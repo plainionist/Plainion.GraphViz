@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Viewer.Views.GraphViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:r="clr-namespace:Plainion.GraphViz;assembly=Plainion.GraphViz"
+             xmlns:v="clr-namespace:Plainion.GraphViz.Viewer"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:prism="http://www.codeplex.com/prism"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <r:GraphView GraphSource="{Binding Presentation}" LayoutEngine="{Binding LayoutEngine}" 
+                 GraphItemForContextMenu="{Binding GraphItemForContextMenu, Mode=OneWayToSource}"
+                 Navigation="{Binding Navigation, Mode=OneWayToSource}" Name="myGraphView">
+        <i:Interaction.Triggers>
+            <prism:InteractionRequestTrigger SourceObject="{Binding PrintGraphRequest, Mode=OneWay}">
+                <pn:PopupPrintDialogAction/>
+            </prism:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
+        <r:GraphView.ContextMenus>
+            <ContextMenu x:Key="Node">
+                <MenuItem Header="Hide" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Show">
+                    <MenuItem Header="With siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="With incoming" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="With outgoing" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                </MenuItem>
+            </ContextMenu>
+            <ContextMenu x:Key="Edge">
+                <MenuItem Header="Go to source" Command="{Binding GoToEdgeSourceCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Go to target" Command="{Binding GoToEdgeTargetCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+            </ContextMenu>
+            <ContextMenu x:Key="Default">
+                <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
+            </ContextMenu>
+        </r:GraphView.ContextMenus>
+    </r:GraphView>
+</UserControl>

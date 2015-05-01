@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="b9b1def8-5b89-44d7-aab9-7d6495b99a1e" Created="635401677525055679" LastModified="635401677711896489">
+  <Caption><![CDATA[Masks]]></Caption>
+  <Content><![CDATA[- we could actually create "dynamic" masks which save the e.g. regex pattern for the nodes that should be shown/hidden
+- currently we dont want that for performance reasons
+- BUT: we could define "mask templates" which store the pattern instead in case we later discover that we want to reuse 
+  such settings/templates/masks across graphs of same type (e.g. dependencygraph of different tasks we always want to hide contexts)
+]]></Content>
+</Node>

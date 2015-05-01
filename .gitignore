@@ -1,0 +1,16 @@
+**/bin/**
+**/obj/**
+/*.suo
+/packages/NUnit.2.6.4
+/packages/CommonServiceLocator.1.2/
+/packages/Expression.Blend.Sdk.1.0.2/
+/packages/Prism.Mvvm.1.0.0/
+/packages/Prism.Composition.5.0.0/
+/packages/Prism.PubSubEvents.1.0.0
+/packages/Prism.Interactivity.5.0.0/
+/packages/Prism.5.0.0/
+/packages/Prism.MEFExtensions.5.0.0/
+/packages/Plainion.Core.2.1.0.0/
+/packages/Plainion.Windows.1.4.0.0
+/packages/Plainion.Prism.1.4.0.0/
+/packages/WPFToolkit.3.5.50211.1

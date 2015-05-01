@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.Analysis.NodeMasksView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:v="clr-namespace:Plainion.GraphViz"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <ListView Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="100" SelectionMode="Single" 
+                  ItemsSource="{Binding Path=Masks}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+            <ListView.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding DeleteMaskCommand}" />
+                <KeyBinding Key="Up" Modifiers="Control" Command="{Binding MoveMaskUpCommand}" />
+                <KeyBinding Key="Down" Modifiers="Control" Command="{Binding MoveMaskDownCommand}" />
+            </ListView.InputBindings>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Delete" Command="{Binding DeleteMaskCommand}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Label" Width="{Binding ElementName=myColumnStretchHelper, Path=ActualWidth}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Mask.Label}" ToolTip="{Binding Path=ToolTip}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn  x:Name="IsAppliedCol" Width="70" Header="Applied" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Path=Mask.IsApplied, Mode=TwoWay}" Margin="0"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn  x:Name="IsShowCol" Width="70" Header="Show" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Path=Mask.IsShowMask, Mode=TwoWay}" Margin="0"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+            <Button Content="Up" Margin="5" Command="{Binding MoveMaskUpCommand}"/>
+            <Button Content="Down" Margin="5" Command="{Binding MoveMaskDownCommand}"/>
+        </StackPanel>
+        <!-- http://social.msdn.microsoft.com/Forums/vstudio/en-US/3ee5696c-4f26-4e30-8891-0e2f95d69623/gridview-last-column-to-fill-available-space?forum=wpf -->
+        <!--This is the hidden helper Grid which does the resizing -->
+        <Grid Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="{Binding ElementName=IsAppliedCol, Path=ActualWidth}"/>
+                <ColumnDefinition Width="{Binding ElementName=IsShowCol, Path=ActualWidth}"/>
+                <ColumnDefinition Width="10"/>
+            </Grid.ColumnDefinitions>
+            <!--This is the hidden helper Field which is used to bind to, using the "Fill" column of the helper grid-->
+            <Grid Grid.Column="0" x:Name="myColumnStretchHelper"/>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,55 @@
+graph 1 14.869 13
+node "Common.Components.DisplayAC" 13.597 10.25 1.5135 0.5 DisplayAC solid ellipse black lightgrey
+node "Platform.GeneralVisualizationService" 4.9306 12.75 3.39 0.5 GeneralVisualizationService solid ellipse black lightgrey
+node "Common.Facades.ComponentFacade" 12.056 0.25 2.3179 0.5 ComponentFacade solid ellipse black lightgrey
+node "Common.AlgorithmServiceExporter" 9.9861 12.75 3.167 0.5 AlgorithmServiceExporter solid ellipse black lightgrey
+node "Application.Infrastructure.AsyncCancelAC" 3.6111 5.25 2.1092 0.5 AsyncCancelAC solid ellipse black lightgrey
+node "Application.DataHandlingAC" 8.6667 7.75 2.1838 0.5 DataHandlingAC solid ellipse black lightgrey
+node "Application.ProgressAC" 8.1111 2.75 1.6028 0.5 ProgressAC solid ellipse black lightgrey
+node "Application.DragDropAC" 12.361 5.25 1.7665 0.5 DragDropAC solid ellipse black lightgrey
+node "Application.DataPersistenceAC" 5.3333 2.75 2.392 0.5 DataPersistenceAC solid ellipse black lightgrey
+node "Common.Facades.HandlerFacade" 6.7222 0.25 1.93 0.5 HandlerFacade solid ellipse black lightgrey
+node "Common.IDataProcessor" 6.2917 10.25 1.945 0.5 IDataProcessor solid ellipse black lightgrey
+node "Application.Infrastructure.ReanimationConstraints" 6.8889 5.25 2.8993 0.5 ReanimationConstraints solid ellipse black lightgrey
+node "Platform.IApplication" 3.6944 10.25 1.6624 0.5 IApplication solid ellipse black lightgrey
+node "Application.ModelExtension" 8.5556 10.25 2.0797 0.5 ModelExtension solid ellipse black lightgrey
+node "Platform.ICentralConroller" 11.486 10.25 2.2135 0.5 ICentralConroller solid ellipse black lightgrey
+node "Application.PersistenceService" 1.1528 5.25 2.3175 0.5 PersistenceService solid ellipse black lightgrey
+node "Application.PreFetchingStrategy" 10.417 2.75 2.4967 0.5 PreFetchingStrategy solid ellipse black lightgrey
+edge "Common.Components.DisplayAC" "Platform.GeneralVisualizationService" 4 13.042 10.422 11.575 10.841 7.5851 11.979 5.8066 12.486 solid black
+edge "Common.Facades.ComponentFacade" "Common.Components.DisplayAC" 7 12.334 0.49664 12.754 0.86865 13.534 1.6431 13.833 2.5 14.771 5.1859 13.996 8.7205 13.7 9.8629 solid black
+edge "Common.Facades.ComponentFacade" "Common.AlgorithmServiceExporter" 16 12.346 0.49497 12.794 0.86764 13.648 1.6465 14.097 2.5 14.679 3.6049 14.736 3.9874 14.736 5.2361 14.736 5.2361 14.736 5.2361 14.736 7.7639 14.736 8.9856 15.164 9.4933 14.472 10.5 13.683 11.648 12.127 12.234 11.072 12.513 solid black
+edge "Common.Facades.ComponentFacade" "Application.Infrastructure.AsyncCancelAC" 10 11.46 0.46466 10.508 0.80127 8.604 1.5382 7.1806 2.5 6.9128 2.6809 6.9007 2.7928 6.6528 3 5.7706 3.7373 4.6693 4.5141 4.0633 4.93 solid black
+edge "Common.Facades.ComponentFacade" "Application.DataHandlingAC" 7 12.069 0.50272 12.087 0.98855 12.09 2.1204 11.778 3 11.127 4.8341 9.6237 6.662 8.9746 7.3979 solid black
+edge "Common.Facades.ComponentFacade" "Application.ProgressAC" 4 11.695 0.48984 10.977 0.94016 9.3671 1.9489 8.5727 2.4468 solid black
+edge "Common.Facades.ComponentFacade" "Application.DragDropAC" 7 12.159 0.49942 12.328 0.90061 12.659 1.7464 12.778 2.5 12.911 3.3438 12.658 4.3352 12.491 4.8623 solid black
+edge "Common.Facades.ComponentFacade" "Application.DataPersistenceAC" 4 11.494 0.47042 10.271 0.92032 7.3677 1.9879 6.0302 2.4798 solid black
+edge "Application.Infrastructure.AsyncCancelAC" "Application.DataHandlingAC" 4 4.0509 5.479 4.966 5.9264 7.0741 6.9573 8.0937 7.4559 solid black
+edge "Application.Infrastructure.AsyncCancelAC" "Platform.IApplication" 4 3.6151 5.5037 3.6285 6.3029 3.6717 8.8798 3.6881 9.8562 solid black
+edge "Application.DataHandlingAC" "Common.Components.DisplayAC" 4 9.0999 7.9811 10.004 8.4344 12.089 9.4797 13.069 9.9714 solid black
+edge "Application.DataHandlingAC" "Platform.GeneralVisualizationService" 7 8.0675 7.9617 7.262 8.2622 5.855 8.9163 5.1944 10 4.7451 10.737 4.7991 11.799 4.8694 12.358 solid black
+edge "Application.DataHandlingAC" "Common.AlgorithmServiceExporter" 7 8.8103 8.0018 9.0429 8.3996 9.497 9.232 9.7083 10 9.9332 10.817 9.9798 11.816 9.9872 12.352 solid black
+edge "Application.DataHandlingAC" "Common.IDataProcessor" 4 8.4432 7.9965 8.0196 8.4375 7.0982 9.3965 6.61 9.9047 solid black
+edge "Application.DataHandlingAC" "Platform.IApplication" 4 8.2298 7.9811 7.3203 8.4333 5.2262 9.4745 4.2343 9.9677 solid black
+edge "Application.DataHandlingAC" "Application.ModelExtension" 4 8.656 8.0009 8.6367 8.431 8.5957 9.3431 8.5725 9.8593 solid black
+edge "Application.DataHandlingAC" "Platform.ICentralConroller" 4 8.9319 7.9965 9.438 8.4403 10.542 9.4086 11.119 9.9142 solid black
+edge "Application.ProgressAC" "Application.DataHandlingAC" 7 8.2262 2.998 8.4153 3.3971 8.7839 4.2399 8.9167 5 9.0629 5.8375 8.8843 6.8352 8.7623 7.364 solid black
+edge "Application.DragDropAC" "Common.Components.DisplayAC" 4 12.421 5.5037 12.62 6.3045 13.263 8.8904 13.504 9.8622 solid black
+edge "Application.DragDropAC" "Application.DataHandlingAC" 4 12.033 5.4833 11.372 5.9254 9.8795 6.9245 9.1236 7.4304 solid black
+edge "Application.DragDropAC" "Platform.IApplication" 7 12.209 5.4968 11.859 6.0175 10.941 7.2856 9.875 8 8.1474 9.1572 5.7476 9.8 4.508 10.074 solid black
+edge "Application.DragDropAC" "Platform.ICentralConroller" 4 12.319 5.5037 12.178 6.3029 11.725 8.8798 11.553 9.8562 solid black
+edge "Application.DataPersistenceAC" "Application.DataHandlingAC" 7 5.8707 2.9747 6.5997 3.2922 7.8773 3.9682 8.4583 5 8.8801 5.7491 8.8108 6.8016 8.7331 7.3576 solid black
+edge "Application.DataPersistenceAC" "Application.PersistenceService" 4 4.955 2.9876 4.1998 3.4342 2.5055 4.4361 1.657 4.9379 solid black
+edge "Common.Facades.HandlerFacade" "Common.Components.DisplayAC" 7 7.4841 0.40332 8.6196 0.64644 10.766 1.2465 12.111 2.5 14.262 4.5049 13.848 8.5991 13.661 9.8588 solid black
+edge "Common.Facades.HandlerFacade" "Application.Infrastructure.AsyncCancelAC" 7 6.1855 0.45877 5.4371 0.76327 4.1097 1.4303 3.5556 2.5 3.1603 3.2629 3.3512 4.3133 3.4974 4.8643 solid black
+edge "Common.Facades.HandlerFacade" "Application.DataHandlingAC" 10 6.2215 0.46673 5.3583 0.85211 3.7104 1.7634 4.0139 3 4.3126 4.2174 4.4821 4.5672 5.3194 5.5 6.121 6.3929 7.353 7.0939 8.0775 7.4588 solid black
+edge "Common.Facades.HandlerFacade" "Application.ProgressAC" 4 6.8554 0.50094 7.0991 0.93472 7.6182 1.8588 7.9068 2.3725 solid black
+edge "Common.Facades.HandlerFacade" "Application.DragDropAC" 7 7.53 0.38811 8.6602 0.60619 10.696 1.1685 11.778 2.5 12.336 3.1869 12.395 4.2822 12.383 4.8565 solid black
+edge "Common.Facades.HandlerFacade" "Application.DataPersistenceAC" 4 6.589 0.50094 6.3454 0.93472 5.8262 1.8588 5.5376 2.3725 solid black
+edge "Application.Infrastructure.ReanimationConstraints" "Application.DataHandlingAC" 4 7.0593 5.5009 7.3739 5.9384 8.0471 6.8745 8.4146 7.3856 solid black
+edge "Application.ModelExtension" "Common.AlgorithmServiceExporter" 4 8.6927 10.501 8.9448 10.937 9.483 11.867 9.7795 12.379 solid black
+edge "Application.PersistenceService" "Platform.GeneralVisualizationService" 7 1.1838 5.5047 1.2917 6.2789 1.7027 8.7555 2.7361 10.5 3.2058 11.293 4.0149 12.016 4.5085 12.414 solid black
+edge "Application.PersistenceService" "Application.DataHandlingAC" 4 1.7613 5.4641 3.1317 5.915 6.4554 7.0086 7.9351 7.4954 solid black
+edge "Application.PersistenceService" "Platform.IApplication" 7 1.336 5.5013 1.6365 5.8984 2.2405 6.7299 2.6389 7.5 3.0569 8.3081 3.4057 9.3212 3.5782 9.8594 solid black
+edge "Application.PreFetchingStrategy" "Application.DataHandlingAC" 4 10.332 3.0037 10.05 3.8045 9.1403 6.3904 8.7983 7.3622 solid black
+stop

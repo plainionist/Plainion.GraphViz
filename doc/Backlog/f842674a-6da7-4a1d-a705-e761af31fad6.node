@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="f842674a-6da7-4a1d-a705-e761af31fad6" Created="635401684974707672" LastModified="635660827909343611">
+  <Caption><![CDATA[Modules.Persistence]]></Caption>
+  <Content><![CDATA[- add "persistence module" to save graph in different forms
+  - model in DGML/DOT only (e.g. in case from reflection)
+  - internal state with masks and all that stuff (kinda hibernate)
+]]></Content>
+</Node>

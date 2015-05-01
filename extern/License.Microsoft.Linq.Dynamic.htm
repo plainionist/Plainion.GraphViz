@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage no-websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients no-cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths" dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        
+    <meta name="search.content.shortId" content="bb894665">
+    <meta name="ms.shortidmsdn" content="bb894665">
+    <meta name="search.content.locale" content="en-us">
+    <meta name="MN" content="61C41DD6-5:37:33 AM">
+    <meta http-equiv="content-language" content="en,de">
+    
+      <link rel="canonical" href="http://msdn.microsoft.com/de-de/vstudio/bb894665.aspx">
+      
+      <meta name="NormalizedUrl" content="http://msdn.microsoft.com/en-us/vstudio/bb894665(d=default,l=en-us,v=MSDN.10).aspx">
+      <meta name="ms.normalizedurl" content="http://msdn.microsoft.com/en-us/vstudio/bb894665(d=default,l=en-us,v=MSDN.10).aspx">
+    
+        <meta name="Title" content="Microsoft Public License (Ms-PL)">
+    
+        <meta name="Search.MSCategory" content="aa718958">
+    
+        <meta name="Search.TocNodeId" content="aa718958">
+    
+        <meta name="ROBOTS" content="NOINDEX,NOFOLLOW">
+    
+    <script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/ms2.js" async="" type="text/javascript"></script><script async="" src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/ai.js" type="text/javascript"></script><script type="text/javascript" src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/jquery-1.js" data-do-not-move="true" data-provides="jQuery"></script>
+    <script type="text/javascript" src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/jquery.js" data-do-not-move="true" data-requires="jQuery" data-provides="jQuery.partial"></script>
+    
+    
+            <script type="text/javascript" src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/modernizr2.js" data-do-not-move="true" data-provides="modernizr, modernizr2, yepnope">
+    </script>
+    
+    
+    <script type="text/javascript" data-do-not-move="true">
+        //<![CDATA[
+        
+        window.appInsightsId = '60854590-027a-4ae4-98be-2741a40f355f';
+        //]]>
+    </script>
+    
+
+    <title>Microsoft Public License (Ms-PL)</title>
+    <link rel="stylesheet" type="text/css" href="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/Combined.css"><script class="mtps-injected">try {
+/**/
+(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { 
+	"image": "http://i.msdn.microsoft.com", 
+	"js": "http://i2.msdn.microsoft.com", 
+	"css": "http://i3.msdn.microsoft.com", 
+	"xap": "http://msdn.microsoft.com"
+});
+/**/
+} finally { MTPS._injectNextScript_0 && MTPS._injectNextScript_0(); }</script><script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/Combined.js" class="mtps-injected"></script><script class="mtps-injected">try {
+//
+    var searchWidgetJsUri = 'http://i2.services.social.microsoft.com/search/Widgets/SearchBox.jss?boxid=HeaderSearchTextBox&btnid=HeaderSearchButton&brand=MSDN&loc=de-de&Refinement=195&watermark=Visual%20Studio&focusOnInit=false&iroot=vstudio';
+  //
+} finally { MTPS._injectNextScript_2 && MTPS._injectNextScript_2(); }</script><script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/search.js" class="mtps-injected"></script><script id="mscom.srch.searchBox" src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/SearchBox.js"></script><script class="mtps-injected">try {
+/**/
+    
+      var wt_nvr_ru = "WT_NVR_RU";
+      var wt_fpcdom = ".microsoft.com";
+      var wt_domlist = "msdn.microsoft.com";
+      var wt_pathlist = "";var wt_paramlist = "DCSext.mtps_devcenter";
+      var wt_siteid = "MSDN";
+      var gDomain="m.webtrends.com";
+    var gDcsId = "dcsmgru7m99k7mqmgrhudo0k8_8c6m";
+    var gFpc = "WT_FPC";
+    if (document.cookie.indexOf(gFpc + "=") == -1) {
+        var scriptElem = document.createElement('script');
+        scriptElem.src = "http" + (window.location.protocol.indexOf('https:') == 0 ? 's' : '') + "://" + gDomain + "/" + gDcsId + "/wtid.js";
+        document.getElementsByTagName('head')[0].appendChild(scriptElem);
+    }
+    var detectedLocale = "de-de";
+    var wtsp = "_vstudio_";
+    var gTrackEvents = "1";
+    /**/
+} finally { MTPS._injectNextScript_4 && MTPS._injectNextScript_4(); }</script><script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/webtrendsscript.js" class="mtps-injected"></script><script class="mtps-injected">try {
+var omni_guid = 'c_a6c54a45f699407891dd5d892f967a75';
+} finally { MTPS._injectNextScript_6 && MTPS._injectNextScript_6(); }</script><script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/omni_rsid.js" class="mtps-injected"></script><script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/broker.js" class="mtps-injected"></script><script class="mtps-injected">try {
+//
+    if (!$.Microsoft) $.Microsoft = {};
+    if (!$.Microsoft.Mtps) $.Microsoft.Mtps = {};
+    if (!$.Microsoft.Mtps.NetReflectorInit)
+        $.Microsoft.Mtps.NetReflectorInit = {
+            surveyUrl: "http://vp-nri.com/take?i=171562&h=ivk6Cx0ApKkpFMdD1G6R7g",
+            throttleRate: "30",
+            privacyStatementText: "Datenschutz und Cookies",
+            trackerWindowText: "Schließen Sie dieses Fenster bitte nicht.<br/><br/>Vielen Dank! Die Umfrage wird hier angezeigt, sobald Sie Ihren Besuch beendet haben. Bitte schließen Sie daher dieses Fenster nicht.",
+            brandId: 'msdn'
+        };
+//
+} finally { MTPS._injectNextScript_9 && MTPS._injectNextScript_9(); }</script><script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/NetReflector.js" class="mtps-injected"></script></head>
+    
+    <body id="MTPS_Body" class="MsdnPageBody"><div style="display: block;" id="ux-banner">
+        <div class="banner">
+            <div class="row">
+                <div class="left">Ich stimme zu, dass diese Seite Cookies für Analysen, personalisierten Inhalt und Werbung verwendet</div>
+                <div class="middle"><a tabindex="1" href="http://www.microsoft.com/privacystatement/de-de/core/default.aspx">Erfahren Sie mehr</a></div>
+                <div class="right"><a tabindex="1" title="Schließen"></a></div>
+            </div>
+        </div>
+    </div>
+        
+        <div id="BodyBackground">
+            <div id="JelloSizer">
+                <div id="JelloExpander">
+                    <div id="JelloWrapper">
+                        <div class="Clear"> </div>
+                        <span class="skipnav"><a href="#MainContent">Skip to main content</a></span>
+                        
+
+
+
+
+    
+    
+    
+    
+
+
+<header class="ux-header">
+  <div class="header-top-bar">
+    <a class="header-top-bar-brand-logo" href="http://msdn.microsoft.com/vstudio" title="Visual Studio"></a>
+
+    <ul class="header-top-bar-links" id="ux-nav-user">
+      <li class="header-top-bar-search-box">
+        
+
+<form name="HeaderSearchForm" id="HeaderSearchForm" method="get" action="http://social.msdn.microsoft.com/search/de-de/">
+  <input value="Visual Studio durchsuchen mit Bing" style="color: rgb(170, 170, 170); font-style: italic;" autocomplete="off" id="HeaderSearchTextBox" name="query" title="Visual Studio durchsuchen mit Bing" class="TextBoxSearch" type="text">
+  <input id="RefinementId" name="refinement" title="195" value="195" type="hidden">
+  <input id="HeaderSearchButton" title="Visual Studio durchsuchen mit Bing" class="header-search-button" value="" type="submit">
+  
+<div style="display: none; text-align: left; border: 1px solid buttonshadow; position: absolute; z-index: 1000; padding: 2px; background-color: rgb(255, 255, 255); color: rgb(255, 255, 255); font-family: &quot;Segoe UI&quot;,Helvetica,Garuda,Arial,sans-serif; font-size: 13px;" id="SearchFlyoutContainer"><div id="SuggestionContainer"><ul style="list-style: none outside none; padding: 4px 2px 0px 1px; cursor: pointer; margin: 1px; white-space: nowrap;"></ul></div></div></form>
+      </li>
+
+
+
+      <li class="last">
+        <a class="scarabLink" id="idPPScarab" href="https://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=12&amp;ct=1401107853&amp;rver=6.0.5276.0&amp;wp=MCLBI&amp;wlcxt=msdn%24msdn%24msdn&amp;wreply=http%3a%2f%2fmsdn.microsoft.com%2fde-de%2fvstudio%2fbb894665.aspx&amp;lc=1031&amp;id=254354&amp;mkt=de-DE" title=" Anmelden  ">
+          <span id="idPPScarabSIT"> Anmelden  </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="header-nav-container">
+  <nav class="header-nav">
+    <ul class="header-nav-pri">
+          <li><a href="http://msdn.microsoft.com/de-de/vstudio/aa718325.aspx" title="Home">Home</a></li>
+          <li><a href="http://code.msdn.microsoft.com/vstudio" title="Beispiele">Beispiele</a></li>
+          <li><a href="http://msdn.microsoft.com/de-de/vstudio/jj672990.aspx" title="Sprachen">Sprachen</a></li>
+          <li><a href="http://visualstudiogallery.msdn.microsoft.com/" title="Erweiterungen">Erweiterungen</a></li>
+          <li><a href="http://msdn.microsoft.com/de-de/library/vstudio" title="Dokumentation">Dokumentation</a></li>
+          <li><a href="http://social.msdn.microsoft.com/forums/vstudio/de-de/home" title="Foren">Foren</a></li>
+
+    </ul>
+  
+  </nav>
+  
+    <div class="header-nav-trial">
+      <a href="http://go.microsoft.com/fwlink/?LinkId=309297&amp;clcid=0x409&amp;slcid=0x409" title="starten sie kostenlos" class="trialanchor">
+            <span class="trialtext">starten sie kostenlos</span>
+            <span class="trialimage"></span>
+        </a>
+    </div>
+  </div>
+</header>
+
+
+
+
+                        <div class="Clear"> </div>
+                        <div class="topleftcorner"> </div>
+                        <div class="toprightcorner"> </div>
+                        <div class="alley">
+                            <div class="wrapper">
+                                <div class="inner">
+                                  
+                                    <div class="Clear"> </div>
+                                    <div class="BreadCrumb"><div class="BreadCrumbInner EyebrowContainer"><span class="EyebrowElement">Microsoft Public License (Ms-PL)</span>
+    
+    </div></div>
+                                    <a name="MainContent"></a>
+                                    <h1>Microsoft Public License (Ms-PL)</h1><p>Published: October 12, 2006</p><p><strong>This
+ license governs use of the accompanying software. If you use the 
+software, you accept this license. If you do not accept the license, do 
+not use the software.</strong></p><h2>1. Definitions</h2><p>The terms 
+“reproduce,” “reproduction,” “derivative works,” and “distribution” have
+ the same meaning here as under U.S. copyright law.</p><p>A “contribution” is the original software, or any additions or changes to the software.</p><p>A “contributor” is any person that distributes its contribution under this license.</p><p>“Licensed patents” are a contributor’s patent claims that read directly on its contribution.</p><h2>2. Grant of Rights</h2><p>(A)
+ Copyright Grant- Subject to the terms of this license, including the 
+license conditions and limitations in section 3, each contributor grants
+ you a non-exclusive, worldwide, royalty-free copyright license to 
+reproduce its contribution, prepare derivative works of its 
+contribution, and distribute its contribution or any derivative works 
+that you create.</p><p>(B) Patent Grant- Subject to the terms of this 
+license, including the license conditions and limitations in section 3, 
+each contributor grants you a non-exclusive, worldwide, royalty-free 
+license under its licensed patents to make, have made, use, sell, offer 
+for sale, import, and/or otherwise dispose of its contribution in the 
+software or derivative works of the contribution in the software.</p><h2>3. Conditions and Limitations</h2><p>(A) No Trademark License- This license does not grant you rights to use any contributors’ name, logo, or trademarks.</p><p>(B)
+ If you bring a patent claim against any contributor over patents that 
+you claim are infringed by the software, your patent license from such 
+contributor to the software ends automatically.</p><p>(C) If you 
+distribute any portion of the software, you must retain all copyright, 
+patent, trademark, and attribution notices that are present in the 
+software.</p><p>(D) If you distribute any portion of the software in 
+source code form, you may do so only under this license by including a 
+complete copy of this license with your distribution. If you distribute 
+any portion of the software in compiled or object code form, you may 
+only do so under a license that complies with this license.</p><p>(E) 
+The software is licensed “as-is.” You bear the risk of using it. The 
+contributors give no express warranties, guarantees or conditions. You 
+may have additional consumer rights under your local laws which this 
+license cannot change. To the extent permitted under your local laws, 
+the contributors exclude the implied warranties of merchantability, 
+fitness for a particular purpose and non-infringement.</p><hr><table border="1" width="100%"><tbody><tr valign="top"><td align="center">
+<a href="http://download.microsoft.com/download/7/4/8/748f58d8-fdde-418b-a0ab-4e046ac762fd/CSharpSamples.zip">
+<strong>I accept</strong></a></td><td align="center">
+<a href="http://go.microsoft.com/fwlink/?LinkID=85559">
+<strong>I do not accept</strong></a></td></tr></tbody></table><p>&nbsp;</p><div><a href="#top"><img alt="Top of page" src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/bb894665.gif" height="9" width="7">Top of page</a></div>
+                                     
+    <div id="footerAd" style="margin-left:auto;margin-right:auto;display:table">
+        <div></div>
+    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ClearBottom"> </div>
+                        <div class="bottomleftcorner"> </div>
+                        <div class="bottomrightcorner"> </div>  
+                      
+<footer class="ux-footer">
+  <div class="nav">
+    <div class="footerLinksContainer"> 
+          <ul class="footerLinks" style="width: 16.66%;">
+            <li class="footerLinksTitle">
+              <a href="http://msdn.microsoft.com/de-de/vstudio/aa718325.aspx" title="Home">Home</a>
+            </li>
+
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/aa718325.aspx" title="Willkommen">Willkommen</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/cc136611.aspx" title="Visual Studio">Visual Studio</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/ff637362.aspx" title="Team Foundation Server">Team Foundation Server</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/aa496123" title=".NET Framework">.NET Framework</a>
+                </li>
+          </ul>
+          <ul class="footerLinks" style="width: 16.66%;">
+            <li class="footerLinksTitle">
+              <a href="http://code.msdn.microsoft.com/vstudio" title="Beispiele">Beispiele</a>
+            </li>
+
+          </ul>
+          <ul class="footerLinks" style="width: 16.66%;">
+            <li class="footerLinksTitle">
+              <a href="http://msdn.microsoft.com/de-de/vstudio/jj672990.aspx" title="Sprachen">Sprachen</a>
+            </li>
+
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/jj672990.aspx" title="Überblick">Überblick</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/hh386302.aspx" title="Visual C++">Visual C++</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/hh341490.aspx" title="Visual C#">Visual C#</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/hh388573.aspx" title="Visual Basic">Visual Basic</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/jj673959.aspx" title="JavaScript">JavaScript</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/de-de/vstudio/hh388569.aspx" title="Visual F#">Visual F#</a>
+                </li>
+          </ul>
+          <ul class="footerLinks" style="width: 16.66%;">
+            <li class="footerLinksTitle">
+              <a href="http://visualstudiogallery.msdn.microsoft.com/" title="Erweiterungen">Erweiterungen</a>
+            </li>
+
+          </ul>
+          <ul class="footerLinks" style="width: 16.66%;">
+            <li class="footerLinksTitle">
+              <a href="http://msdn.microsoft.com/de-de/library/vstudio" title="Dokumentation">Dokumentation</a>
+            </li>
+
+                <li>
+                  <a href="http://msdn.microsoft.com/en-us/library/vstudio/dd831853%28v=vs.120%29.aspx" title="Visual Studio">Visual Studio</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/en-us/library/vstudio/fda2bad5%28v=vs.120%29.aspx" title="Team Foundation Server ALM">Team Foundation Server ALM</a>
+                </li>
+                <li>
+                  <a href="http://msdn.microsoft.com/en-us/library/vstudio/w0x726c2.aspx" title=".NET Framework">.NET Framework</a>
+                </li>
+          </ul>
+          <ul class="footerLinks" style="width: 16.66%;">
+            <li class="footerLinksTitle">
+              <a href="http://social.msdn.microsoft.com/forums/vstudio/de-de/home" title="Foren">Foren</a>
+            </li>
+
+          </ul>
+    </div>
+    </div>
+  <div class="footerSubLinksContainer">
+    <span class="localePickerLink"><a href="http://msdn.microsoft.com/de-de/vstudio/SelectLocale?fromPage=%2fvstudio%2fbb894665" title="Deutschland (Deutsch)">Deutschland (Deutsch)</a></span>
+    <ul class="footerSubLinks">
+      <li class="subFooterLink">© 2014 Microsoft</li>
+          <li class="subFooterLink">
+            <a href="http://www.microsoft.com/de-de/corporate/rechtliche-hinweise/nutzungsbedingungen.aspx" title="Nutzungsbedingungen">Nutzungsbedingungen</a>
+          </li>
+          <li class="subFooterLink">
+            <a href="http://www.microsoft.com/de-de/corporate/rechtliche-hinweise/impressum.aspx" title="Impressum">Impressum</a>
+          </li>
+          <li class="subFooterLink">
+            <a href="http://www.microsoft.com/library/toolbar/3.0/trademarks/de-de.mspx" title="Markenzeichen">Markenzeichen</a>
+          </li>
+          <li class="subFooterLink">
+            <a href="http://go.microsoft.com/fwlink/?linkid=248681" title="Datenschutz und Cookies ">Datenschutz und Cookies </a>
+          </li>
+      <li>
+        <a class="microsoftlogo" href="http://www.microsoft.com/" title="Microsoft"></a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+<noscript>
+<img alt="DCSIMG" width="1" height="1" src="http://m.webtrends.com/dcsmgru7m99k7mqmgrhudo0k8_8c6m/njs.gif?dcsuri=/nojavascript&amp;WT.js=No" />
+</noscript>
+
+
+<noscript><a href="http://www.omniture.com" title="Web Analytics">
+<img src="http://msstonojsmsdn.112.2o7.net/b/ss/msstonojsmsdn/1/H.20.2--NS/0" height="1" width="1" border="0" alt="" />
+</a></noscript>
+
+
+
+<div class="NetReflectorMain">
+  <div class="NRHeader"></div>
+  <div class="NRCloseButton">
+  </div>
+  <div class="NRTopStripe"></div>
+  <div class="NRNotification">
+    <div>Microsoft führt eine Onlineumfrage durch, um Ihre Meinung zur 
+-Website zu erfahren. Wenn Sie sich zur Teilnahme entscheiden, wird 
+Ihnen die Onlineumfrage angezeigt, sobald Sie die -Website verlassen.  <br><br>Möchten Sie teilnehmen?
+    </div>
+    <input class="NRSubmit" value="JA" type="button">
+    <input class="NRCancel" value="NEIN" type="button">
+    <div class="PrivacyStatement"><a id="PrivacyStatement" href="javascript:void(0)">Datenschutz und Cookies</a></div>
+  </div>
+  <div class="NRBottomStripe"></div>
+</div>
+
+
+
+
+
+
+    <script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function(window,document){"use strict";function preload(scripts){for(var result=[],script,e,i=0;i<scripts.length;i++)script=scripts[i],script.hasOwnProperty("url")&&(e=document.createElement("script"),e.src=script.url,script.throwaway=e),result.push(script);return result}function inject(scripts,index){var script,elem;if(index>=scripts.length){delete mtps.injectScripts;return}script=scripts[index];elem=document.createElement("script");elem.className="mtps-injected";elem.async=!1;var isLoaded=!1,timeoutId=0,injectNextFnName="",injectNext=elem.onerror=function(){isLoaded||(isLoaded=!0,inject(scripts,index+1),window.clearTimeout(timeoutId),elem.onload=elem.onerror=elem.onreadystatechange=null,injectNextFnName&&delete mtps[injectNextFnName],elem.removeEventListener&&elem.removeEventListener("load",injectNext,!1))};elem.addEventListener?elem.addEventListener("load",injectNext,!1):elem.readyState==="uninitialized"?elem.onreadystatechange=function(){(this.readyState==="loaded"||this.readyState==="complete")&&injectNext()}:elem.onload=injectNext;script.hasOwnProperty("url")?(timeoutId=window.setTimeout(injectNext,12e4),elem.src=script.url):(injectNextFnName="_injectNextScript_"+index,mtps[injectNextFnName]=injectNext,timeoutId=window.setTimeout(injectNext,2e3),elem.text="try {\n"+script.txt+"\n} finally { MTPS."+injectNextFnName+" && MTPS."+injectNextFnName+"(); }");parent.appendChild(elem)}var mtps=window.MTPS||(window.MTPS={}),parent=document.getElementsByTagName("head")[0];mtps.injectScripts=function(scripts){inject(preload(scripts),0)}})(window,document);
+MTPS.injectScripts([
+	{ txt: "/**/\r\n(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { \r\n\t\"image\": \"http://i.msdn.microsoft.com\", \r\n\t\"js\": \"http://i2.msdn.microsoft.com\", \r\n\t\"css\": \"http://i3.msdn.microsoft.com\", \r\n\t\"xap\": \"http://msdn.microsoft.com\"\r\n});\r\n/**/" },
+	{ url: "http://i2.msdn.microsoft.com/Combined.js?resources=0:jquery.cookie,1:Utilities,2:Banner,1:AppInsightsPerf;/Areas/Sto/Content/Scripts:0,/Areas/Epx/Content/Scripts:1,/Areas/Epx/Shared/Content:2\u0026amp;hashKey=6375574FADCD05F45B6182636FBD7412" },
+	{ txt: "//\n    var searchWidgetJsUri = \u0027http://i2.services.social.microsoft.com/search/Widgets/SearchBox.jss?boxid=HeaderSearchTextBox\u0026btnid=HeaderSearchButton\u0026brand=MSDN\u0026loc=de-de\u0026Refinement=195\u0026watermark=Visual%20Studio\u0026focusOnInit=false\u0026iroot=vstudio\u0027;\n  //" },
+	{ url: "http://i2.msdn.microsoft.com/Areas/Epx/Themes/VStudio/Content/search.2.js" },
+	{ txt: "/**/\n    \n      var wt_nvr_ru = \"WT_NVR_RU\";\n      var wt_fpcdom = \".microsoft.com\";\n      var wt_domlist = \"msdn.microsoft.com\";\n      var wt_pathlist = \"\";var wt_paramlist = \"DCSext.mtps_devcenter\";\n      var wt_siteid = \"MSDN\";\n      var gDomain=\"m.webtrends.com\";\n    var gDcsId = \"dcsmgru7m99k7mqmgrhudo0k8_8c6m\";\n    var gFpc = \"WT_FPC\";\n    if (document.cookie.indexOf(gFpc + \"=\") == -1) {\n        var scriptElem = document.createElement(\u0027script\u0027);\n        scriptElem.src = \"http\" + (window.location.protocol.indexOf(\u0027https:\u0027) == 0 ? \u0027s\u0027 : \u0027\u0027) + \"://\" + gDomain + \"/\" + gDcsId + \"/wtid.js\";\n        document.getElementsByTagName(\u0027head\u0027)[0].appendChild(scriptElem);\n    }\n    var detectedLocale = \"de-de\";\n    var wtsp = \"_vstudio_\";\n    var gTrackEvents = \"1\";\n    /**/" },
+	{ url: "http://i2.msdn.microsoft.com/Areas/Sto/Content/Scripts/webtrendsscript.js" },
+	{ txt: "var omni_guid = \u0027c_a6c54a45f699407891dd5d892f967a75\u0027;" },
+	{ url: "http://i2.msdn.microsoft.com/Areas/Sto/Content/Scripts/omni_rsid.js" },
+	{ url: "http://js.microsoft.com/library/svy/sto/broker.js" },
+	{ txt: "//\n    if (!$.Microsoft) $.Microsoft = {};\n    if (!$.Microsoft.Mtps) $.Microsoft.Mtps = {};\n    if (!$.Microsoft.Mtps.NetReflectorInit)\n        $.Microsoft.Mtps.NetReflectorInit = {\n            surveyUrl: \"http://vp-nri.com/take?i=171562\u0026h=ivk6Cx0ApKkpFMdD1G6R7g\",\n            throttleRate: \"30\",\n            privacyStatementText: \"Datenschutz und Cookies\",\n            trackerWindowText: \"Schließen Sie dieses Fenster bitte nicht.\u003cbr/\u003e\u003cbr/\u003eVielen Dank! Die Umfrage wird hier angezeigt, sobald Sie Ihren Besuch beendet haben. Bitte schließen Sie daher dieses Fenster nicht.\",\n            brandId: \u0027msdn\u0027\n        };\n//" },
+	{ url: "http://i2.msdn.microsoft.com/Areas/Sto/Content/Scripts/NetReflector.js" }
+]);
+
+/*]]>*/
+</script>
+
+    
+
+
+<script src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/broker-config.js"></script><div id="_WEDCSInsertedData" style="display: none;"><iframe id="_msnFrame" src="Microsoft%20Public%20License%20%28Ms-PL%29-Dateien/c.gif" style="z-index:-1;height:1px;width:1px;display:none;visibility:hidden;" onload="javascript:MscomBeacon();"></iframe></div></body><!--[CDATA[     
+Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx.
+]]--></html>

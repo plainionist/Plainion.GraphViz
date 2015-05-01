@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Config DotToolsHome="\bin\GraphViz" NodeIdAsDefaultToolTip="True" xmlns="clr-namespace:Blade.GraphViz.Viewer.Configuration;assembly=Blade.GraphViz.Viewer">
+    <Config.LabelConversion>
+        <RegexConversion Matching="^.*\.([^\.]*)$" Replacement="$1" />
+        <RegexConversion Matching="Facade$" Replacement="Fc" />
+    </Config.LabelConversion>
+</Config>

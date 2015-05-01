@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.Analysis.SearchBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:a="clr-namespace:Plainion.GraphViz.Modules.Analysis"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="300">
+    <Grid>
+        <!-- http://www.jeff.wilcox.name/2008/10/introducing-autocompletebox/ -->
+        <a:ExtendedAutoCompleteBox Width="300" ToolTip="Enter substring matching node label" 
+                                   ValueMemberPath="DisplayText" IsEnabled="{Binding Path=IsEnabled}"
+                                   ItemsSource="{Binding Path=VisibleNodes}" ItemFilter="{Binding Path=ItemFilter}"
+                                   SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
+                                   InputCommittedCommand="{Binding Path=SearchCommittedCommand}">
+            <a:ExtendedAutoCompleteBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayText}" />
+                </DataTemplate>
+            </a:ExtendedAutoCompleteBox.ItemTemplate>
+        </a:ExtendedAutoCompleteBox>
+    </Grid>
+</UserControl>

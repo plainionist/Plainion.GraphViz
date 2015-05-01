@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="72f692f2-a6ee-4adf-b8e5-f6e61285b525" Created="635414644063962398" LastModified="635660827992858388" Origin="7a972347-5138-48e8-ac78-9e070c523cd3">
+  <Caption><![CDATA[Cleanup handling of GraphItemForContextMenu]]></Caption>
+  <Content><![CDATA[- can we go for more generic thing? (focused, selected?)]]></Content>
+</Node>

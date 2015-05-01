@@ -1,0 +1,22 @@
+<UserControl x:Class="Plainion.GraphViz.GraphView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:Plainion.GraphViz.Visuals">
+    <Grid x:Name="Grid" >
+        <ScrollViewer x:Name="ScrollViewer"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+            <i:Interaction.Behaviors>
+                <pn:PanOnLMBBehavior/>
+            </i:Interaction.Behaviors>
+            
+            <local:GraphVisual x:Name="myGraphVisual" Margin="50">
+                <local:GraphVisual.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="myScaleTransform"/>
+                    </TransformGroup>
+                </local:GraphVisual.LayoutTransform>
+            </local:GraphVisual>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

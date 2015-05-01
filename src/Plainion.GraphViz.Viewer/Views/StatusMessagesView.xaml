@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Viewer.Views.StatusMessagesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="500" Width="600">
+    <Grid>
+        <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5"
+                  ItemsSource="{Binding Path=StatusMessageService.Messages}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Message}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>
