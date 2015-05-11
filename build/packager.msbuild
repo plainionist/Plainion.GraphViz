@@ -37,9 +37,20 @@
 
   <Target Name="Clean">
     <RemoveDir Directories="$(PackageRoot)"/>
+    <MakeDir Directories="$(PackageRoot)"/>
   </Target>
 
-  <Target Name="Build">
+  <Target Name="UpdatePackages">
+    <PropertyGroup>
+      <NuGet>/bin/NuGet.exe</NuGet>
+    </PropertyGroup>
+    
+    <Error Condition="!Exists('$(NuGet)')" Text="NuGet.exe not found at $(NuGet)" />
+    
+    <Exec Command="$(NuGet) restore $(Solution)" WorkingDirectory="$(PackageRoot)"/>
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="UpdatePackages">
     <MSBuild Projects="$(Solution)"
              Properties="Configuration=$(BuildMode);Platform=$(BuildPlatform);OutputPath=$(PackageRoot)"
              Targets="Rebuild"
