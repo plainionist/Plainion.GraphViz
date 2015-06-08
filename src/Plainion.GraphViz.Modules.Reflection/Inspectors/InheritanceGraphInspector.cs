@@ -39,8 +39,8 @@ namespace Plainion.GraphViz.Modules.Reflection.Inspectors
 
             ReportProgress( 1 );
 
-            var assemblies = Directory.GetFiles( assemblyHome, "*.dll" )
-                .Concat( Directory.GetFiles( assemblyHome, "*.exe" ) )
+            var assemblies = Directory.EnumerateFiles( assemblyHome, "*.dll" )
+                .Concat(Directory.EnumerateFiles(assemblyHome, "*.exe"))
                 .AsParallel()
                 .Where( file => File.Exists( file ) )
                 .Where( file => AssemblyUtils.IsManagedAssembly( file ) )
