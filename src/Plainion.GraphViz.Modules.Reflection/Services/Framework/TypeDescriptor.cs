@@ -9,7 +9,14 @@ namespace Plainion.GraphViz.Modules.Reflection.Services.Framework
 
         public TypeDescriptor( Type type )
         {
-            myHashCode = type.GetHashCode();
+            if (type.IsGenericType)
+            {
+                myHashCode = type.GetGenericTypeDefinition().GetHashCode();
+            }
+            else
+            {
+                myHashCode = type.GetHashCode();
+            }
 
             Id = myHashCode.ToString();
             Name = type.Name;

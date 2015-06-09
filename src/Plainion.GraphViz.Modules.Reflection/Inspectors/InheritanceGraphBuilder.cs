@@ -43,6 +43,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Inspectors
                 return;
             }
 
+            var name = type.Name;
             var typeDesc = new TypeDescriptor( type );
             myBuilder.TryAddNode( typeDesc.Id );
             myIdToTypeMap[ typeDesc.Id ] = typeDesc;
