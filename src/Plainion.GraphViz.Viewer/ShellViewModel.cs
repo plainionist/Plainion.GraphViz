@@ -11,10 +11,12 @@ using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Services;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System.IO;
+using System.Windows.Threading;
 
 namespace Plainion.GraphViz.Viewer
 {
-    [Export( typeof( ShellViewModel ) )]
+    [Export(typeof(ShellViewModel))]
     public class ShellViewModel : ViewModelBase
     {
         private IGraphPresentation myPresentation;
@@ -22,7 +24,7 @@ namespace Plainion.GraphViz.Viewer
         private ConfigurationService myConfigurationService;
 
         [ImportingConstructor]
-        public ShellViewModel( IStatusMessageService statusMessageService, ConfigurationService configService )
+        public ShellViewModel(IStatusMessageService statusMessageService, ConfigurationService configService)
         {
             myStatusMessageService = statusMessageService;
             myStatusMessageService.Messages.CollectionChanged += OnStatusMessagesChanged;
@@ -30,20 +32,32 @@ namespace Plainion.GraphViz.Viewer
             myConfigurationService = configService;
 
             NodeMasksEditorRequest = new InteractionRequest<INotification>();
-            OpenFilterEditor = new DelegateCommand( OnOpenFilterEditor );
+            OpenFilterEditor = new DelegateCommand(OnOpenFilterEditor);
 
             SettingsEditorRequest = new InteractionRequest<IConfirmation>();
-            OpenSettingsEditor = new DelegateCommand( OnOpenSettingsEditor );
+            OpenSettingsEditor = new DelegateCommand(OnOpenSettingsEditor);
 
             ShowStatusMessagesRequest = new InteractionRequest<INotification>();
-            ShowStatusMessagesCommand = new DelegateCommand( ShowStatusMessages );
+            ShowStatusMessagesCommand = new DelegateCommand(ShowStatusMessages);
 
             myConfigurationService.ConfigChanged += OnConfigChanged;
         }
 
-        void OnConfigChanged( object sender, EventArgs e )
+        void OnConfigChanged(object sender, EventArgs e)
         {
-            Model.LayoutEngine = new DotToolLayoutEngine( new DotToDotPlainConverter( myConfigurationService.Config.DotToolsHome ) );
+            if (Directory.Exists(myConfigurationService.Config.DotToolsHome))
+            {
+                Model.LayoutEngine = new DotToolLayoutEngine(new DotToDotPlainConverter(myConfigurationService.Config.DotToolsHome));
+            }
+            else
+            {
+                // http://stackoverflow.com/questions/13026826/execute-command-after-view-is-loaded-wpf-mvvm
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+                {
+                    // DotToolHome not set -> open settings editor
+                    OpenSettingsEditor.Execute(null);
+                }));
+            }
         }
 
         private void OnOpenSettingsEditor()
@@ -51,13 +65,13 @@ namespace Plainion.GraphViz.Viewer
             var notification = new Confirmation();
             notification.Title = "Settings";
 
-            SettingsEditorRequest.Raise( notification, c =>
+            SettingsEditorRequest.Raise(notification, c =>
                 {
-                    if( c.Confirmed )
+                    if (c.Confirmed && myPresentation != null)
                     {
                         myPresentation.InvalidateLayout();
                     }
-                } );
+                });
         }
 
         private void OnOpenFilterEditor()
@@ -65,7 +79,7 @@ namespace Plainion.GraphViz.Viewer
             var notification = new Notification();
             notification.Title = "Filters";
 
-            NodeMasksEditorRequest.Raise( notification, c => { } );
+            NodeMasksEditorRequest.Raise(notification, c => { });
         }
 
         public ICommand OpenFilterEditor
@@ -91,12 +105,12 @@ namespace Plainion.GraphViz.Viewer
             var notification = new Notification();
             notification.Title = "Status messages";
 
-            ShowStatusMessagesRequest.Raise( notification, n => { } );
+            ShowStatusMessagesRequest.Raise(notification, n => { });
         }
 
-        private void OnStatusMessagesChanged( object sender, NotifyCollectionChangedEventArgs e )
+        private void OnStatusMessagesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged( "StatusBarVisibility" );
+            OnPropertyChanged("StatusBarVisibility");
         }
 
         public bool IsEnabled
@@ -107,15 +121,15 @@ namespace Plainion.GraphViz.Viewer
             }
         }
 
-        protected override void OnModelPropertyChanged( string propertyName )
+        protected override void OnModelPropertyChanged(string propertyName)
         {
-            if( propertyName == "Model" )
+            if (propertyName == "Model")
             {
-                OnConfigChanged( this, EventArgs.Empty );
+                OnConfigChanged(this, EventArgs.Empty);
             }
-            else if( propertyName == "Presentation" )
+            else if (propertyName == "Presentation")
             {
-                if( myPresentation == Model.Presentation )
+                if (myPresentation == Model.Presentation)
                 {
                     return;
                 }
@@ -124,21 +138,21 @@ namespace Plainion.GraphViz.Viewer
 
                 myPresentation.GetModule<INodeMaskModule>().AutoHideAllNodesForShowMasks = true;
 
-                if( myPresentation.Graph.Nodes.Count() > 300 )
+                if (myPresentation.Graph.Nodes.Count() > 300)
                 {
                     var hideAllButOne = new NodeMask();
                     hideAllButOne.IsShowMask = true;
                     hideAllButOne.IsApplied = true;
                     hideAllButOne.Label = "Hide all but one node";
 
-                    hideAllButOne.Set( myPresentation.Graph.Nodes.Take( 1 ) );
+                    hideAllButOne.Set(myPresentation.Graph.Nodes.Take(1));
 
-                    myPresentation.GetModule<INodeMaskModule>().Push( hideAllButOne );
+                    myPresentation.GetModule<INodeMaskModule>().Push(hideAllButOne);
 
                     OnOpenFilterEditor();
                 }
 
-                OnPropertyChanged( "IsEnabled" );
+                OnPropertyChanged("IsEnabled");
             }
         }
 
