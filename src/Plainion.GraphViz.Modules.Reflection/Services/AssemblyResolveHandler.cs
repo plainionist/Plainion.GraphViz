@@ -18,6 +18,12 @@ namespace Plainion.GraphViz.Modules.Reflection.Services
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += OnReflectionOnlyAssemblyResolve;
         }
 
+        // http://blogs.microsoft.co.il/sasha/2008/07/19/appdomains-and-remoting-life-time-service/
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
         private Assembly OnAssemblyResolve( object sender, ResolveEventArgs args )
         {
             return AppDomain.CurrentDomain.GetAssemblies()
