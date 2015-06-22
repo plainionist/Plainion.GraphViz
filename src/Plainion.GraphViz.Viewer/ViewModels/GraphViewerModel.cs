@@ -11,33 +11,34 @@ using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
-    [Export( typeof( GraphViewerModel ) )]
+    [Export(typeof(GraphViewerModel))]
     public class GraphViewerModel : ViewModelBase
     {
         [ImportingConstructor]
-        public GraphViewerModel( IEventAggregator eventAggregator )
+        public GraphViewerModel(IEventAggregator eventAggregator)
         {
-            HideNodeCommand = new DelegateCommand<Node>( n => new HideSingleNode( Presentation ).Execute( n ) );
-            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>( n => new ShowNodeWithSiblings( Presentation ).Execute( n ) );
-            ShowNodeWithIncomingCommand = new DelegateCommand<Node>( n => new ShowNodeWithIncomings( Presentation ).Execute( n ) );
-            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>( n => new ShowNodeWithOutgoings( Presentation ).Execute( n ) );
+            HideNodeCommand = new DelegateCommand<Node>(n => new HideSingleNode(Presentation).Execute(n));
+            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowNodeWithSiblings(Presentation).Execute(n));
+            ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowNodeWithIncomings(Presentation).Execute(n));
+            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowNodeWithOutgoings(Presentation).Execute(n));
 
-            GoToEdgeSourceCommand = new DelegateCommand<Edge>( edge => Navigation.NavigateTo( edge.Source ) );
-            GoToEdgeTargetCommand = new DelegateCommand<Edge>( edge => Navigation.NavigateTo( edge.Target ) );
+            GoToEdgeSourceCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Source));
+            GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
 
-            InvalidateLayoutCommand = new DelegateCommand( OnInvalidateLayout, () => Presentation != null );
+            ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
+            InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
-            PrintGraphCommand = new DelegateCommand( OnPrintGrpah, () => Presentation != null );
+            PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
 
-            eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe( OnEventFocused );
+            eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe(OnEventFocused);
         }
 
-        private void OnEventFocused( Node node )
+        private void OnEventFocused(Node node)
         {
-            if( node != null )
+            if (node != null)
             {
-                Navigation.NavigateTo( node );
+                Navigation.NavigateTo(node);
 
                 //myGraphViewer.GraphVisual.Presentation.GetModuleFor<SelectionState>().Get( selectedNode.Id ).IsSelected = true;
             }
@@ -56,68 +57,34 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             var notification = new Confirmation();
             notification.Title = "Plainion.GraphViz.Viewer";
 
-            PrintGraphRequest.Raise( notification, c => { } );
+            PrintGraphRequest.Raise(notification, c => { });
         }
 
-        public IGraphViewNavigation Navigation
-        {
-            get;
-            set;
-        }
+        public IGraphViewNavigation Navigation { get; set; }
 
-        public DelegateCommand InvalidateLayoutCommand
-        {
-            get;
-            private set;
-        }
+        public DelegateCommand ShowCyclesCommand { get; private set; }
 
-        private void OnInvalidateLayout()
-        {
-            Presentation.InvalidateLayout();
-        }
+        public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
-        public ICommand HideNodeCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand HideNodeCommand { get; private set; }
 
-        public ICommand ShowNodeWithSiblingsCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand ShowNodeWithSiblingsCommand { get; private set; }
 
-        public ICommand ShowNodeWithIncomingCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand ShowNodeWithIncomingCommand { get; private set; }
 
-        public ICommand ShowNodeWithOutgoingCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand ShowNodeWithOutgoingCommand { get; private set; }
 
-        public ICommand GoToEdgeSourceCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand GoToEdgeSourceCommand { get; private set; }
 
-        public ICommand GoToEdgeTargetCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand GoToEdgeTargetCommand { get; private set; }
 
-        protected override void OnModelPropertyChanged( string propertyName )
+        protected override void OnModelPropertyChanged(string propertyName)
         {
-            OnPropertyChanged( propertyName );
+            OnPropertyChanged(propertyName);
 
-            if( propertyName == "Presentation" )
+            if (propertyName == "Presentation")
             {
+                ShowCyclesCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
             }

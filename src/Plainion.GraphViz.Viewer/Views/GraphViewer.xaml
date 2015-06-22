@@ -32,6 +32,8 @@
                 <MenuItem Header="Go to target" Command="{Binding GoToEdgeTargetCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
             </ContextMenu>
             <ContextMenu x:Key="Default">
+                <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
+                <Separator/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>
         </r:GraphView.ContextMenus>

@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\HideSingleNode.cs" />
+    <Compile Include="Algorithms\ShowCycles.cs" />
     <Compile Include="Algorithms\ShowNodeWithIncomings.cs" />
     <Compile Include="Algorithms\ShowNodeWithOutgoings.cs" />
     <Compile Include="Algorithms\ShowNodeWithSiblings.cs" />
