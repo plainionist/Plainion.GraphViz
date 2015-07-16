@@ -18,33 +18,30 @@ namespace Plainion.GraphViz.Viewer.Configuration
         public Config()
         {
             LabelConversion = new List<ILabelConversionStep>();
+            NodeIdAsDefaultToolTip = true;
         }
 
         public string DotToolsHome
         {
             get { return myDotToolsHome; }
-            set { myDotToolsHome = value == null ? null : Path.GetFullPath( value ); }
+            set { myDotToolsHome = value == null ? null : Path.GetFullPath(value); }
         }
 
-        public bool NodeIdAsDefaultToolTip
-        {
-            get;
-            set;
-        }
+        public bool NodeIdAsDefaultToolTip { get; set; }
 
-        [DesignerSerializationVisibility( DesignerSerializationVisibility.Content )]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<ILabelConversionStep> LabelConversion
         {
             get;
             private set;
         }
 
-        internal static Config Load( string dataRoot )
+        internal static Config Load(string dataRoot)
         {
-            var configFile = Path.Combine( dataRoot, Filename );
-            if( File.Exists( configFile ) )
+            var configFile = Path.Combine(dataRoot, Filename);
+            if (File.Exists(configFile))
             {
-                return Deserialize( dataRoot, configFile );
+                return Deserialize(dataRoot, configFile);
             }
 
             {
@@ -54,28 +51,28 @@ namespace Plainion.GraphViz.Viewer.Configuration
             }
         }
 
-        private static Config Deserialize( string configFolder, string configFile )
+        private static Config Deserialize(string configFolder, string configFile)
         {
-            var config = ( Config )XamlReader.Load( XmlReader.Create( configFile ) );
+            var config = (Config)XamlReader.Load(XmlReader.Create(configFile));
             config.myConfigFolder = configFolder;
             return config;
         }
 
         internal static Config LoadDefaults()
         {
-            var binFolder = Path.GetDirectoryName( typeof( Config ).Assembly.Location );
-            var configFile = Path.Combine( binFolder, Filename );
-            if( File.Exists( configFile ) )
+            var binFolder = Path.GetDirectoryName(typeof(Config).Assembly.Location);
+            var configFile = Path.Combine(binFolder, Filename);
+            if (File.Exists(configFile))
             {
-                return Deserialize( binFolder, configFile );
+                return Deserialize(binFolder, configFile);
             }
 
-            throw new InvalidOperationException( "Could not find config file" );
+            throw new InvalidOperationException("Could not find config file");
         }
 
         internal void Save()
         {
-            XamlWriter.Save( this, XmlWriter.Create( Path.Combine( myConfigFolder, Filename ) ) );
+            XamlWriter.Save(this, XmlWriter.Create(Path.Combine(myConfigFolder, Filename)));
         }
     }
 }
