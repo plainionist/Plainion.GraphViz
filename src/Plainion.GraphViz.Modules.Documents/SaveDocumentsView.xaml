@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.Documents.SaveDocumentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:prism="http://www.codeplex.com/prism"
+             xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
+             xmlns:pn="http://github.com/ronin4net/plainion"
+             mc:Ignorable="d" Focusable="True">
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Control" Key="S" Command="{Binding SaveDocumentCommand}"/>
+    </UserControl.InputBindings>
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest, Mode=OneWay}">
+            <pn:PopupFileDialogAction FileDialogType="{x:Type win32:SaveFileDialog}"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    <i:Interaction.Behaviors>
+        <pn:PropagateInputBindingsToWindowBehavior/>
+    </i:Interaction.Behaviors>
+    <Button Command="{Binding SaveDocumentCommand}" Padding="1" Margin="2">
+        <Button.Content>
+            <Image Source="/Plainion.GraphViz.Modules.Documents;Component/Resources/Save.png" Width="16" ToolTip="Save"/>
+        </Button.Content>
+    </Button>
+</UserControl>

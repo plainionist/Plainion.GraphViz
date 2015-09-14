@@ -14,7 +14,8 @@ namespace Plainion.GraphViz.Modules.Documents
 
         public void Initialize()
         {
-            RegionManager.RegisterViewWithRegion( Infrastructure.RegionNames.OpenDocuments, typeof( OpenDocumentsView ) );
+            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.OpenDocuments, typeof(OpenDocumentsView));
+            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.SaveDocuments, typeof(SaveDocumentsView));
         }
     }
 }

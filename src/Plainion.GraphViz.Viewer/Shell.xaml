@@ -28,6 +28,8 @@
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Margin ="6">
             <StackPanel Orientation="Horizontal">
                 <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.OpenDocuments}"/>
+
+                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.SaveDocuments}"/>
                 
                 <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.PrintGraphCommand}" Padding="1" Margin="2">
                     <Image Source="/Resources/Print.png" Width="16" ToolTip="Print"/>

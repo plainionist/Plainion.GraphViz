@@ -79,6 +79,7 @@
     <Compile Include="AbstractGraphDocument.cs" />
     <Compile Include="BasicDocumentProcessor.cs" />
     <Compile Include="DgmlDocument.cs" />
+    <Compile Include="DgmlExporter.cs" />
     <Compile Include="DotLangDocument.cs" />
     <Compile Include="DotLangPureDocument.cs" />
     <Compile Include="DotPlainDocument.cs" />
@@ -88,6 +89,10 @@
     <Compile Include="IGraphDocument.cs" />
     <Compile Include="ILayoutDocument.cs" />
     <Compile Include="IStyleDocument.cs" />
+    <Compile Include="SaveDocumentsView.xaml.cs">
+      <DependentUpon>SaveDocumentsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SaveDocumentsViewModel.cs" />
     <Compile Include="OpenDocumentsViewModel.cs" />
     <Compile Include="OpenDocumentsView.xaml.cs">
       <DependentUpon>OpenDocumentsView.xaml</DependentUpon>
@@ -110,6 +115,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="SaveDocumentsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="OpenDocumentsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -121,6 +130,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Save.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
