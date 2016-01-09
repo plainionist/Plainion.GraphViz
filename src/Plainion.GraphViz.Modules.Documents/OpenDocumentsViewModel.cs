@@ -7,12 +7,17 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Interactivity.InteractionRequest;
+using Microsoft.Practices.Prism.Mvvm;
+using System.Windows;
+using System;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
     [Export( typeof( OpenDocumentsViewModel ) )]
     public class OpenDocumentsViewModel : ViewModelBase
     {
+        private FileSystemWatcher myFileWatcher;
+
         [Import]
         internal IPresentationCreationService PresentationCreationService { get; set; }
 
@@ -28,7 +33,7 @@ namespace Plainion.GraphViz.Modules.Documents
         public DelegateCommand OpenDocumentCommand { get; private set; }
 
         public InteractionRequest<OpenFileDialogNotification> OpenFileRequest { get; private set; }
-        
+
         private void OpenDocument()
         {
             var notification = new OpenFileDialogNotification();
@@ -57,12 +62,12 @@ namespace Plainion.GraphViz.Modules.Documents
 
             processor.Process( path );
 
-            if ( processor.FailedItems.Any() )
+            if( processor.FailedItems.Any() )
             {
                 var sb = new StringBuilder();
                 sb.AppendLine( "Following items could not be loaded successfully:" );
                 sb.AppendLine();
-                foreach ( var item in processor.FailedItems )
+                foreach( var item in processor.FailedItems )
                 {
                     sb.AppendLine( string.Format( "{0}: {1}", item.FailureReason, item.Item ) );
                 }
@@ -70,10 +75,36 @@ namespace Plainion.GraphViz.Modules.Documents
             }
 
             Model.Presentation = presentation;
+
+            if( myFileWatcher != null )
+            {
+                myFileWatcher.Dispose();
+                myFileWatcher = null;
+            }
+
+            myFileWatcher = new FileSystemWatcher();
+            myFileWatcher.Path = Path.GetDirectoryName( path );
+            myFileWatcher.Filter = Path.GetFileName( path );
+            myFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            myFileWatcher.Changed += OnCurrentFileChanged;
+            myFileWatcher.EnableRaisingEvents = true;
+        }
+
+        private void OnCurrentFileChanged( object sender, FileSystemEventArgs e )
+        {
+            Application.Current.Dispatcher.BeginInvoke( new Action( () => Open( e.FullPath ) ) );
         }
 
         protected override void OnModelPropertyChanged( string propertyName )
         {
+            if( propertyName == PropertySupport.ExtractPropertyName( () => Model.Presentation ) )
+            {
+                if( myFileWatcher != null )
+                {
+                    myFileWatcher.Dispose();
+                    myFileWatcher = null;
+                }
+            }
         }
     }
 }
