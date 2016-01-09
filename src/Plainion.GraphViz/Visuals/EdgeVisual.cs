@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
@@ -7,7 +9,14 @@ namespace Plainion.GraphViz.Visuals
 {
     internal class EdgeVisual : AbstractElementVisual
     {
+        private static Typeface myFont;
+
         private IGraphPresentation myPresentation;
+
+        static EdgeVisual()
+        {
+            myFont = new Typeface( "Verdana" );
+        }
 
         public EdgeVisual( Edge owner, IGraphPresentation presentation )
         {
@@ -24,6 +33,7 @@ namespace Plainion.GraphViz.Visuals
         public void Draw( EdgeLayout layoutState )
         {
             var styleState = myPresentation.GetPropertySetFor<EdgeStyle>().Get( Owner.Id );
+            var label = myPresentation.GetPropertySetFor<Caption>().Get( Owner.Id );
 
             var stream = new StreamGeometry();
             var context = stream.Open();
@@ -50,6 +60,20 @@ namespace Plainion.GraphViz.Visuals
             Visual = new DrawingVisual();
             var dc = Visual.RenderOpen();
             dc.DrawGeometry( pen.Brush, pen, stream );
+
+            if( label.DisplayText != label.OwnerId )
+            {
+                var sourceLayoutState = myPresentation.GetModule<IGraphLayoutModule>().GetLayout( Owner.Source );
+                
+                var tx = new FormattedText( label.DisplayText,
+                    CultureInfo.InvariantCulture,
+                    FlowDirection.LeftToRight,
+                    myFont,
+                    sourceLayoutState.Height * 0.5, Brushes.Black );
+
+                dc.DrawText( tx, new Point( layoutState.LabelPosition.X - tx.Width, layoutState.LabelPosition.Y - tx.Height ) );
+            }
+
             dc.Close();
 
             Visual.SetValue( GraphItemProperty, Owner );

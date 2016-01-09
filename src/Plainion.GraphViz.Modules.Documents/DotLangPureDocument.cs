@@ -31,7 +31,12 @@ namespace Plainion.GraphViz.Modules.Documents
                         continue;
                     }
 
-                    if( line.Split( '=' ).Length > 1 )
+                    if( line.TrimStart().StartsWith( "/*" ) )
+                    {
+                        continue;
+                    }
+
+                    if( line.Split( '=' ).Length > 1 && !line.Contains( "[" ) )
                     {
                         // skip attributes
                         continue;
@@ -43,7 +48,8 @@ namespace Plainion.GraphViz.Modules.Documents
                     }
                     else
                     {
-                        var tokens = line.Split( new[] { "->" }, StringSplitOptions.RemoveEmptyEntries );
+                        // ignore labels
+                        var tokens = line.Split( '[' )[ 0 ].Split( new[] { "->" }, StringSplitOptions.RemoveEmptyEntries );
                         var source = tokens[ 0 ].Trim( ' ', '"' );
                         var target = tokens[ 1 ].Trim( ' ', '"' );
                         TryAddEdge( source, target );

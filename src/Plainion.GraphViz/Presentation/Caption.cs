@@ -1,4 +1,5 @@
 ﻿
+using System.Windows;
 namespace Plainion.GraphViz.Presentation
 {
     public class Caption : AbstractPropertySet

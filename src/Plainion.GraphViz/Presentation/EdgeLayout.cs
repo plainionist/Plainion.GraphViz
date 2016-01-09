@@ -7,6 +7,7 @@ namespace Plainion.GraphViz.Presentation
     public class EdgeLayout : AbstractPropertySet
     {
         private IEnumerable<Point> myPoints;
+        private Point myLabelPosition;
 
         public EdgeLayout( string ownerId )
             : base( ownerId )
@@ -18,6 +19,12 @@ namespace Plainion.GraphViz.Presentation
         {
             get { return myPoints; }
             set { SetProperty( ref myPoints, value != null ? value.ToList() : Enumerable.Empty<Point>(), "Points" ); }
+        }
+
+        public Point LabelPosition
+        {
+            get { return myLabelPosition; }
+            set { SetProperty( ref myLabelPosition, value, "LabelPosition" ); }
         }
     }
 }

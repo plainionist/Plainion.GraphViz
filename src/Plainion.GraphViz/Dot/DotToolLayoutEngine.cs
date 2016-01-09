@@ -31,7 +31,7 @@ namespace Plainion.GraphViz.Dot
             var nodeLayouts = new List<NodeLayout>();
             var edgeLayouts = new List<EdgeLayout>();
 
-            ParsePlainFile( nodeLayouts, edgeLayouts );
+            ParsePlainFile( nodeLayouts, edgeLayouts, presentation.GetPropertySetFor<Caption>() );
 
             var module = presentation.GetModule<IGraphLayoutModule>();
             module.Set( nodeLayouts, edgeLayouts );
@@ -58,14 +58,18 @@ namespace Plainion.GraphViz.Dot
 
                 foreach( var edge in presentation.Graph.Edges.Where( e => presentation.Picking.Pick( e ) ) )
                 {
-                    writer.WriteLine( "  \"{0}\" -> \"{1}\"", edge.Source.Id, edge.Target.Id );
+                    // pass label to trigger dot.exe to create position of the label
+                    var label = labelModule.Get( edge.Id );
+
+                    // always pass label otherwise parser will fail :(
+                    writer.WriteLine( "  \"{0}\" -> \"{1}\" [label=\"{2}\"]", edge.Source.Id, edge.Target.Id, label.DisplayText != label.OwnerId ? label.DisplayText : "." );
                 }
 
                 writer.WriteLine( "}" );
             }
         }
 
-        private void ParsePlainFile( List<NodeLayout> nodeLayouts, List<EdgeLayout> edgeLayouts )
+        private void ParsePlainFile( List<NodeLayout> nodeLayouts, List<EdgeLayout> edgeLayouts, IPropertySetModule<Caption> captionModule )
         {
             using( var reader = new DotPlainReader( new StreamReader( myPlainFile.FullName ) ) )
             {
@@ -86,7 +90,11 @@ namespace Plainion.GraphViz.Dot
                     var sourceNodeId = parser.ReadId();
                     var targetNodeId = parser.ReadId();
 
-                    var layout = parser.ReadEdgeLayout( Edge.CreateId( sourceNodeId, targetNodeId ) );
+                    var edgeId = Edge.CreateId( sourceNodeId, targetNodeId );
+
+                    var layout = parser.ReadEdgeLayout( edgeId );
+                    var label = parser.ReadLabel( edgeId );
+                    layout.LabelPosition = parser.ReadPoint();
                     edgeLayouts.Add( layout );
                 }
             }

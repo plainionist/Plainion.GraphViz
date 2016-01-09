@@ -22,7 +22,7 @@ namespace Plainion.GraphViz.Dot
             get;
             private set;
         }
-        
+
         public void Open()
         {
             if( MoveNextEntry( "graph" ) )
