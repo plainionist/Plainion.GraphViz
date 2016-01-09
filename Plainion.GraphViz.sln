@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz", "src\Plainion.GraphViz\Plainion.GraphViz.csproj", "{8CC5C764-ACE2-4AF2-BCA1-F78753E709AA}"
 EndProject
@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build\create-package.cmd = build\create-package.cmd
 		build\GlobalAssemblyInfo.cs = build\GlobalAssemblyInfo.cs
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.Editor", "src\Plainion.GraphViz.Modules.Editor\Plainion.GraphViz.Modules.Editor.csproj", "{A8762C71-C29A-4EE0-8537-396289538CFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{0F4FA89D-B2F4-40F5-BB4A-21C4BDB98C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F4FA89D-B2F4-40F5-BB4A-21C4BDB98C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F4FA89D-B2F4-40F5-BB4A-21C4BDB98C8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8762C71-C29A-4EE0-8537-396289538CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8762C71-C29A-4EE0-8537-396289538CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8762C71-C29A-4EE0-8537-396289538CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8762C71-C29A-4EE0-8537-396289538CFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
