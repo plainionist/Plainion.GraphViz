@@ -54,30 +54,25 @@ namespace Plainion.GraphViz.Modules.Documents
                     while( token.TokenType != TokenType.CommentEnd )
                     {
                         i++;
+                        token = tokens[ i ];
                     }
                     continue;
                 }
 
                 if( token.TokenType == TokenType.SingleLineComment )
                 {
-                    while( token.TokenType != TokenType.WhiteSpace && token.TokenValue.EndsWith( @"\n" ) )
-                    {
-                        i++;
-                    }
+                    ReadToEndOfLine( tokens, ref i, token );
                     continue;
                 }
 
                 if( i + 1 < tokens.Count && tokens[ i + 1 ].TokenType == TokenType.Assignment )
                 {
-                    while( token.TokenType != TokenType.WhiteSpace && token.TokenValue.EndsWith( @"\n" ) )
-                    {
-                        i++;
-                    }
+                    ReadToEndOfLine( tokens, ref i, token );
                     continue;
                 }
 
                 if( i + 1 < tokens.Count
-                    && ( tokens[ i + 1 ].TokenType == TokenType.SemiColon || ( tokens[ i + 1 ].TokenType == TokenType.WhiteSpace && tokens[ i + 1 ].TokenValue.Contains( "\n" ) ) ) )
+                    && ( tokens[ i + 1 ].TokenType == TokenType.SemiColon || tokens[ i + 1 ].TokenType == TokenType.NewLine ) )
                 {
                     TryAddNode( token.TokenValue );
                     continue;
@@ -89,6 +84,15 @@ namespace Plainion.GraphViz.Modules.Documents
                     i += 2;
                     continue;
                 }
+            }
+        }
+
+        private static void ReadToEndOfLine( List<Token> tokens, ref int i, Token token )
+        {
+            while( token.TokenType != TokenType.NewLine )
+            {
+                i++;
+                token = tokens[ i ];
             }
         }
 
@@ -112,7 +116,10 @@ namespace Plainion.GraphViz.Modules.Documents
 
                 while( current != null && current.TokenType != TokenType.EndOfStream )
                 {
-                    yield return current;
+                    if( current.TokenType != TokenType.WhiteSpace )
+                    {
+                        yield return current;
+                    }
 
                     current = Next();
                 }
@@ -144,7 +151,7 @@ namespace Plainion.GraphViz.Modules.Documents
                                         new MatchKeyword(TokenType.SemiColon, ";"),
                                         new MatchKeyword(TokenType.CommentBegin, "/*"),
                                         new MatchKeyword(TokenType.CommentEnd, "*/"),
-                                        new MatchKeyword(TokenType.CommentEnd, "//"),
+                                        new MatchKeyword(TokenType.SingleLineComment, "//"),
                                     };
 
                 // give each keyword the list of possible delimiters and not allow them to be 
@@ -160,6 +167,7 @@ namespace Plainion.GraphViz.Modules.Documents
                 matchers.Add( new MatchString( MatchString.QUOTE ) );
                 matchers.AddRange( specialCharacters );
                 matchers.AddRange( keywordmatchers );
+                matchers.Add( new MatchNewLine() );
                 matchers.Add( new MatchWhiteSpace() );
                 matchers.Add( new MatchNumber() );
                 matchers.Add( new MatchWord( specialCharacters ) );
@@ -310,7 +318,8 @@ namespace Plainion.GraphViz.Modules.Documents
             AttributeBegin,
             AttributeEnd,
             Number,
-            SingleLineComment
+            SingleLineComment,
+            NewLine
         }
 
         public interface IMatcher
@@ -413,6 +422,28 @@ namespace Plainion.GraphViz.Modules.Documents
                 if( str.Length > 0 )
                 {
                     return new Token( TokenType.QuotedString, str.ToString() );
+                }
+
+                return null;
+            }
+        }
+
+        class MatchNewLine : MatcherBase
+        {
+            protected override Token IsMatchImpl( Tokenizer tokenizer )
+            {
+                var str = new StringBuilder();
+
+                while( !tokenizer.EndOfStream() && ( tokenizer.Current == "\r" || tokenizer.Current == "\n" ) )
+                {
+                    str.Append( tokenizer.Current );
+
+                    tokenizer.Consume();
+                }
+
+                if( str.ToString() == Environment.NewLine )
+                {
+                    return new Token( TokenType.NewLine );
                 }
 
                 return null;
