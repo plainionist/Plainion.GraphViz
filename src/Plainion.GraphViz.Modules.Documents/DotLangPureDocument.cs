@@ -5,13 +5,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
     // http://www.graphviz.org/doc/info/lang.html
     // inspired by: https://github.com/devshorts/LanguageCreator
-    public class DotLangPureDocument : AbstractGraphDocument
+    public class DotLangPureDocument : AbstractGraphDocument, ICaptionDocument
     {
+        private List<Caption> myCaptions;
+
+        public IEnumerable<Caption> Captions
+        {
+            get { return myCaptions; }
+        }
+
         protected override void Load()
         {
             using( var reader = new StreamReader( Filename ) )
@@ -20,79 +28,162 @@ namespace Plainion.GraphViz.Modules.Documents
             }
         }
 
-        internal void Read( TextReader reader )
+        protected internal void Add( Caption caption )
         {
-            var lexer = new Lexer( reader.ReadToEnd() );
-
-            var tokens = lexer.Lex().ToList();
-            for( int i = 0; i < tokens.Count; ++i )
-            {
-                var token = tokens[ i ];
-
-                if( token.TokenType == TokenType.WhiteSpace )
-                {
-                    continue;
-                }
-
-                if( token.TokenType == TokenType.Graph || token.TokenType == TokenType.Strict || token.TokenType == TokenType.DirectedGraph )
-                {
-                    continue;
-                }
-
-                if( token.TokenType == TokenType.Node || token.TokenType == TokenType.Edge )
-                {
-                    continue;
-                }
-
-                if( token.TokenType == TokenType.GraphBegin || token.TokenType == TokenType.GraphEnd )
-                {
-                    continue;
-                }
-
-                if( token.TokenType == TokenType.CommentBegin )
-                {
-                    while( token.TokenType != TokenType.CommentEnd )
-                    {
-                        i++;
-                        token = tokens[ i ];
-                    }
-                    continue;
-                }
-
-                if( token.TokenType == TokenType.SingleLineComment )
-                {
-                    ReadToEndOfLine( tokens, ref i, token );
-                    continue;
-                }
-
-                if( i + 1 < tokens.Count && tokens[ i + 1 ].TokenType == TokenType.Assignment )
-                {
-                    ReadToEndOfLine( tokens, ref i, token );
-                    continue;
-                }
-
-                if( i + 1 < tokens.Count
-                    && ( tokens[ i + 1 ].TokenType == TokenType.SemiColon || tokens[ i + 1 ].TokenType == TokenType.NewLine ) )
-                {
-                    TryAddNode( token.TokenValue );
-                    continue;
-                }
-
-                if( i + 2 < tokens.Count && tokens[ i + 1 ].TokenType == TokenType.EdgeDef )
-                {
-                    TryAddEdge( token.TokenValue, tokens[ i + 2 ].TokenValue );
-                    i += 2;
-                    continue;
-                }
-            }
+            myCaptions.Add( caption );
         }
 
-        private static void ReadToEndOfLine( List<Token> tokens, ref int i, Token token )
+        internal void Read( TextReader reader )
         {
-            while( token.TokenType != TokenType.NewLine )
+            myCaptions = new List<Caption>();
+            
+            var lexer = new Lexer( reader.ReadToEnd() );
+            var parser = new Parser( lexer, this );
+            parser.Parse();
+        }
+
+        private class Parser
+        {
+            private Iterator myIterator;
+            private DotLangPureDocument myDocument;
+
+            public Parser( Lexer lexer, DotLangPureDocument document )
             {
-                i++;
-                token = tokens[ i ];
+                myIterator = new Iterator( lexer );
+                myDocument = document;
+            }
+
+            private class Iterator
+            {
+                private Lexer myLexer;
+                private IList<Token> myTokens;
+                private int myCurrent;
+
+                public Iterator( Lexer lexer )
+                {
+                    myLexer = lexer;
+                    myTokens = myLexer.Lex().ToList();
+                    myCurrent = -1;
+                }
+
+                public Token Current
+                {
+                    get { return myTokens[ myCurrent ]; }
+                }
+
+                public Token Next
+                {
+                    get { return myCurrent + 1 < myTokens.Count ? myTokens[ myCurrent + 1 ] : null; }
+                }
+
+                public bool IsNext( TokenType tokenType )
+                {
+                    return Next != null && Next.Type == tokenType;
+                }
+
+                public bool MoveNext()
+                {
+                    myCurrent++;
+                    return myCurrent < myTokens.Count;
+                }
+            }
+
+            public void Parse()
+            {
+                while( myIterator.MoveNext() )
+                {
+                    if( myIterator.Current.Type == TokenType.Graph || myIterator.Current.Type == TokenType.Strict || myIterator.Current.Type == TokenType.DirectedGraph )
+                    {
+                        continue;
+                    }
+
+                    if( myIterator.Current.Type == TokenType.Node || myIterator.Current.Type == TokenType.Edge )
+                    {
+                        continue;
+                    }
+
+                    if( myIterator.Current.Type == TokenType.GraphBegin || myIterator.Current.Type == TokenType.GraphEnd )
+                    {
+                        continue;
+                    }
+
+                    if( myIterator.Current.Type == TokenType.CommentBegin )
+                    {
+                        while( myIterator.Current.Type != TokenType.CommentEnd && myIterator.MoveNext() ) ;
+                        continue;
+                    }
+
+                    if( myIterator.Current.Type == TokenType.SingleLineComment )
+                    {
+                        while( myIterator.Current.Type != TokenType.NewLine && myIterator.MoveNext() ) ;
+                        continue;
+                    }
+
+                    if( myIterator.IsNext( TokenType.Assignment ) )
+                    {
+                        // end of statement
+                        while( !( myIterator.Current.Type == TokenType.NewLine || myIterator.Current.Type == TokenType.SemiColon )
+                            && myIterator.MoveNext() ) ;
+                        continue;
+                    }
+
+                    if( IsNodeDefinition() )
+                    {
+                        var node = myDocument.TryAddNode( myIterator.Current.Value );
+
+                        TryReadAttributes( node.Id );
+                        continue;
+                    }
+
+                    if( myIterator.IsNext( TokenType.EdgeDef ) )
+                    {
+                        var source = myIterator.Current;
+                        myIterator.MoveNext();
+                        myIterator.MoveNext();
+                        var target = myIterator.Current;
+                        var edge = myDocument.TryAddEdge( source.Value, target.Value );
+
+                        TryReadAttributes( edge.Id );
+                        
+                        continue;
+                    }
+                }
+            }
+
+            private void TryReadAttributes( string ownerId )
+            {
+                if( !myIterator.IsNext( TokenType.AttributeBegin ) )
+                {
+                    return;
+                }
+
+                myIterator.MoveNext();
+                
+                while( myIterator.Current.Type != TokenType.AttributeEnd )
+                {
+                    myIterator.MoveNext();
+                    var key = myIterator.Current.Value;
+
+                    // assignment
+                    myIterator.MoveNext();
+                    
+                    myIterator.MoveNext();
+                    var value = myIterator.Current.Value;
+
+                    if( key.Equals( "label", StringComparison.OrdinalIgnoreCase ) )
+                    {
+                        myDocument.Add( new Caption( ownerId, value ) );
+                    }
+
+                    // either colon or end
+                    myIterator.MoveNext();
+                }
+            }
+
+            private bool IsNodeDefinition()
+            {
+                return ( myIterator.Current.Type == TokenType.Word || myIterator.Current.Type == TokenType.QuotedString )
+                    && ( !myIterator.IsNext( TokenType.EdgeDef ) );
             }
         }
 
@@ -103,20 +194,19 @@ namespace Plainion.GraphViz.Modules.Documents
             private Tokenizer myTokenizer;
             private List<IMatcher> myMatchers;
 
-            public Lexer( String source )
+            public Lexer( string source )
             {
                 myTokenizer = new Tokenizer( source );
+                myMatchers = InitializeMatchList();
             }
 
             public IEnumerable<Token> Lex()
             {
-                myMatchers = InitializeMatchList();
-
                 var current = Next();
 
-                while( current != null && current.TokenType != TokenType.EndOfStream )
+                while( current != null && current.Type != TokenType.EndOfStream )
                 {
-                    if( current.TokenType != TokenType.WhiteSpace )
+                    if( current.Type != TokenType.WhiteSpace )
                     {
                         yield return current;
                     }
@@ -273,25 +363,25 @@ namespace Plainion.GraphViz.Modules.Documents
 
         public class Token
         {
-            public TokenType TokenType { get; private set; }
+            public TokenType Type { get; private set; }
 
-            public string TokenValue { get; private set; }
+            public string Value { get; private set; }
 
             public Token( TokenType tokenType, string token )
             {
-                TokenType = tokenType;
-                TokenValue = token;
+                Type = tokenType;
+                Value = token;
             }
 
             public Token( TokenType tokenType )
             {
-                TokenValue = null;
-                TokenType = tokenType;
+                Value = null;
+                Type = tokenType;
             }
 
             public override string ToString()
             {
-                return TokenType + ": " + TokenValue;
+                return Type + ": " + Value;
             }
         }
 

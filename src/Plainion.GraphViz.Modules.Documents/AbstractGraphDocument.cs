@@ -36,7 +36,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
         protected abstract void Load();
 
-        protected Node TryAddNode( string nodeId )
+        protected internal Node TryAddNode( string nodeId )
         {
             var node = myGraphBuilder.TryAddNode( nodeId );
             if( node == null )
@@ -48,7 +48,7 @@ namespace Plainion.GraphViz.Modules.Documents
             return node;
         }
 
-        protected Edge TryAddEdge( string sourceNodeId, string targetNodeId )
+        protected internal Edge TryAddEdge( string sourceNodeId, string targetNodeId )
         {
             var edge = myGraphBuilder.TryAddEdge( sourceNodeId, targetNodeId );
 
