@@ -7,9 +7,9 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
     class MatchKeyword : MatcherBase
     {
-        public string Match { get; set; }
+        private TokenType myTokenType;
 
-        private TokenType TokenType { get; set; }
+        public string Match { get; private set; }
 
         /// <summary>
         /// If true then matching on { in a string like "{test" will match the first cahracter
@@ -19,10 +19,10 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
         public List<MatchKeyword> SpecialCharacters { get; set; }
 
-        public MatchKeyword( TokenType type, String match )
+        public MatchKeyword( TokenType type, string match )
         {
             Match = match;
-            TokenType = type;
+            myTokenType = type;
             AllowAsSubString = true;
         }
 
@@ -46,7 +46,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             {
                 var next = tokenizer.Current;
 
-                found = String.IsNullOrWhiteSpace( next ) || SpecialCharacters.Any( character => character.Match == next );
+                found = string.IsNullOrWhiteSpace( next ) || SpecialCharacters.Any( character => character.Match == next );
             }
             else
             {
@@ -55,7 +55,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
             if( found )
             {
-                return new Token( TokenType, Match );
+                return new Token( myTokenType, Match );
             }
 
             return null;

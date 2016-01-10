@@ -5,9 +5,10 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
     class MatchNumber : MatcherBase
     {
+        private static Regex myRegex = new Regex( "[0-9]" );
+
         protected override Token IsMatchImpl( Tokenizer tokenizer )
         {
-
             var leftOperand = GetIntegers( tokenizer );
 
             if( leftOperand != null )
@@ -33,11 +34,9 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
         private String GetIntegers( Tokenizer tokenizer )
         {
-            var regex = new Regex( "[0-9]" );
+            string num = null;
 
-            String num = null;
-
-            while( tokenizer.Current != null && regex.IsMatch( tokenizer.Current ) )
+            while( tokenizer.Current != null && myRegex.IsMatch( tokenizer.Current ) )
             {
                 num += tokenizer.Current;
                 tokenizer.Consume();
@@ -49,7 +48,6 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             }
 
             return null;
-
         }
     }
 }

@@ -6,17 +6,18 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
     class MatchWord : MatcherBase
     {
-        private List<MatchKeyword> SpecialCharacters { get; set; }
-        public MatchWord( IEnumerable<IMatcher> keywordMatchers )
+        private List<MatchKeyword> mySpecialCharacters;
+
+        public MatchWord( IEnumerable<IMatcher> specialCharacters )
         {
-            SpecialCharacters = keywordMatchers.Select( i => i as MatchKeyword ).Where( i => i != null ).ToList();
+            mySpecialCharacters = specialCharacters.Select( i => i as MatchKeyword ).Where( i => i != null ).ToList();
         }
 
         protected override Token IsMatchImpl( Tokenizer tokenizer )
         {
             String current = null;
 
-            while( !tokenizer.EndOfStream() && !String.IsNullOrWhiteSpace( tokenizer.Current ) && SpecialCharacters.All( m => m.Match != tokenizer.Current ) )
+            while( !tokenizer.EndOfStream() && !String.IsNullOrWhiteSpace( tokenizer.Current ) && mySpecialCharacters.All( m => m.Match != tokenizer.Current ) )
             {
                 current += tokenizer.Current;
                 tokenizer.Consume();
@@ -28,7 +29,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             }
 
             // can't start a word with a special character
-            if( SpecialCharacters.Any( c => current.StartsWith( c.Match ) ) )
+            if( mySpecialCharacters.Any( c => current.StartsWith( c.Match ) ) )
             {
                 throw new Exception( String.Format( "Cannot start a word with a special character {0}", current ) );
             }

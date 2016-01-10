@@ -3,9 +3,10 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
     public class Token
     {
-        public TokenType Type { get; private set; }
-
-        public string Value { get; private set; }
+        public Token( TokenType tokenType )
+            : this( tokenType, null )
+        {
+        }
 
         public Token( TokenType tokenType, string token )
         {
@@ -13,11 +14,9 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             Value = token;
         }
 
-        public Token( TokenType tokenType )
-        {
-            Value = null;
-            Type = tokenType;
-        }
+        public TokenType Type { get; private set; }
+
+        public string Value { get; private set; }
 
         public override string ToString()
         {

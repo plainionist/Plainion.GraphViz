@@ -83,6 +83,7 @@
     <Compile Include="DotLangDocument.cs" />
     <Compile Include="DotLangPureDocument.cs" />
     <Compile Include="DotLang\IMatcher.cs" />
+    <Compile Include="DotLang\Iterator.cs" />
     <Compile Include="DotLang\Lexer.cs" />
     <Compile Include="DotLang\MatcherBase.cs" />
     <Compile Include="DotLang\MatchKeyword.cs" />
