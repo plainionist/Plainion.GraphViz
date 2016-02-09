@@ -82,17 +82,9 @@ namespace Plainion.GraphViz.Viewer
             NodeMasksEditorRequest.Raise(notification, c => { });
         }
 
-        public ICommand OpenFilterEditor
-        {
-            get;
-            private set;
-        }
+        public ICommand OpenFilterEditor { get; private set; }
 
-        public ICommand OpenSettingsEditor
-        {
-            get;
-            private set;
-        }
+        public ICommand OpenSettingsEditor { get; private set; }
 
         public InteractionRequest<INotification> NodeMasksEditorRequest { get; private set; }
 
@@ -161,10 +153,6 @@ namespace Plainion.GraphViz.Viewer
             get { return myStatusMessageService.Messages.Any() ? Visibility.Visible : Visibility.Hidden; }
         }
 
-        public ICommand ShowStatusMessagesCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand ShowStatusMessagesCommand { get; private set; }
     }
 }
