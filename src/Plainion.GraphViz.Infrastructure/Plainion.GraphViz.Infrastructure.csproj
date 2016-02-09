@@ -72,6 +72,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\IDocumentLoader.cs" />
     <Compile Include="ViewModel\DefaultDomainModel.cs" />
     <Compile Include="FailedItem.cs" />
     <Compile Include="ViewModel\IDomainModel.cs" />

@@ -13,11 +13,12 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System.IO;
 using System.Windows.Threading;
+using Plainion.Windows.Interactivity.DragDrop;
 
 namespace Plainion.GraphViz.Viewer
 {
     [Export(typeof(ShellViewModel))]
-    public class ShellViewModel : ViewModelBase
+    public class ShellViewModel : ViewModelBase, IDropable
     {
         private IGraphPresentation myPresentation;
         private IStatusMessageService myStatusMessageService;
@@ -42,6 +43,9 @@ namespace Plainion.GraphViz.Viewer
 
             myConfigurationService.ConfigChanged += OnConfigChanged;
         }
+
+        [Import(AllowDefault = true)]
+        public IDocumentLoader DocumentLoader { get; set; }
 
         void OnConfigChanged(object sender, EventArgs e)
         {
@@ -154,5 +158,20 @@ namespace Plainion.GraphViz.Viewer
         }
 
         public ICommand ShowStatusMessagesCommand { get; private set; }
+
+        string IDropable.DataFormat
+        {
+            get { return DataFormats.FileDrop; }
+        }
+
+        bool IDropable.IsDropAllowed(object data, DropLocation location)
+        {
+            return DocumentLoader != null && DocumentLoader.CanLoad(((string[])data).First());
+        }
+
+        void IDropable.Drop(object data, DropLocation location)
+        {
+            DocumentLoader.Load(((string[])data).First());
+        }
     }
 }
