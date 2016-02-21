@@ -4,7 +4,7 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Mvvm;
 
-namespace Plainion.GraphViz.Modules.Reflection
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 {
     [Export( typeof( InheritanceGraphMenuItemModel ) )]
     public class InheritanceGraphMenuItemModel : BindableBase

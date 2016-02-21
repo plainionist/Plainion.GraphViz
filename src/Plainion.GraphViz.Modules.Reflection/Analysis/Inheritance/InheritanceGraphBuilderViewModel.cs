@@ -7,19 +7,18 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
-using Plainion.GraphViz.Modules.Reflection.Inspectors;
 using Plainion.GraphViz.Modules.Reflection.Services;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
 using Plainion.GraphViz.Presentation;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
 
-namespace Plainion.GraphViz.Modules.Reflection
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 {
     [Export( typeof( InheritanceGraphBuilderViewModel ) )]
     public class InheritanceGraphBuilderViewModel : ViewModelBase

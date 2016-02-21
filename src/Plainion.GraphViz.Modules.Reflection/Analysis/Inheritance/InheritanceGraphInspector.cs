@@ -5,9 +5,8 @@ using System.Reflection;
 using System.Text;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
-using Plainion;
 
-namespace Plainion.GraphViz.Modules.Reflection.Inspectors
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 {
     class InheritanceGraphInspector : AsyncInspectorBase<TypeRelationshipDocument>
     {

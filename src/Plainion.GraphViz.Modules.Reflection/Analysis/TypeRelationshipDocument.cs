@@ -5,7 +5,7 @@ using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.Reflection
+namespace Plainion.GraphViz.Modules.Reflection.Analysis
 {
     [Serializable]
     class TypeRelationshipDocument

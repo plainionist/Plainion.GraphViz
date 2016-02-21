@@ -5,7 +5,7 @@ using System.Reflection;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
 
-namespace Plainion.GraphViz.Modules.Reflection.Inspectors
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 {
     class InheritanceGraphBuilder
     {

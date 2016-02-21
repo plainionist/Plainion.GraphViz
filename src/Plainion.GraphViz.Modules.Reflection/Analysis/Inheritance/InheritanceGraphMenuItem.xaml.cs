@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Controls;
 
-namespace Plainion.GraphViz.Modules.Reflection
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 {
     [Export( typeof( InheritanceGraphMenuItem ) )]
     public partial class InheritanceGraphMenuItem : MenuItem

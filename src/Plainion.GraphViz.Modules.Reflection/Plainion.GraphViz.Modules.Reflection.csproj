@@ -83,11 +83,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EdgeType.cs" />
-    <Compile Include="InheritanceGraphMenuItem.xaml.cs">
+    <Compile Include="Analysis\EdgeType.cs" />
+    <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItem.xaml.cs">
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InheritanceGraphMenuItemModel.cs" />
+    <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItemModel.cs" />
     <Compile Include="Services\Framework\IInspectorHandle.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Services\AssemblyInspectionService.cs" />
@@ -95,21 +95,21 @@
     <Compile Include="Services\Framework\InspectorBase.cs" />
     <Compile Include="Services\BackgroundWorkerAdapter.cs" />
     <Compile Include="Services\Framework\ICancellationToken.cs" />
-    <Compile Include="Inspectors\AllTypesInspector.cs" />
+    <Compile Include="Analysis\AllTypesInspector.cs" />
     <Compile Include="Services\Framework\AsyncInspectorBase.cs" />
-    <Compile Include="Inspectors\InheritanceGraphInspector.cs" />
-    <Compile Include="Inspectors\InheritanceGraphBuilder.cs" />
-    <Compile Include="InheritanceGraphBuilderView.xaml.cs">
+    <Compile Include="Analysis\Inheritance\InheritanceGraphInspector.cs" />
+    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilder.cs" />
+    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilderView.xaml.cs">
       <DependentUpon>InheritanceGraphBuilderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InheritanceGraphBuilderViewModel.cs" />
+    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilderViewModel.cs" />
     <Compile Include="Services\AssemblyResolveHandler.cs" />
     <Compile Include="ReflectionModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\InspectionDomain.cs" />
     <Compile Include="Services\Framework\TypeDescriptor.cs" />
     <Compile Include="Services\InspectionExtensions.cs" />
-    <Compile Include="TypeRelationshipDocument.cs" />
+    <Compile Include="Analysis\TypeRelationshipDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -125,11 +125,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="InheritanceGraphBuilderView.xaml">
+    <Page Include="Analysis\Inheritance\InheritanceGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="InheritanceGraphMenuItem.xaml">
+    <Page Include="Analysis\Inheritance\InheritanceGraphMenuItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

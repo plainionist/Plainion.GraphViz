@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
-using Plainion;
 
-namespace Plainion.GraphViz.Modules.Reflection.Inspectors
+namespace Plainion.GraphViz.Modules.Reflection.Analysis
 {
     class AllTypesInspector : InspectorBase
     {
