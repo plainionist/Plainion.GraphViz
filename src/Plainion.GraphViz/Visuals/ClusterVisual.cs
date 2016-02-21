@@ -12,7 +12,9 @@ namespace Plainion.GraphViz.Visuals
     internal class ClusterVisual : AbstractElementVisual
     {
         private static Typeface myFont;
+
         private const double BorderThickness = 0.016;
+        private const double FontSize = BorderThickness * 10;
 
         private IGraphPresentation myPresentation;
 
@@ -39,13 +41,14 @@ namespace Plainion.GraphViz.Visuals
             var rect = GetBoundingBox( drawingElements );
             dc.DrawRectangle( Brushes.Transparent, new Pen( Brushes.Black, BorderThickness ), rect );
 
-            //var tx = new FormattedText( label.DisplayText,
-            //      CultureInfo.InvariantCulture,
-            //      FlowDirection.LeftToRight,
-            //      myFont,
-            //      rect.Height * 0.7, Brushes.Black );
+            var tx = new FormattedText( label.DisplayText,
+                  CultureInfo.InvariantCulture,
+                  FlowDirection.LeftToRight,
+                  myFont,
+                  FontSize, Brushes.Black );
 
-            //dc.DrawText( tx, new Point( ( ( rect.Right - rect.Left ) / 2 ) - tx.Width / 2, ( ( rect.Bottom - rect.Top ) / 2 ) - tx.Height / 2 ) );
+            var fontPadding = BorderThickness * 3;
+            dc.DrawText( tx, new Point( rect.Left + fontPadding, rect.Top + fontPadding ) );
 
             dc.Close();
 
@@ -79,7 +82,10 @@ namespace Plainion.GraphViz.Visuals
                 box.Union( nodeBox );
             }
 
-            // 3. add some padding
+            // 3. add some padding for label
+            box = new Rect( box.Left, box.Top - FontSize * 2, box.Width, box.Height + FontSize * 2 );
+
+            // 4. add some padding
             box.Inflate( BorderThickness * 7, BorderThickness * 7 );
 
             return box;
