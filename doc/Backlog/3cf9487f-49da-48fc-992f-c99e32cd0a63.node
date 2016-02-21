@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="3cf9487f-49da-48fc-992f-c99e32cd0a63" Created="635916327380065815" LastModified="635916328408104615">
+  <Caption><![CDATA[Add support for sub-graphs]]></Caption>
+  <Content><![CDATA[simple idea:
+- a graph gets a property "clusters" or "subgraphs"
+- this just lists all the nodes within the cluster as plain list
+
+we may need to support "rectangle nodes" first]]></Content>
+</Node>

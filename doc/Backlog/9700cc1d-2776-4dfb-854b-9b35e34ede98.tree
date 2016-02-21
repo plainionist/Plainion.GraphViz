@@ -4,6 +4,12 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next steps]]></Caption>
+      <Node Id="cb6552bf-3a2c-410c-a5c7-791db0a05d69">
+        <Caption><![CDATA[Analyse call graphs]]></Caption>
+      </Node>
+      <Node Id="3cf9487f-49da-48fc-992f-c99e32cd0a63">
+        <Caption><![CDATA[Add support for sub-graphs]]></Caption>
+      </Node>
     </Node>
   </Node>
 </Tree>
