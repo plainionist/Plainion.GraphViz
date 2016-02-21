@@ -5,15 +5,15 @@ using System.Reflection;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
+namespace Plainion.GraphViz.Modules.Reflection.Analysis
 {
-    class InheritanceGraphBuilder
+    class TypeDependencyGraphBuilder
     {
         private RelaxedGraphBuilder myBuilder;
         private IDictionary<string, TypeDescriptor> myIdToTypeMap;
         private IDictionary<string, EdgeType> myEdgeTypes;
 
-        public InheritanceGraphBuilder()
+        public TypeDependencyGraphBuilder()
         {
             myBuilder = new RelaxedGraphBuilder();
             myIdToTypeMap = new Dictionary<string, TypeDescriptor>();

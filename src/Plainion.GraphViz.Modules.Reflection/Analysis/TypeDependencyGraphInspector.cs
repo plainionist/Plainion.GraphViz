@@ -6,13 +6,13 @@ using System.Text;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
+namespace Plainion.GraphViz.Modules.Reflection.Analysis
 {
-    class InheritanceGraphInspector : AsyncInspectorBase<TypeRelationshipDocument>
+    class TypeDependencyGraphInspector : AsyncInspectorBase<TypeRelationshipDocument>
     {
         private string mySelectedAssemblyName;
 
-        public InheritanceGraphInspector(string applicationBase)
+        public TypeDependencyGraphInspector(string applicationBase)
             : base(applicationBase)
         {
         }
@@ -51,7 +51,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 
             var document = new TypeRelationshipDocument();
 
-            var builder = new InheritanceGraphBuilder();
+            var builder = new TypeDependencyGraphBuilder();
             builder.IgnoreDotNetTypes = IgnoreDotNetTypes;
 
             foreach (var assemblyFile in assemblies)
@@ -73,7 +73,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
             return document;
         }
 
-        private void ProcessAssembly(TypeRelationshipDocument document, InheritanceGraphBuilder builder, string assemblyFile)
+        private void ProcessAssembly(TypeRelationshipDocument document, TypeDependencyGraphBuilder builder, string assemblyFile)
         {
             try
             {

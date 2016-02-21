@@ -84,10 +84,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\EdgeType.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItem.xaml.cs">
-      <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
+    <Compile Include="Analysis\TypeDependencyGraphMenuItem.xaml.cs">
+      <DependentUpon>TypeDependencyGraphMenuItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItemModel.cs" />
+    <Compile Include="Analysis\TypeDependencyGraphMenuItemModel.cs" />
     <Compile Include="Services\Framework\IInspectorHandle.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Services\AssemblyInspectionService.cs" />
@@ -97,12 +97,12 @@
     <Compile Include="Services\Framework\ICancellationToken.cs" />
     <Compile Include="Analysis\AllTypesInspector.cs" />
     <Compile Include="Services\Framework\AsyncInspectorBase.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphInspector.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilder.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilderView.xaml.cs">
-      <DependentUpon>InheritanceGraphBuilderView.xaml</DependentUpon>
+    <Compile Include="Analysis\TypeDependencyGraphInspector.cs" />
+    <Compile Include="Analysis\TypeDependencyGraphBuilder.cs" />
+    <Compile Include="Analysis\TypeDependencyGraphBuilderView.xaml.cs">
+      <DependentUpon>TypeDependencyGraphBuilderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilderViewModel.cs" />
+    <Compile Include="Analysis\TypeDependencyGraphBuilderViewModel.cs" />
     <Compile Include="Services\AssemblyResolveHandler.cs" />
     <Compile Include="ReflectionModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,11 +125,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Analysis\Inheritance\InheritanceGraphBuilderView.xaml">
+    <Page Include="Analysis\TypeDependencyGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Analysis\Inheritance\InheritanceGraphMenuItem.xaml">
+    <Page Include="Analysis\TypeDependencyGraphMenuItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

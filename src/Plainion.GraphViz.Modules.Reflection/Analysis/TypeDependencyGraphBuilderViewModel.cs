@@ -18,10 +18,10 @@ using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
+namespace Plainion.GraphViz.Modules.Reflection.Analysis
 {
-    [Export( typeof( InheritanceGraphBuilderViewModel ) )]
-    public class InheritanceGraphBuilderViewModel : ViewModelBase
+    [Export( typeof( TypeDependencyGraphBuilderViewModel ) )]
+    public class TypeDependencyGraphBuilderViewModel : ViewModelBase
     {
         private string myAssemblyToAnalyseLocation;
         private TypeDescriptor myTypeToAnalyse;
@@ -29,11 +29,11 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
         private bool myIsReady;
         private bool myIgnoreDotNetTypes;
         private Action myCancelBackgroundProcessing;
-        private IInspectorHandle<InheritanceGraphInspector> myInheritanceGraphInspector;
+        private IInspectorHandle<TypeDependencyGraphInspector> myTypeDependencyGraphInspector;
         private IInspectorHandle<AllTypesInspector> myAllTypesInspector;
         private bool myAddToGraph;
 
-        public InheritanceGraphBuilderViewModel()
+        public TypeDependencyGraphBuilderViewModel()
         {
             Types = new ObservableCollection<TypeDescriptor>();
             TypeFilter = OnFilterItem;
@@ -122,13 +122,13 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
         {
             IsReady = false;
 
-            InspectionService.UpdateInspectorOnDemand( ref myInheritanceGraphInspector, Path.GetDirectoryName( AssemblyToAnalyseLocation ) );
+            InspectionService.UpdateInspectorOnDemand( ref myTypeDependencyGraphInspector, Path.GetDirectoryName( AssemblyToAnalyseLocation ) );
 
-            myInheritanceGraphInspector.Value.IgnoreDotNetTypes = IgnoreDotNetTypes;
-            myInheritanceGraphInspector.Value.AssemblyLocation = AssemblyToAnalyseLocation;
-            myInheritanceGraphInspector.Value.SelectedType = TypeToAnalyse;
+            myTypeDependencyGraphInspector.Value.IgnoreDotNetTypes = IgnoreDotNetTypes;
+            myTypeDependencyGraphInspector.Value.AssemblyLocation = AssemblyToAnalyseLocation;
+            myTypeDependencyGraphInspector.Value.SelectedType = TypeToAnalyse;
 
-            myCancelBackgroundProcessing = InspectionService.RunAsync( myInheritanceGraphInspector.Value, v => ProgressValue = v, OnInheritanceGraphCompleted );
+            myCancelBackgroundProcessing = InspectionService.RunAsync( myTypeDependencyGraphInspector.Value, v => ProgressValue = v, OnGraphCompleted );
         }
 
         internal void OnClosed()
@@ -141,7 +141,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
             }
 
             InspectionService.DestroyInspectorOnDemand( ref myAllTypesInspector );
-            InspectionService.DestroyInspectorOnDemand( ref myInheritanceGraphInspector );
+            InspectionService.DestroyInspectorOnDemand( ref myTypeDependencyGraphInspector );
 
             IsReady = true;
         }
@@ -211,7 +211,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
             set { SetProperty( ref myProgress, value ); }
         }
 
-        private void OnInheritanceGraphCompleted( TypeRelationshipDocument document )
+        private void OnGraphCompleted( TypeRelationshipDocument document )
         {
             try
             {
