@@ -64,7 +64,8 @@ namespace Plainion.GraphViz.Dot
                         continue;
                     }
 
-                    writer.WriteLine( "  subgraph \"cluster_{0}\" {", cluster.Id );
+                    var clusterId = cluster.Id.StartsWith( "cluster_" ) ? cluster.Id : "cluster_" + cluster.Id;
+                    writer.WriteLine( "  subgraph \"" + clusterId + "\" {" );
 
                     // pass label to trigger dot.exe to create proper size of node bounding box
                     writer.WriteLine( "    label = \"{0}\"", labelModule.Get( cluster.Id ).DisplayText );
@@ -72,7 +73,7 @@ namespace Plainion.GraphViz.Dot
                     foreach( var node in visibleClusterNodes )
                     {
                         // pass label to trigger dot.exe to create proper size of node bounding box
-                        writer.WriteLine( "  \"{0}\" [label=\"{1}\"]", node.Id, labelModule.Get( node.Id ).DisplayText );
+                        writer.WriteLine( "    \"{0}\" [label=\"{1}\"]", node.Id, labelModule.Get( node.Id ).DisplayText );
                     }
 
                     writer.WriteLine( "  }" );

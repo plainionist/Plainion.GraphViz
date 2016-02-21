@@ -61,6 +61,18 @@ namespace Plainion.GraphViz.Modules.Documents
             return edge;
         }
 
+        protected internal Cluster TryAddCluster( string clusterId, IEnumerable<string> nodes )
+        {
+            var cluster = myGraphBuilder.TryAddCluster( clusterId, nodes );
+            if( cluster == null )
+            {
+                myFailedItems.Add( new FailedItem( clusterId, "Cluster already exists" ) );
+                return null;
+            }
+
+            return cluster;
+        }
+
         public IEnumerable<FailedItem> FailedItems
         {
             get { return myFailedItems; }

@@ -34,21 +34,8 @@ namespace Plainion.GraphViz.Model
 
         public Edge TryAddEdge( string sourceNodeId, string targetNodeId )
         {
-            var sourceNode = Graph.FindNode( sourceNodeId );
-            if( sourceNode == null )
-            {
-                // support just adding edges - add nodes implicitly
-                sourceNode = new Node( sourceNodeId );
-                myGraph.TryAdd( sourceNode );
-            }
-
-            var targetNode = Graph.FindNode( targetNodeId );
-            if( targetNode == null )
-            {
-                // support just adding edges - add nodes implicitly
-                targetNode = new Node( targetNodeId );
-                myGraph.TryAdd( targetNode );
-            }
+            var sourceNode = GetOrCreateNode( sourceNodeId );
+            var targetNode = GetOrCreateNode( targetNodeId );
 
             var edge = new Edge( sourceNode, targetNode );
 
@@ -63,9 +50,21 @@ namespace Plainion.GraphViz.Model
             return edge;
         }
 
+        private Node GetOrCreateNode( string nodeId )
+        {
+            var node = Graph.FindNode( nodeId );
+            if( node == null )
+            {
+                node = new Node( nodeId );
+                myGraph.TryAdd( node );
+            }
+
+            return node;
+        }
+
         public Cluster TryAddCluster( string clusterId, IEnumerable<string> nodeIds )
         {
-            var cluster = new Cluster( clusterId, nodeIds.Select( n => TryAddNode( n ) ) );
+            var cluster = new Cluster( clusterId, nodeIds.Select( n => GetOrCreateNode( n ) ) );
 
             if( !myGraph.TryAdd( cluster ) )
             {

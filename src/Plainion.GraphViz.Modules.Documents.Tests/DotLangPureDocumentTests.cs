@@ -160,5 +160,40 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
             Assert.That( document.Captions.Single( c => c.OwnerId == edge1 ).Label, Is.EqualTo( "Implemented by" ) );
             Assert.That( document.Captions.Single( c => c.OwnerId == edge2 ).Label, Is.EqualTo( "called by" ) );
         }
+
+        [Test]
+        public void Read_WithSubgraphs_ClustersDetected()
+        {
+            var document = new DotLangPureDocument();
+
+            using( var reader = new StringReader( "digraph {   subgraph cluster_C1 { label=\"C1\"; a0; a1; }    subgraph cluster_C2 { label=\"C2\"; b0 -> b1; } a0 -> b0; }" ) )
+            {
+                document.Read( reader );
+            }
+
+            {
+                var edge1 = Edge.CreateId( "b0", "b1" );
+                var edge2 = Edge.CreateId( "a0", "b0" );
+                Assert.That( document.Graph.Edges.Select( e => e.Id ), Is.EquivalentTo( new[] { edge1, edge2 } ) );
+            }
+
+            {
+                var c1 = document.Graph.Clusters.SingleOrDefault( c => c.Id == "cluster_C1" );
+                Assert.That( c1, Is.Not.Null, "Cluster C1 not found" );
+
+                Assert.That( document.Captions.Single( c => c.OwnerId == "cluster_C1" ).Label, Is.EqualTo( "C1" ) );
+
+                Assert.That( c1.Nodes.Select( n => n.Id ), Is.EqualTo( new[] { "a0", "a1" } ) );
+            }
+
+            {
+                var c2 = document.Graph.Clusters.SingleOrDefault( c => c.Id == "cluster_C2" );
+                Assert.That( c2, Is.Not.Null, "Cluster C2 not found" );
+
+                Assert.That( document.Captions.Single( c => c.OwnerId == "cluster_C2" ).Label, Is.EqualTo( "C2" ) );
+
+                Assert.That( c2.Nodes.Select( n => n.Id ), Is.EqualTo( new[] { "b0", "b1" } ) );
+            }
+        }
     }
 }

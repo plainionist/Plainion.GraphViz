@@ -63,6 +63,5 @@ namespace Plainion.GraphViz.Modules.Documents
             var parser = new Parser(lexer, this);
             parser.Parse();
         }
-
     }
 }
