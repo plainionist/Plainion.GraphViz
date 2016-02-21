@@ -64,7 +64,7 @@ namespace Plainion.GraphViz.Dot
                         continue;
                     }
 
-                    writer.WriteLine( "  subgraph \"{0}\" {", cluster.Id );
+                    writer.WriteLine( "  subgraph \"cluster_{0}\" {", cluster.Id );
 
                     // pass label to trigger dot.exe to create proper size of node bounding box
                     writer.WriteLine( "    label = \"{0}\"", labelModule.Get( cluster.Id ).DisplayText );
@@ -123,7 +123,16 @@ namespace Plainion.GraphViz.Dot
                     var edgeId = Edge.CreateId( sourceNodeId, targetNodeId );
 
                     var layout = parser.ReadEdgeLayout( edgeId );
+
                     var label = parser.ReadLabel( edgeId );
+
+                    if( label.Label == "invis" )
+                    {
+                        // this is an invisible edge
+                        // -> ignore it
+                        continue;
+                    }
+
                     layout.LabelPosition = parser.ReadPoint();
                     edgeLayouts.Add( layout );
                 }

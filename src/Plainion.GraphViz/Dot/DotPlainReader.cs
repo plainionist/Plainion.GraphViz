@@ -67,12 +67,28 @@ namespace Plainion.GraphViz.Dot
 
         public double ReadDouble()
         {
-            return double.Parse( ReadString(), CultureInfo.InvariantCulture );
+            try
+            {
+                var str = ReadString();
+                return double.Parse( str, CultureInfo.InvariantCulture );
+            }
+            catch( Exception ex )
+            {
+                throw new Exception( "Failed to parse line: " + myCurrentLine, ex );
+            }
         }
 
         public int ReadInt()
         {
-            return int.Parse( ReadString(), CultureInfo.InvariantCulture );
+            try
+            {
+                var str = ReadString();
+                return int.Parse( str, CultureInfo.InvariantCulture );
+            }
+            catch( Exception ex )
+            {
+                throw new Exception( "Failed to parse line: " + myCurrentLine, ex );
+            }
         }
 
         internal void Close()

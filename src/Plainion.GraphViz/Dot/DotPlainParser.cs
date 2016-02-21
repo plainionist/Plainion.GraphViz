@@ -17,11 +17,7 @@ namespace Plainion.GraphViz.Dot
             myReader = reader;
         }
 
-        public DotGraphHeader Header
-        {
-            get;
-            private set;
-        }
+        public DotGraphHeader Header { get; private set; }
 
         public void Open()
         {
