@@ -24,11 +24,7 @@ namespace Plainion.GraphViz.Visuals
             myPresentation = presentation;
         }
 
-        public Node Owner
-        {
-            get;
-            private set;
-        }
+        public Node Owner { get; private set; }
 
         // TODO: we should interpret the shape/style/color attributes ...
         public void Draw( NodeLayout layoutState )
@@ -41,7 +37,8 @@ namespace Plainion.GraphViz.Visuals
 
             if( style.Shape.Equals( "rectangle", StringComparison.OrdinalIgnoreCase ) )
             {
-                var rect = new Rect( layoutState.Center, layoutState.GetSize() );
+                var rect = layoutState.GetBoundingBox();
+
                 dc.DrawRectangle( style.FillColor, new Pen( style.BorderColor, 0.016 ), rect );
             }
             else

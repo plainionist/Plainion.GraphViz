@@ -35,5 +35,10 @@ namespace Plainion.GraphViz.Presentation
         {
             return new Size( myWidth, myHeight );
         }
+
+        public Rect GetBoundingBox()
+        {
+            return new Rect( Center.X - myWidth / 2, Center.Y - myHeight / 2, myWidth, myHeight );
+        }
     }
 }

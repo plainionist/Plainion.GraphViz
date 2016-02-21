@@ -45,9 +45,16 @@ namespace Plainion.GraphViz.Dot
             using( var writer = new StreamWriter( myDotFile.FullName ) )
             {
                 writer.WriteLine( "digraph {" );
-                writer.WriteLine( "  ratio=\"compress\"" );
-                writer.WriteLine( "  rankdir=BT" );
-                writer.WriteLine( "  ranksep=\"2.0 equally\"" );
+
+                if( !presentation.Graph.Clusters.Any() )
+                {
+                    // this setting is optimized for simple dependency graphs. If we find clusters we do not consider this
+                    // as simple dependency graph anylonger - lets skip this setting.
+
+                    writer.WriteLine( "  ratio=\"compress\"" );
+                    writer.WriteLine( "  rankdir=BT" );
+                    writer.WriteLine( "  ranksep=\"2.0 equally\"" );
+                }
 
                 var visibleNodes = presentation.Graph.Nodes
                     .Where( n => presentation.Picking.Pick( n ) )

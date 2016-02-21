@@ -43,16 +43,24 @@ namespace Plainion.GraphViz.Visuals
             context.PolyBezierTo( layoutState.Points.Skip( 1 ).ToList(), true, false );
 
             // draw arrow head
-            var start = layoutState.Points.Last();
-            var v = start - layoutState.Points.ElementAt( layoutState.Points.Count() - 2 );
-            v.Normalize();
+            {
+                var start = layoutState.Points.Last();
+                var v = start - layoutState.Points.ElementAt( layoutState.Points.Count() - 2 );
+                v.Normalize();
 
-            start = start - v * 0.15;
-            context.BeginFigure( start + v * 0.28, true, true );
-            double t = v.X; v.X = v.Y; v.Y = -t;  // Rotate 90°
-            context.LineTo( start + v * 0.08, true, true );
-            context.LineTo( start + v * -0.08, true, true );
-            context.Close();
+                start = start - v * 0.05;
+                context.BeginFigure( start + v * 0.18, true, true );
+
+                // Rotate 90°
+                double t = v.X;
+                v.X = v.Y;
+                v.Y = -t;
+
+                context.LineTo( start + v * 0.06, true, true );
+                context.LineTo( start + v * -0.06, true, true );
+
+                context.Close();
+            }
 
             var pen = new Pen( styleState.Color, 0.016 );
 
@@ -64,7 +72,7 @@ namespace Plainion.GraphViz.Visuals
             if( label.DisplayText != label.OwnerId )
             {
                 var sourceLayoutState = myPresentation.GetModule<IGraphLayoutModule>().GetLayout( Owner.Source );
-                
+
                 var tx = new FormattedText( label.DisplayText,
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,

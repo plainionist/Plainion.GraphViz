@@ -7,11 +7,7 @@ namespace Plainion.GraphViz.Visuals
 {
     internal class AbstractElementVisual
     {
-        public DrawingVisual Visual
-        {
-            get;
-            protected set;
-        }
+        public DrawingVisual Visual { get; protected set; }
 
         public void Select( bool select )
         {

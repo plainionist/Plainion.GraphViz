@@ -137,6 +137,7 @@
     <Compile Include="Visuals\EdgeVisual.cs" />
     <Compile Include="ILayoutEngine.cs" />
     <Compile Include="Visuals\IVisualPicking.cs" />
+    <Compile Include="Visuals\ClusterVisual.cs" />
     <Compile Include="Visuals\NodeVisual.cs" />
     <Compile Include="Model\Edge.cs" />
     <Compile Include="Model\Graph.cs" />

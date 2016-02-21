@@ -70,11 +70,7 @@ namespace Plainion.GraphViz.Visuals
 
         public event EventHandler RenderingFinished;
 
-        public ILayoutEngine LayoutEngine
-        {
-            get;
-            set;
-        }
+        public ILayoutEngine LayoutEngine { get; set; }
 
         public void Refresh()
         {
@@ -103,7 +99,7 @@ namespace Plainion.GraphViz.Visuals
 
             if( myDrawingElements.Count == 0 )
             {
-                Debug.WriteLine( "Rerendering" );
+                Debug.WriteLine( "Re-Rendering" );
 
                 RemoveVisualChild( myDrawing );
 
@@ -136,6 +132,20 @@ namespace Plainion.GraphViz.Visuals
                     {
                         var layoutState = layoutModule.GetLayout( edge );
                         visual.Draw( layoutState );
+
+                        myDrawing.Children.Add( visual.Visual );
+                    }
+                }
+
+                foreach( var cluster in Presentation.Graph.Clusters )
+                {
+                    var visual = new ClusterVisual( cluster, Presentation );
+
+                    myDrawingElements.Add( cluster.Id, visual );
+
+                    if( cluster.Nodes.Any( n => Presentation.Picking.Pick( n ) ) )
+                    {
+                        visual.Draw( myDrawingElements );
 
                         myDrawing.Children.Add( visual.Visual );
                     }
@@ -240,10 +250,7 @@ namespace Plainion.GraphViz.Visuals
         // TODO: do we really want to allow direct access?
         internal DrawingVisual Drawing
         {
-            get
-            {
-                return myDrawing;
-            }
+            get { return myDrawing; }
         }
 
         // Provide a required override for the VisualChildCount property.
