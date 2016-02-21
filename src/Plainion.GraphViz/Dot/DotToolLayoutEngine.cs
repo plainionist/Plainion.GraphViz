@@ -38,6 +38,7 @@ namespace Plainion.GraphViz.Dot
         }
 
         // TODO: we have to consider StyleModule
+        // http://www.graphviz.org/Gallery/directed/cluster.html
         private void GenerateDotFile( IGraphPresentation presentation )
         {
             var labelModule = presentation.GetPropertySetFor<Caption>();
@@ -48,7 +49,36 @@ namespace Plainion.GraphViz.Dot
                 writer.WriteLine( "  rankdir=BT" );
                 writer.WriteLine( "  ranksep=\"2.0 equally\"" );
 
-                foreach( var node in presentation.Graph.Nodes.Where( n => presentation.Picking.Pick( n ) ) )
+                var visibleNodes = presentation.Graph.Nodes
+                    .Where( n => presentation.Picking.Pick( n ) )
+                    .ToList();
+
+                foreach( var cluster in presentation.Graph.Clusters )
+                {
+                    var visibleClusterNodes = cluster.Nodes
+                        .Where( n => visibleNodes.Contains( n ) )
+                        .ToList();
+
+                    if( visibleClusterNodes.Count == 0 )
+                    {
+                        continue;
+                    }
+
+                    writer.WriteLine( "  subgraph \"{0}\" {", cluster.Id );
+
+                    // pass label to trigger dot.exe to create proper size of node bounding box
+                    writer.WriteLine( "    label = \"{0}\"", labelModule.Get( cluster.Id ).DisplayText );
+
+                    foreach( var node in visibleClusterNodes )
+                    {
+                        // pass label to trigger dot.exe to create proper size of node bounding box
+                        writer.WriteLine( "  \"{0}\" [label=\"{1}\"]", node.Id, labelModule.Get( node.Id ).DisplayText );
+                    }
+
+                    writer.WriteLine( "  }" );
+                }
+
+                foreach( var node in visibleNodes )
                 {
                     // pass label to trigger dot.exe to create proper size of node bounding box
                     var label = labelModule.Get( node.Id ).DisplayText;

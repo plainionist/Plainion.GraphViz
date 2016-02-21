@@ -6,9 +6,9 @@ namespace Plainion.GraphViz.Model
     [Serializable]
     public class Node : IGraphItem
     {
-        public Node( string nodeId )
+        public Node( string id )
         {
-            Id = nodeId;
+            Id = id;
 
             In = new List<Edge>();
             Out = new List<Edge>();

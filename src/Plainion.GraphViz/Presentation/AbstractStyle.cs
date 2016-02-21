@@ -14,7 +14,7 @@ namespace Plainion.GraphViz.Presentation
         public string Style
         {
             get { return myStyle; }
-            set { SetProperty( ref myStyle, value, "Style" ); }
+            set { SetProperty( ref myStyle, value ); }
         }
     }
 }

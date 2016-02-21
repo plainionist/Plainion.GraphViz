@@ -7,6 +7,8 @@ namespace Plainion.GraphViz.Model
         IEnumerable<Node> Nodes { get; }
         IEnumerable<Edge> Edges { get; }
 
+        IEnumerable<Cluster> Clusters { get; }
+
         Node FindNode( string nodeId );
     }
 }

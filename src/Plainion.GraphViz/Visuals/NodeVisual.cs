@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 using Plainion.GraphViz.Model;
@@ -38,7 +39,15 @@ namespace Plainion.GraphViz.Visuals
             Visual = new DrawingVisual();
             var dc = Visual.RenderOpen();
 
-            dc.DrawEllipse( style.FillColor, new Pen( style.BorderColor, 0.016 ), layoutState.Center, layoutState.Width, layoutState.Height );
+            if( style.Shape.Equals( "rectangle", StringComparison.OrdinalIgnoreCase ) )
+            {
+                var rect = new Rect( layoutState.Center, layoutState.GetSize() );
+                dc.DrawRectangle( style.FillColor, new Pen( style.BorderColor, 0.016 ), rect );
+            }
+            else
+            {
+                dc.DrawEllipse( style.FillColor, new Pen( style.BorderColor, 0.016 ), layoutState.Center, layoutState.Width, layoutState.Height );
+            }
 
             var tx = new FormattedText( label.DisplayText,
                   CultureInfo.InvariantCulture,

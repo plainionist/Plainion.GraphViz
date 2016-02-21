@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Plainion.GraphViz.Presentation
 {
@@ -10,15 +11,11 @@ namespace Plainion.GraphViz.Presentation
             OwnerId = ownerId;
         }
 
-        public string OwnerId
-        {
-            get;
-            private set;
-        }
+        public string OwnerId { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void SetProperty<T>( ref T member, T value, string propertyName )
+        protected void SetProperty<T>( ref T member, T value, [CallerMemberName] string propertyName = null )
         {
             if( object.ReferenceEquals( member, default( T ) ) && object.ReferenceEquals( value, default( T ) ) )
             {

@@ -17,20 +17,20 @@ namespace Plainion.GraphViz.Presentation
         public Brush FillColor
         {
             get { return myFillColor; }
-            set { SetProperty( ref myFillColor, value, "FillColor" ); }
+            set { SetProperty( ref myFillColor, value ); }
         }
 
         // e.g. ellipse
         public string Shape
         {
             get { return myShape; }
-            set { SetProperty( ref myShape, value, "Shape" ); }
+            set { SetProperty( ref myShape, value ); }
         }
 
         public Brush BorderColor
         {
             get { return myBorderColor; }
-            set { SetProperty( ref myBorderColor, value, "BorderColor" ); }
+            set { SetProperty( ref myBorderColor, value ); }
         }
     }
 }

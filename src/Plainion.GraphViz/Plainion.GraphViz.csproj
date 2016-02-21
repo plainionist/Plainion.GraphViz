@@ -94,6 +94,7 @@
     <Compile Include="Dot\DotGraphHeader.cs" />
     <Compile Include="Dot\DotPlainParser.cs" />
     <Compile Include="IGraphViewNavigation.cs" />
+    <Compile Include="Model\Cluster.cs" />
     <Compile Include="Model\RelaxedGraphBuilder.cs" />
     <Compile Include="Dot\DotToDotPlainConverter.cs" />
     <Compile Include="Model\IGraph.cs" />

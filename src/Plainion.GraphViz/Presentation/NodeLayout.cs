@@ -16,19 +16,24 @@ namespace Plainion.GraphViz.Presentation
         public Point Center
         {
             get { return myCenter; }
-            set { SetProperty( ref myCenter, value, "Center" ); }
+            set { SetProperty( ref myCenter, value ); }
         }
 
         public double Width
         {
             get { return myWidth; }
-            set { SetProperty( ref myWidth, value, "Width" ); }
+            set { SetProperty( ref myWidth, value ); }
         }
 
         public double Height
         {
             get { return myHeight; }
-            set { SetProperty( ref myHeight, value, "Height" ); }
+            set { SetProperty( ref myHeight, value ); }
+        }
+
+        public Size GetSize()
+        {
+            return new Size( myWidth, myHeight );
         }
     }
 }

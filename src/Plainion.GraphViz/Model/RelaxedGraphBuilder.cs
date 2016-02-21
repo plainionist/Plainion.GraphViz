@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Model
@@ -59,6 +61,18 @@ namespace Plainion.GraphViz.Model
             edge.Target.In.Add( edge );
 
             return edge;
+        }
+
+        public Cluster TryAddCluster( string clusterId, IEnumerable<string> nodeIds )
+        {
+            var cluster = new Cluster( clusterId, nodeIds.Select( n => TryAddNode( n ) ) );
+
+            if( !myGraph.TryAdd( cluster ) )
+            {
+                return null;
+            }
+
+            return cluster;
         }
     }
 }
