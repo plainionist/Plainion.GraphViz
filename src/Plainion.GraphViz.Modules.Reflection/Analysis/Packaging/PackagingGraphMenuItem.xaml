@@ -7,6 +7,7 @@
              xmlns:prism="http://www.codeplex.com/prism"
              xmlns:v="clr-namespace:Plainion.GraphViz.Modules.Reflection"
              mc:Ignorable="d" 
+             IsEnabled="False"
              Header="Packaging dependency graph ..."
              Command="{Binding OpenPackagingGraphBuilderCommand}">
     <i:Interaction.Triggers>
