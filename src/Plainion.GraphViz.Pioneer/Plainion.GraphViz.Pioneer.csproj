@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packaging\Analyzer.cs" />
+    <Compile Include="Packaging\AssemblyLoader.cs" />
     <Compile Include="Packaging\Cluster.cs" />
     <Compile Include="Packaging\Config.cs" />
     <Compile Include="Packaging\PackageBase.cs" />

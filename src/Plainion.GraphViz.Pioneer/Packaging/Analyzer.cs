@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +15,7 @@ namespace Plainion.GraphViz.Pioneer.Packaging
         private static string[] Colors = new[] { "lightblue", "lightgreen", "lightgray" };
 
         private Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
+        private AssemblyLoader myLoader = new AssemblyLoader();
 
         internal void Execute(object rawConfig)
         {
@@ -26,7 +28,7 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                 var assemblies = package.Includes
                     .SelectMany(i => Directory.GetFiles(config.AssemblyRoot, i.Pattern))
                     .Where(file => !package.Excludes.Any(e => e.Matches(file)))
-                    .Select(Load)
+                    .Select(myLoader.Load)
                     .Where(asm => asm != null)
                     .ToList();
 
@@ -36,6 +38,8 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             }
 
             Console.WriteLine("Analyzing ...");
+
+            //Debugger.Launch();
 
             var tasks = config.Packages
                 .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze(p)))
@@ -73,7 +77,7 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                             continue;
                         }
 
-                        var nodeDesc = string.Format("  \"{0}\" [color = {1}]", node.Name, Colors[i]);
+                        var nodeDesc = string.Format("  \"{0}\" [color = {1}, label = {2}]", node.FullName, Colors[i], node.Name);
 
                         // in case multiple cluster match we just take the first one
                         var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
@@ -106,40 +110,29 @@ namespace Plainion.GraphViz.Pioneer.Packaging
 
                 foreach (var edge in edges)
                 {
-                    writer.WriteLine("  \"{0}\" -> \"{1}\"", edge.Item1.Name, edge.Item2.Name);
+                    writer.WriteLine("  \"{0}\" -> \"{1}\"", edge.Item1.FullName, edge.Item2.FullName);
                 }
 
                 writer.WriteLine("}");
             }
         }
 
-        private Assembly Load(string path)
-        {
-            try
-            {
-                Console.WriteLine("Loading {0}", path);
-
-                return Assembly.LoadFrom(path);
-            }
-            catch
-            {
-                Console.WriteLine("ERROR: failed to load assembly {0}", path);
-                return null;
-            }
-        }
-
         private Tuple<Type, Type>[] Analyze(Package p)
         {
-            return myPackages[p.Name]
-                .SelectMany(t => Analyze(p, t))
+            var tasks = myPackages[p.Name]
+                .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(p, t)))
                 .ToArray();
+
+            Task.WaitAll(tasks);
+
+            return tasks.SelectMany(t => t.Result).ToArray();
         }
 
         private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
         {
             Console.Write(".");
 
-            return new Reflector(type).GetUsedTypes()
+            return new Reflector(myLoader, type).GetUsedTypes()
                 .Where(usedType => IsForeignPackage(package, usedType))
                 .Select(usedType => Edge(type, usedType));
         }

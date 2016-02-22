@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 
 namespace Plainion.GraphViz.Pioneer.Packaging
 {
     // http://stackoverflow.com/questions/24680054/how-to-get-the-list-of-methods-called-from-a-method-using-reflection-in-c-sharp
     class Reflector
     {
+        private readonly AssemblyLoader myLoader;
         private readonly Type myType;
 
-        public Reflector(Type type)
+        public Reflector(AssemblyLoader loader, Type type)
         {
+            myLoader = loader;
             myType = type;
         }
 
@@ -23,8 +29,12 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                 .Concat(GetPropertyTypes())
                 .Concat(GetMethodTypes())
                 .Concat(GetConstructorTypes())
+                .Concat(GetCalledTypes())
                 .Distinct()
                 .ToList();
+            //IEnumerable<Type> types = GetCalledTypes()
+            //    .Distinct()
+            //    .ToList();
 
             var elementTypes = types
                 .Where(t => t.HasElementType)
@@ -99,6 +109,50 @@ namespace Plainion.GraphViz.Pioneer.Packaging
         {
             return myType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
                 .SelectMany(GetParameterTypes);
+        }
+
+        //http://stackoverflow.com/questions/4184384/mono-cecil-typereference-to-type
+        private IEnumerable<Type> GetCalledTypes()
+        {
+            if (myType.IsInterface || myType.IsNested || !myType.IsClass)
+            {
+                yield break;
+            }
+
+            var cecilType = myLoader.MonoLoad(myType.Assembly).MainModule.Types
+                .SingleOrDefault(t => t.FullName == myType.FullName);
+
+            if (cecilType == null)
+            {
+                Console.Write("!");
+                yield break;
+            }
+
+            var methods = cecilType.Methods
+                .Where(m => m.HasBody)
+                .SelectMany(m => m.Body.Instructions);
+
+            foreach (var instr in methods)
+            {
+                if (instr.OpCode == OpCodes.Call)
+                {
+                    var callee = ((MethodReference)instr.Operand);
+                    var declaringType = callee.DeclaringType;
+
+                    if (!declaringType.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var dotNetType = myLoader.FindTypeByName(declaringType.FullName);
+                        if (dotNetType != null)
+                        {
+                            yield return dotNetType;
+                        }
+                        else
+                        {
+                            Console.Write("-");
+                        }
+                    }
+                }
+            }
         }
     }
 }
