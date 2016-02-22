@@ -1,6 +1,6 @@
 ﻿namespace Plainion.GraphViz.Pioneer.Packaging
 {
-    public class Exclude : FilePattern
+    public class Exclude : Wildcard
     {
     }
 }

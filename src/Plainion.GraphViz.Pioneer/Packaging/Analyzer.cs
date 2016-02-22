@@ -2,9 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Plainion.GraphViz.Pioneer.Packaging
@@ -39,13 +41,14 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             Console.WriteLine("Analyzing ...");
 
             var tasks = config.Packages
-                .Select(p => Task.Run<Tuple<string, string>[]>(() => Analyze(p)))
+                .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze(p)))
                 .ToArray();
 
             Task.WaitAll(tasks);
 
             var edges = tasks
                 .SelectMany(t => t.Result)
+                .Distinct()
                 .ToList();
 
             var output = Path.GetFullPath("packaging.dot");
@@ -57,15 +60,48 @@ namespace Plainion.GraphViz.Pioneer.Packaging
 
                 for (int i = 0; i < config.Packages.Count; ++i)
                 {
-                    foreach (var type in myPackages[config.Packages[i].Name])
+                    var package = config.Packages[i];
+
+                    var clusters = new Dictionary<string, List<string>>();
+
+                    foreach (var cluster in package.Clusters)
                     {
-                        var node = type.Name;
+                        clusters[cluster.Name] = new List<string>();
+                    }
+
+                    foreach (var node in myPackages[package.Name].Select(Node).Distinct())
+                    {
                         if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
                         {
                             continue;
                         }
 
-                        writer.WriteLine("  \"{0}\" [color = {1}]", node, Colors[i]);
+                        var nodeDesc = string.Format("  \"{0}\" [color = {1}]", node.Name, Colors[i]);
+
+                        // in case multiple cluster match we just take the first one
+                        var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
+                        if (matchedCluster != null)
+                        {
+                            clusters[matchedCluster.Name].Add(nodeDesc);
+                        }
+                        else
+                        {
+                            writer.WriteLine(nodeDesc);
+                        }
+                    }
+
+                    foreach (var entry in clusters.Where(e => e.Value.Any()))
+                    {
+                        writer.WriteLine();
+                        writer.WriteLine("  subgraph " + entry.Key + " {");
+
+                        foreach (var nodeDesc in entry.Value)
+                        {
+                            writer.WriteLine("  " + nodeDesc);
+                        }
+
+                        writer.WriteLine("  }");
+                        writer.WriteLine();
                     }
                 }
 
@@ -73,7 +109,7 @@ namespace Plainion.GraphViz.Pioneer.Packaging
 
                 foreach (var edge in edges)
                 {
-                    writer.WriteLine("  \"{0}\" -> \"{1}\"", edge.Item1, edge.Item2);
+                    writer.WriteLine("  \"{0}\" -> \"{1}\"", edge.Item1.Name, edge.Item2.Name);
                 }
 
                 writer.WriteLine("}");
@@ -95,7 +131,7 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             }
         }
 
-        private Tuple<string, string>[] Analyze(Package p)
+        private Tuple<Type, Type>[] Analyze(Package p)
         {
             return myPackages[p.Name]
                 .SelectMany(t => Analyze(p, t))
@@ -104,9 +140,9 @@ namespace Plainion.GraphViz.Pioneer.Packaging
 
         // TODO: generics
         // TODO: method body
-        private IEnumerable<Tuple<string, string>> Analyze(Package package, Type type)
+        private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
         {
-            Console.WriteLine("  {0}", type.FullName);
+            Console.Write(".");
 
             // base classes
             {
@@ -214,9 +250,27 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             return false;
         }
 
-        private Tuple<string, string> Edge(Type type, Type baseType)
+        private Tuple<Type, Type> Edge(Type source, Type target)
         {
-            return new Tuple<string, string>(type.Name, baseType.Name);
+            return new Tuple<Type, Type>(Node(source), Node(target));
+        }
+
+        private Type Node(Type type)
+        {
+            var nodeType = type;
+
+            if (type.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) != null)
+            {
+                nodeType = type.DeclaringType;
+            }
+
+            if (nodeType == null)
+            {
+                // e.g. code generated from Xml like ResourceManager
+                nodeType = type;
+            }
+
+            return nodeType;
         }
     }
 }

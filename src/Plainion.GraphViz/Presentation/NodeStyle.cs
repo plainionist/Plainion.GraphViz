@@ -11,6 +11,8 @@ namespace Plainion.GraphViz.Presentation
         public NodeStyle( string ownerId )
             : base( ownerId )
         {
+            Shape = "ellipse";
+            BorderColor = Brushes.Black;
         }
 
         public Brush FillColor

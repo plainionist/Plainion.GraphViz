@@ -6,26 +6,13 @@ using System.Windows.Markup;
 namespace Plainion.GraphViz.Pioneer.Packaging
 {
     [ContentProperty("Patterns")]
-    public class Package
+    public class Package : PackageBase
     {
         public Package()
         {
-            Patterns = new List<FilePattern>();
+            Clusters = new List<Cluster>();
         }
 
-        public string Name { get; set; }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public List<FilePattern> Patterns { get; private set; }
-
-        public IEnumerable<Include> Includes
-        {
-            get { return Patterns.OfType<Include>(); }
-        }
-
-        public IEnumerable<Exclude> Excludes
-        {
-            get { return Patterns.OfType<Exclude>(); }
-        }
+        public List<Cluster> Clusters { get; private set; }
     }
 }

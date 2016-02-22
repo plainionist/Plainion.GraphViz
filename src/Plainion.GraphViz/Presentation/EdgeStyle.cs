@@ -11,6 +11,7 @@ namespace Plainion.GraphViz.Presentation
         public EdgeStyle( string ownerId )
             : base( ownerId )
         {
+            Color = Brushes.Black;
         }
 
         public Brush Color
