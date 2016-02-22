@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -68,9 +69,11 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                     }
                 }
 
+                writer.WriteLine();
+
                 foreach (var edge in edges)
                 {
-                    writer.WriteLine("\"{0}\" -> \"{1}\"", edge.Item1, edge.Item2);
+                    writer.WriteLine("  \"{0}\" -> \"{1}\"", edge.Item1, edge.Item2);
                 }
 
                 writer.WriteLine("}");
@@ -99,28 +102,116 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                 .ToArray();
         }
 
+        // TODO: generics
+        // TODO: method body
         private IEnumerable<Tuple<string, string>> Analyze(Package package, Type type)
         {
             Console.WriteLine("  {0}", type.FullName);
 
-            var baseType = type.BaseType;
-            while (baseType != null && baseType != typeof(object))
+            // base classes
             {
-                foreach (var entry in myPackages)
+                var baseType = type.BaseType;
+                while (baseType != null && baseType != typeof(object))
                 {
-                    if (entry.Key == package.Name)
-                    {
-                        continue;
-                    }
-
-                    if (entry.Value.Contains(baseType))
+                    if (IsForeignPackage(package, baseType))
                     {
                         yield return Edge(type, baseType);
                     }
+
+                    baseType = baseType.BaseType;
+                }
+            }
+
+            // interfaces
+            {
+                foreach (var iface in type.GetInterfaces())
+                {
+                    if (IsForeignPackage(package, iface))
+                    {
+                        yield return Edge(type, iface);
+                    }
+                }
+            }
+
+            // members
+            {
+                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
+                {
+                    if (IsForeignPackage(package, field.FieldType))
+                    {
+                        yield return Edge(type, field.FieldType);
+                    }
                 }
 
-                baseType = baseType.BaseType;
+                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
+                {
+                    if (IsForeignPackage(package, property.PropertyType))
+                    {
+                        yield return Edge(type, property.PropertyType);
+                    }
+                }
+
+                foreach (var method in type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
+                {
+                    if (IsForeignPackage(package, method.ReturnType))
+                    {
+                        yield return Edge(type, method.ReturnType);
+                    }
+
+                    foreach (var parameter in method.GetParameters())
+                    {
+                        if (parameter.ParameterType.HasElementType)
+                        {
+                            if (IsForeignPackage(package, parameter.ParameterType.GetElementType()))
+                            {
+                                yield return Edge(type, parameter.ParameterType.GetElementType());
+                            }
+                        }
+                        else
+                        {
+                            if (IsForeignPackage(package, parameter.ParameterType))
+                            {
+                                yield return Edge(type, parameter.ParameterType);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var method in type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
+                {
+                    foreach (var parameter in method.GetParameters())
+                    {
+                        if (parameter.ParameterType.HasElementType)
+                        {
+                            if (IsForeignPackage(package, parameter.ParameterType.GetElementType()))
+                            {
+                                yield return Edge(type, parameter.ParameterType.GetElementType());
+                            }
+                        }
+                        else
+                        {
+                            if (IsForeignPackage(package, parameter.ParameterType))
+                            {
+                                yield return Edge(type, parameter.ParameterType);
+                            }
+                        }
+                    }
+                }
             }
+
+        }
+
+        private bool IsForeignPackage(Package package, Type dep)
+        {
+            foreach (var entry in myPackages.Where(e => e.Key != package.Name))
+            {
+                if (entry.Value.Contains(dep))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private Tuple<string, string> Edge(Type type, Type baseType)
