@@ -1,8 +1,4 @@
-﻿/* -------------------------------------------------------------------------------------------------
-   Restricted - Copyright (C) Siemens Healthcare GmbH/Siemens Medical Solutions USA, Inc., 2016. All rights reserved
-   ------------------------------------------------------------------------------------------------- */
-   
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -35,7 +31,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         private Action myCancelBackgroundProcessing;
         private IInspectorHandle<PackagingGraphInspector> myPackagingGraphInspector;
         private IInspectorHandle<AllTypesInspector> myAllTypesInspector;
-        private bool myAddToGraph;
 
         public PackagingGraphBuilderViewModel()
         {
@@ -43,7 +38,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             TypeFilter = OnFilterItem;
 
             CreateGraphCommand = new DelegateCommand( CreateGraph, () => TypeToAnalyse != null && IsReady );
-            AddToGraphCommand = new DelegateCommand( AddToGraph, () => TypeToAnalyse != null && IsReady );
             CancelCommand = new DelegateCommand( () => myCancelBackgroundProcessing(), () => !IsReady );
             BrowseAssemblyCommand = new DelegateCommand( OnBrowseClicked, () => IsReady );
             ClosedCommand = new DelegateCommand( OnClosed );
@@ -54,12 +48,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             IgnoreDotNetTypes = true;
         }
 
-        private void AddToGraph()
-        {
-            myAddToGraph = true;
-            CreateGraph();
-        }
-
         public bool IsReady
         {
             get { return myIsReady; }
@@ -68,7 +56,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 if ( SetProperty( ref myIsReady, value ) )
                 {
                     CreateGraphCommand.RaiseCanExecuteChanged();
-                    AddToGraphCommand.RaiseCanExecuteChanged();
                     CancelCommand.RaiseCanExecuteChanged();
                     BrowseAssemblyCommand.RaiseCanExecuteChanged();
                 }
@@ -85,8 +72,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         public AssemblyInspectionService InspectionService { get; set; }
 
         public DelegateCommand CreateGraphCommand { get; private set; }
-
-        public DelegateCommand AddToGraphCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
 
@@ -190,7 +175,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 // if s.th. is typed which is not available in the list of types we will get null here
                 SetProperty( ref myTypeToAnalyse, value );
                 CreateGraphCommand.RaiseCanExecuteChanged();
-                AddToGraphCommand.RaiseCanExecuteChanged();
 
                 if ( myTypeToAnalyse == null )
                 {
@@ -250,14 +234,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                     {
                         Color = entry.Value == EdgeType.DerivesFrom ? Brushes.Black : Brushes.Blue
                     } );
-                }
-
-                if ( myAddToGraph && Model.Presentation != null && Model.Presentation.Graph != null )
-                {
-                    presentation = Model.Presentation.UnionWith( presentation,
-                        () => PresentationCreationService.CreatePresentation( Path.GetDirectoryName( AssemblyToAnalyseLocation ) ) );
-
-                    myAddToGraph = false;
                 }
 
                 if ( document.FailedItems.Any() )

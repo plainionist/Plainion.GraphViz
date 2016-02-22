@@ -34,31 +34,9 @@
                       IsEnabled="{Binding IsReady}"/>
             <Button  Grid.Column="2" Content="Browse"  Command="{Binding Path=BrowseAssemblyCommand}"  Margin="5,0,0,0"/>
         </Grid>
-        <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Text="Select type:" Padding="0,0,10,0" />
-            <tk:AutoCompleteBox Grid.Column="1" ToolTip="Enter type name" 
-                            ValueMemberPath="FullName"
-                            ItemsSource="{Binding Path=Types}" ItemFilter="{Binding Path=TypeFilter}"
-                            SelectedItem="{Binding Path=TypeToAnalyse, Mode=TwoWay, ValidatesOnDataErrors=True}"
-                            Validation.ErrorTemplate="{StaticResource HighlightErrorsWithBorder}"
-                            IsEnabled="{Binding IsReady}">
-                <tk:AutoCompleteBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding FullName}" />
-                    </DataTemplate>
-                </tk:AutoCompleteBox.ItemTemplate>
-            </tk:AutoCompleteBox>
-        </Grid>
         <StackPanel DockPanel.Dock="Top">
-            <CheckBox Content="Ignore .NET types" Margin="5,5,5,0" IsChecked="{Binding Path=IgnoreDotNetTypes}"
-                      IsEnabled="{Binding IsReady}"/>
             <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5">
                 <Button Content="Cancel" Margin="0,0,5,0" Command="{Binding Path=CancelCommand}" />
-                <Button Content="Add to graph" Margin="0,0,5,0"  Command="{Binding Path=AddToGraphCommand}"/>
                 <Button Content="Create graph" Command="{Binding Path=CreateGraphCommand}"/>
             </StackPanel>
             <ProgressBar Minimum="0" Value="{Binding Path=ProgressValue, Mode=TwoWay}" Margin="5" Height="15" Maximum="100"/>

@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="cb6552bf-3a2c-410c-a5c7-791db0a05d69" Created="635916327223676870" LastModified="635917291284077042">
+<Node Id="cb6552bf-3a2c-410c-a5c7-791db0a05d69" Created="635916327223676870" LastModified="635917295057227042">
   <Caption><![CDATA[Packaging Analysis]]></Caption>
   <Content><![CDATA[
 Visualize dependencies between "packages".
 
 1. define packages and select assemby pattern
+   - pacakges dont go into clusters for now but get different color
+   - borrow color selection from flames
 2. allow definition of "sub packages"
 3. update graph all time
 
