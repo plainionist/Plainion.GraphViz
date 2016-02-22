@@ -84,6 +84,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\EdgeType.cs" />
+    <Compile Include="Analysis\Packaging\PackagingGraphBuilder.cs" />
+    <Compile Include="Analysis\Packaging\PackagingGraphBuilderView.xaml.cs">
+      <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Analysis\Packaging\PackagingGraphBuilderViewModel.cs" />
+    <Compile Include="Analysis\Packaging\PackagingGraphInspector.cs" />
+    <Compile Include="Analysis\Packaging\PackagingGraphMenuItem.xaml.cs">
+      <DependentUpon>PackagingGraphMenuItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Analysis\Packaging\PackagingGraphMenuItemModel.cs" />
     <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItem.xaml.cs">
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
@@ -125,6 +135,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Analysis\Packaging\PackagingGraphBuilderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Analysis\Packaging\PackagingGraphMenuItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Analysis\Inheritance\InheritanceGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
