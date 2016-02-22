@@ -43,12 +43,12 @@ namespace Plainion.GraphViz.Visuals
             }
             set
             {
-                if( myPresentation == value )
+                if (myPresentation == value)
                 {
                     return;
                 }
 
-                if( myPresentation != null )
+                if (myPresentation != null)
                 {
                     mySelectionJournal.Dispose();
                     myNodeMaskJournal.Dispose();
@@ -59,7 +59,7 @@ namespace Plainion.GraphViz.Visuals
 
                 myPresentation = value;
 
-                if( myPresentation != null )
+                if (myPresentation != null)
                 {
                     mySelectionJournal = myPresentation.GetPropertySetFor<Selection>().CreateJournal();
                     myNodeMaskJournal = myPresentation.GetModule<INodeMaskModule>().CreateJournal();
@@ -74,7 +74,7 @@ namespace Plainion.GraphViz.Visuals
 
         public void Refresh()
         {
-            if( Presentation == null )
+            if (Presentation == null)
             {
                 return;
             }
@@ -83,80 +83,80 @@ namespace Plainion.GraphViz.Visuals
 
             // current assumption: it is enough to check the nodes as we would not render edges independent from nodes
             var reLayout = Presentation.Graph.Nodes
-                .Where( node => Presentation.Picking.Pick( node ) )
-                .Any( node => layoutModule.GetLayout( node ) == null );
+                .Where(node => Presentation.Picking.Pick(node))
+                .Any(node => layoutModule.GetLayout(node) == null);
 
-            if( reLayout )
+            if (reLayout)
             {
-                Contract.Invariant( LayoutEngine != null, "LayoutEngine not set" );
+                Contract.Invariant(LayoutEngine != null, "LayoutEngine not set");
 
-                Debug.WriteLine( "Relayouting" );
-                LayoutEngine.Relayout( Presentation );
+                Debug.WriteLine("Relayouting");
+                LayoutEngine.Relayout(Presentation);
 
                 // reLayout requires reRender
                 myDrawingElements.Clear();
             }
 
-            if( myDrawingElements.Count == 0 )
+            if (myDrawingElements.Count == 0)
             {
-                Debug.WriteLine( "Re-Rendering" );
+                Debug.WriteLine("Re-Rendering");
 
-                RemoveVisualChild( myDrawing );
+                RemoveVisualChild(myDrawing);
 
                 myDrawing.Children.Clear();
 
                 myDrawing = new DrawingVisual();
 
-                foreach( var node in Presentation.Graph.Nodes )
+                foreach (var node in Presentation.Graph.Nodes)
                 {
-                    var visual = new NodeVisual( node, Presentation );
+                    var visual = new NodeVisual(node, Presentation);
 
-                    myDrawingElements.Add( node.Id, visual );
+                    myDrawingElements.Add(node.Id, visual);
 
-                    if( Presentation.Picking.Pick( node ) )
+                    if (Presentation.Picking.Pick(node))
                     {
-                        var layoutState = layoutModule.GetLayout( node );
-                        visual.Draw( layoutState );
+                        var layoutState = layoutModule.GetLayout(node);
+                        visual.Draw(layoutState);
 
-                        myDrawing.Children.Add( visual.Visual );
+                        myDrawing.Children.Add(visual.Visual);
                     }
                 }
 
-                foreach( var edge in Presentation.Graph.Edges )
+                foreach (var edge in Presentation.Graph.Edges)
                 {
-                    var visual = new EdgeVisual( edge, Presentation );
+                    var visual = new EdgeVisual(edge, Presentation);
 
-                    myDrawingElements.Add( edge.Id, visual );
+                    myDrawingElements.Add(edge.Id, visual);
 
-                    if( Presentation.Picking.Pick( edge ) )
+                    if (Presentation.Picking.Pick(edge))
                     {
-                        var layoutState = layoutModule.GetLayout( edge );
-                        visual.Draw( layoutState );
+                        var layoutState = layoutModule.GetLayout(edge);
+                        visual.Draw(layoutState);
 
-                        myDrawing.Children.Add( visual.Visual );
+                        myDrawing.Children.Add(visual.Visual);
                     }
                 }
 
-                foreach( var cluster in Presentation.Graph.Clusters )
+                foreach (var cluster in Presentation.Graph.Clusters)
                 {
-                    var visual = new ClusterVisual( cluster, Presentation );
+                    var visual = new ClusterVisual(cluster, Presentation);
 
-                    myDrawingElements.Add( cluster.Id, visual );
+                    myDrawingElements.Add(cluster.Id, visual);
 
-                    if( cluster.Nodes.Any( n => Presentation.Picking.Pick( n ) ) )
+                    if (cluster.Nodes.Any(n => Presentation.Picking.Pick(n)))
                     {
-                        visual.Draw( myDrawingElements );
+                        visual.Draw(myDrawingElements);
 
-                        myDrawing.Children.Add( visual.Visual );
+                        myDrawing.Children.Insert(0, visual.Visual);
                     }
                 }
 
-                AddVisualChild( myDrawing );
+                AddVisualChild(myDrawing);
 
                 var selectionModule = Presentation.GetPropertySetFor<Selection>();
-                foreach( var e in selectionModule.Items )
+                foreach (var e in selectionModule.Items)
                 {
-                    myDrawingElements[ e.OwnerId ].Select( e.IsSelected );
+                    myDrawingElements[e.OwnerId].Select(e.IsSelected);
                 }
 
                 // clear journals - to avoid considering out-dated infos on next refresh
@@ -166,50 +166,50 @@ namespace Plainion.GraphViz.Visuals
 
                 InvalidateMeasure();
 
-                if( RenderingFinished != null )
+                if (RenderingFinished != null)
                 {
-                    RenderingFinished( this, EventArgs.Empty );
+                    RenderingFinished(this, EventArgs.Empty);
                 }
             }
             else
             {
-                if( !myNodeMaskJournal.IsEmpty )
+                if (!myNodeMaskJournal.IsEmpty)
                 {
-                    foreach( var node in Presentation.Graph.Nodes )
+                    foreach (var node in Presentation.Graph.Nodes)
                     {
-                        SetVisibility( ( NodeVisual )myDrawingElements[ node.Id ],
-                            Presentation.Picking.Pick( node ),
-                            v => v.Draw( layoutModule.GetLayout( v.Owner ) ) );
+                        SetVisibility((NodeVisual)myDrawingElements[node.Id],
+                            Presentation.Picking.Pick(node),
+                            v => v.Draw(layoutModule.GetLayout(v.Owner)));
                     }
 
-                    foreach( var edge in Presentation.Graph.Edges )
+                    foreach (var edge in Presentation.Graph.Edges)
                     {
-                        SetVisibility( ( EdgeVisual )myDrawingElements[ edge.Id ],
-                            Presentation.Picking.Pick( edge ),
-                            v => v.Draw( layoutModule.GetLayout( v.Owner ) ) );
+                        SetVisibility((EdgeVisual)myDrawingElements[edge.Id],
+                            Presentation.Picking.Pick(edge),
+                            v => v.Draw(layoutModule.GetLayout(v.Owner)));
                     }
 
                     myNodeMaskJournal.Clear();
                     InvalidateVisual();
                 }
 
-                if( !myEdgeMaskJournal.IsEmpty )
+                if (!myEdgeMaskJournal.IsEmpty)
                 {
                     // EdgeMask module can only hide additional edges so no picking required here
-                    foreach( var edge in myEdgeMaskJournal.Entries )
+                    foreach (var edge in myEdgeMaskJournal.Entries)
                     {
-                        SetVisibility( ( EdgeVisual )myDrawingElements[ edge.Id ], false, null );
+                        SetVisibility((EdgeVisual)myDrawingElements[edge.Id], false, null);
                     }
 
                     myEdgeMaskJournal.Clear();
                     InvalidateVisual();
                 }
 
-                if( !mySelectionJournal.IsEmpty )
+                if (!mySelectionJournal.IsEmpty)
                 {
-                    foreach( var e in mySelectionJournal.Entries )
+                    foreach (var e in mySelectionJournal.Entries)
                     {
-                        myDrawingElements[ e.OwnerId ].Select( e.IsSelected );
+                        myDrawingElements[e.OwnerId].Select(e.IsSelected);
                     }
 
                     mySelectionJournal.Clear();
@@ -220,29 +220,29 @@ namespace Plainion.GraphViz.Visuals
 
         // when modifying the Children collection we have to consider that we could get here because of IsDirty
         // but IsVisible was already toggled multiple times so that actually nothing has to be done
-        private void SetVisibility<T>( T visual, bool isVisible, Action<T> drawAction ) where T : AbstractElementVisual
+        private void SetVisibility<T>(T visual, bool isVisible, Action<T> drawAction) where T : AbstractElementVisual
         {
-            if( isVisible )
+            if (isVisible)
             {
-                if( visual.Visual == null )
+                if (visual.Visual == null)
                 {
-                    drawAction( visual );
+                    drawAction(visual);
 
-                    myDrawing.Children.Add( visual.Visual );
+                    myDrawing.Children.Add(visual.Visual);
                 }
                 else
                 {
-                    if( !myDrawing.Children.Contains( visual.Visual ) )
+                    if (!myDrawing.Children.Contains(visual.Visual))
                     {
-                        myDrawing.Children.Add( visual.Visual );
+                        myDrawing.Children.Add(visual.Visual);
                     }
                 }
             }
             else
             {
-                if( myDrawing.Children.Contains( visual.Visual ) )
+                if (myDrawing.Children.Contains(visual.Visual))
                 {
-                    myDrawing.Children.Remove( visual.Visual );
+                    myDrawing.Children.Remove(visual.Visual);
                 }
             }
         }
@@ -260,7 +260,7 @@ namespace Plainion.GraphViz.Visuals
         }
 
         // Provide a required override for the GetVisualChild method.
-        protected override Visual GetVisualChild( int index )
+        protected override Visual GetVisualChild(int index)
         {
             return myDrawing;
         }
@@ -270,69 +270,69 @@ namespace Plainion.GraphViz.Visuals
             get
             {
                 var bounds = myDrawing.ContentBounds;
-                bounds.Union( myDrawing.DescendantBounds );
+                bounds.Union(myDrawing.DescendantBounds);
 
-                return new Size( bounds.Width * 64, bounds.Height * 64 );
+                return new Size(bounds.Width * 64, bounds.Height * 64);
             }
         }
 
-        protected override Size MeasureOverride( Size availableSize )
+        protected override Size MeasureOverride(Size availableSize)
         {
             Rect bounds = myDrawing.ContentBounds;
-            bounds.Union( myDrawing.DescendantBounds );
+            bounds.Union(myDrawing.DescendantBounds);
 
-            if( bounds.IsEmpty )
+            if (bounds.IsEmpty)
             {
                 // if the graph is empty
-                return new Size( 8, 8 );
+                return new Size(8, 8);
             }
 
             // add some extra padding in case the bezier curve is to huge
-            bounds.Inflate( bounds.Width * 0.01, bounds.Height * 0.01 );
+            bounds.Inflate(bounds.Width * 0.01, bounds.Height * 0.01);
 
             var m = new Matrix();
-            m.Translate( -bounds.Left, -bounds.Top );
+            m.Translate(-bounds.Left, -bounds.Top);
             // TODO: why 64?
-            m.Scale( 64, 64 );
+            m.Scale(64, 64);
 
-            myDrawing.Transform = new MatrixTransform( m );
+            myDrawing.Transform = new MatrixTransform(m);
 
-            return new Size( bounds.Width * 64, bounds.Height * 64 );
+            return new Size(bounds.Width * 64, bounds.Height * 64);
         }
 
-        public Rect? GetBoundingBox( IGraphItem item )
+        public Rect? GetBoundingBox(IGraphItem item)
         {
-            if( myDrawingElements[ item.Id ].Visual == null )
+            if (myDrawingElements[item.Id].Visual == null)
             {
                 return null;
             }
 
-            var bounds = myDrawingElements[ item.Id ].Visual.ContentBounds;
-            bounds.Scale( 64, 64 );
+            var bounds = myDrawingElements[item.Id].Visual.ContentBounds;
+            bounds.Scale(64, 64);
             return bounds;
         }
 
         public IGraphItem PickMousePosition()
         {
-            return Pick( Mouse.GetPosition( this ) );
+            return Pick(Mouse.GetPosition(this));
         }
 
-        public IGraphItem Pick( Point position )
+        public IGraphItem Pick(Point position)
         {
-            var result = VisualTreeHelper.HitTest( this, position );
-            if( result == null )
+            var result = VisualTreeHelper.HitTest(this, position);
+            if (result == null)
             {
                 return null;
             }
 
             var visual = result.VisualHit as DrawingVisual;
 
-            if( visual == null )
+            if (visual == null)
             {
                 return null;
             }
 
-            return ( IGraphItem )visual.ReadLocalValue( AbstractElementVisual.GraphItemProperty );
+            return (IGraphItem)visual.ReadLocalValue(AbstractElementVisual.GraphItemProperty);
         }
     }
 }
