@@ -14,11 +14,15 @@ namespace Plainion.GraphViz.Pioneer.Packaging
     {
         private readonly AssemblyLoader myLoader;
         private readonly Type myType;
+        private readonly string myFullName;
 
         public Reflector(AssemblyLoader loader, Type type)
         {
             myLoader = loader;
             myType = type;
+
+            // .net fullnames do escape "."
+            myFullName = myType.FullName.Replace("\\,", ",");
         }
 
         internal IEnumerable<Type> GetUsedTypes()
@@ -117,11 +121,12 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             }
 
             var cecilType = myLoader.MonoLoad(myType.Assembly).MainModule.Types
-                .SingleOrDefault(t => t.FullName == myType.FullName);
+                .SingleOrDefault(t => t.FullName == myFullName);
 
             if (cecilType == null)
             {
-                Console.Write("!");
+                Console.Write("!{0}!", myFullName);
+
                 yield break;
             }
 

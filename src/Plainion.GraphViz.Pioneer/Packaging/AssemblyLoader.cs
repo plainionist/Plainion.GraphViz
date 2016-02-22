@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
@@ -119,6 +120,9 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             {
                 typeFullName = typeFullName.Replace('/', '+');
             }
+
+            // ',' in fullname has to be escaped
+            typeFullName = typeFullName.Replace(",", "\\,");
 
             var type = asm.GetType(typeFullName);
 
