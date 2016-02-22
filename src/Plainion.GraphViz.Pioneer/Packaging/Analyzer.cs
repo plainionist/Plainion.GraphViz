@@ -1,8 +1,6 @@
 ﻿
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +15,6 @@ namespace Plainion.GraphViz.Pioneer.Packaging
 
         private Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
 
-        // http://stackoverflow.com/questions/24680054/how-to-get-the-list-of-methods-called-from-a-method-using-reflection-in-c-sharp
         internal void Execute(object rawConfig)
         {
             var config = (Config)rawConfig;
@@ -138,103 +135,13 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                 .ToArray();
         }
 
-        // TODO: generics
-        // TODO: method body
         private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
         {
             Console.Write(".");
 
-            // base classes
-            {
-                var baseType = type.BaseType;
-                while (baseType != null && baseType != typeof(object))
-                {
-                    if (IsForeignPackage(package, baseType))
-                    {
-                        yield return Edge(type, baseType);
-                    }
-
-                    baseType = baseType.BaseType;
-                }
-            }
-
-            // interfaces
-            {
-                foreach (var iface in type.GetInterfaces())
-                {
-                    if (IsForeignPackage(package, iface))
-                    {
-                        yield return Edge(type, iface);
-                    }
-                }
-            }
-
-            // members
-            {
-                foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
-                {
-                    if (IsForeignPackage(package, field.FieldType))
-                    {
-                        yield return Edge(type, field.FieldType);
-                    }
-                }
-
-                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
-                {
-                    if (IsForeignPackage(package, property.PropertyType))
-                    {
-                        yield return Edge(type, property.PropertyType);
-                    }
-                }
-
-                foreach (var method in type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
-                {
-                    if (IsForeignPackage(package, method.ReturnType))
-                    {
-                        yield return Edge(type, method.ReturnType);
-                    }
-
-                    foreach (var parameter in method.GetParameters())
-                    {
-                        if (parameter.ParameterType.HasElementType)
-                        {
-                            if (IsForeignPackage(package, parameter.ParameterType.GetElementType()))
-                            {
-                                yield return Edge(type, parameter.ParameterType.GetElementType());
-                            }
-                        }
-                        else
-                        {
-                            if (IsForeignPackage(package, parameter.ParameterType))
-                            {
-                                yield return Edge(type, parameter.ParameterType);
-                            }
-                        }
-                    }
-                }
-
-                foreach (var method in type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static))
-                {
-                    foreach (var parameter in method.GetParameters())
-                    {
-                        if (parameter.ParameterType.HasElementType)
-                        {
-                            if (IsForeignPackage(package, parameter.ParameterType.GetElementType()))
-                            {
-                                yield return Edge(type, parameter.ParameterType.GetElementType());
-                            }
-                        }
-                        else
-                        {
-                            if (IsForeignPackage(package, parameter.ParameterType))
-                            {
-                                yield return Edge(type, parameter.ParameterType);
-                            }
-                        }
-                    }
-                }
-            }
-
+            return new Reflector(type).GetUsedTypes()
+                .Where(usedType => IsForeignPackage(package, usedType))
+                .Select(usedType => Edge(type, usedType));
         }
 
         private bool IsForeignPackage(Package package, Type dep)

@@ -52,6 +52,7 @@
     <Compile Include="Packaging\Cluster.cs" />
     <Compile Include="Packaging\Config.cs" />
     <Compile Include="Packaging\PackageBase.cs" />
+    <Compile Include="Packaging\Reflector.cs" />
     <Compile Include="Packaging\Wildcard.cs" />
     <Compile Include="Packaging\Exclude.cs" />
     <Compile Include="Packaging\Include.cs" />
