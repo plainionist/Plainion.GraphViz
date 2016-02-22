@@ -47,6 +47,18 @@ namespace Plainion.GraphViz.Pioneer.Packaging
 
             Task.WaitAll(tasks);
 
+            Console.WriteLine();
+
+            if (myLoader.SkippedAssemblies.Any())
+            {
+                Console.WriteLine("Skipped assemblies:");
+                foreach (var asm in myLoader.SkippedAssemblies)
+                {
+                    Console.WriteLine("  {0}", asm);
+                }
+                Console.WriteLine();
+            }
+
             var edges = tasks
                 .SelectMany(t => t.Result)
                 .Distinct()

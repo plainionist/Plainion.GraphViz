@@ -32,9 +32,6 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                 .Concat(GetCalledTypes())
                 .Distinct()
                 .ToList();
-            //IEnumerable<Type> types = GetCalledTypes()
-            //    .Distinct()
-            //    .ToList();
 
             var elementTypes = types
                 .Where(t => t.HasElementType)
@@ -132,25 +129,20 @@ namespace Plainion.GraphViz.Pioneer.Packaging
                 .Where(m => m.HasBody)
                 .SelectMany(m => m.Body.Instructions);
 
-            foreach (var instr in methods)
+            foreach (var instr in methods.Where(x => x.OpCode == OpCodes.Call))
             {
-                if (instr.OpCode == OpCodes.Call)
-                {
-                    var callee = ((MethodReference)instr.Operand);
-                    var declaringType = callee.DeclaringType;
+                var callee = ((MethodReference)instr.Operand);
+                var declaringType = callee.DeclaringType;
 
-                    if (!declaringType.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var dotNetType = myLoader.FindTypeByName(declaringType.FullName);
-                        if (dotNetType != null)
-                        {
-                            yield return dotNetType;
-                        }
-                        else
-                        {
-                            Console.Write("-");
-                        }
-                    }
+                if (declaringType.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var dotNetType = myLoader.FindTypeByName(declaringType);
+                if (dotNetType != null)
+                {
+                    yield return dotNetType;
                 }
             }
         }
