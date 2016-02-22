@@ -33,6 +33,10 @@
       <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Plainion.Core, Version=2.8.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plainion.Core.2.8.0.0\lib\NET45\Plainion.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,8 +50,11 @@
   <ItemGroup>
     <Compile Include="Packaging\Analyzer.cs" />
     <Compile Include="Packaging\Config.cs" />
+    <Compile Include="Packaging\FilePattern.cs" />
+    <Compile Include="Packaging\Exclude.cs" />
     <Compile Include="Packaging\Include.cs" />
     <Compile Include="Packaging\Package.cs" />
+    <Compile Include="Packaging\TypeAnalyzer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
