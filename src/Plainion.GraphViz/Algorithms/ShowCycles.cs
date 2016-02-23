@@ -1,15 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Presentation;
-using Plainion;
-using System.Collections.Generic;
-
+using Plainion.GraphViz.Presentation; 
 
 namespace Plainion.GraphViz.Algorithms
 {
     public class ShowCycles
     {
-        private IGraphPresentation myPresentation;
+        private readonly IGraphPresentation myPresentation;
 
         public ShowCycles(IGraphPresentation presentation)
         {

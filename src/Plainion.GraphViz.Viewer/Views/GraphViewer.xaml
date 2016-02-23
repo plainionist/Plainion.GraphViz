@@ -33,6 +33,7 @@
             </ContextMenu>
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
+                <MenuItem Header="Hide nodes without edges" Command="{Binding HideNodesWithoutEdgesCommand}"/>
                 <Separator/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>

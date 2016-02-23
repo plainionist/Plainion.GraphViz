@@ -26,6 +26,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
 
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
+            HideNodesWithoutEdgesCommand = new DelegateCommand(() => new HideNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
@@ -46,11 +47,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public InteractionRequest<IConfirmation> PrintGraphRequest { get; private set; }
 
-        public DelegateCommand PrintGraphCommand
-        {
-            get;
-            private set;
-        }
+        public DelegateCommand PrintGraphCommand{get;private set;}
 
         private void OnPrintGrpah()
         {
@@ -64,6 +61,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
+        public DelegateCommand HideNodesWithoutEdgesCommand { get; private set; }
+        
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
         public ICommand HideNodeCommand { get; private set; }
@@ -85,6 +84,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             if (propertyName == "Presentation")
             {
                 ShowCyclesCommand.RaiseCanExecuteChanged();
+                HideNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
             }
