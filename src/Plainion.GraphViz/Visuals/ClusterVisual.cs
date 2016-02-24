@@ -13,7 +13,7 @@ namespace Plainion.GraphViz.Visuals
     {
         private static Typeface myFont;
 
-        private const double BorderThickness = 0.016;
+        private const double BorderThickness = 0.032;
         private const double FontSize = BorderThickness * 10;
 
         private IGraphPresentation myPresentation;
@@ -39,7 +39,7 @@ namespace Plainion.GraphViz.Visuals
             var dc = Visual.RenderOpen();
 
             var rect = GetBoundingBox( drawingElements );
-            dc.DrawRectangle( Brushes.Transparent, new Pen( Brushes.Black, BorderThickness ), rect );
+            dc.DrawRectangle( Brushes.Transparent, new Pen( Brushes.Blue, BorderThickness ), rect );
 
             var tx = new FormattedText( label.DisplayText,
                   CultureInfo.InvariantCulture,

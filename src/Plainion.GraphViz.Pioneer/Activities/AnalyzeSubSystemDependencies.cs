@@ -12,16 +12,17 @@ namespace Plainion.GraphViz.Pioneer.Activities
 {
     class AnalyzeSubSystemDependencies
     {
+        private Package myPackage;
         private readonly List<Type> myTypes = new List<Type>();
         private readonly AssemblyLoader myLoader = new AssemblyLoader();
 
         internal void Execute(Config config, string packageName)
         {
-            var package = config.Packages.Single(p => p.Name.Equals(packageName, StringComparison.OrdinalIgnoreCase));
+            myPackage = config.Packages.Single(p => p.Name.Equals(packageName, StringComparison.OrdinalIgnoreCase));
 
-            Console.WriteLine("Loading package {0}", package.Name);
+            Console.WriteLine("Loading package {0}", myPackage.Name);
 
-            var assemblies = myLoader.Load(config.AssemblyRoot, package);
+            var assemblies = myLoader.Load(config.AssemblyRoot, myPackage);
 
             myTypes.AddRange(assemblies.SelectMany(asm => asm.GetTypes()));
 
@@ -30,7 +31,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
             //Debugger.Launch();
 
             var tasks = config.Packages
-                .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze(p)))
+                .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze()))
                 .ToArray();
 
             Task.WaitAll(tasks);
@@ -52,13 +53,13 @@ namespace Plainion.GraphViz.Pioneer.Activities
                 .Distinct()
                 .ToList();
 
-            DrawGraph(package, edges);
+            DrawGraph(edges);
         }
 
-        private Tuple<Type, Type>[] Analyze(Package p)
+        private Tuple<Type, Type>[] Analyze()
         {
             var tasks = myTypes
-                .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(p, t)))
+                .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(t)))
                 .ToArray();
 
             Task.WaitAll(tasks);
@@ -66,16 +67,20 @@ namespace Plainion.GraphViz.Pioneer.Activities
             return tasks.SelectMany(t => t.Result).ToArray();
         }
 
-        private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
+        private IEnumerable<Tuple<Type, Type>> Analyze(Type type)
         {
             Console.Write(".");
 
+            var cluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(type.FullName));
+
             return new Reflector(myLoader, type).GetUsedTypes()
                 .Where(myTypes.Contains)
+                .Where(t => type != t)
+                .Where(t => cluster == null || cluster != myPackage.Clusters.FirstOrDefault(c => c.Matches(t.FullName)))
                 .Select(usedType => GraphUtils.Edge(type, usedType));
         }
 
-        private void DrawGraph(Package package, List<Tuple<Type, Type>> edges)
+        private void DrawGraph(List<Tuple<Type, Type>> edges)
         {
             var output = Path.GetFullPath("packaging.dot");
             Console.WriteLine("Output: {0}", output);
@@ -86,7 +91,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
                 var clusters = new Dictionary<string, List<string>>();
 
-                foreach (var cluster in package.Clusters)
+                foreach (var cluster in myPackage.Clusters)
                 {
                     clusters[cluster.Name] = new List<string>();
                 }
@@ -101,7 +106,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
                     var nodeDesc = string.Format("  \"{0}\" [label = {1}]", node.FullName, node.Name);
 
                     // in case multiple cluster match we just take the first one
-                    var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
+                    var matchedCluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
                     if (matchedCluster != null)
                     {
                         clusters[matchedCluster.Name].Add(nodeDesc);
