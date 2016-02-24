@@ -17,10 +17,8 @@ namespace Plainion.GraphViz.Pioneer.Activities
         private readonly Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
         private readonly AssemblyLoader myLoader = new AssemblyLoader();
 
-        internal void Execute(object rawConfig)
+        internal void Execute(Config config)
         {
-            var config = (Config)rawConfig;
-
             foreach (var package in config.Packages)
             {
                 Console.WriteLine("Loading package {0}", package.Name);
@@ -77,7 +75,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
                         clusters[cluster.Name] = new List<string>();
                     }
 
-                    foreach (var node in myPackages[package.Name].Select(Node).Distinct())
+                    foreach (var node in myPackages[package.Name].Select(GraphUtils.Node).Distinct())
                     {
                         if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
                         {
@@ -141,35 +139,12 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
             return new Reflector(myLoader, type).GetUsedTypes()
                 .Where(usedType => IsForeignPackage(package, usedType))
-                .Select(usedType => Edge(type, usedType));
+                .Select(usedType => GraphUtils.Edge(type, usedType));
         }
 
         private bool IsForeignPackage(Package package, Type dep)
         {
             return myPackages.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
-        }
-
-        private Tuple<Type, Type> Edge(Type source, Type target)
-        {
-            return new Tuple<Type, Type>(Node(source), Node(target));
-        }
-
-        private Type Node(Type type)
-        {
-            var nodeType = type;
-
-            if (type.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) != null)
-            {
-                nodeType = type.DeclaringType;
-            }
-
-            if (nodeType == null)
-            {
-                // e.g. code generated from Xml like ResourceManager
-                nodeType = type;
-            }
-
-            return nodeType;
         }
     }
 }

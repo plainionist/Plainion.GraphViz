@@ -128,14 +128,12 @@ namespace Plainion.GraphViz.Dot
 
                     var label = parser.ReadLabel(edgeId);
 
-                    if (label.Label == "invis")
+                    if (label.Label != "invis")
                     {
-                        // this is an invisible edge
-                        // -> ignore it
-                        continue;
+                        // no label position
+                        layout.LabelPosition = parser.ReadPoint();
                     }
 
-                    layout.LabelPosition = parser.ReadPoint();
                     edgeLayouts.Add(layout);
                 }
             }

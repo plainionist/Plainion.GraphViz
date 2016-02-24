@@ -48,8 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\AnalyzeSubSystemDependencies.cs" />
     <Compile Include="Activities\AnalyzePackageDependencies.cs" />
     <Compile Include="Services\AssemblyLoader.cs" />
+    <Compile Include="Services\GraphUtils.cs" />
     <Compile Include="Spec\Cluster.cs" />
     <Compile Include="Spec\Config.cs" />
     <Compile Include="Spec\PackageBase.cs" />

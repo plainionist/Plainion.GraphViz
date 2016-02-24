@@ -3,20 +3,35 @@ using System.IO;
 using System.Windows.Markup;
 using System.Xml;
 using Plainion.GraphViz.Pioneer.Activities;
+using Plainion.GraphViz.Pioneer.Spec;
+
 
 namespace Plainion.GraphViz.Pioneer
 {
     class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            if (args.Length == 0)
+            string packageName = null;
+            string configFile = null;
+
+            for (int i = 0; i < args.Length; ++i)
+            {
+                if (args[i] == "-p")
+                {
+                    packageName = args[1];
+                }
+                else
+                {
+                    configFile = args[i];
+                }
+            }
+
+            if (configFile == null)
             {
                 Console.WriteLine("Config file missing");
                 Environment.Exit(1);
             }
-
-            var configFile = args[0];
 
             if (!File.Exists(configFile))
             {
@@ -24,10 +39,18 @@ namespace Plainion.GraphViz.Pioneer
                 Environment.Exit(1);
             }
 
-            var config = XamlReader.Load(XmlReader.Create(configFile));
+            var config = (Config)XamlReader.Load(XmlReader.Create(configFile));
 
-            var analyzer = new AnalyzePackageDependencies();
-            analyzer.Execute(config);
+            if (packageName == null)
+            {
+                var analyzer = new AnalyzePackageDependencies();
+                analyzer.Execute(config);
+            }
+            else
+            {
+                var analyzer = new AnalyzeSubSystemDependencies();
+                analyzer.Execute(config, packageName);
+            }
         }
     }
 }

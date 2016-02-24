@@ -28,6 +28,12 @@ namespace Plainion.GraphViz.Dot
             if( myLineMatchedTag )
             {
                 myCurrentLine = myReader.ReadLine();
+
+                if (myCurrentLine.Length > 0 && myCurrentLine[myCurrentLine.Length - 1] == '\\')
+                {
+                    myCurrentLine = myCurrentLine.TrimEnd('\\') + myReader.ReadLine();
+                }
+
                 myLineMatchedTag = false;
             }
 
