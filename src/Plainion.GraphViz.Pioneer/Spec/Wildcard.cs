@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
-using Plainion.Text;
-namespace Plainion.GraphViz.Pioneer.Packaging
+namespace Plainion.GraphViz.Pioneer.Spec
 {
     public class Wildcard
     {

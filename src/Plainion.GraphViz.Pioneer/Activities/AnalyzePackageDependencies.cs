@@ -1,21 +1,21 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Plainion.GraphViz.Pioneer.Services;
+using Plainion.GraphViz.Pioneer.Spec;
 
-namespace Plainion.GraphViz.Pioneer.Packaging
+namespace Plainion.GraphViz.Pioneer.Activities
 {
-    class Analyzer
+    class AnalyzePackageDependencies
     {
-        private static string[] Colors = new[] { "lightblue", "lightgreen", "lightgray" };
+        private static string[] Colors = { "lightblue", "lightgreen", "lightgray" };
 
-        private Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
-        private AssemblyLoader myLoader = new AssemblyLoader();
+        private readonly Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
+        private readonly AssemblyLoader myLoader = new AssemblyLoader();
 
         internal void Execute(object rawConfig)
         {
@@ -25,12 +25,7 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             {
                 Console.WriteLine("Loading package {0}", package.Name);
 
-                var assemblies = package.Includes
-                    .SelectMany(i => Directory.GetFiles(config.AssemblyRoot, i.Pattern))
-                    .Where(file => !package.Excludes.Any(e => e.Matches(file)))
-                    .Select(myLoader.Load)
-                    .Where(asm => asm != null)
-                    .ToList();
+                var assemblies = myLoader.Load(config.AssemblyRoot, package);
 
                 myPackages[package.Name] = assemblies
                     .SelectMany(asm => asm.GetTypes())
@@ -151,15 +146,7 @@ namespace Plainion.GraphViz.Pioneer.Packaging
 
         private bool IsForeignPackage(Package package, Type dep)
         {
-            foreach (var entry in myPackages.Where(e => e.Key != package.Name))
-            {
-                if (entry.Value.Contains(dep))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return myPackages.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
         }
 
         private Tuple<Type, Type> Edge(Type source, Type target)

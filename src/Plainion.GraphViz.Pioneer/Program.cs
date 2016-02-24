@@ -2,8 +2,7 @@
 using System.IO;
 using System.Windows.Markup;
 using System.Xml;
-
-using Plainion.GraphViz.Pioneer.Packaging;
+using Plainion.GraphViz.Pioneer.Activities;
 
 namespace Plainion.GraphViz.Pioneer
 {
@@ -27,7 +26,7 @@ namespace Plainion.GraphViz.Pioneer
 
             var config = XamlReader.Load(XmlReader.Create(configFile));
 
-            var analyzer = new Analyzer();
+            var analyzer = new AnalyzePackageDependencies();
             analyzer.Execute(config);
         }
     }

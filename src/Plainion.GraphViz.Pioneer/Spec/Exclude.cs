@@ -1,4 +1,4 @@
-﻿namespace Plainion.GraphViz.Pioneer.Packaging
+﻿namespace Plainion.GraphViz.Pioneer.Spec
 {
     public class Exclude : Wildcard
     {

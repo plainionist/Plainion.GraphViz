@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
+using Plainion.GraphViz.Pioneer.Spec;
 
-namespace Plainion.GraphViz.Pioneer.Packaging
+namespace Plainion.GraphViz.Pioneer.Services
 {
     class AssemblyLoader
     {
-        private List<Assembly> myAssemblies = new List<Assembly>();
+        private readonly List<Assembly> myAssemblies = new List<Assembly>();
         private Dictionary<string, AssemblyDefinition> myMonoCache = new Dictionary<string, AssemblyDefinition>();
         private List<string> mySkippedAssemblies = new List<string>();
 
@@ -156,6 +157,16 @@ namespace Plainion.GraphViz.Pioneer.Packaging
             Environment.Exit(2);
 
             return null;
+        }
+
+        internal IReadOnlyCollection<Assembly> Load(string assemblyRoot , Package package)
+        {
+            return package.Includes
+                .SelectMany(i => Directory.GetFiles(assemblyRoot, i.Pattern))
+                .Where(file => !package.Excludes.Any(e => e.Matches(file)))
+                .Select(Load)
+                .Where(asm => asm != null)
+                .ToList();
         }
     }
 }

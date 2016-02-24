@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 
-
-namespace Plainion.GraphViz.Pioneer.Packaging
+namespace Plainion.GraphViz.Pioneer.Spec
 {
     public class Cluster : PackageBase
     {

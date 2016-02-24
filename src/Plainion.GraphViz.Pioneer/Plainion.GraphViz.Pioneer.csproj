@@ -48,16 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packaging\Analyzer.cs" />
-    <Compile Include="Packaging\AssemblyLoader.cs" />
-    <Compile Include="Packaging\Cluster.cs" />
-    <Compile Include="Packaging\Config.cs" />
-    <Compile Include="Packaging\PackageBase.cs" />
-    <Compile Include="Packaging\Reflector.cs" />
-    <Compile Include="Packaging\Wildcard.cs" />
-    <Compile Include="Packaging\Exclude.cs" />
-    <Compile Include="Packaging\Include.cs" />
-    <Compile Include="Packaging\Package.cs" />
+    <Compile Include="Activities\AnalyzePackageDependencies.cs" />
+    <Compile Include="Services\AssemblyLoader.cs" />
+    <Compile Include="Spec\Cluster.cs" />
+    <Compile Include="Spec\Config.cs" />
+    <Compile Include="Spec\PackageBase.cs" />
+    <Compile Include="Services\Reflector.cs" />
+    <Compile Include="Spec\Wildcard.cs" />
+    <Compile Include="Spec\Exclude.cs" />
+    <Compile Include="Spec\Include.cs" />
+    <Compile Include="Spec\Package.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -65,5 +65,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

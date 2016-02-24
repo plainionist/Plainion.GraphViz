@@ -2,8 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Markup;
 
-
-namespace Plainion.GraphViz.Pioneer.Packaging
+namespace Plainion.GraphViz.Pioneer.Spec
 {
     [ContentProperty("Packages")]
     public class Config
