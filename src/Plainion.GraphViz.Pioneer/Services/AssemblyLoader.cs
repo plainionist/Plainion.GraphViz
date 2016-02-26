@@ -117,7 +117,7 @@ namespace Plainion.GraphViz.Pioneer.Services
                 typeFullName = typeFullName.Substring(0, idx);
             }
 
-           // if (typeRef.IsNested)
+            if (typeRef.IsNested)
             {
                 typeFullName = typeFullName.Replace('/', '+');
             }
@@ -162,7 +162,7 @@ namespace Plainion.GraphViz.Pioneer.Services
             return null;
         }
 
-        internal IReadOnlyCollection<Assembly> Load(string assemblyRoot , Package package)
+        internal IReadOnlyCollection<Assembly> Load(string assemblyRoot, Package package)
         {
             return package.Includes
                 .SelectMany(i => Directory.GetFiles(assemblyRoot, i.Pattern))

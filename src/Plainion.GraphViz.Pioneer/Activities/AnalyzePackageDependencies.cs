@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Plainion.GraphViz.Modules.Documents;
 using Plainion.GraphViz.Pioneer.Services;
 using Plainion.GraphViz.Pioneer.Spec;
 using Plainion.GraphViz.Presentation;
-
 
 namespace Plainion.GraphViz.Pioneer.Activities
 {

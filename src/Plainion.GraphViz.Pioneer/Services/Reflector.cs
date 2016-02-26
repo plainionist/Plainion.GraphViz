@@ -115,7 +115,7 @@ namespace Plainion.GraphViz.Pioneer.Services
         {
             if (myType.IsInterface || myType.IsNested || !myType.IsClass)
             {
-                yield break;
+                return Enumerable.Empty<Type>();
             }
 
             var cecilType = myLoader.MonoLoad(myType.Assembly).MainModule.Types
@@ -125,13 +125,20 @@ namespace Plainion.GraphViz.Pioneer.Services
             {
                 Console.Write("!{0}!", myFullName);
 
-                yield break;
+                return Enumerable.Empty<Type>();
             }
 
             var methods = cecilType.Methods
                 .Where(m => m.HasBody)
                 .SelectMany(m => m.Body.Instructions);
 
+            return GetCalledTypes(methods)
+                .Where(t => t != null)
+                .ToList();
+        }
+
+        private IEnumerable<Type> GetCalledTypes(IEnumerable<Instruction> methods)
+        {
             foreach (var instr in methods)
             {
                 if (instr.OpCode == OpCodes.Ldtoken)
@@ -139,11 +146,7 @@ namespace Plainion.GraphViz.Pioneer.Services
                     var typeRef = instr.Operand as TypeReference;
                     if (typeRef != null)
                     {
-                        var type = TryGetSystemType(typeRef);
-                        if (type != null)
-                        {
-                            yield return type;
-                        }
+                        yield return TryGetSystemType(typeRef);
                     }
                 }
                 else if (instr.OpCode == OpCodes.Call)
@@ -151,27 +154,15 @@ namespace Plainion.GraphViz.Pioneer.Services
                     var callee = ((MethodReference)instr.Operand);
                     var declaringType = callee.DeclaringType;
 
-                    var type = TryGetSystemType(declaringType);
-                    if (type != null)
-                    {
-                        yield return type;
-                    }
+                    yield return TryGetSystemType(declaringType);
 
-                    type = TryGetSystemType(callee.ReturnType);
-                    if (type != null)
-                    {
-                        yield return type;
-                    }
+                    yield return  TryGetSystemType(callee.ReturnType);
 
                     if (callee.HasGenericParameters)
                     {
                         foreach (var parameter in callee.GenericParameters)
                         {
-                            type = TryGetSystemType(parameter);
-                            if (type != null)
-                            {
-                                yield return type;
-                            }
+                            yield return TryGetSystemType(parameter);
                         }
                     }
 
@@ -179,11 +170,7 @@ namespace Plainion.GraphViz.Pioneer.Services
                     {
                         foreach (var parameter in callee.Parameters)
                         {
-                            type = TryGetSystemType(parameter.ParameterType);
-                            if (type != null)
-                            {
-                                yield return type;
-                            }
+                            yield return TryGetSystemType(parameter.ParameterType);
                         }
                     }
                 }
