@@ -47,6 +47,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Plainion.Core, Version=2.8.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Core.2.8.0.0\lib\NET45\Plainion.Core.dll</HintPath>
       <Private>True</Private>
@@ -84,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\EdgeType.cs" />
+    <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphBuilder.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphBuilderView.xaml.cs">
       <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
@@ -98,6 +115,7 @@
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItemModel.cs" />
+    <Compile Include="Analysis\Packaging\Reflector.cs" />
     <Compile Include="Services\Framework\IInspectorHandle.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Services\AssemblyInspectionService.cs" />

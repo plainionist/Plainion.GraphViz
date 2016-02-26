@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plainion.GraphViz.Pioneer.Services;
+using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging;
 using Plainion.GraphViz.Pioneer.Spec;
 using Plainion.GraphViz.Presentation;
 

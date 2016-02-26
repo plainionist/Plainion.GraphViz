@@ -54,12 +54,10 @@
     <Compile Include="Activities\AnalyzeBase.cs" />
     <Compile Include="Activities\AnalyzeSubSystemDependencies.cs" />
     <Compile Include="Activities\AnalyzePackageDependencies.cs" />
-    <Compile Include="Services\AssemblyLoader.cs" />
     <Compile Include="Activities\GraphUtils.cs" />
     <Compile Include="Spec\Cluster.cs" />
     <Compile Include="Spec\Config.cs" />
     <Compile Include="Spec\PackageBase.cs" />
-    <Compile Include="Services\Reflector.cs" />
     <Compile Include="Spec\Wildcard.cs" />
     <Compile Include="Spec\Exclude.cs" />
     <Compile Include="Spec\Include.cs" />
@@ -77,10 +75,15 @@
       <Project>{9105de30-de66-403c-a89c-c261e99c4c05}</Project>
       <Name>Plainion.GraphViz.Modules.Documents</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.Reflection\Plainion.GraphViz.Modules.Reflection.csproj">
+      <Project>{21cc39c6-6535-4f17-aba3-82af9f49fe0c}</Project>
+      <Name>Plainion.GraphViz.Modules.Reflection</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj">
       <Project>{8cc5c764-ace2-4af2-bca1-f78753e709aa}</Project>
       <Name>Plainion.GraphViz</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

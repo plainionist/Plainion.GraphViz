@@ -5,8 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.Documents;
-using Plainion.GraphViz.Pioneer.Services;
+using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging;
 using Plainion.GraphViz.Pioneer.Spec;
 using Plainion.GraphViz.Presentation;
 
@@ -136,7 +135,12 @@ namespace Plainion.GraphViz.Pioneer.Activities
         {
             Console.WriteLine("Loading package {0}", package.Name);
 
-            return AssemblyLoader.Load(Config.AssemblyRoot, package);
+            return package.Includes
+                .SelectMany(i => Directory.GetFiles(Config.AssemblyRoot, i.Pattern))
+                .Where(file => !package.Excludes.Any(e => e.Matches(file)))
+                .Select(AssemblyLoader.Load)
+                .Where(asm => asm != null)
+                .ToList();
         }
     }
 }

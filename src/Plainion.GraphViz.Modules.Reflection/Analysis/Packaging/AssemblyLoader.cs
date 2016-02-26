@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
-using Plainion.GraphViz.Pioneer.Spec;
 
-namespace Plainion.GraphViz.Pioneer.Services
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 {
     class AssemblyLoader
     {
@@ -160,16 +158,6 @@ namespace Plainion.GraphViz.Pioneer.Services
             //Environment.Exit(2);
 
             return null;
-        }
-
-        internal IReadOnlyCollection<Assembly> Load(string assemblyRoot, Package package)
-        {
-            return package.Includes
-                .SelectMany(i => Directory.GetFiles(assemblyRoot, i.Pattern))
-                .Where(file => !package.Excludes.Any(e => e.Matches(file)))
-                .Select(Load)
-                .Where(asm => asm != null)
-                .ToList();
         }
     }
 }
