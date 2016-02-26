@@ -8,20 +8,20 @@ using Plainion.GraphViz.Pioneer.Spec;
 
 namespace Plainion.GraphViz.Pioneer.Activities
 {
-    class AnalyzePackageDependencies
+    class AnalyzePackageDependencies : AnalyzeBase
     {
         private static string[] Colors = { "lightblue", "lightgreen", "lightgray" };
 
         private readonly Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
         private readonly AssemblyLoader myLoader = new AssemblyLoader();
 
-        internal void Execute(Config config)
+        protected override void Execute()
         {
-            foreach (var package in config.Packages)
+            foreach (var package in Config.Packages)
             {
                 Console.WriteLine("Loading package {0}", package.Name);
 
-                var assemblies = myLoader.Load(config.AssemblyRoot, package);
+                var assemblies = myLoader.Load(Config.AssemblyRoot, package);
 
                 myPackages[package.Name] = assemblies
                     .SelectMany(asm => asm.GetTypes())
@@ -30,9 +30,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
             Console.WriteLine("Analyzing ...");
 
-            //Debugger.Launch();
-
-            var tasks = config.Packages
+            var tasks = Config.Packages
                 .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze(p)))
                 .ToArray();
 
@@ -62,9 +60,9 @@ namespace Plainion.GraphViz.Pioneer.Activities
             {
                 writer.WriteLine("digraph {");
 
-                for (int i = 0; i < config.Packages.Count; ++i)
+                for (int i = 0; i < Config.Packages.Count; ++i)
                 {
-                    var package = config.Packages[i];
+                    var package = Config.Packages[i];
 
                     var clusters = new Dictionary<string, List<string>>();
 

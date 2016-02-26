@@ -8,27 +8,27 @@ using Plainion.GraphViz.Pioneer.Spec;
 
 namespace Plainion.GraphViz.Pioneer.Activities
 {
-    class AnalyzeSubSystemDependencies
+    class AnalyzeSubSystemDependencies : AnalyzeBase
     {
         private Package myPackage;
         private readonly List<Type> myTypes = new List<Type>();
         private readonly AssemblyLoader myLoader = new AssemblyLoader();
 
-        internal void Execute(Config config, string packageName)
+        public string PackageName { get; set; }
+
+        protected override void Execute()
         {
-            myPackage = config.Packages.Single(p => p.Name.Equals(packageName, StringComparison.OrdinalIgnoreCase));
+            myPackage = Config.Packages.Single(p => p.Name.Equals(PackageName, StringComparison.OrdinalIgnoreCase));
 
             Console.WriteLine("Loading package {0}", myPackage.Name);
 
-            var assemblies = myLoader.Load(config.AssemblyRoot, myPackage);
+            var assemblies = myLoader.Load(Config.AssemblyRoot, myPackage);
 
             myTypes.AddRange(assemblies.SelectMany(asm => asm.GetTypes()));
 
             Console.WriteLine("Analyzing ...");
 
-            //Debugger.Launch();
-
-            var tasks = config.Packages
+            var tasks = Config.Packages
                 .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze()))
                 .ToArray();
 

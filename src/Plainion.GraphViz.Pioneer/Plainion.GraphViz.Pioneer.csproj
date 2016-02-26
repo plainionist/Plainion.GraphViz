@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\AnalyzeBase.cs" />
     <Compile Include="Activities\AnalyzeSubSystemDependencies.cs" />
     <Compile Include="Activities\AnalyzePackageDependencies.cs" />
     <Compile Include="Services\AssemblyLoader.cs" />
