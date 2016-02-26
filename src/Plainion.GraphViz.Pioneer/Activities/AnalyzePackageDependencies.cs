@@ -13,17 +13,12 @@ namespace Plainion.GraphViz.Pioneer.Activities
         private static string[] Colors = { "lightblue", "lightgreen", "lightgray" };
 
         private readonly Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
-        private readonly AssemblyLoader myLoader = new AssemblyLoader();
 
         protected override void Execute()
         {
             foreach (var package in Config.Packages)
             {
-                Console.WriteLine("Loading package {0}", package.Name);
-
-                var assemblies = myLoader.Load(Config.AssemblyRoot, package);
-
-                myPackages[package.Name] = assemblies
+                myPackages[package.Name] = Load(package)
                     .SelectMany(asm => asm.GetTypes())
                     .ToList();
             }
@@ -38,10 +33,10 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
             Console.WriteLine();
 
-            if (myLoader.SkippedAssemblies.Any())
+            if (AssemblyLoader.SkippedAssemblies.Any())
             {
                 Console.WriteLine("Skipped assemblies:");
-                foreach (var asm in myLoader.SkippedAssemblies)
+                foreach (var asm in AssemblyLoader.SkippedAssemblies)
                 {
                     Console.WriteLine("  {0}", asm);
                 }
@@ -133,7 +128,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
         {
             Console.Write(".");
 
-            return new Reflector(myLoader, type).GetUsedTypes()
+            return new Reflector(AssemblyLoader, type).GetUsedTypes()
                 .Where(usedType => IsForeignPackage(package, usedType))
                 .Select(usedType => GraphUtils.Edge(type, usedType));
         }

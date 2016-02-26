@@ -11,8 +11,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
     class AnalyzeSubSystemDependencies : AnalyzeBase
     {
         private Package myPackage;
-        private readonly List<Type> myTypes = new List<Type>();
-        private readonly AssemblyLoader myLoader = new AssemblyLoader();
+        private List<Type> myTypes;
 
         public string PackageName { get; set; }
 
@@ -20,11 +19,9 @@ namespace Plainion.GraphViz.Pioneer.Activities
         {
             myPackage = Config.Packages.Single(p => p.Name.Equals(PackageName, StringComparison.OrdinalIgnoreCase));
 
-            Console.WriteLine("Loading package {0}", myPackage.Name);
-
-            var assemblies = myLoader.Load(Config.AssemblyRoot, myPackage);
-
-            myTypes.AddRange(assemblies.SelectMany(asm => asm.GetTypes()));
+            myTypes = Load(myPackage)
+                .SelectMany(asm => asm.GetTypes())
+                .ToList();
 
             Console.WriteLine("Analyzing ...");
 
@@ -36,10 +33,10 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
             Console.WriteLine();
 
-            if (myLoader.SkippedAssemblies.Any())
+            if (AssemblyLoader.SkippedAssemblies.Any())
             {
                 Console.WriteLine("Skipped assemblies:");
-                foreach (var asm in myLoader.SkippedAssemblies)
+                foreach (var asm in AssemblyLoader.SkippedAssemblies)
                 {
                     Console.WriteLine("  {0}", asm);
                 }
@@ -71,7 +68,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
             var cluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(type.FullName));
 
-            return new Reflector(myLoader, type).GetUsedTypes()
+            return new Reflector(AssemblyLoader, type).GetUsedTypes()
                 .Where(myTypes.Contains)
                 .Where(t => type != t)
                 .Where(t => cluster == null || cluster != myPackage.Clusters.FirstOrDefault(c => c.Matches(t.FullName)))
