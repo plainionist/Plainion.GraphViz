@@ -26,20 +26,19 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
         protected override Task<Tuple<Type, Type>[]>[] Analyze()
         {
-            return Config.Packages
-                .Select<Package, Task<Tuple<Type, Type>[]>>(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze2()))
-                .ToArray();
-        }
+            return new[]
+            {
+                Task.Run<Tuple<Type, Type>[]>(() =>
+                {
+                    var tasks = myTypes
+                        .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(t)))
+                        .ToArray();
 
-        private Tuple<Type, Type>[] Analyze2()
-        {
-            var tasks = myTypes
-                .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(t)))
-                .ToArray();
+                    Task.WaitAll(tasks);
 
-            Task.WaitAll(tasks);
-
-            return tasks.SelectMany(t => t.Result).ToArray();
+                    return tasks.SelectMany(t => t.Result).ToArray();
+                })
+            };
         }
 
         private IEnumerable<Tuple<Type, Type>> Analyze(Type type)
