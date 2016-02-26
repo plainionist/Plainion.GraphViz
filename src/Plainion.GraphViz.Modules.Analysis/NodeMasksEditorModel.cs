@@ -126,7 +126,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             var regex = new Regex(Filter.ToLower(), RegexOptions.IgnoreCase);
 
             var matchedNodes = myPresentation.Graph.Nodes
-                .Where(n => regex.IsMatch(n.Id) || regex.IsMatch(myPresentation.GetPropertySetFor<Caption>().Get(n.Id).DisplayText));
+                .Where(n => myFilterOnId ? regex.IsMatch(n.Id) : regex.IsMatch(myPresentation.GetPropertySetFor<Caption>().Get(n.Id).DisplayText));
 
             // TODO: should we have default "hide" really?
             var mask = new NodeMask();

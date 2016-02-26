@@ -117,13 +117,16 @@ namespace Plainion.GraphViz.Pioneer.Services
                 typeFullName = typeFullName.Substring(0, idx);
             }
 
-            if (typeRef.IsNested)
+           // if (typeRef.IsNested)
             {
                 typeFullName = typeFullName.Replace('/', '+');
             }
 
             // ',' in fullname has to be escaped
             typeFullName = typeFullName.Replace(",", "\\,");
+
+            // sometimes there is '&' at the end??
+            typeFullName = typeFullName.Replace("&", "");
 
             var type = asm.GetType(typeFullName);
 
@@ -136,25 +139,25 @@ namespace Plainion.GraphViz.Pioneer.Services
             // D I A G N O S T I C S
             //
 
-            var ns = typeRef.Namespace;
-            if (string.IsNullOrEmpty(ns))
-            {
-                var idx = typeFullName.LastIndexOf('.');
-                ns = typeFullName.Substring(0, idx);
-            }
+            //var ns = typeRef.Namespace;
+            //if (string.IsNullOrEmpty(ns))
+            //{
+            //    var idx = typeFullName.LastIndexOf('.');
+            //    ns = typeFullName.Substring(0, idx);
+            //}
 
-            Console.WriteLine();
-            Console.WriteLine(typeFullName);
-            Console.WriteLine("  [Asm] " + asm.FullName);
-            Console.WriteLine("  [NS]  " + ns);
+            //Console.WriteLine();
+            //Console.WriteLine(typeFullName);
+            //Console.WriteLine("  [Asm] " + asm.FullName);
+            //Console.WriteLine("  [NS]  " + ns);
 
 
-            foreach (var t in asm.GetTypes().Where(x => x.Namespace == ns))
-            {
-                Console.WriteLine("  + " + t.FullName);
-            }
+            //foreach (var t in asm.GetTypes().Where(x => x.Namespace == ns))
+            //{
+            //    Console.WriteLine("  + " + t.FullName);
+            //}
 
-            Environment.Exit(2);
+            //Environment.Exit(2);
 
             return null;
         }

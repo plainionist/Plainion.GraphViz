@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using System.Windows;
 using System.Windows.Input;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Infrastructure;
@@ -22,11 +23,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowNodeWithIncomings(Presentation).Execute(n));
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowNodeWithOutgoings(Presentation).Execute(n));
 
+            CopyTextCommand = new DelegateCommand<Node>(n => Clipboard.SetText(Presentation.GetModule<CaptionModule>().Get(n.Id).DisplayText));
+
             GoToEdgeSourceCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Source));
             GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
 
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
             HideNodesWithoutEdgesCommand = new DelegateCommand(() => new HideNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
+            ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
@@ -47,7 +51,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public InteractionRequest<IConfirmation> PrintGraphRequest { get; private set; }
 
-        public DelegateCommand PrintGraphCommand{get;private set;}
+        public DelegateCommand PrintGraphCommand { get; private set; }
 
         private void OnPrintGrpah()
         {
@@ -62,10 +66,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
         public DelegateCommand HideNodesWithoutEdgesCommand { get; private set; }
-        
+
+        public DelegateCommand ShowNodesOutsideClustersCommand { get; private set; }
+
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
         public ICommand HideNodeCommand { get; private set; }
+
+        public ICommand CopyTextCommand { get; private set; }
 
         public ICommand ShowNodeWithSiblingsCommand { get; private set; }
 
@@ -85,6 +93,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             {
                 ShowCyclesCommand.RaiseCanExecuteChanged();
                 HideNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
+                ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
             }

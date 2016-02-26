@@ -26,6 +26,8 @@
                     <MenuItem Header="With incoming" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="With outgoing" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
+                <Separator/>
+                <MenuItem Header="Copy to clipboard" Command="{Binding CopyTextCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
             </ContextMenu>
             <ContextMenu x:Key="Edge">
                 <MenuItem Header="Go to source" Command="{Binding GoToEdgeSourceCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
@@ -34,6 +36,7 @@
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
                 <MenuItem Header="Hide nodes without edges" Command="{Binding HideNodesWithoutEdgesCommand}"/>
+                <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
                 <Separator/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>

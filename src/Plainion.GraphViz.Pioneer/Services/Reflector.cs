@@ -132,22 +132,78 @@ namespace Plainion.GraphViz.Pioneer.Services
                 .Where(m => m.HasBody)
                 .SelectMany(m => m.Body.Instructions);
 
-            foreach (var instr in methods.Where(x => x.OpCode == OpCodes.Call))
+            foreach (var instr in methods)
             {
-                var callee = ((MethodReference)instr.Operand);
-                var declaringType = callee.DeclaringType;
-
-                if (declaringType.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
+                if (instr.OpCode == OpCodes.Ldtoken)
                 {
-                    continue;
+                    var typeRef = instr.Operand as TypeReference;
+                    if (typeRef != null)
+                    {
+                        var type = TryGetSystemType(typeRef);
+                        if (type != null)
+                        {
+                            yield return type;
+                        }
+                    }
                 }
-
-                var dotNetType = myLoader.FindTypeByName(declaringType);
-                if (dotNetType != null)
+                else if (instr.OpCode == OpCodes.Call)
                 {
-                    yield return dotNetType;
+                    var callee = ((MethodReference)instr.Operand);
+                    var declaringType = callee.DeclaringType;
+
+                    var type = TryGetSystemType(declaringType);
+                    if (type != null)
+                    {
+                        yield return type;
+                    }
+
+                    type = TryGetSystemType(callee.ReturnType);
+                    if (type != null)
+                    {
+                        yield return type;
+                    }
+
+                    if (callee.HasGenericParameters)
+                    {
+                        foreach (var parameter in callee.GenericParameters)
+                        {
+                            type = TryGetSystemType(parameter);
+                            if (type != null)
+                            {
+                                yield return type;
+                            }
+                        }
+                    }
+
+                    if (callee.HasParameters)
+                    {
+                        foreach (var parameter in callee.Parameters)
+                        {
+                            type = TryGetSystemType(parameter.ParameterType);
+                            if (type != null)
+                            {
+                                yield return type;
+                            }
+                        }
+                    }
                 }
             }
+        }
+
+        private Type TryGetSystemType(TypeReference typeRef)
+        {
+            if (typeRef.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
+            {
+                return null;
+            }
+
+            var dotNetType = myLoader.FindTypeByName(typeRef);
+            if (dotNetType != null)
+            {
+                return dotNetType;
+            }
+
+            return null;
         }
     }
 }

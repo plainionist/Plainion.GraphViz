@@ -3,7 +3,9 @@ using System.IO;
 using System.Windows.Markup;
 using System.Xml;
 using Plainion.GraphViz.Pioneer.Activities;
+using Plainion.GraphViz.Pioneer.Services;
 using Plainion.GraphViz.Pioneer.Spec;
+using Plainion.GraphViz.Pioneer.Tests;
 
 
 namespace Plainion.GraphViz.Pioneer
@@ -12,6 +14,9 @@ namespace Plainion.GraphViz.Pioneer
     {
         private static void Main(string[] args)
         {
+            //var reflector = new Reflector(new AssemblyLoader(), typeof(ReflectorTests));
+            //var x = reflector.GetUsedTypes();
+
             string packageName = null;
             string configFile = null;
 
