@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Plainion.GraphViz.Modules.Documents;
 using Plainion.GraphViz.Pioneer.Services;
 using Plainion.GraphViz.Pioneer.Spec;
+using Plainion.GraphViz.Presentation;
+
 
 namespace Plainion.GraphViz.Pioneer.Activities
 {
@@ -56,71 +60,51 @@ namespace Plainion.GraphViz.Pioneer.Activities
             return myPackages.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
         }
 
-        protected override void DrawGraph(IReadOnlyCollection<Tuple<Type, Type>> edges)
+        protected override AnalysisDocument GenerateDocument(IReadOnlyCollection<Tuple<Type, Type>> edges)
         {
-            var output = Path.GetFullPath("packaging.dot");
-            Console.WriteLine("Output: {0}", output);
+            var doc = new AnalysisDocument();
 
-            using (var writer = new StreamWriter(output))
+            for (int i = 0; i < Config.Packages.Count; ++i)
             {
-                writer.WriteLine("digraph {");
+                var package = Config.Packages[i];
 
-                for (int i = 0; i < Config.Packages.Count; ++i)
+                var clusters = new Dictionary<string, List<string>>();
+
+                foreach (var cluster in package.Clusters)
                 {
-                    var package = Config.Packages[i];
+                    clusters[cluster.Name] = new List<string>();
+                }
 
-                    var clusters = new Dictionary<string, List<string>>();
-
-                    foreach (var cluster in package.Clusters)
+                foreach (var node in myPackages[package.Name].Select(GraphUtils.Node).Distinct())
+                {
+                    if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
                     {
-                        clusters[cluster.Name] = new List<string>();
+                        continue;
                     }
 
-                    foreach (var node in myPackages[package.Name].Select(GraphUtils.Node).Distinct())
+                    var graphNode = doc.TryAddNode(node.FullName);
+                    doc.Add(new Caption(graphNode.Id, node.Name));
+
+                    // in case multiple cluster match we just take the first one
+                    var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
+                    if (matchedCluster != null)
                     {
-                        if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
-                        {
-                            continue;
-                        }
-
-                        var nodeDesc = string.Format("  \"{0}\" [color = {1}, label = {2}]", node.FullName, Colors[i], node.Name);
-
-                        // in case multiple cluster match we just take the first one
-                        var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
-                        if (matchedCluster != null)
-                        {
-                            clusters[matchedCluster.Name].Add(nodeDesc);
-                        }
-                        else
-                        {
-                            writer.WriteLine(nodeDesc);
-                        }
-                    }
-
-                    foreach (var entry in clusters.Where(e => e.Value.Any()))
-                    {
-                        writer.WriteLine();
-                        writer.WriteLine("  subgraph " + entry.Key + " {");
-
-                        foreach (var nodeDesc in entry.Value)
-                        {
-                            writer.WriteLine("  " + nodeDesc);
-                        }
-
-                        writer.WriteLine("  }");
-                        writer.WriteLine();
+                        clusters[matchedCluster.Name].Add(graphNode.Id);
                     }
                 }
 
-                writer.WriteLine();
-
-                foreach (var edge in edges)
+                foreach (var entry in clusters.Where(e => e.Value.Any()))
                 {
-                    writer.WriteLine("  \"{0}\" -> \"{1}\"", edge.Item1.FullName, edge.Item2.FullName);
+                    doc.TryAddCluster(entry.Key, entry.Value);
                 }
-
-                writer.WriteLine("}");
             }
+
+            foreach (var edge in edges)
+            {
+                doc.TryAddEdge(edge.Item1.FullName, edge.Item2.FullName);
+            }
+
+            return doc;
         }
     }
 }

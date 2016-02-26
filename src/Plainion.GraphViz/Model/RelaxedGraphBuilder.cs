@@ -64,7 +64,7 @@ namespace Plainion.GraphViz.Model
 
         public Cluster TryAddCluster( string clusterId, IEnumerable<string> nodeIds )
         {
-            var cluster = new Cluster( clusterId, nodeIds.Select( n => GetOrCreateNode( n ) ) );
+            var cluster = new Cluster( clusterId, nodeIds.Select( GetOrCreateNode ) );
 
             if( !myGraph.TryAdd( cluster ) )
             {

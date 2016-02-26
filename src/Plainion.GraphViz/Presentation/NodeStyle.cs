@@ -8,30 +8,31 @@ namespace Plainion.GraphViz.Presentation
         private Brush myBorderColor;
         private string myShape;
 
-        public NodeStyle( string ownerId )
-            : base( ownerId )
+        public NodeStyle(string ownerId)
+            : base(ownerId)
         {
             Shape = "ellipse";
             BorderColor = Brushes.Black;
+            FillColor = Brushes.LightGray;
         }
 
         public Brush FillColor
         {
             get { return myFillColor; }
-            set { SetProperty( ref myFillColor, value ); }
+            set { SetProperty(ref myFillColor, value); }
         }
 
         // e.g. ellipse
         public string Shape
         {
             get { return myShape; }
-            set { SetProperty( ref myShape, value ); }
+            set { SetProperty(ref myShape, value); }
         }
 
         public Brush BorderColor
         {
             get { return myBorderColor; }
-            set { SetProperty( ref myBorderColor, value ); }
+            set { SetProperty(ref myBorderColor, value); }
         }
     }
 }

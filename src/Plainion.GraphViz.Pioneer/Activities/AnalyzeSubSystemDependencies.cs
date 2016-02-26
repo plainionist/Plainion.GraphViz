@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.Documents;
 using Plainion.GraphViz.Pioneer.Services;
 using Plainion.GraphViz.Pioneer.Spec;
+using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Pioneer.Activities
 {
@@ -54,66 +58,46 @@ namespace Plainion.GraphViz.Pioneer.Activities
                 .Select(usedType => GraphUtils.Edge(type, usedType));
         }
 
-        protected override void DrawGraph(IReadOnlyCollection<Tuple<Type, Type>> edges)
+        protected override AnalysisDocument GenerateDocument(IReadOnlyCollection<Tuple<Type, Type>> edges)
         {
-            var output = Path.GetFullPath("packaging.dot");
-            Console.WriteLine("Output: {0}", output);
+            var doc = new AnalysisDocument();
 
-            using (var writer = new StreamWriter(output))
+            var clusters = new Dictionary<string, List<string>>();
+
+            foreach (var cluster in myPackage.Clusters)
             {
-                writer.WriteLine("digraph {");
-
-                var clusters = new Dictionary<string, List<string>>();
-
-                foreach (var cluster in myPackage.Clusters)
-                {
-                    clusters[cluster.Name] = new List<string>();
-                }
-
-                foreach (var node in myTypes.Select(GraphUtils.Node).Distinct())
-                {
-                    if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
-                    {
-                        continue;
-                    }
-
-                    var nodeDesc = string.Format("  \"{0}\" [label = {1}]", node.FullName, node.Name);
-
-                    // in case multiple cluster match we just take the first one
-                    var matchedCluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
-                    if (matchedCluster != null)
-                    {
-                        clusters[matchedCluster.Name].Add(nodeDesc);
-                    }
-                    else
-                    {
-                        writer.WriteLine(nodeDesc);
-                    }
-                }
-
-                foreach (var entry in clusters.Where(e => e.Value.Any()))
-                {
-                    writer.WriteLine();
-                    writer.WriteLine("  subgraph " + entry.Key + " {");
-
-                    foreach (var nodeDesc in entry.Value)
-                    {
-                        writer.WriteLine("  " + nodeDesc);
-                    }
-
-                    writer.WriteLine("  }");
-                    writer.WriteLine();
-                }
-
-                writer.WriteLine();
-
-                foreach (var edge in edges)
-                {
-                    writer.WriteLine("  \"{0}\" -> \"{1}\"", edge.Item1.FullName, edge.Item2.FullName);
-                }
-
-                writer.WriteLine("}");
+                clusters[cluster.Name] = new List<string>();
             }
+
+            foreach (var node in myTypes.Select(GraphUtils.Node).Distinct())
+            {
+                if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
+                {
+                    continue;
+                }
+
+                var graphNode = doc.TryAddNode(node.FullName);
+                doc.Add(new Caption(graphNode.Id, node.Name));
+
+                // in case multiple cluster match we just take the first one
+                var matchedCluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
+                if (matchedCluster != null)
+                {
+                    clusters[matchedCluster.Name].Add(graphNode.Id);
+                }
+            }
+
+            foreach (var entry in clusters.Where(e => e.Value.Any()))
+            {
+                doc.TryAddCluster(entry.Key, entry.Value);
+            }
+
+            foreach (var edge in edges)
+            {
+                doc.TryAddEdge(edge.Item1.FullName, edge.Item2.FullName);
+            }
+
+            return doc;
         }
     }
 }

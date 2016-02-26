@@ -37,6 +37,7 @@
       <HintPath>..\..\packages\Plainion.Core.2.8.0.0\lib\NET45\Plainion.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,8 +47,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\AnalysisDocument.cs" />
     <Compile Include="Activities\AnalyzeBase.cs" />
     <Compile Include="Activities\AnalyzeSubSystemDependencies.cs" />
     <Compile Include="Activities\AnalyzePackageDependencies.cs" />
@@ -69,6 +72,15 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.Documents\Plainion.GraphViz.Modules.Documents.csproj">
+      <Project>{9105de30-de66-403c-a89c-c261e99c4c05}</Project>
+      <Name>Plainion.GraphViz.Modules.Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj">
+      <Project>{8cc5c764-ace2-4af2-bca1-f78753e709aa}</Project>
+      <Name>Plainion.GraphViz</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
