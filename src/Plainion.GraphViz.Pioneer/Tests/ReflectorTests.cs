@@ -1,5 +1,5 @@
 ﻿
-using Plainion.GraphViz.Pioneer.Services;
+using Plainion.GraphViz.Pioneer.Activities;
 
 namespace Plainion.GraphViz.Pioneer.Tests
 {

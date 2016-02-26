@@ -2,9 +2,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Plainion.GraphViz.Pioneer.Services
+namespace Plainion.GraphViz.Pioneer.Activities
 {
-    class GraphUtils
+    static class GraphUtils
     {
         public static Tuple<Type, Type> Edge(Type source, Type target)
         {

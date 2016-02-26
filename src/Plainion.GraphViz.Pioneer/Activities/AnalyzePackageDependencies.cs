@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Plainion.GraphViz.Pioneer.Services;
 using Plainion.GraphViz.Pioneer.Spec;
