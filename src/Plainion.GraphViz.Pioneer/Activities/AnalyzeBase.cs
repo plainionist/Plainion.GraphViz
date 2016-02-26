@@ -25,6 +25,8 @@ namespace Plainion.GraphViz.Pioneer.Activities
         }
 
         protected abstract void Execute();
+        
+        protected abstract void Load();
 
         protected IEnumerable<Assembly> Load(Package package)
         {

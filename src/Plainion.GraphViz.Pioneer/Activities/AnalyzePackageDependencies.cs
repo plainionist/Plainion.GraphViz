@@ -14,7 +14,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
         private readonly Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
 
-        protected override void Execute()
+        protected override void Load()
         {
             foreach (var package in Config.Packages)
             {
@@ -22,7 +22,12 @@ namespace Plainion.GraphViz.Pioneer.Activities
                     .SelectMany(asm => asm.GetTypes())
                     .ToList();
             }
+        }
 
+        protected override void Execute()
+        {
+            Load();
+            
             Console.WriteLine("Analyzing ...");
 
             var tasks = Config.Packages

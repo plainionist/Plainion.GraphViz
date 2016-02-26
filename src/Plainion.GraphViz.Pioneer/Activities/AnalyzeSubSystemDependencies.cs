@@ -15,13 +15,18 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
         public string PackageName { get; set; }
 
-        protected override void Execute()
+        protected override void Load()
         {
             myPackage = Config.Packages.Single(p => p.Name.Equals(PackageName, StringComparison.OrdinalIgnoreCase));
 
             myTypes = Load(myPackage)
                 .SelectMany(asm => asm.GetTypes())
                 .ToList();
+        }
+
+        protected override void Execute()
+        {
+            Load();
 
             Console.WriteLine("Analyzing ...");
 
