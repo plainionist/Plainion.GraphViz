@@ -24,35 +24,40 @@ namespace Plainion.GraphViz.Pioneer.Activities
             }
         }
 
-        protected override void Execute()
+        protected override Task<Tuple<Type, Type>[]>[] Analyze()
         {
-            Load();
-            
-            Console.WriteLine("Analyzing ...");
+            return Config.Packages
+                .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze2(p)))
+                .ToArray();
+        }
 
-            var tasks = Config.Packages
-                .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze(p)))
+        private Tuple<Type, Type>[] Analyze2(Package p)
+        {
+            var tasks = myPackages[p.Name]
+                .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(p, t)))
                 .ToArray();
 
             Task.WaitAll(tasks);
 
-            Console.WriteLine();
+            return tasks.SelectMany(t => t.Result).ToArray();
+        }
 
-            if (AssemblyLoader.SkippedAssemblies.Any())
-            {
-                Console.WriteLine("Skipped assemblies:");
-                foreach (var asm in AssemblyLoader.SkippedAssemblies)
-                {
-                    Console.WriteLine("  {0}", asm);
-                }
-                Console.WriteLine();
-            }
+        private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
+        {
+            Console.Write(".");
 
-            var edges = tasks
-                .SelectMany(t => t.Result)
-                .Distinct()
-                .ToList();
+            return new Reflector(AssemblyLoader, type).GetUsedTypes()
+                .Where(usedType => IsForeignPackage(package, usedType))
+                .Select(usedType => GraphUtils.Edge(type, usedType));
+        }
 
+        private bool IsForeignPackage(Package package, Type dep)
+        {
+            return myPackages.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
+        }
+
+        protected override void DrawGraph(IReadOnlyCollection<Tuple<Type, Type>> edges)
+        {
             var output = Path.GetFullPath("packaging.dot");
             Console.WriteLine("Output: {0}", output);
 
@@ -116,31 +121,6 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
                 writer.WriteLine("}");
             }
-        }
-
-        private Tuple<Type, Type>[] Analyze(Package p)
-        {
-            var tasks = myPackages[p.Name]
-                .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(p, t)))
-                .ToArray();
-
-            Task.WaitAll(tasks);
-
-            return tasks.SelectMany(t => t.Result).ToArray();
-        }
-
-        private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
-        {
-            Console.Write(".");
-
-            return new Reflector(AssemblyLoader, type).GetUsedTypes()
-                .Where(usedType => IsForeignPackage(package, usedType))
-                .Select(usedType => GraphUtils.Edge(type, usedType));
-        }
-
-        private bool IsForeignPackage(Package package, Type dep)
-        {
-            return myPackages.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
         }
     }
 }

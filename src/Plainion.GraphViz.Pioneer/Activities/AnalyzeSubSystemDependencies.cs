@@ -24,39 +24,14 @@ namespace Plainion.GraphViz.Pioneer.Activities
                 .ToList();
         }
 
-        protected override void Execute()
+        protected override Task<Tuple<Type, Type>[]>[] Analyze()
         {
-            Load();
-
-            Console.WriteLine("Analyzing ...");
-
-            var tasks = Config.Packages
-                .Select(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze()))
+            return Config.Packages
+                .Select<Package, Task<Tuple<Type, Type>[]>>(p => Task.Run<Tuple<Type, Type>[]>(() => Analyze2()))
                 .ToArray();
-
-            Task.WaitAll(tasks);
-
-            Console.WriteLine();
-
-            if (AssemblyLoader.SkippedAssemblies.Any())
-            {
-                Console.WriteLine("Skipped assemblies:");
-                foreach (var asm in AssemblyLoader.SkippedAssemblies)
-                {
-                    Console.WriteLine("  {0}", asm);
-                }
-                Console.WriteLine();
-            }
-
-            var edges = tasks
-                .SelectMany(t => t.Result)
-                .Distinct()
-                .ToList();
-
-            DrawGraph(edges);
         }
 
-        private Tuple<Type, Type>[] Analyze()
+        private Tuple<Type, Type>[] Analyze2()
         {
             var tasks = myTypes
                 .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(t)))
@@ -80,7 +55,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
                 .Select(usedType => GraphUtils.Edge(type, usedType));
         }
 
-        private void DrawGraph(List<Tuple<Type, Type>> edges)
+        protected override void DrawGraph(IReadOnlyCollection<Tuple<Type, Type>> edges)
         {
             var output = Path.GetFullPath("packaging.dot");
             Console.WriteLine("Output: {0}", output);
