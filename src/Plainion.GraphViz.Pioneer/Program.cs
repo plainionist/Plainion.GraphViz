@@ -14,10 +14,6 @@ namespace Plainion.GraphViz.Pioneer
         
         private static void Main(string[] args)
         {
-            //var reflector = new Reflector(new AssemblyLoader(), typeof(ReflectorTests));
-            //var x = reflector.GetUsedTypes();
-
-
             for (int i = 0; i < args.Length; ++i)
             {
                 if (args[i] == "-p")
