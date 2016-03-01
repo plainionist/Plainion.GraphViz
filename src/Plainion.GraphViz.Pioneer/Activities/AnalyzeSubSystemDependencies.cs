@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging;
-using Plainion.GraphViz.Pioneer.Spec;
+using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Pioneer.Activities

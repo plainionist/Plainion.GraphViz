@@ -25,7 +25,7 @@
             <pn:PopupFileDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
-    <DockPanel Background="#FDFDF5" LastChildFill="True">
+    <DockPanel Background="#FDFDF5" LastChildFill="True" Margin="5">
         <StackPanel DockPanel.Dock="Bottom">
             <Grid Margin="0,5,0,5">
                 <Grid.ColumnDefinitions>

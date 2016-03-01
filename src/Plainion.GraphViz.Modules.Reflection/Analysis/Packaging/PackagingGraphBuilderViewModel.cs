@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -69,6 +70,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         public IPresentationCreationService PresentationCreationService { get; set; }
 
         [Import]
+        public IDocumentLoader DocumentLoader { get; set; }
+
+        [Import]
         public IStatusMessageService StatusMessageService { get; set; }
 
         [Import]
@@ -103,26 +107,35 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                         }
                         else
                         {
-                            using (var stream = GetType().Assembly.GetManifestResourceStream("Plainion.GraphViz.Modules.Reflections.Resources.SystemPackagingTemplate.xaml"))
+                            using (var stream = GetType().Assembly.GetManifestResourceStream("Plainion.GraphViz.Modules.Reflection.Resources.SystemPackagingTemplate.xaml"))
                             {
                                 using (var reader = new StreamReader(stream))
                                 {
-                                    Document.Text= reader.ReadToEnd();
+                                    Document.Text = reader.ReadToEnd();
                                 }
                             }
                         }
+                        Document.FileName = n.FileName;
                     }
                 });
         }
 
         private void CreateGraph()
         {
-            IsReady = false;
+            //IsReady = false;
 
             using (var reader = Document.CreateReader())
             {
                 myPackagingSpec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
             }
+
+            Save();
+
+            var output = Path.GetTempFileName() + ".dot";
+            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
+            Process.Start(executable, "-o " + output + " " + Document.FileName).WaitForExit();
+
+            DocumentLoader.Load(output);
 
             //InspectionService.UpdateInspectorOnDemand(ref myPackagingGraphInspector, Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
@@ -130,12 +143,13 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             //myPackagingGraphInspector.Value.AssemblyLocation = AssemblyToAnalyseLocation;
             //myPackagingGraphInspector.Value.SelectedType = TypeToAnalyse;
 
-            myCancelBackgroundProcessing = InspectionService.RunAsync(myPackagingGraphInspector.Value, v => ProgressValue = v, OnPackagingGraphCompleted);
+            //myCancelBackgroundProcessing = InspectionService.RunAsync(myPackagingGraphInspector.Value, v => ProgressValue = v, OnPackagingGraphCompleted);
         }
 
         internal void OnClosed()
         {
-            Document.Text = null;
+            Save();
+            Document.Text = string.Empty;
 
             if (myCancelBackgroundProcessing != null)
             {
@@ -145,6 +159,11 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             InspectionService.DestroyInspectorOnDemand(ref myPackagingGraphInspector);
 
             IsReady = true;
+        }
+
+        private void Save()
+        {
+            File.WriteAllText(Document.FileName, Document.Text);
         }
 
         protected override void OnModelPropertyChanged(string propertyName)

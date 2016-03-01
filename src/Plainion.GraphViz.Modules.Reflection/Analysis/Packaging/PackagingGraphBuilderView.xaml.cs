@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,7 +13,7 @@ using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 {
-    [Export( typeof( PackagingGraphBuilderView ) )]
+    [Export(typeof(PackagingGraphBuilderView))]
     public partial class PackagingGraphBuilderView : UserControl
     {
         private FoldingManager myFoldingManager;
@@ -20,7 +22,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         private IEnumerable<KeywordCompletionData> myCompletionData;
 
         [ImportingConstructor]
-        internal PackagingGraphBuilderView( PackagingGraphBuilderViewModel model )
+        internal PackagingGraphBuilderView(PackagingGraphBuilderViewModel model)
         {
             InitializeComponent();
 
@@ -42,7 +44,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             myTextEditor.TextArea.TextEntered += OnTextEntered;
 
             myCompletionData = GetType().Assembly.GetTypes()
-                .Where(t => t.GetInterfaces().Any(iface => iface == typeof(SystemPackaging)))
+                .Where(t => t.Namespace == typeof(SystemPackaging).Namespace)
+                .Where(t => !t.IsAbstract)
+                .Where(t => t.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) != null)
                 .Select(t => new KeywordCompletionData(t))
                 .ToList();
         }

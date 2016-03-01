@@ -6,13 +6,14 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:prism="http://www.codeplex.com/prism"
              xmlns:v="clr-namespace:Plainion.GraphViz.Modules.Reflection"
+             xmlns:pn="http://github.com/ronin4net/plainion"
              mc:Ignorable="d" 
-             IsEnabled="False"
              Header="Packaging dependency graph ..."
              Command="{Binding OpenPackagingGraphBuilderCommand}">
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding PackagingGraphBuilderRequest, Mode=OneWay}">
-            <prism:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.PackagingGraphBuilder}"/>
+            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.PackagingGraphBuilder}" 
+                                WindowHeight="600" WindowWidth="800"/>
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 </MenuItem>

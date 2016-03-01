@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging;
-using Plainion.GraphViz.Pioneer.Spec;
+using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Pioneer.Activities
@@ -18,11 +18,11 @@ namespace Plainion.GraphViz.Pioneer.Activities
             AssemblyLoader = new AssemblyLoader();
         }
 
-        protected Config Config { get; private set; }
+        protected SystemPackaging Config { get; private set; }
 
         protected AssemblyLoader AssemblyLoader { get; private set; }
 
-        public void Execute(Config config)
+        public void Execute(SystemPackaging config)
         {
             Config = config;
 
@@ -64,10 +64,9 @@ namespace Plainion.GraphViz.Pioneer.Activities
 
         private void WriteDocument(AnalysisDocument document)
         {
-            var output = Path.GetFullPath("packaging.dot");
-            Console.WriteLine("Output: {0}", output);
+            Console.WriteLine("Output: {0}", OutputFile);
 
-            using (var writer = new StreamWriter(output))
+            using (var writer = new StreamWriter(OutputFile))
             {
                 writer.WriteLine("digraph {");
 
@@ -142,5 +141,7 @@ namespace Plainion.GraphViz.Pioneer.Activities
                 .Where(asm => asm != null)
                 .ToList();
         }
+
+        public string OutputFile { get; set; }
     }
 }

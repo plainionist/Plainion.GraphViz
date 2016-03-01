@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Markup;
 using System.Xml;
+using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Pioneer.Activities;
-using Plainion.GraphViz.Pioneer.Spec;
 
 namespace Plainion.GraphViz.Pioneer
 {
@@ -11,14 +12,21 @@ namespace Plainion.GraphViz.Pioneer
     {
         private static string myPackageName;
         private static string myConfigFile;
-        
+        private static string myOutputFile;
+
         private static void Main(string[] args)
         {
+            myOutputFile = Path.GetFullPath(".");
+
             for (int i = 0; i < args.Length; ++i)
             {
                 if (args[i] == "-p")
                 {
-                    myPackageName = args[1];
+                    myPackageName = args[i + 1];
+                }
+                else if (args[i] == "-o")
+                {
+                    myOutputFile = args[i + 1];
                 }
                 else
                 {
@@ -38,13 +46,14 @@ namespace Plainion.GraphViz.Pioneer
                 Environment.Exit(1);
             }
 
-            var config = (Config)XamlReader.Load(XmlReader.Create(myConfigFile));
+            var config = (SystemPackaging)XamlReader.Load(XmlReader.Create(myConfigFile));
 
             var analyzer = CreateAnalyzer(config);
+            analyzer.OutputFile = myOutputFile;
             analyzer.Execute(config);
         }
 
-        private static AnalyzeBase CreateAnalyzer(Config config)
+        private static AnalyzeBase CreateAnalyzer(SystemPackaging config)
         {
             if (myPackageName == null)
             {

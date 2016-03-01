@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <SystemPackaging xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec" 
-                  xmlns:s="clr-namespace:System;assembly=mscorlib"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                  xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <Config.AssemblyRoot>c:\workspace\Project\bin\Debug</Config.AssemblyRoot>
+                 xmlns:s="clr-namespace:System;assembly=mscorlib"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <SystemPackaging.AssemblyRoot>c:\workspace\Project\bin\Debug</SystemPackaging.AssemblyRoot>
     <Package Name="Package1">
         <Include Pattern="syngo.*P1*.dll"/>
         <Package.Clusters>

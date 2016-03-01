@@ -185,7 +185,6 @@
     </Page>
     <EmbeddedResource Include="Resources\SystemPackagingTemplate.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

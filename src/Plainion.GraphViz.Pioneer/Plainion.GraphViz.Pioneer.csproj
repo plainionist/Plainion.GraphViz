@@ -55,13 +55,6 @@
     <Compile Include="Activities\AnalyzeSubSystemDependencies.cs" />
     <Compile Include="Activities\AnalyzePackageDependencies.cs" />
     <Compile Include="Activities\GraphUtils.cs" />
-    <Compile Include="Spec\Cluster.cs" />
-    <Compile Include="Spec\Config.cs" />
-    <Compile Include="Spec\PackageBase.cs" />
-    <Compile Include="Spec\Wildcard.cs" />
-    <Compile Include="Spec\Exclude.cs" />
-    <Compile Include="Spec\Include.cs" />
-    <Compile Include="Spec\Package.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
