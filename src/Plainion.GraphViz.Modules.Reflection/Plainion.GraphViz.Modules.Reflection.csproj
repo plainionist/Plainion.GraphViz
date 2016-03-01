@@ -15,6 +15,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism.Composition, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Prism.Composition.5.0.0\lib\NET45\Microsoft.Practices.Prism.Composition.dll</HintPath>
@@ -100,7 +104,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\EdgeType.cs" />
+    <Compile Include="Analysis\Packaging\AbstractCompletionData.cs" />
     <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />
+    <Compile Include="Analysis\Packaging\KeywordCompletionData.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphBuilder.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphBuilderView.xaml.cs">
       <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
@@ -115,7 +121,15 @@
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItemModel.cs" />
+    <Compile Include="Analysis\Packaging\PropertyCompletionData.cs" />
     <Compile Include="Analysis\Packaging\Reflector.cs" />
+    <Compile Include="Analysis\Packaging\Spec\Cluster.cs" />
+    <Compile Include="Analysis\Packaging\Spec\SystemPackaging.cs" />
+    <Compile Include="Analysis\Packaging\Spec\Exclude.cs" />
+    <Compile Include="Analysis\Packaging\Spec\Include.cs" />
+    <Compile Include="Analysis\Packaging\Spec\Package.cs" />
+    <Compile Include="Analysis\Packaging\Spec\PackageBase.cs" />
+    <Compile Include="Analysis\Packaging\Spec\Wildcard.cs" />
     <Compile Include="Services\Framework\IInspectorHandle.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Services\AssemblyInspectionService.cs" />
@@ -169,6 +183,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <EmbeddedResource Include="Resources\SystemPackagingTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
