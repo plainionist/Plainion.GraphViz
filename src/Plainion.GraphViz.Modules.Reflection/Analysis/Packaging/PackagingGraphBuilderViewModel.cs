@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Markup;
@@ -30,6 +33,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         //private IInspectorHandle<PackagingGraphInspector> myPackagingGraphInspector;
         private TextDocument myDocument;
         private SystemPackaging myPackagingSpec;
+        private IEnumerable<KeywordCompletionData> myCompletionData;
 
         public PackagingGraphBuilderViewModel()
         {
@@ -43,6 +47,13 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             OpenCommand = new DelegateCommand(OnOpen, () => IsReady);
             OpenFileRequest = new InteractionRequest<OpenFileDialogNotification>();
 
+            myCompletionData = GetType().Assembly.GetTypes()
+                .Where(t => t.Namespace == typeof(SystemPackaging).Namespace)
+                .Where(t => !t.IsAbstract)
+                .Where(t => t.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) == null)
+                .Select(t => new KeywordCompletionData(t))
+                .ToList();
+
             IsReady = true;
         }
 
@@ -50,6 +61,12 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         {
             get { return myDocument; }
             set { SetProperty(ref myDocument, value); }
+        }
+
+        public IEnumerable<KeywordCompletionData> CompletionData
+        {
+            get { return myCompletionData; }
+            set { SetProperty(ref myCompletionData, value); }
         }
 
         public bool IsReady

@@ -108,6 +108,9 @@
     <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />
     <Compile Include="Analysis\Packaging\KeywordCompletionData.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphBuilder.cs" />
+    <Compile Include="Analysis\Packaging\XmlEditor.xaml.cs">
+      <DependentUpon>XmlEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Analysis\Packaging\PackagingGraphBuilderView.xaml.cs">
       <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
     </Compile>
@@ -167,6 +170,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Analysis\Packaging\XmlEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Analysis\Packaging\PackagingGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

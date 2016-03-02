@@ -7,7 +7,8 @@
         xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
         xmlns:pn="http://github.com/ronin4net/plainion"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:v="clr-namespace:Plainion.GraphViz.Modules.Reflection.Analysis.Packaging"
         mc:Ignorable="d"  
         d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -41,12 +42,6 @@
             <ProgressBar Minimum="0" Value="{Binding Path=ProgressValue, Mode=TwoWay}" Margin="0,5,0,5" Height="15" Maximum="100"/>
         </StackPanel>
 
-        <avalonEdit:TextEditor 
-             Name="myTextEditor" 
-             FontFamily="Consolas" 
-             SyntaxHighlighting="XML"  
-             Document="{Binding Document}" 
-             ShowLineNumbers="True" 
-             FontSize="10pt"/>
+        <v:XmlEditor Document="{Binding Document}" CompletionData="{Binding CompletionData}"/>
     </DockPanel>
 </UserControl>

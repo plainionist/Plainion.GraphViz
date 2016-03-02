@@ -6,7 +6,7 @@ using ICSharpCode.AvalonEdit.Editing;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 {
-    abstract class AbstractCompletionData : ICompletionData
+    public abstract class AbstractCompletionData : ICompletionData
     {
         protected AbstractCompletionData(string name, string description)
         {

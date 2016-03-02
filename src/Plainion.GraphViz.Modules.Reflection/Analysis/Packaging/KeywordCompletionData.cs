@@ -2,7 +2,7 @@
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 {
-    class KeywordCompletionData : AbstractCompletionData
+    public class KeywordCompletionData : AbstractCompletionData
     {
         public KeywordCompletionData(Type type)
             : base(type.Name, type.Name)
