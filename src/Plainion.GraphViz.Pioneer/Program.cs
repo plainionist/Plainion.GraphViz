@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Markup;
 using System.Xml;
@@ -16,41 +15,49 @@ namespace Plainion.GraphViz.Pioneer
 
         private static void Main(string[] args)
         {
-            myOutputFile = Path.GetFullPath(".");
-
-            for (int i = 0; i < args.Length; ++i)
+            try
             {
-                if (args[i] == "-p")
+                myOutputFile = Path.GetFullPath(".");
+
+                for (int i = 0; i < args.Length; ++i)
                 {
-                    myPackageName = args[i + 1];
+                    if (args[i] == "-p")
+                    {
+                        myPackageName = args[i + 1];
+                    }
+                    else if (args[i] == "-o")
+                    {
+                        myOutputFile = args[i + 1];
+                    }
+                    else
+                    {
+                        myConfigFile = args[i];
+                    }
                 }
-                else if (args[i] == "-o")
+
+                if (myConfigFile == null)
                 {
-                    myOutputFile = args[i + 1];
+                    Console.WriteLine("Config file missing");
+                    Environment.Exit(1);
                 }
-                else
+
+                if (!File.Exists(myConfigFile))
                 {
-                    myConfigFile = args[i];
+                    Console.WriteLine("Config file does not exist: " + myConfigFile);
+                    Environment.Exit(1);
                 }
+
+                var config = (SystemPackaging)XamlReader.Load(XmlReader.Create(myConfigFile));
+
+                var analyzer = CreateAnalyzer(config);
+                analyzer.OutputFile = myOutputFile;
+                analyzer.Execute(config);
             }
-
-            if (myConfigFile == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Config file missing");
+                Console.WriteLine(ex.ToString());
                 Environment.Exit(1);
             }
-
-            if (!File.Exists(myConfigFile))
-            {
-                Console.WriteLine("Config file does not exist: " + myConfigFile);
-                Environment.Exit(1);
-            }
-
-            var config = (SystemPackaging)XamlReader.Load(XmlReader.Create(myConfigFile));
-
-            var analyzer = CreateAnalyzer(config);
-            analyzer.OutputFile = myOutputFile;
-            analyzer.Execute(config);
         }
 
         private static AnalyzeBase CreateAnalyzer(SystemPackaging config)

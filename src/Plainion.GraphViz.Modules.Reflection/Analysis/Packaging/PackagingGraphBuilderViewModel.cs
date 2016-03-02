@@ -27,7 +27,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         private int myProgress;
         private bool myIsReady;
         private Action myCancelBackgroundProcessing;
-        private IInspectorHandle<PackagingGraphInspector> myPackagingGraphInspector;
+        //private IInspectorHandle<PackagingGraphInspector> myPackagingGraphInspector;
         private TextDocument myDocument;
         private SystemPackaging myPackagingSpec;
 
@@ -132,10 +132,20 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             Save();
 
             var output = Path.GetTempFileName() + ".dot";
-            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
-            Process.Start(executable, "-o " + output + " " + Document.FileName).WaitForExit();
 
-            DocumentLoader.Load(output);
+            if (File.Exists(output))
+            {
+                File.Delete(output);
+            }
+
+            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
+            var pioneer = Process.Start(executable, "-o " + output + " " + Document.FileName);
+            pioneer.WaitForExit();
+
+            if (pioneer.ExitCode == 0)
+            {
+                DocumentLoader.Load(output);
+            }
 
             //InspectionService.UpdateInspectorOnDemand(ref myPackagingGraphInspector, Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
@@ -151,12 +161,12 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             Save();
             Document.Text = string.Empty;
 
-            if (myCancelBackgroundProcessing != null)
-            {
-                myCancelBackgroundProcessing();
-            }
+            //if (myCancelBackgroundProcessing != null)
+            //{
+            //    myCancelBackgroundProcessing();
+            //}
 
-            InspectionService.DestroyInspectorOnDemand(ref myPackagingGraphInspector);
+            //InspectionService.DestroyInspectorOnDemand(ref myPackagingGraphInspector);
 
             IsReady = true;
         }

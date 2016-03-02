@@ -2,7 +2,7 @@
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec
 {
-    public class Wildcard
+    public abstract class Wildcard
     {
         public string Pattern { get; set; }
 

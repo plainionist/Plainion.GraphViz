@@ -6,9 +6,9 @@ using System.Windows.Markup;
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec
 {
     [ContentProperty("Patterns")]
-    public class PackageBase
+    public abstract class PackageBase
     {
-        public PackageBase()
+        protected PackageBase()
         {
             Patterns = new List<Wildcard>();
         }

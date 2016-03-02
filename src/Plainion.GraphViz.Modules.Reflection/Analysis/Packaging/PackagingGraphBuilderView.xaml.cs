@@ -46,7 +46,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             myCompletionData = GetType().Assembly.GetTypes()
                 .Where(t => t.Namespace == typeof(SystemPackaging).Namespace)
                 .Where(t => !t.IsAbstract)
-                .Where(t => t.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) != null)
+                .Where(t => t.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) == null)
                 .Select(t => new KeywordCompletionData(t))
                 .ToList();
         }
