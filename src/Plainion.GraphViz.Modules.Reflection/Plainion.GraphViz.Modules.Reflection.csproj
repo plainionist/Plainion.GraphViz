@@ -15,6 +15,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Akka, Version=1.0.6.16, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.1.0.6\lib\net45\Akka.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.1.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AvalonEdit.5.0.2\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
       <Private>True</Private>
@@ -67,6 +71,10 @@
       <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Plainion.Core, Version=2.8.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Core.2.8.0.0\lib\NET45\Plainion.Core.dll</HintPath>
       <Private>True</Private>
@@ -105,6 +113,13 @@
   <ItemGroup>
     <Compile Include="Analysis\EdgeType.cs" />
     <Compile Include="Analysis\Packaging\AbstractCompletionData.cs" />
+    <Compile Include="Analysis\Packaging\Actors\AnalysisDocument.cs" />
+    <Compile Include="Analysis\Packaging\Actors\AnalyzeBase.cs" />
+    <Compile Include="Analysis\Packaging\Actors\AnalyzePackageDependencies.cs" />
+    <Compile Include="Analysis\Packaging\Actors\AnalyzeSubSystemDependencies.cs" />
+    <Compile Include="Analysis\Packaging\Actors\GraphBuildRequest.cs" />
+    <Compile Include="Analysis\Packaging\Actors\GraphUtils.cs" />
+    <Compile Include="Analysis\Packaging\Actors\PackageAnalysingActor.cs" />
     <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />
     <Compile Include="Analysis\Packaging\KeywordCompletionData.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphBuilder.cs" />

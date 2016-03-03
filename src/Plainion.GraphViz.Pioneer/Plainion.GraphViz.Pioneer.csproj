@@ -50,11 +50,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\AnalysisDocument.cs" />
-    <Compile Include="Activities\AnalyzeBase.cs" />
-    <Compile Include="Activities\AnalyzeSubSystemDependencies.cs" />
-    <Compile Include="Activities\AnalyzePackageDependencies.cs" />
-    <Compile Include="Activities\GraphUtils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,8 +71,6 @@
       <Name>Plainion.GraphViz</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

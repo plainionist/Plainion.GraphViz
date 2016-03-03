@@ -11,11 +11,15 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Xml;
+
+using Akka.Actor;
+
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Modules.Reflection.Services;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
@@ -137,7 +141,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 });
         }
 
-        private void CreateGraph()
+        private async void CreateGraph()
         {
             //IsReady = false;
 
@@ -155,12 +159,24 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 File.Delete(output);
             }
 
-            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
-            var pioneer = Process.Start(executable, "-o " + output + " " + Document.FileName);
-            pioneer.WaitForExit();
+            //var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
+            //var pioneer = Process.Start(executable, "-o " + output + " " + Document.FileName);
+            //pioneer.WaitForExit();
 
-            if (pioneer.ExitCode == 0)
+            var request = new GraphBuildRequest
             {
+                Spec = Document.Text,
+                OutputFile = output
+            };
+
+            var system = ActorSystem.Create("CodeInspection");
+            var inspector = system.ActorOf<PackageAnalysingActor>("package-deps-analyst");
+            
+            var response = await inspector.Ask(request);
+
+            if (!(response is Failure))
+            {
+                output = ((string) response);
                 DocumentLoader.Load(output);
             }
 
