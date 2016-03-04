@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Xml;
 using Akka.Actor;
-using Akka.Dispatch.SysMsg;
-
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors

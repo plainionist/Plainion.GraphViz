@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Windows.Markup;
 using System.Xml;
+using Akka.Actor;
+using Akka.Configuration;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 
@@ -14,6 +17,49 @@ namespace Plainion.GraphViz.Pioneer
         private static string myOutputFile;
 
         private static void Main(string[] args)
+        {
+            if (args.Length == 1 && args[0] == "-SAS")
+            {
+                StartActorSystem();
+            }
+            else
+            {
+                ConsoleMain(args);
+            }
+        }
+
+        private static void StartActorSystem()
+        {
+            var config = ConfigurationFactory.ParseString(@"
+                akka {
+                    actor {
+                        provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
+                    }
+
+                    remote {
+                        helios.tcp {
+                            port = 2525
+                            hostname = localhost
+                        }
+                    }
+                }
+                ");
+
+            using (var system = ActorSystem.Create("CodeInspection", config))
+            {
+                Console.WriteLine("System booted");
+
+                system.ActorOf<PackageAnalysingActor>("PackagingDependencies");
+
+                Console.WriteLine("Actor PackagingDependencies created");
+
+                Console.WriteLine("...  running ...");
+
+                while (true) Thread.Sleep(1000);
+            }
+        }
+
+        private static void ConsoleMain(string[] args)
         {
             try
             {

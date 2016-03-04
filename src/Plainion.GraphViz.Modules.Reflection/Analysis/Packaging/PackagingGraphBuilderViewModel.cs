@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Akka.Actor;
+using Akka.Configuration;
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
@@ -139,8 +143,27 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 OutputFile = Path.GetTempFileName() + ".dot"
             };
 
-            mySystem = ActorSystem.Create("CodeInspection");
-            myActor = mySystem.ActorOf<PackageAnalysingActor>("package-deps-analyst");
+            var config = ConfigurationFactory.ParseString(@"
+                akka {
+                    actor {
+                        provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
+                    }
+                    remote {
+                        helios.tcp {
+                            port = 0
+                            hostname = localhost
+                        }
+                    }
+                }
+                ");
+
+            mySystem = ActorSystem.Create("CodeInspectionClient", config);
+
+            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
+            var pioneer = Process.Start(executable, "-SAS");
+
+            myActor = await mySystem.ActorSelection("akka.tcp://CodeInspection@localhost:2525/user/PackagingDependencies")
+                .ResolveOne(TimeSpan.FromSeconds(5));
 
             var response = await myActor.Ask(request);
 
@@ -150,6 +173,8 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             }
 
             var ignore = mySystem.Terminate();
+
+            pioneer.Kill();
 
             IsReady = true;
         }
@@ -165,7 +190,10 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             Save();
             Document.Text = string.Empty;
 
-            myActor.Tell(new Cancel());
+            if (myActor != null)
+            {
+                myActor.Tell(new Cancel());
+            }
 
             IsReady = true;
         }
