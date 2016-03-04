@@ -1,40 +1,83 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Xml;
 using Akka.Actor;
+using Akka.Dispatch.SysMsg;
+
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 {
-    class PackageAnalysingActor : ReceiveActor
+    class PackageAnalysingActor : ReceiveActor, IWithUnboundedStash
     {
+        private CancellationTokenSource myCTS;
+
+        public IStash Stash { get; set; }
+
         public PackageAnalysingActor()
         {
-            Receive<GraphBuildRequest>(r => OnReceive(r));
+            myCTS = new CancellationTokenSource();
+
+            Ready();
         }
 
-        private bool OnReceive(GraphBuildRequest request)
+        private void Ready()
         {
-            try
+            Receive<GraphBuildRequest>(r =>
             {
-                var activity = new AnalyzePackageDependencies();
-                activity.OutputFile = request.OutputFile;
+                var self = Self;
+                var sender = Sender;
 
-                using (var reader = new StringReader(request.Spec))
+                Task.Run<string>(() =>
                 {
-                    var spec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
-                    activity.Execute(spec);
-                }
+                    var activity = new AnalyzePackageDependencies();
+                    activity.OutputFile = r.OutputFile;
 
-                Sender.Tell(activity.OutputFile, Self);
-            }
-            catch (Exception e)
+                    using (var reader = new StringReader(r.Spec))
+                    {
+                        var spec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
+                        activity.Execute(spec);
+                    }
+
+                    return activity.OutputFile;
+                }, myCTS.Token)
+                .ContinueWith<object>(x =>
+                {
+                    if (x.IsCanceled || x.IsFaulted)
+                    {
+                        return new Finished(sender) { Exception = x.Exception };
+                    }
+
+                    return new Finished(sender) {OutputFile = x.Result};
+                }, TaskContinuationOptions.ExecuteSynchronously)
+                .PipeTo(self);
+
+                Become(Working);
+            });
+        }
+
+        private void Working()
+        {
+            Receive<Cancel>(msg =>
             {
-                Sender.Tell(new Failure { Exception = e }, Self);
-            }
+                myCTS.Cancel();
+                BecomeReady();
+            });
+            Receive<Finished>(msg =>
+            {
+                msg.Sender.Tell(msg.OutputFile, Self);
+                BecomeReady();
+            });
+            ReceiveAny(o => Stash.Stash());
+        }
 
-            return true;
+        private void BecomeReady()
+        {
+            myCTS = new CancellationTokenSource();
+            Stash.UnstashAll();
+            Become(Ready);
         }
     }
 }

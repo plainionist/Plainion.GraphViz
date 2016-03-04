@@ -117,6 +117,8 @@
     <Compile Include="Analysis\Packaging\Actors\AnalyzeBase.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalyzePackageDependencies.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalyzeSubSystemDependencies.cs" />
+    <Compile Include="Analysis\Packaging\Actors\Cancel.cs" />
+    <Compile Include="Analysis\Packaging\Actors\Finished.cs" />
     <Compile Include="Analysis\Packaging\Actors\GraphBuildRequest.cs" />
     <Compile Include="Analysis\Packaging\Actors\GraphUtils.cs" />
     <Compile Include="Analysis\Packaging\Actors\PackageAnalysingActor.cs" />

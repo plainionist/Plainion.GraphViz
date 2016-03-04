@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Windows;
-using System.Windows.Markup;
-using System.Windows.Media;
-using System.Xml;
-
 using Akka.Actor;
-
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
@@ -22,8 +13,6 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Modules.Reflection.Services;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
-using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
@@ -33,18 +22,17 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
     {
         private int myProgress;
         private bool myIsReady;
-        private Action myCancelBackgroundProcessing;
-        //private IInspectorHandle<PackagingGraphInspector> myPackagingGraphInspector;
         private TextDocument myDocument;
-        private SystemPackaging myPackagingSpec;
         private IEnumerable<KeywordCompletionData> myCompletionData;
+        private ActorSystem mySystem;
+        private IActorRef myActor;
 
         public PackagingGraphBuilderViewModel()
         {
             Document = new TextDocument();
 
-            CreateGraphCommand = new DelegateCommand(CreateGraph, () => IsReady);
-            CancelCommand = new DelegateCommand(() => myCancelBackgroundProcessing(), () => !IsReady);
+            CreateGraphCommand = new DelegateCommand(OnCreateGraph, () => IsReady);
+            CancelCommand = new DelegateCommand(OnCancel, () => !IsReady);
 
             ClosedCommand = new DelegateCommand(OnClosed);
 
@@ -141,52 +129,35 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 });
         }
 
-        private async void CreateGraph()
+        private async void OnCreateGraph()
         {
-            //IsReady = false;
-
-            using (var reader = Document.CreateReader())
-            {
-                myPackagingSpec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
-            }
-
-            Save();
-
-            var output = Path.GetTempFileName() + ".dot";
-
-            if (File.Exists(output))
-            {
-                File.Delete(output);
-            }
-
-            //var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
-            //var pioneer = Process.Start(executable, "-o " + output + " " + Document.FileName);
-            //pioneer.WaitForExit();
+            IsReady = false;
 
             var request = new GraphBuildRequest
             {
                 Spec = Document.Text,
-                OutputFile = output
+                OutputFile = Path.GetTempFileName() + ".dot"
             };
 
-            var system = ActorSystem.Create("CodeInspection");
-            var inspector = system.ActorOf<PackageAnalysingActor>("package-deps-analyst");
-            
-            var response = await inspector.Ask(request);
+            mySystem = ActorSystem.Create("CodeInspection");
+            myActor = mySystem.ActorOf<PackageAnalysingActor>("package-deps-analyst");
+
+            var response = await myActor.Ask(request);
 
             if (!(response is Failure))
             {
-                output = ((string) response);
-                DocumentLoader.Load(output);
+                DocumentLoader.Load((string)response);
             }
 
-            //InspectionService.UpdateInspectorOnDemand(ref myPackagingGraphInspector, Path.GetDirectoryName(AssemblyToAnalyseLocation));
+            var ignore = mySystem.Terminate();
 
-            //myPackagingGraphInspector.Value.IgnoreDotNetTypes = IgnoreDotNetTypes;
-            //myPackagingGraphInspector.Value.AssemblyLocation = AssemblyToAnalyseLocation;
-            //myPackagingGraphInspector.Value.SelectedType = TypeToAnalyse;
+            IsReady = true;
+        }
 
-            //myCancelBackgroundProcessing = InspectionService.RunAsync(myPackagingGraphInspector.Value, v => ProgressValue = v, OnPackagingGraphCompleted);
+        private void OnCancel()
+        {
+            myActor.Tell(new Cancel());
+            IsReady = true;
         }
 
         internal void OnClosed()
@@ -194,12 +165,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             Save();
             Document.Text = string.Empty;
 
-            //if (myCancelBackgroundProcessing != null)
-            //{
-            //    myCancelBackgroundProcessing();
-            //}
-
-            //InspectionService.DestroyInspectorOnDemand(ref myPackagingGraphInspector);
+            myActor.Tell(new Cancel());
 
             IsReady = true;
         }
@@ -217,64 +183,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         {
             get { return myProgress; }
             set { SetProperty(ref myProgress, value); }
-        }
-
-        private void OnPackagingGraphCompleted(TypeRelationshipDocument document)
-        {
-            try
-            {
-                if (document == null)
-                {
-                    return;
-                }
-
-                if (!document.Graph.Nodes.Any())
-                {
-                    MessageBox.Show("No nodes found");
-                    return;
-                }
-
-                var presentation = PresentationCreationService.CreatePresentation(myPackagingSpec.AssemblyRoot);
-
-                var captionModule = presentation.GetPropertySetFor<Caption>();
-                var edgeStyleModule = presentation.GetPropertySetFor<EdgeStyle>();
-
-                presentation.Graph = document.Graph;
-
-                foreach (var desc in document.Descriptors)
-                {
-                    captionModule.Add(new Caption(desc.Id, desc.Name));
-                }
-
-                foreach (var entry in document.EdgeTypes)
-                {
-                    edgeStyleModule.Add(new EdgeStyle(entry.Key)
-                    {
-                        Color = entry.Value == EdgeType.DerivesFrom ? Brushes.Black : Brushes.Blue
-                    });
-                }
-
-                if (document.FailedItems.Any())
-                {
-                    foreach (var item in document.FailedItems)
-                    {
-                        var sb = new StringBuilder();
-                        sb.AppendLine("Loading failed");
-                        sb.AppendFormat("Item: {0}", item.Item);
-                        sb.AppendLine();
-                        sb.AppendFormat("Reason: {0}", item.FailureReason);
-                        StatusMessageService.Publish(new StatusMessage(sb.ToString()));
-                    }
-                }
-
-                Model.Presentation = presentation;
-            }
-            finally
-            {
-                myCancelBackgroundProcessing = null;
-                ProgressValue = 0;
-                IsReady = true;
-            }
         }
     }
 }
