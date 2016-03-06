@@ -141,7 +141,6 @@
     <Compile Include="Analysis\Packaging\Actors\PackageAnalysingActor.cs" />
     <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />
     <Compile Include="Controls\KeywordCompletionData.cs" />
-    <Compile Include="Analysis\Packaging\PackagingGraphBuilder.cs" />
     <Compile Include="Controls\XmlEditor.xaml.cs">
       <DependentUpon>XmlEditor.xaml</DependentUpon>
     </Compile>
@@ -149,7 +148,6 @@
       <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Analysis\Packaging\PackagingGraphBuilderViewModel.cs" />
-    <Compile Include="Analysis\Packaging\PackagingGraphInspector.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphMenuItem.xaml.cs">
       <DependentUpon>PackagingGraphMenuItem.xaml</DependentUpon>
     </Compile>
