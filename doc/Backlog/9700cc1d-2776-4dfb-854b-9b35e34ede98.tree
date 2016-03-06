@@ -19,12 +19,6 @@
           <Caption><![CDATA[encapsulate into Service]]></Caption>
         </Node>
       </Node>
-      <Node Id="d1524d65-f8ed-4b07-856f-efcab1a6c3bd">
-        <Caption><![CDATA[Reflection module]]></Caption>
-        <Node Id="3d244602-6f4c-4588-8e17-3a6df066f6bd">
-          <Caption><![CDATA[project structure]]></Caption>
-        </Node>
-      </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
         <Node Id="fb401c48-f3b4-4897-ac46-41d1b3b77eef">

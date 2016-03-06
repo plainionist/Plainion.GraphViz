@@ -61,12 +61,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.Reflection\Plainion.GraphViz.Modules.Reflection.csproj">
-      <Project>{21cc39c6-6535-4f17-aba3-82af9f49fe0c}</Project>
-      <Name>Plainion.GraphViz.Modules.Reflection</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
