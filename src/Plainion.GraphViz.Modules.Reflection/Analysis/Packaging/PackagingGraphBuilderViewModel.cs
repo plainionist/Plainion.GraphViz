@@ -14,6 +14,8 @@ using Akka.Configuration;
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
@@ -187,7 +189,8 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             {
                 Spec = Document.Text,
                 AnalysisMode = AnalysisMode,
-                PackageName = PackageName
+                PackageName = PackageName,
+                OutputFile = Path.GetTempFileName()
             };
 
             var config = ConfigurationFactory.ParseString( @"
@@ -221,20 +224,41 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             system.Stop( myActor );
             myActor = null;
 
-            system.Dispose();
-
-            actorSystemHost.Kill();
-
-            if( !( response is FailureResponse ) )
+            try
             {
-                BuildGraph( ( AnalysisResponse )response );
-            }
-            else
-            {
-                throw new Exception( ( ( FailureResponse )response ).Error );
-            }
+                if( !( response is FailureResponse ) )
+                {
+                    AnalysisResponse analysisResponse;
 
-            IsReady = true;
+                    var settings = new JsonSerializerSettings();
+
+                    var serializer = JsonSerializer.Create( settings );
+                    using( var sr = new StreamReader( ( string )response ) )
+                    {
+                        using( var reader = new JsonTextReader( sr ) )
+                        {
+                            analysisResponse = serializer.Deserialize<AnalysisResponse>( reader );
+                        }
+                    }
+
+                    BuildGraph( analysisResponse );
+                }
+                else
+                {
+                    throw new Exception( ( ( FailureResponse )response ).Error );
+                }
+            }
+            finally
+            {
+                system.Dispose();
+                actorSystemHost.Kill();
+
+                IsReady = true;
+                if( File.Exists( request.OutputFile ) )
+                {
+                    File.Delete( request.OutputFile );
+                }
+            }
         }
 
         private void BuildGraph( AnalysisResponse response )
@@ -275,7 +299,11 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
         private void OnCancel()
         {
-            myActor.Tell( new Cancel() );
+            if( myActor != null )
+            {
+                myActor.Tell( new Cancel() );
+            }
+
             IsReady = true;
         }
 

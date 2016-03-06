@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using System.Xml;
 using Akka.Actor;
+using Newtonsoft.Json;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
@@ -51,7 +52,16 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
                         return new Finished( sender ) { Exception = x.Exception };
                     }
 
-                    return new Finished( sender ) { Response = AnalysisResponse.Create( x.Result ) };
+                    var serializer = new JsonSerializer();
+                    using( var sw = new StreamWriter( r.OutputFile ) )
+                    {
+                        using( var writer = new JsonTextWriter( sw ) )
+                        {
+                            serializer.Serialize( writer, AnalysisResponse.Create( x.Result ) );
+                        }
+                    }
+
+                    return new Finished( sender ) { ResponseFile = r.OutputFile };
                 }, TaskContinuationOptions.ExecuteSynchronously )
                 .PipeTo( self );
 
@@ -76,7 +86,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
                 }
                 else
                 {
-                    msg.Sender.Tell( msg.Response, Self );
+                    msg.Sender.Tell( msg.ResponseFile, Self );
                 }
                 BecomeReady();
             } );

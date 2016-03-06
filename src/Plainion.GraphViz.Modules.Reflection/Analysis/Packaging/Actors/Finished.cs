@@ -12,12 +12,12 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
             mySender = sender;
         }
 
-        public AnalysisResponse Response { get; set; }
-
         public IActorRef Sender
         {
             get { return mySender; }
         }
+
+        public string ResponseFile { get; set; }
 
         public Exception Exception { get; set; }
     }
