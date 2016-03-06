@@ -28,7 +28,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         private bool myIsReady;
         private TextDocument myDocument;
         private IEnumerable<KeywordCompletionData> myCompletionData;
-        private ActorSystem mySystem;
         private IActorRef myActor;
 
         public PackagingGraphBuilderViewModel()
@@ -159,7 +158,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 }
                 " );
 
-            mySystem = ActorSystem.Create( "CodeInspectionClient", config );
+            var system = ActorSystem.Create( "CodeInspectionClient", config );
 
             var executable = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Plainion.Graphviz.Pioneer.exe" );
             var actorSystemHost = Process.Start( executable, "-SAS" );
@@ -170,16 +169,16 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
             // deploy actor remotely
             var remoteAddress = Address.Parse( "akka.tcp://CodeInspection@localhost:2525" );
-            myActor = mySystem.ActorOf( Props.Create( () => new PackageAnalysingActor() )
+            myActor = system.ActorOf( Props.Create( () => new PackageAnalysingActor() )
                 .WithDeploy( Deploy.None.WithScope( new RemoteScope( remoteAddress ) ) ), "PackagingDependencies" );
 
             var response = await myActor.Ask( request );
 
-            mySystem.Stop( myActor );
+            system.Stop( myActor );
+            
+            system.Dispose();
 
             actorSystemHost.Kill();
-
-            mySystem.Dispose();
 
             if( !( response is Failure ) )
             {
