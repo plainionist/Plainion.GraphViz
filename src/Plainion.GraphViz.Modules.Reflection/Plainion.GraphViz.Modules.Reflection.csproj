@@ -132,6 +132,7 @@
     <Compile Include="Analysis\Packaging\Actors\FailureResponse.cs" />
     <Compile Include="Analysis\Packaging\AnalysisMode.cs" />
     <Compile Include="Analysis\Packaging\EnumToBoolExtension.cs" />
+    <Compile Include="Analysis\Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Controls\AbstractCompletionData.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalysisDocument.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalyzeBase.cs" />

@@ -231,6 +231,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                     AnalysisResponse analysisResponse;
 
                     var settings = new JsonSerializerSettings();
+                    settings.ContractResolver = new PrivateSettersContractResolver();
 
                     var serializer = JsonSerializer.Create( settings );
                     using( var sr = new StreamReader( ( string )response ) )

@@ -27,6 +27,12 @@
         <Node Id="7d088e5a-840f-40d7-a65a-4d973adea1fe">
           <Caption><![CDATA[different actors per analysis mode?]]></Caption>
         </Node>
+        <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">
+          <Caption><![CDATA[auto-packaging]]></Caption>
+        </Node>
+        <Node Id="4ece55f9-17be-4941-9316-57a810fdcec7">
+          <Caption><![CDATA[dynamic package creation]]></Caption>
+        </Node>
       </Node>
     </Node>
   </Node>
