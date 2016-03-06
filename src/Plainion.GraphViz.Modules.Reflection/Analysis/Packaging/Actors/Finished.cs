@@ -1,4 +1,6 @@
-﻿using Akka.Actor;
+﻿using System;
+using Akka.Actor;
+
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 {
     class Finished
@@ -10,13 +12,13 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
             mySender = sender;
         }
 
-        public string OutputFile { get; set; }
+        public AnalysisDocument Document { get; set; }
 
         public IActorRef Sender
         {
             get { return mySender; }
         }
 
-        public System.AggregateException Exception { get; set; }
+        public Exception Exception { get; set; }
     }
 }

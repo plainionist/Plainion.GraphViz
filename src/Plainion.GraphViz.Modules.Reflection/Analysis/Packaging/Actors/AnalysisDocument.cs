@@ -1,131 +1,55 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 {
-    public abstract class AbstractGraphDocument 
+    public class AnalysisDocument
     {
-        private RelaxedGraphBuilder myGraphBuilder;
-        private IList<FailedItem> myFailedItems;
-
-        protected AbstractGraphDocument()
-        {
-            myGraphBuilder = new RelaxedGraphBuilder();
-            myFailedItems = new List<FailedItem>();
-        }
-
-        public virtual IGraph Graph
-        {
-            get { return myGraphBuilder.Graph; }
-        }
-
-        public string Filename
-        {
-            get;
-            private set;
-        }
-
-        public void Load(string path)
-        {
-            myGraphBuilder = new RelaxedGraphBuilder();
-            Filename = path;
-
-            Load();
-        }
-
-        protected abstract void Load();
-
-        protected internal Node TryAddNode(string nodeId)
-        {
-            var node = myGraphBuilder.TryAddNode(nodeId);
-            if (node == null)
-            {
-                myFailedItems.Add(new FailedItem(nodeId, "Node already exists"));
-                return null;
-            }
-
-            return node;
-        }
-
-        protected internal Edge TryAddEdge(string sourceNodeId, string targetNodeId)
-        {
-            var edge = myGraphBuilder.TryAddEdge(sourceNodeId, targetNodeId);
-
-            if (edge == null)
-            {
-                myFailedItems.Add(new FailedItem(Edge.CreateId(sourceNodeId, targetNodeId), "Edge already exists"));
-                return null;
-            }
-
-            return edge;
-        }
-
-        protected internal Cluster TryAddCluster(string clusterId, IEnumerable<string> nodes)
-        {
-            var cluster = myGraphBuilder.TryAddCluster(clusterId, nodes);
-            if (cluster == null)
-            {
-                myFailedItems.Add(new FailedItem(clusterId, "Cluster already exists"));
-                return null;
-            }
-
-            return cluster;
-        }
-
-        public IEnumerable<FailedItem> FailedItems
-        {
-            get { return myFailedItems; }
-        }
-    }
-
-    class AnalysisDocument : AbstractGraphDocument
-    {
-        private List<Caption> myCaptions;
-        private List<NodeStyle> myNodeStyles;
-        private List<EdgeStyle> myEdgeStyles;
+        public HashSet<string> myNodes;
+        public HashSet<Tuple<string, string>> myEdges;
+        public Dictionary<string, IEnumerable<string>> myClusters;
 
         public AnalysisDocument()
         {
-            myCaptions = new List<Caption>();
-            myNodeStyles = new List<NodeStyle>();
-            myEdgeStyles = new List<EdgeStyle>();
+            myNodes = new HashSet<string>();
+            myEdges = new HashSet<Tuple<string, string>>();
+            myClusters = new Dictionary<string, IEnumerable<string>>();
+
+            Captions = new List<Caption>();
         }
 
-        public IEnumerable<Caption> Captions
+        public IEnumerable<string> Nodes { get { return myNodes; } }
+
+        public IEnumerable<Tuple<string, string>> Edges { get { return myEdges; } }
+
+        public IReadOnlyDictionary<string, IEnumerable<string>> Clusters { get { return myClusters; } }
+
+        public List<Caption> Captions { get; private set; }
+
+        public void AddNode( string nodeId )
         {
-            get { return myCaptions; }
+            myNodes.Add( nodeId );
         }
 
-        public IEnumerable<NodeStyle> NodeStyles
+        public void AddEdge( string sourceNodeId, string targetNodeId )
         {
-            get { return myNodeStyles; }
+            myEdges.Add( Tuple.Create( sourceNodeId, targetNodeId ) );
         }
 
-        public IEnumerable<EdgeStyle> EdgeStyles
+        public void AddToCluster( string clusterId, string nodeId )
         {
-            get { return myEdgeStyles; }
-        }
+            IEnumerable<string> existing;
+            if( !myClusters.TryGetValue( clusterId, out existing ) )
+            {
+                existing = new HashSet<string>();
+                myClusters.Add( clusterId, existing );
+            }
 
-        internal void Add(Caption caption)
-        {
-            myCaptions.Add(caption);
-        }
-
-        internal void Add(NodeStyle style)
-        {
-            myNodeStyles.Add(style);
-        }
-
-        internal void Add(EdgeStyle style)
-        {
-            myEdgeStyles.Add(style);
-        }
-
-        protected override void Load()
-        {
-            throw new System.NotImplementedException();
+            ( ( HashSet<string> )existing ).Add( nodeId );
         }
     }
 }

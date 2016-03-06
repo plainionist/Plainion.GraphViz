@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Windows;
 using Akka.Actor;
 using Akka.Configuration;
 using ICSharpCode.AvalonEdit.Document;
@@ -12,10 +14,12 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Modules.Reflection.Controls;
 using Plainion.GraphViz.Modules.Reflection.Services;
+using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
@@ -81,9 +85,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         public IPresentationCreationService PresentationCreationService { get; set; }
 
         [Import]
-        public IDocumentLoader DocumentLoader { get; set; }
-
-        [Import]
         public IStatusMessageService StatusMessageService { get; set; }
 
         [Import]
@@ -140,7 +141,6 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             var request = new GraphBuildRequest
             {
                 Spec = Document.Text,
-                OutputFile = Path.GetTempFileName() + ".dot"
             };
 
             var config = ConfigurationFactory.ParseString( @"
@@ -154,19 +154,13 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                             hostname = localhost
                         }
                     }
-                }
-                " );
+                }" );
 
             var system = ActorSystem.Create( "CodeInspectionClient", config );
 
             var executable = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Plainion.Graphviz.Pioneer.exe" );
             var actorSystemHost = Process.Start( executable, "-SAS" );
 
-            // this way we would resolve an already deployed remote actor
-            //myActor = await mySystem.ActorSelection("akka.tcp://CodeInspection@localhost:2525/user/PackagingDependencies")
-            //    .ResolveOne(TimeSpan.FromSeconds(5));
-
-            // deploy actor remotely
             var remoteAddress = Address.Parse( "akka.tcp://CodeInspection@localhost:2525" );
             myActor = system.ActorOf( Props.Create( () => new PackageAnalysingActor() )
                 .WithDeploy( Deploy.None.WithScope( new RemoteScope( remoteAddress ) ) ), "PackagingDependencies" );
@@ -174,17 +168,58 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             var response = await myActor.Ask( request );
 
             system.Stop( myActor );
-            
+            myActor = null;
+
             system.Dispose();
 
             actorSystemHost.Kill();
 
             if( !( response is Failure ) )
             {
-                DocumentLoader.Load( ( string )response );
+                BuildGraph( ( AnalysisDocument )response );
+            }
+            else
+            {
+                throw ( ( Failure )response ).Exception;
             }
 
             IsReady = true;
+        }
+
+        private void BuildGraph( AnalysisDocument document )
+        {
+            if( !document.Nodes.Any() && !document.Edges.Any() )
+            {
+                MessageBox.Show( "Neither nodes nor edges found" );
+                return;
+            }
+
+            var presentation = PresentationCreationService.CreatePresentation( Path.GetTempPath() );
+
+            var captionModule = presentation.GetPropertySetFor<Caption>();
+
+            var builder = new RelaxedGraphBuilder();
+            foreach( var edge in document.Edges )
+            {
+                builder.TryAddEdge( edge.Item1, edge.Item2 );
+            }
+            foreach( var node in document.Nodes )
+            {
+                builder.TryAddNode( node );
+            }
+            foreach( var cluster in document.Clusters )
+            {
+                builder.TryAddCluster( cluster.Key, cluster.Value );
+            }
+
+            presentation.Graph = builder.Graph;
+
+            foreach( var caption in document.Captions )
+            {
+                captionModule.Add( caption );
+            }
+
+            Model.Presentation = presentation;
         }
 
         private void OnCancel()
@@ -208,7 +243,10 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
         private void Save()
         {
-            File.WriteAllText( Document.FileName, Document.Text );
+            if( Document.FileName != null )
+            {
+                File.WriteAllText( Document.FileName, Document.Text );
+            }
         }
 
         protected override void OnModelPropertyChanged( string propertyName )

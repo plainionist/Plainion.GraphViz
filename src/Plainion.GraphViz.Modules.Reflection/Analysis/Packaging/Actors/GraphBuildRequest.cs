@@ -3,7 +3,5 @@
     class GraphBuildRequest
     {
         public string Spec { get; set; }
-
-        public string OutputFile { get; set; }
     }
 }
