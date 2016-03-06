@@ -22,123 +22,124 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 
         protected AssemblyLoader AssemblyLoader { get; private set; }
 
-        public void Execute(SystemPackaging config)
+        public void Execute( SystemPackaging config )
         {
             Config = config;
 
             Load();
 
-            Console.WriteLine("Analyzing ...");
+            Console.WriteLine( "Analyzing ..." );
 
             var tasks = Analyze();
 
-            Task.WaitAll(tasks);
+            Task.WaitAll( tasks );
 
             Console.WriteLine();
 
-            if (AssemblyLoader.SkippedAssemblies.Any())
+            if( AssemblyLoader.SkippedAssemblies.Any() )
             {
-                Console.WriteLine("Skipped assemblies:");
-                foreach (var asm in AssemblyLoader.SkippedAssemblies)
+                Console.WriteLine( "Skipped assemblies:" );
+                foreach( var asm in AssemblyLoader.SkippedAssemblies )
                 {
-                    Console.WriteLine("  {0}", asm);
+                    Console.WriteLine( "  {0}", asm );
                 }
                 Console.WriteLine();
             }
 
             var edges = tasks
-                .SelectMany(t => t.Result)
+                .SelectMany( t => t.Result )
                 .Distinct()
                 .ToList();
 
-            var doc = GenerateDocument(edges);
+            var doc = GenerateDocument( edges );
 
-            WriteDocument(doc);
+            WriteDocument( doc );
         }
 
         protected abstract void Load();
 
         protected abstract Task<Tuple<Type, Type>[]>[] Analyze();
 
-        protected abstract AnalysisDocument GenerateDocument(IReadOnlyCollection<Tuple<Type, Type>> edges);
+        protected abstract AnalysisDocument GenerateDocument( IReadOnlyCollection<Tuple<Type, Type>> edges );
 
-        private void WriteDocument(AnalysisDocument document)
+        private void WriteDocument( AnalysisDocument document )
         {
-            Console.WriteLine("Output: {0}", OutputFile);
+            Console.WriteLine( "Output: {0}", OutputFile );
 
-            using (var writer = new StreamWriter(OutputFile))
+            using( var writer = new StreamWriter( OutputFile ) )
             {
-                writer.WriteLine("digraph {");
+                writer.WriteLine( "digraph {" );
 
                 Func<Node, string> GetNodeDef = node =>
                 {
-                    var style = document.NodeStyles.SingleOrDefault(n => n.OwnerId == node.Id) ?? new NodeStyle(node.Id);
-                    var caption = document.Captions.SingleOrDefault(n => n.OwnerId == node.Id) ?? new Caption(node.Id, null);
-                    return string.Format("\"{0}\" [color = {1}, label = {2}]", node.Id, style.FillColor.ToString(), caption.DisplayText);
+                    var style = document.NodeStyles.SingleOrDefault( n => n.OwnerId == node.Id ) ?? new NodeStyle( node.Id );
+                    var caption = document.Captions.SingleOrDefault( n => n.OwnerId == node.Id ) ?? new Caption( node.Id, null );
+                    return string.Format( "\"{0}\" [color = {1}, label = {2}]", node.Id, style.FillColor.ToString(), caption.DisplayText );
                 };
 
-                foreach (var node in document.Graph.Nodes.Where(n => !document.Graph.Clusters.Any(c => c.Nodes.Contains(n))))
+                foreach( var node in document.Graph.Nodes.Where( n => !document.Graph.Clusters.Any( c => c.Nodes.Contains( n ) ) ) )
                 {
-                    writer.WriteLine("  " + GetNodeDef(node));
+                    writer.WriteLine( "  " + GetNodeDef( node ) );
                 }
 
-                foreach (var cluster in document.Graph.Clusters)
+                foreach( var cluster in document.Graph.Clusters )
                 {
                     writer.WriteLine();
-                    writer.WriteLine("  subgraph " + cluster.Id + " {");
+                    writer.WriteLine( "  subgraph " + cluster.Id + " {" );
 
-                    foreach (var node in cluster.Nodes)
+                    foreach( var node in cluster.Nodes )
                     {
-                        writer.WriteLine("    " + GetNodeDef(node));
+                        writer.WriteLine( "    " + GetNodeDef( node ) );
                     }
 
-                    writer.WriteLine("  }");
+                    writer.WriteLine( "  }" );
                     writer.WriteLine();
                 }
 
                 writer.WriteLine();
 
-                foreach (var edge in document.Graph.Edges)
+                foreach( var edge in document.Graph.Edges )
                 {
-                    writer.Write("  \"{0}\" -> \"{1}\"", edge.Source.Id, edge.Target.Id);
+                    writer.Write( "  \"{0}\" -> \"{1}\"", edge.Source.Id, edge.Target.Id );
 
                     var attributes = new List<string>();
 
-                    var style = document.EdgeStyles.SingleOrDefault(e => e.OwnerId == edge.Id);
-                    if (style != null)
+                    var style = document.EdgeStyles.SingleOrDefault( e => e.OwnerId == edge.Id );
+                    if( style != null )
                     {
-                        attributes.Add("color = " + style.Color);
+                        attributes.Add( "color = " + style.Color );
                     }
 
-                    var caption = document.Captions.SingleOrDefault(e => e.OwnerId == edge.Id);
-                    if (caption != null)
+                    var caption = document.Captions.SingleOrDefault( e => e.OwnerId == edge.Id );
+                    if( caption != null )
                     {
-                        attributes.Add(string.Format("label = \"{0}\"", caption.DisplayText));
+                        attributes.Add( string.Format( "label = \"{0}\"", caption.DisplayText ) );
                     }
 
-                    if (attributes.Count == 0)
+                    if( attributes.Count == 0 )
                     {
                         writer.WriteLine();
                     }
                     else
                     {
-                        writer.WriteLine(string.Format("[{0}]", string.Join(",", attributes)));
+                        writer.WriteLine( string.Format( "[{0}]", string.Join( ",", attributes ) ) );
                     }
                 }
 
-                writer.WriteLine("}");
+                writer.WriteLine( "}" );
             }
         }
 
-        protected IEnumerable<Assembly> Load(Package package)
+        protected IEnumerable<Assembly> Load( Package package )
         {
-            Console.WriteLine("Loading package {0}", package.Name);
+            Console.WriteLine( "Assembly root {0}", Path.GetFullPath( Config.AssemblyRoot ) );
+            Console.WriteLine( "Loading package {0}", package.Name );
 
             return package.Includes
-                .SelectMany(i => Directory.GetFiles(Config.AssemblyRoot, i.Pattern))
-                .Where(file => !package.Excludes.Any(e => e.Matches(file)))
-                .Select(AssemblyLoader.Load)
-                .Where(asm => asm != null)
+                .SelectMany( i => Directory.GetFiles( Config.AssemblyRoot, i.Pattern ) )
+                .Where( file => !package.Excludes.Any( e => e.Matches( file ) ) )
+                .Select( AssemblyLoader.Load )
+                .Where( asm => asm != null )
                 .ToList();
         }
 

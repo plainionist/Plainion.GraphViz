@@ -21,7 +21,7 @@ using Plainion.Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 {
-    [Export(typeof(PackagingGraphBuilderViewModel))]
+    [Export( typeof( PackagingGraphBuilderViewModel ) )]
     public class PackagingGraphBuilderViewModel : ViewModelBase
     {
         private int myProgress;
@@ -35,19 +35,19 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         {
             Document = new TextDocument();
 
-            CreateGraphCommand = new DelegateCommand(OnCreateGraph, () => IsReady);
-            CancelCommand = new DelegateCommand(OnCancel, () => !IsReady);
+            CreateGraphCommand = new DelegateCommand( OnCreateGraph, () => IsReady );
+            CancelCommand = new DelegateCommand( OnCancel, () => !IsReady );
 
-            ClosedCommand = new DelegateCommand(OnClosed);
+            ClosedCommand = new DelegateCommand( OnClosed );
 
-            OpenCommand = new DelegateCommand(OnOpen, () => IsReady);
+            OpenCommand = new DelegateCommand( OnOpen, () => IsReady );
             OpenFileRequest = new InteractionRequest<OpenFileDialogNotification>();
 
             myCompletionData = GetType().Assembly.GetTypes()
-                .Where(t => t.Namespace == typeof(SystemPackaging).Namespace)
-                .Where(t => !t.IsAbstract)
-                .Where(t => t.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) == null)
-                .Select(t => new KeywordCompletionData(t))
+                .Where( t => t.Namespace == typeof( SystemPackaging ).Namespace )
+                .Where( t => !t.IsAbstract )
+                .Where( t => t.GetCustomAttribute( typeof( CompilerGeneratedAttribute ), true ) == null )
+                .Select( t => new KeywordCompletionData( t ) )
                 .ToList();
 
             IsReady = true;
@@ -56,13 +56,13 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         public TextDocument Document
         {
             get { return myDocument; }
-            set { SetProperty(ref myDocument, value); }
+            set { SetProperty( ref myDocument, value ); }
         }
 
         public IEnumerable<KeywordCompletionData> CompletionData
         {
             get { return myCompletionData; }
-            set { SetProperty(ref myCompletionData, value); }
+            set { SetProperty( ref myCompletionData, value ); }
         }
 
         public bool IsReady
@@ -70,7 +70,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             get { return myIsReady; }
             set
             {
-                if (SetProperty(ref myIsReady, value))
+                if( SetProperty( ref myIsReady, value ) )
                 {
                     CreateGraphCommand.RaiseCanExecuteChanged();
                     CancelCommand.RaiseCanExecuteChanged();
@@ -109,20 +109,20 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             notification.FilterIndex = 0;
             notification.CheckFileExists = false;
 
-            OpenFileRequest.Raise(notification,
+            OpenFileRequest.Raise( notification,
                 n =>
                 {
-                    if (n.Confirmed)
+                    if( n.Confirmed )
                     {
-                        if (File.Exists(n.FileName))
+                        if( File.Exists( n.FileName ) )
                         {
-                            Document.Text = File.ReadAllText(n.FileName);
+                            Document.Text = File.ReadAllText( n.FileName );
                         }
                         else
                         {
-                            using (var stream = GetType().Assembly.GetManifestResourceStream("Plainion.GraphViz.Modules.Reflection.Resources.SystemPackagingTemplate.xaml"))
+                            using( var stream = GetType().Assembly.GetManifestResourceStream( "Plainion.GraphViz.Modules.Reflection.Resources.SystemPackagingTemplate.xaml" ) )
                             {
-                                using (var reader = new StreamReader(stream))
+                                using( var reader = new StreamReader( stream ) )
                                 {
                                     Document.Text = reader.ReadToEnd();
                                 }
@@ -130,20 +130,22 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                         }
                         Document.FileName = n.FileName;
                     }
-                });
+                } );
         }
 
         private async void OnCreateGraph()
         {
             IsReady = false;
 
+            Save();
+            
             var request = new GraphBuildRequest
             {
                 Spec = Document.Text,
                 OutputFile = Path.GetTempFileName() + ".dot"
             };
 
-            var config = ConfigurationFactory.ParseString(@"
+            var config = ConfigurationFactory.ParseString( @"
                 akka {
                     actor {
                         provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
@@ -155,33 +157,39 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                         }
                     }
                 }
-                ");
+                " );
 
-            mySystem = ActorSystem.Create("CodeInspectionClient", config);
+            mySystem = ActorSystem.Create( "CodeInspectionClient", config );
 
-            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.Pioneer.exe");
-            var pioneer = Process.Start(executable, "-SAS");
+            var executable = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Plainion.Graphviz.Pioneer.exe" );
+            var actorSystemHost = Process.Start( executable, "-SAS" );
 
-            myActor = await mySystem.ActorSelection("akka.tcp://CodeInspection@localhost:2525/user/PackagingDependencies")
-                .ResolveOne(TimeSpan.FromSeconds(5));
+            // this way we would resolve an already deployed remote actor
+            //myActor = await mySystem.ActorSelection("akka.tcp://CodeInspection@localhost:2525/user/PackagingDependencies")
+            //    .ResolveOne(TimeSpan.FromSeconds(5));
 
-            var response = await myActor.Ask(request);
+            // deploy actor remotely
+            var remoteAddress = Address.Parse( "akka.tcp://CodeInspection@localhost:2525" );
+            myActor = mySystem.ActorOf( Props.Create( () => new PackageAnalysingActor() )
+                .WithDeploy( Deploy.None.WithScope( new RemoteScope( remoteAddress ) ) ), "PackagingDependencies" );
 
-            if (!(response is Failure))
+            var response = await myActor.Ask( request );
+
+            if( !( response is Failure ) )
             {
-                DocumentLoader.Load((string)response);
+                DocumentLoader.Load( ( string )response );
             }
 
             var ignore = mySystem.Terminate();
 
-            pioneer.Kill();
+            actorSystemHost.Kill();
 
             IsReady = true;
         }
 
         private void OnCancel()
         {
-            myActor.Tell(new Cancel());
+            myActor.Tell( new Cancel() );
             IsReady = true;
         }
 
@@ -190,9 +198,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             Save();
             Document.Text = string.Empty;
 
-            if (myActor != null)
+            if( myActor != null )
             {
-                myActor.Tell(new Cancel());
+                myActor.Tell( new Cancel() );
             }
 
             IsReady = true;
@@ -200,17 +208,17 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
         private void Save()
         {
-            File.WriteAllText(Document.FileName, Document.Text);
+            File.WriteAllText( Document.FileName, Document.Text );
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnModelPropertyChanged( string propertyName )
         {
         }
 
         public int ProgressValue
         {
             get { return myProgress; }
-            set { SetProperty(ref myProgress, value); }
+            set { SetProperty( ref myProgress, value ); }
         }
     }
 }

@@ -47,12 +47,6 @@ namespace Plainion.GraphViz.Pioneer
 
             using (var system = ActorSystem.Create("CodeInspection", config))
             {
-                Console.WriteLine("System booted");
-
-                system.ActorOf<PackageAnalysingActor>("PackagingDependencies");
-
-                Console.WriteLine("Actor PackagingDependencies created");
-
                 Console.WriteLine("...  running ...");
 
                 while (true) Thread.Sleep(1000);

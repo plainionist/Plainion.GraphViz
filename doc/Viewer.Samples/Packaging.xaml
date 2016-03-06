@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SystemPackaging xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec" 
+                 xmlns:s="clr-namespace:System;assembly=mscorlib"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <SystemPackaging.AssemblyRoot>.</SystemPackaging.AssemblyRoot>
+    <Package Name="Plainion.Core">
+        <Include Pattern="Plainion.Core.dll"/>
+        <Include Pattern="Plainion.Windows.dll"/>
+        <Include Pattern="Plainion.Prism.dll"/>
+        <Package.Clusters>
+            <Cluster Name="UI">
+                <Include Pattern="Plainion.Windows.*"/>
+                <Include Pattern="Plainion.Prism.*"/>
+            </Cluster>
+        </Package.Clusters>
+    </Package>
+    <Package Name="Plaionion.GraphViz">
+        <Include Pattern="Plainion.GraphViz.*dll"/>
+    </Package>
+</SystemPackaging>

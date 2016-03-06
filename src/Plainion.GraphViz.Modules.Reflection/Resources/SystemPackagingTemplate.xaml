@@ -5,7 +5,7 @@
                  xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <SystemPackaging.AssemblyRoot>c:\workspace\Project\bin\Debug</SystemPackaging.AssemblyRoot>
     <Package Name="Package1">
-        <Include Pattern="syngo.*P1*.dll"/>
+        <Include Pattern="P1*.dll"/>
         <Package.Clusters>
             <Cluster Name="Feature1">
                 <Include Pattern="*.Feature1.*"/>
@@ -16,7 +16,7 @@
         </Package.Clusters>
     </Package>
     <Package Name="Package2">
-        <Include Pattern="syngo.*P2*.dll"/>
+        <Include Pattern="P2*.dll"/>
         <Package.Clusters>
             <Cluster Name="FeatureX">
                 <Include Pattern="*.FeatureX.*"/>
