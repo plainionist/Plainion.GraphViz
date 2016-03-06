@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +21,10 @@ namespace Plainion.GraphViz.Modules.Reflection.Controls
         {
             InitializeComponent();
 
-            Loaded += OnLoaded;
+            if( !DesignerProperties.GetIsInDesignMode( this ) )
+            {
+                Loaded += OnLoaded;
+            }
         }
 
         public static readonly DependencyProperty DocumentProperty = DependencyProperty.Register( "Document", typeof( TextDocument ), typeof( XmlEditor ) );
