@@ -4,8 +4,8 @@
   <Import Project="..\..\build\Globals.msbuild" />
   <PropertyGroup>
     <ProjectGuid>{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}</ProjectGuid>
-    <RootNamespace>Plainion.GraphViz.Pioneer</RootNamespace>
-    <AssemblyName>Plainion.GraphViz.Pioneer</AssemblyName>
+    <RootNamespace>Plainion.GraphViz.ActorsHost</RootNamespace>
+    <AssemblyName>Plainion.GraphViz.ActorsHost</AssemblyName>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -37,28 +37,8 @@
       <HintPath>..\..\packages\Helios.1.4.1\lib\net45\Helios.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Cecil.0.9.6.1\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Plainion.Core, Version=2.8.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Core.2.8.0.0\lib\NET45\Plainion.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -82,17 +62,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.Documents\Plainion.GraphViz.Modules.Documents.csproj">
-      <Project>{9105de30-de66-403c-a89c-c261e99c4c05}</Project>
-      <Name>Plainion.GraphViz.Modules.Documents</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Plainion.GraphViz.Modules.Reflection\Plainion.GraphViz.Modules.Reflection.csproj">
       <Project>{21cc39c6-6535-4f17-aba3-82af9f49fe0c}</Project>
       <Name>Plainion.GraphViz.Modules.Reflection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj">
-      <Project>{8cc5c764-ace2-4af2-bca1-f78753e709aa}</Project>
-      <Name>Plainion.GraphViz</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -208,8 +208,8 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
             var system = ActorSystem.Create( "CodeInspectionClient", config );
 
-            var executable = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Plainion.Graphviz.Pioneer.exe" );
-            var info = new ProcessStartInfo( executable, "-SAS" );
+            var executable = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Plainion.Graphviz.ActorsHost.exe" );
+            var info = new ProcessStartInfo( executable );
             //info.CreateNoWindow = true;
             //info.UseShellExecute = false;
             var actorSystemHost = Process.Start( info );

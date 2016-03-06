@@ -3,23 +3,11 @@ using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
 
-namespace Plainion.GraphViz.Pioneer
+namespace Plainion.GraphViz.ActorsHost
 {
     class Program
     {
         private static void Main( string[] args )
-        {
-            if( args.Length == 1 && args[ 0 ] == "-SAS" )
-            {
-                StartActorSystem();
-            }
-            else
-            {
-                throw new NotImplementedException( "No commands implemented" );
-            }
-        }
-
-        private static void StartActorSystem()
         {
             var config = ConfigurationFactory.ParseString( @"
                 akka {

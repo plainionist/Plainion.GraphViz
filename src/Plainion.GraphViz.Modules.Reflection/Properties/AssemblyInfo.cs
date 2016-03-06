@@ -29,8 +29,6 @@ using System.Windows.Markup;
 
 [assembly: XmlnsDefinition("http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec", "Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec")] 
  
- 
 
 [assembly: InternalsVisibleTo("Plainion.GraphViz.Modules.Reflection.Tests")]
-[assembly: InternalsVisibleTo("Plainion.GraphViz.Pioneer")]
 
