@@ -7,7 +7,7 @@ using Akka.Actor;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
 {
     class PackageAnalysingActor : ReceiveActor, IWithUnboundedStash
     {

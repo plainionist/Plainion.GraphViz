@@ -6,7 +6,7 @@ using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
 {
     class AnalyzeSubSystemDependencies : AnalyzeBase
     {

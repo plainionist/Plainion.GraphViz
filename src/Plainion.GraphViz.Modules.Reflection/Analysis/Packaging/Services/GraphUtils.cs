@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
 {
     static class GraphUtils
     {

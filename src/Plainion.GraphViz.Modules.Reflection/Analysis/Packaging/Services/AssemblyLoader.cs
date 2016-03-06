@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
 {
     class AssemblyLoader
     {

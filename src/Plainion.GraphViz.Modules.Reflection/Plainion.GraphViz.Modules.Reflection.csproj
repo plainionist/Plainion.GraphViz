@@ -128,21 +128,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\Inheritance\EdgeType.cs" />
-    <Compile Include="Analysis\Packaging\Actors\FailureResponse.cs" />
+    <Compile Include="Analysis\Packaging\Services\FailureResponse.cs" />
     <Compile Include="Analysis\Packaging\AnalysisMode.cs" />
     <Compile Include="Analysis\Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Analysis\Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Controls\AbstractCompletionData.cs" />
-    <Compile Include="Analysis\Packaging\Actors\AnalysisDocument.cs" />
-    <Compile Include="Analysis\Packaging\Actors\AnalyzeBase.cs" />
-    <Compile Include="Analysis\Packaging\Actors\AnalyzePackageDependencies.cs" />
-    <Compile Include="Analysis\Packaging\Actors\AnalyzeSubSystemDependencies.cs" />
-    <Compile Include="Analysis\Packaging\Actors\Cancel.cs" />
-    <Compile Include="Analysis\Packaging\Actors\Finished.cs" />
-    <Compile Include="Analysis\Packaging\Actors\AnalysisRequest.cs" />
-    <Compile Include="Analysis\Packaging\Actors\GraphUtils.cs" />
-    <Compile Include="Analysis\Packaging\Actors\PackageAnalysingActor.cs" />
-    <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />
+    <Compile Include="Analysis\Packaging\Services\AnalysisDocument.cs" />
+    <Compile Include="Analysis\Packaging\Services\AnalyzeBase.cs" />
+    <Compile Include="Analysis\Packaging\Services\AnalyzePackageDependencies.cs" />
+    <Compile Include="Analysis\Packaging\Services\AnalyzeSubSystemDependencies.cs" />
+    <Compile Include="Analysis\Packaging\Services\Cancel.cs" />
+    <Compile Include="Analysis\Packaging\Services\Finished.cs" />
+    <Compile Include="Analysis\Packaging\Services\AnalysisRequest.cs" />
+    <Compile Include="Analysis\Packaging\Services\GraphUtils.cs" />
+    <Compile Include="Analysis\Packaging\Services\PackageAnalysingActor.cs" />
+    <Compile Include="Analysis\Packaging\Services\AssemblyLoader.cs" />
     <Compile Include="Controls\KeywordCompletionData.cs" />
     <Compile Include="Controls\XmlEditor.xaml.cs">
       <DependentUpon>XmlEditor.xaml</DependentUpon>
@@ -160,7 +160,7 @@
     </Compile>
     <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItemModel.cs" />
     <Compile Include="Controls\PropertyCompletionData.cs" />
-    <Compile Include="Analysis\Packaging\Reflector.cs" />
+    <Compile Include="Analysis\Packaging\Services\Reflector.cs" />
     <Compile Include="Analysis\Packaging\Spec\Cluster.cs" />
     <Compile Include="Analysis\Packaging\Spec\SystemPackaging.cs" />
     <Compile Include="Analysis\Packaging\Spec\Exclude.cs" />

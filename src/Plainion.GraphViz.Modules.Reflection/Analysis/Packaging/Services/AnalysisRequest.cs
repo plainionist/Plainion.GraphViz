@@ -1,4 +1,4 @@
-﻿namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
+﻿namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
 {
     class AnalysisRequest
     {

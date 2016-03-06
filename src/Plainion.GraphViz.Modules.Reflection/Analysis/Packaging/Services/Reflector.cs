@@ -5,7 +5,7 @@ using System.Reflection;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
 {
     // http://stackoverflow.com/questions/24680054/how-to-get-the-list-of-methods-called-from-a-method-using-reflection-in-c-sharp
     class Reflector
