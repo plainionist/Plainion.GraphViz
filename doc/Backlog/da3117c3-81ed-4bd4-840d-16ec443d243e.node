@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e" Created="635928471088322334" LastModified="635928471241091072">
+  <Caption><![CDATA[packaging]]></Caption>
+  <Content><![CDATA[- optionally name edges (inherit, use, call)]]></Content>
+</Node>
