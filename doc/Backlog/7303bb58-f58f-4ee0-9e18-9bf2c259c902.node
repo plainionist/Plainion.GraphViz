@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902" Created="635928469808659142" LastModified="635928473134139348">
+<Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902" Created="635928469808659142" LastModified="635928737419964225">
   <Caption><![CDATA[Akka]]></Caption>
-  <Content><![CDATA[- do not save graph anylonger but send it back via message
-  - first step as dot text
-  - second as document and then build from model
+  <Content><![CDATA[
 - add support for inner package deps
 - remove API from pinoeer
 - create actor host

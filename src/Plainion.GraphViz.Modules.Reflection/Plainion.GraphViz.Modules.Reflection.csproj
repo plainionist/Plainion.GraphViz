@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\EdgeType.cs" />
+    <Compile Include="Analysis\Packaging\Actors\AnalysisResponse.cs" />
     <Compile Include="Controls\AbstractCompletionData.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalysisDocument.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalyzeBase.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Analysis\Packaging\Actors\AnalyzeSubSystemDependencies.cs" />
     <Compile Include="Analysis\Packaging\Actors\Cancel.cs" />
     <Compile Include="Analysis\Packaging\Actors\Finished.cs" />
-    <Compile Include="Analysis\Packaging\Actors\GraphBuildRequest.cs" />
+    <Compile Include="Analysis\Packaging\Actors\AnalysisRequest.cs" />
     <Compile Include="Analysis\Packaging\Actors\GraphUtils.cs" />
     <Compile Include="Analysis\Packaging\Actors\PackageAnalysingActor.cs" />
     <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />

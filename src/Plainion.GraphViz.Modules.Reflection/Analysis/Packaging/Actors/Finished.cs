@@ -7,12 +7,12 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
     {
         private readonly IActorRef mySender;
 
-        public Finished(IActorRef sender)
+        public Finished( IActorRef sender )
         {
             mySender = sender;
         }
 
-        public AnalysisDocument Document { get; set; }
+        public AnalysisResponse Response { get; set; }
 
         public IActorRef Sender
         {

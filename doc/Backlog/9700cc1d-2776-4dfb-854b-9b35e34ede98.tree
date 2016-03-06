@@ -6,6 +6,9 @@
       <Caption><![CDATA[Next steps]]></Caption>
       <Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902">
         <Caption><![CDATA[Akka]]></Caption>
+        <Node Id="c76ad2c5-1a8f-4012-a1ee-a92b5769128c">
+          <Caption><![CDATA[cleanup all the messages]]></Caption>
+        </Node>
       </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>

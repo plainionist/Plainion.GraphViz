@@ -138,7 +138,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
             Save();
 
-            var request = new GraphBuildRequest
+            var request = new AnalysisRequest
             {
                 Spec = Document.Text,
             };
@@ -176,7 +176,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
             if( !( response is Failure ) )
             {
-                BuildGraph( ( AnalysisDocument )response );
+                BuildGraph( ( AnalysisResponse )response );
             }
             else
             {
@@ -186,9 +186,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             IsReady = true;
         }
 
-        private void BuildGraph( AnalysisDocument document )
+        private void BuildGraph( AnalysisResponse response )
         {
-            if( !document.Nodes.Any() && !document.Edges.Any() )
+            if( !response.Nodes.Any() && !response.Edges.Any() )
             {
                 MessageBox.Show( "Neither nodes nor edges found" );
                 return;
@@ -199,22 +199,22 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             var captionModule = presentation.GetPropertySetFor<Caption>();
 
             var builder = new RelaxedGraphBuilder();
-            foreach( var edge in document.Edges )
+            foreach( var edge in response.Edges )
             {
                 builder.TryAddEdge( edge.Item1, edge.Item2 );
             }
-            foreach( var node in document.Nodes )
+            foreach( var node in response.Nodes )
             {
                 builder.TryAddNode( node );
             }
-            foreach( var cluster in document.Clusters )
+            foreach( var cluster in response.Clusters )
             {
                 builder.TryAddCluster( cluster.Key, cluster.Value );
             }
 
             presentation.Graph = builder.Graph;
 
-            foreach( var caption in document.Captions )
+            foreach( var caption in response.Captions )
             {
                 captionModule.Add( caption );
             }

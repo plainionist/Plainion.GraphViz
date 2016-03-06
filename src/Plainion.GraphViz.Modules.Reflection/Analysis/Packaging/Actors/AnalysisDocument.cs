@@ -9,9 +9,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 {
     public class AnalysisDocument
     {
-        public HashSet<string> myNodes;
-        public HashSet<Tuple<string, string>> myEdges;
-        public Dictionary<string, IEnumerable<string>> myClusters;
+        private HashSet<string> myNodes;
+        private HashSet<Tuple<string, string>> myEdges;
+        private Dictionary<string, IEnumerable<string>> myClusters;
 
         public AnalysisDocument()
         {

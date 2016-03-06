@@ -26,7 +26,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 
         private void Ready()
         {
-            Receive<GraphBuildRequest>( r =>
+            Receive<AnalysisRequest>( r =>
             {
                 var self = Self;
                 var sender = Sender;
@@ -48,7 +48,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
                         return new Finished( sender ) { Exception = x.Exception };
                     }
 
-                    return new Finished( sender ) { Document = x.Result };
+                    return new Finished( sender ) { Response = AnalysisResponse.Create( x.Result ) };
                 }, TaskContinuationOptions.ExecuteSynchronously )
                 .PipeTo( self );
 
@@ -71,7 +71,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
                 }
                 else
                 {
-                    msg.Sender.Tell( msg.Document, Self );
+                    msg.Sender.Tell( msg.Response, Self );
                 }
                 BecomeReady();
             } );
