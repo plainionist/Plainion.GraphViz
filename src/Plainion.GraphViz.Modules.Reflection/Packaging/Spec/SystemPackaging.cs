@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Markup;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec
+namespace Plainion.GraphViz.Modules.Reflection.Packaging.Spec
 {
     [ContentProperty("Packages")]
     public class SystemPackaging

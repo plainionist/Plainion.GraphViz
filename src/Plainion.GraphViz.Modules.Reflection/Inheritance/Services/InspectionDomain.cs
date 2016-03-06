@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Policy;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework;
 using Plainion;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services
 {
     internal class InspectionDomain : IDisposable
     {

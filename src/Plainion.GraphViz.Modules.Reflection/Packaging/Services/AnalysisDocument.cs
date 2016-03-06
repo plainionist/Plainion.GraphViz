@@ -5,7 +5,7 @@ using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
+namespace Plainion.GraphViz.Modules.Reflection.Packaging.Services
 {
     // we use private properties here to support Json serialiation
     public class AnalysisDocument

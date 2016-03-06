@@ -1,7 +1,7 @@
 ﻿using System;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services
 {
     /// <summary>
     /// Small utils to simplify manage of inspectors

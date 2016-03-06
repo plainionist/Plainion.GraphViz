@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Plainion.GraphViz.Infrastructure;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance
 {
     class InheritanceGraphInspector : AsyncInspectorBase<TypeRelationshipDocument>
     {

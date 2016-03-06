@@ -18,14 +18,14 @@ using Newtonsoft.Json;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services;
-using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
+using Plainion.GraphViz.Modules.Reflection.Packaging.Services;
+using Plainion.GraphViz.Modules.Reflection.Packaging.Spec;
 using Plainion.GraphViz.Modules.Reflection.Controls;
-using Plainion.GraphViz.Modules.Reflection.Services;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Packaging
 {
     [Export( typeof( PackagingGraphBuilderViewModel ) )]
     public class PackagingGraphBuilderViewModel : ViewModelBase

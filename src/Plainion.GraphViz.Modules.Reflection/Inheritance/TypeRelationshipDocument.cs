@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance
 {
     [Serializable]
     class TypeRelationshipDocument

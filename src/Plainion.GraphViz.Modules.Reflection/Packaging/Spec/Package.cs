@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Markup;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec
+namespace Plainion.GraphViz.Modules.Reflection.Packaging.Spec
 {
     [ContentProperty("Patterns")]
     public class Package : PackageBase

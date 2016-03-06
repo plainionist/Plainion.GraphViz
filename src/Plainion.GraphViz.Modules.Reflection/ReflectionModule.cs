@@ -2,8 +2,8 @@
 using Microsoft.Practices.Prism.MefExtensions.Modularity;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.Regions;
-using Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance;
-using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging;
+using Plainion.GraphViz.Modules.Reflection.Inheritance;
+using Plainion.GraphViz.Modules.Reflection.Packaging;
 
 namespace Plainion.GraphViz.Modules.Reflection
 {

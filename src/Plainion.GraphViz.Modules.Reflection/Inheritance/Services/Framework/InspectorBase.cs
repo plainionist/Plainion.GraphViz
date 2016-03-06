@@ -1,7 +1,7 @@
 ﻿using System;
 using Plainion;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services.Framework
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework
 {
     public abstract class InspectorBase : MarshalByRefObject
     {

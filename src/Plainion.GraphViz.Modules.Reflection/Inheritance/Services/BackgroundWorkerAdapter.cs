@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services
 {
     internal class BackgroundWorkerAdapter : MarshalByRefObject, IProgress<int>, ICancellationToken
     {

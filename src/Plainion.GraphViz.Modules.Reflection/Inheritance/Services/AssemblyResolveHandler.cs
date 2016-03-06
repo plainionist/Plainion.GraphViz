@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services
 {
     internal class AssemblyResolveHandler : MarshalByRefObject
     {

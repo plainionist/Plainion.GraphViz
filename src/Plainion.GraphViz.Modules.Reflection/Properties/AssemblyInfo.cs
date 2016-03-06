@@ -27,7 +27,7 @@ using System.Windows.Markup;
     //     Themes\generic.xaml
     ResourceDictionaryLocation.SourceAssembly )]
 
-[assembly: XmlnsDefinition("http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec", "Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec")] 
+[assembly: XmlnsDefinition("http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec", "Plainion.GraphViz.Modules.Reflection.Packaging.Spec")] 
  
 
 [assembly: InternalsVisibleTo("Plainion.GraphViz.Modules.Reflection.Tests")]

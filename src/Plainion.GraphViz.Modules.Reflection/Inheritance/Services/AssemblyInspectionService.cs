@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework;
 using Plainion;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services
 {
     [Export( typeof( AssemblyInspectionService ) )]
     public class AssemblyInspectionService

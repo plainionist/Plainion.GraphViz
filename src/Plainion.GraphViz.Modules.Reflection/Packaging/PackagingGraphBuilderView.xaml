@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.PackagingGraphBuilderView"
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.Reflection.Packaging.PackagingGraphBuilderView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
@@ -8,7 +8,7 @@
         xmlns:pn="http://github.com/ronin4net/plainion"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:v="clr-namespace:Plainion.GraphViz.Modules.Reflection.Analysis.Packaging"
+        xmlns:v="clr-namespace:Plainion.GraphViz.Modules.Reflection.Packaging"
         xmlns:c="clr-namespace:Plainion.GraphViz.Modules.Reflection.Controls"
         mc:Ignorable="d"  
         d:DesignHeight="400" d:DesignWidth="500">

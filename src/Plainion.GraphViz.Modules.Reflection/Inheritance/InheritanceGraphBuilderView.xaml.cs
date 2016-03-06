@@ -3,7 +3,7 @@ using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance
 {
     [Export( typeof( InheritanceGraphBuilderView ) )]
     public partial class InheritanceGraphBuilderView : UserControl

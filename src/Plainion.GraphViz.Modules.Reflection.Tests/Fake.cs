@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plainion.GraphViz.Modules.Reflection.Analysis;
-using Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance;
+using Plainion.GraphViz.Modules.Reflection;
+using Plainion.GraphViz.Modules.Reflection.Inheritance;
 
 namespace Plainion.GraphViz.Modules.Reflection.Tests
 {

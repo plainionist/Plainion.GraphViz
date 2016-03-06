@@ -1,5 +1,5 @@
 ﻿
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
+namespace Plainion.GraphViz.Modules.Reflection.Packaging.Services
 {
     class FailureResponse
     {

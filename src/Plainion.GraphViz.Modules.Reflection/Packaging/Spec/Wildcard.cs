@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec
+namespace Plainion.GraphViz.Modules.Reflection.Packaging.Spec
 {
     public abstract class Wildcard
     {

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Packaging
 {
     //https://zamjad.wordpress.com/2014/03/01/radio-button-in-mvvm/
     [ValueConversion( typeof( bool ), typeof( Enum ) )]

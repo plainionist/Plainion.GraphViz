@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Controls;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Packaging
 {
     [Export(typeof(PackagingGraphBuilderView))]
     public partial class PackagingGraphBuilderView : UserControl

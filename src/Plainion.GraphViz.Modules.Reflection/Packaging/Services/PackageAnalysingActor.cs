@@ -5,9 +5,9 @@ using System.Windows.Markup;
 using System.Xml;
 using Akka.Actor;
 using Newtonsoft.Json;
-using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
+using Plainion.GraphViz.Modules.Reflection.Packaging.Spec;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
+namespace Plainion.GraphViz.Modules.Reflection.Packaging.Services
 {
     class PackageAnalysingActor : ReceiveActor, IWithUnboundedStash
     {

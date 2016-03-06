@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services.Framework
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework
 {
     public interface IInspectorHandle<T> : IDisposable where T : InspectorBase
     {

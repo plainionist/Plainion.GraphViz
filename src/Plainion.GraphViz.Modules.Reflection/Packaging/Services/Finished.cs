@@ -1,7 +1,7 @@
 ﻿using System;
 using Akka.Actor;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Services
+namespace Plainion.GraphViz.Modules.Reflection.Packaging.Services
 {
     class Finished
     {

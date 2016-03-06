@@ -1,5 +1,5 @@
 ﻿
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Packaging
 {
     public enum AnalysisMode
     {

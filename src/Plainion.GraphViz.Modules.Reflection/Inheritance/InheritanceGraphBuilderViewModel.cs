@@ -12,13 +12,13 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
-using Plainion.GraphViz.Modules.Reflection.Services;
-using Plainion.GraphViz.Modules.Reflection.Services.Framework;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services;
+using Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance
 {
     [Export( typeof( InheritanceGraphBuilderViewModel ) )]
     public class InheritanceGraphBuilderViewModel : ViewModelBase

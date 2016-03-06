@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Plainion.GraphViz.Modules.Reflection.Services.Framework
+namespace Plainion.GraphViz.Modules.Reflection.Inheritance.Services.Framework
 {
     internal class AssemblyUtils
     {
