@@ -127,69 +127,69 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analysis\Inheritance\EdgeType.cs" />
-    <Compile Include="Analysis\Packaging\Services\FailureResponse.cs" />
-    <Compile Include="Analysis\Packaging\AnalysisMode.cs" />
-    <Compile Include="Analysis\Packaging\EnumToBoolExtension.cs" />
-    <Compile Include="Analysis\Packaging\PrivateSettersContractResolver.cs" />
+    <Compile Include="Inheritance\EdgeType.cs" />
+    <Compile Include="Packaging\Services\FailureResponse.cs" />
+    <Compile Include="Packaging\AnalysisMode.cs" />
+    <Compile Include="Packaging\EnumToBoolExtension.cs" />
+    <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Controls\AbstractCompletionData.cs" />
-    <Compile Include="Analysis\Packaging\Services\AnalysisDocument.cs" />
-    <Compile Include="Analysis\Packaging\Services\AnalyzeBase.cs" />
-    <Compile Include="Analysis\Packaging\Services\AnalyzePackageDependencies.cs" />
-    <Compile Include="Analysis\Packaging\Services\AnalyzeSubSystemDependencies.cs" />
-    <Compile Include="Analysis\Packaging\Services\Cancel.cs" />
-    <Compile Include="Analysis\Packaging\Services\Finished.cs" />
-    <Compile Include="Analysis\Packaging\Services\AnalysisRequest.cs" />
-    <Compile Include="Analysis\Packaging\Services\GraphUtils.cs" />
-    <Compile Include="Analysis\Packaging\Services\PackageAnalysingActor.cs" />
-    <Compile Include="Analysis\Packaging\Services\AssemblyLoader.cs" />
+    <Compile Include="Packaging\Services\AnalysisDocument.cs" />
+    <Compile Include="Packaging\Services\AnalyzeBase.cs" />
+    <Compile Include="Packaging\Services\AnalyzePackageDependencies.cs" />
+    <Compile Include="Packaging\Services\AnalyzeSubSystemDependencies.cs" />
+    <Compile Include="Packaging\Services\Cancel.cs" />
+    <Compile Include="Packaging\Services\Finished.cs" />
+    <Compile Include="Packaging\Services\AnalysisRequest.cs" />
+    <Compile Include="Packaging\Services\GraphUtils.cs" />
+    <Compile Include="Packaging\Services\PackageAnalysingActor.cs" />
+    <Compile Include="Packaging\Services\AssemblyLoader.cs" />
     <Compile Include="Controls\KeywordCompletionData.cs" />
     <Compile Include="Controls\XmlEditor.xaml.cs">
       <DependentUpon>XmlEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis\Packaging\PackagingGraphBuilderView.xaml.cs">
+    <Compile Include="Packaging\PackagingGraphBuilderView.xaml.cs">
       <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis\Packaging\PackagingGraphBuilderViewModel.cs" />
-    <Compile Include="Analysis\Packaging\PackagingGraphMenuItem.xaml.cs">
+    <Compile Include="Packaging\PackagingGraphBuilderViewModel.cs" />
+    <Compile Include="Packaging\PackagingGraphMenuItem.xaml.cs">
       <DependentUpon>PackagingGraphMenuItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis\Packaging\PackagingGraphMenuItemModel.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItem.xaml.cs">
+    <Compile Include="Packaging\PackagingGraphMenuItemModel.cs" />
+    <Compile Include="Inheritance\InheritanceGraphMenuItem.xaml.cs">
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItemModel.cs" />
+    <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
     <Compile Include="Controls\PropertyCompletionData.cs" />
-    <Compile Include="Analysis\Packaging\Services\Reflector.cs" />
-    <Compile Include="Analysis\Packaging\Spec\Cluster.cs" />
-    <Compile Include="Analysis\Packaging\Spec\SystemPackaging.cs" />
-    <Compile Include="Analysis\Packaging\Spec\Exclude.cs" />
-    <Compile Include="Analysis\Packaging\Spec\Include.cs" />
-    <Compile Include="Analysis\Packaging\Spec\Package.cs" />
-    <Compile Include="Analysis\Packaging\Spec\PackageBase.cs" />
-    <Compile Include="Analysis\Packaging\Spec\Wildcard.cs" />
-    <Compile Include="Services\Framework\IInspectorHandle.cs" />
+    <Compile Include="Packaging\Services\Reflector.cs" />
+    <Compile Include="Packaging\Spec\Cluster.cs" />
+    <Compile Include="Packaging\Spec\SystemPackaging.cs" />
+    <Compile Include="Packaging\Spec\Exclude.cs" />
+    <Compile Include="Packaging\Spec\Include.cs" />
+    <Compile Include="Packaging\Spec\Package.cs" />
+    <Compile Include="Packaging\Spec\PackageBase.cs" />
+    <Compile Include="Packaging\Spec\Wildcard.cs" />
+    <Compile Include="Inheritance\Services\Framework\IInspectorHandle.cs" />
     <Compile Include="RegionNames.cs" />
-    <Compile Include="Services\AssemblyInspectionService.cs" />
-    <Compile Include="Services\Framework\AssemblyUtils.cs" />
-    <Compile Include="Services\Framework\InspectorBase.cs" />
-    <Compile Include="Services\BackgroundWorkerAdapter.cs" />
-    <Compile Include="Services\Framework\ICancellationToken.cs" />
-    <Compile Include="Analysis\Inheritance\AllTypesInspector.cs" />
-    <Compile Include="Services\Framework\AsyncInspectorBase.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphInspector.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilder.cs" />
-    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilderView.xaml.cs">
+    <Compile Include="Inheritance\Services\AssemblyInspectionService.cs" />
+    <Compile Include="Inheritance\Services\Framework\AssemblyUtils.cs" />
+    <Compile Include="Inheritance\Services\Framework\InspectorBase.cs" />
+    <Compile Include="Inheritance\Services\BackgroundWorkerAdapter.cs" />
+    <Compile Include="Inheritance\Services\Framework\ICancellationToken.cs" />
+    <Compile Include="Inheritance\AllTypesInspector.cs" />
+    <Compile Include="Inheritance\Services\Framework\AsyncInspectorBase.cs" />
+    <Compile Include="Inheritance\InheritanceGraphInspector.cs" />
+    <Compile Include="Inheritance\InheritanceGraphBuilder.cs" />
+    <Compile Include="Inheritance\InheritanceGraphBuilderView.xaml.cs">
       <DependentUpon>InheritanceGraphBuilderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Analysis\Inheritance\InheritanceGraphBuilderViewModel.cs" />
-    <Compile Include="Services\AssemblyResolveHandler.cs" />
+    <Compile Include="Inheritance\InheritanceGraphBuilderViewModel.cs" />
+    <Compile Include="Inheritance\Services\AssemblyResolveHandler.cs" />
     <Compile Include="ReflectionModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\InspectionDomain.cs" />
-    <Compile Include="Services\Framework\TypeDescriptor.cs" />
-    <Compile Include="Services\InspectionExtensions.cs" />
-    <Compile Include="Analysis\Inheritance\TypeRelationshipDocument.cs" />
+    <Compile Include="Inheritance\Services\InspectionDomain.cs" />
+    <Compile Include="Inheritance\Services\Framework\TypeDescriptor.cs" />
+    <Compile Include="Inheritance\Services\InspectionExtensions.cs" />
+    <Compile Include="Inheritance\TypeRelationshipDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -209,19 +209,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Analysis\Packaging\PackagingGraphBuilderView.xaml">
+    <Page Include="Packaging\PackagingGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Analysis\Packaging\PackagingGraphMenuItem.xaml">
+    <Page Include="Packaging\PackagingGraphMenuItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Analysis\Inheritance\InheritanceGraphBuilderView.xaml">
+    <Page Include="Inheritance\InheritanceGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Analysis\Inheritance\InheritanceGraphMenuItem.xaml">
+    <Page Include="Inheritance\InheritanceGraphMenuItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
