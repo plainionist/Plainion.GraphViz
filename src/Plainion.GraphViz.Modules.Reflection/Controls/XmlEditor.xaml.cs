@@ -8,7 +8,7 @@ using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Controls
 {
     public partial class XmlEditor : UserControl
     {

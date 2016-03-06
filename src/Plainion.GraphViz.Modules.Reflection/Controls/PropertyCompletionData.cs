@@ -3,7 +3,7 @@ using System.Reflection;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Controls
 {
     class PropertyCompletionData : AbstractCompletionData
     {

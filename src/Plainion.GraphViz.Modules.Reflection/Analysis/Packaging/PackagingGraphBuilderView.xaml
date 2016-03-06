@@ -9,6 +9,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:v="clr-namespace:Plainion.GraphViz.Modules.Reflection.Analysis.Packaging"
+        xmlns:c="clr-namespace:Plainion.GraphViz.Modules.Reflection.Controls"
         mc:Ignorable="d"  
         d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -42,6 +43,6 @@
             <ProgressBar Minimum="0" Value="{Binding Path=ProgressValue, Mode=TwoWay}" Margin="0,5,0,5" Height="15" Maximum="100"/>
         </StackPanel>
 
-        <v:XmlEditor Document="{Binding Document}" CompletionData="{Binding CompletionData}"/>
+        <c:XmlEditor Document="{Binding Document}" CompletionData="{Binding CompletionData}"/>
     </DockPanel>
 </UserControl>

@@ -16,21 +16,21 @@ namespace Plainion.GraphViz.Pioneer
         private static string myConfigFile;
         private static string myOutputFile;
 
-        private static void Main(string[] args)
+        private static void Main( string[] args )
         {
-            if (args.Length == 1 && args[0] == "-SAS")
+            if( args.Length == 1 && args[ 0 ] == "-SAS" )
             {
                 StartActorSystem();
             }
             else
             {
-                ConsoleMain(args);
+                ConsoleMain( args );
             }
         }
 
         private static void StartActorSystem()
         {
-            var config = ConfigurationFactory.ParseString(@"
+            var config = ConfigurationFactory.ParseString( @"
                 akka {
                     actor {
                         provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
@@ -43,66 +43,66 @@ namespace Plainion.GraphViz.Pioneer
                         }
                     }
                 }
-                ");
+                " );
 
-            using (var system = ActorSystem.Create("CodeInspection", config))
+            using( var system = ActorSystem.Create( "CodeInspection", config ) )
             {
-                Console.WriteLine("...  running ...");
+                Console.WriteLine( "...  running ..." );
 
-                while (true) Thread.Sleep(1000);
+                while( true ) Thread.Sleep( 1000 );
             }
         }
 
-        private static void ConsoleMain(string[] args)
+        private static void ConsoleMain( string[] args )
         {
             try
             {
-                myOutputFile = Path.GetFullPath(".");
+                myOutputFile = Path.GetFullPath( "." );
 
-                for (int i = 0; i < args.Length; ++i)
+                for( int i = 0; i < args.Length; ++i )
                 {
-                    if (args[i] == "-p")
+                    if( args[ i ] == "-p" )
                     {
-                        myPackageName = args[i + 1];
+                        myPackageName = args[ i + 1 ];
                     }
-                    else if (args[i] == "-o")
+                    else if( args[ i ] == "-o" )
                     {
-                        myOutputFile = args[i + 1];
+                        myOutputFile = args[ i + 1 ];
                     }
                     else
                     {
-                        myConfigFile = args[i];
+                        myConfigFile = args[ i ];
                     }
                 }
 
-                if (myConfigFile == null)
+                if( myConfigFile == null )
                 {
-                    Console.WriteLine("Config file missing");
-                    Environment.Exit(1);
+                    Console.WriteLine( "Config file missing" );
+                    Environment.Exit( 1 );
                 }
 
-                if (!File.Exists(myConfigFile))
+                if( !File.Exists( myConfigFile ) )
                 {
-                    Console.WriteLine("Config file does not exist: " + myConfigFile);
-                    Environment.Exit(1);
+                    Console.WriteLine( "Config file does not exist: " + myConfigFile );
+                    Environment.Exit( 1 );
                 }
 
-                var config = (SystemPackaging)XamlReader.Load(XmlReader.Create(myConfigFile));
+                var config = ( SystemPackaging )XamlReader.Load( XmlReader.Create( myConfigFile ) );
 
-                var analyzer = CreateAnalyzer(config);
+                var analyzer = CreateAnalyzer( config );
                 analyzer.OutputFile = myOutputFile;
-                analyzer.Execute(config);
+                analyzer.Execute( config );
             }
-            catch (Exception ex)
+            catch( Exception ex )
             {
-                Console.WriteLine(ex.ToString());
-                Environment.Exit(1);
+                Console.WriteLine( ex.ToString() );
+                Environment.Exit( 1 );
             }
         }
 
-        private static AnalyzeBase CreateAnalyzer(SystemPackaging config)
+        private static AnalyzeBase CreateAnalyzer( SystemPackaging config )
         {
-            if (myPackageName == null)
+            if( myPackageName == null )
             {
                 return new AnalyzePackageDependencies();
             }

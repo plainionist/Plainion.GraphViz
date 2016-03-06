@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
+namespace Plainion.GraphViz.Modules.Reflection.Controls
 {
     public class KeywordCompletionData : AbstractCompletionData
     {

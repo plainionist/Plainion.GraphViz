@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
 using ICSharpCode.AvalonEdit.Document;
@@ -16,6 +15,7 @@ using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
+using Plainion.GraphViz.Modules.Reflection.Controls;
 using Plainion.GraphViz.Modules.Reflection.Services;
 using Plainion.Prism.Interactivity.InteractionRequest;
 
@@ -138,7 +138,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             IsReady = false;
 
             Save();
-            
+
             var request = new GraphBuildRequest
             {
                 Spec = Document.Text,
@@ -175,14 +175,16 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
             var response = await myActor.Ask( request );
 
+            mySystem.Stop( myActor );
+
+            actorSystemHost.Kill();
+
+            mySystem.Dispose();
+
             if( !( response is Failure ) )
             {
                 DocumentLoader.Load( ( string )response );
             }
-
-            var ignore = mySystem.Terminate();
-
-            actorSystemHost.Kill();
 
             IsReady = true;
         }

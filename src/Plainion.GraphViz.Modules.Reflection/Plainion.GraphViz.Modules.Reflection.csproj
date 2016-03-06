@@ -128,7 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analysis\EdgeType.cs" />
-    <Compile Include="Analysis\Packaging\AbstractCompletionData.cs" />
+    <Compile Include="Controls\AbstractCompletionData.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalysisDocument.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalyzeBase.cs" />
     <Compile Include="Analysis\Packaging\Actors\AnalyzePackageDependencies.cs" />
@@ -139,9 +139,9 @@
     <Compile Include="Analysis\Packaging\Actors\GraphUtils.cs" />
     <Compile Include="Analysis\Packaging\Actors\PackageAnalysingActor.cs" />
     <Compile Include="Analysis\Packaging\AssemblyLoader.cs" />
-    <Compile Include="Analysis\Packaging\KeywordCompletionData.cs" />
+    <Compile Include="Controls\KeywordCompletionData.cs" />
     <Compile Include="Analysis\Packaging\PackagingGraphBuilder.cs" />
-    <Compile Include="Analysis\Packaging\XmlEditor.xaml.cs">
+    <Compile Include="Controls\XmlEditor.xaml.cs">
       <DependentUpon>XmlEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Analysis\Packaging\PackagingGraphBuilderView.xaml.cs">
@@ -157,7 +157,7 @@
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Analysis\Inheritance\InheritanceGraphMenuItemModel.cs" />
-    <Compile Include="Analysis\Packaging\PropertyCompletionData.cs" />
+    <Compile Include="Controls\PropertyCompletionData.cs" />
     <Compile Include="Analysis\Packaging\Reflector.cs" />
     <Compile Include="Analysis\Packaging\Spec\Cluster.cs" />
     <Compile Include="Analysis\Packaging\Spec\SystemPackaging.cs" />
@@ -203,7 +203,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Analysis\Packaging\XmlEditor.xaml">
+    <Page Include="Controls\XmlEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
