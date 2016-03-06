@@ -9,6 +9,9 @@
         <Node Id="c76ad2c5-1a8f-4012-a1ee-a92b5769128c">
           <Caption><![CDATA[cleanup all the messages]]></Caption>
         </Node>
+        <Node Id="a0761ef0-3905-4e04-be20-6b1a40b2f1c1">
+          <Caption><![CDATA[encapsulate into Service]]></Caption>
+        </Node>
       </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
@@ -20,6 +23,9 @@
         </Node>
         <Node Id="fb401c48-f3b4-4897-ac46-41d1b3b77eef">
           <Caption><![CDATA[migrate inheritance to actor]]></Caption>
+        </Node>
+        <Node Id="7d088e5a-840f-40d7-a65a-4d973adea1fe">
+          <Caption><![CDATA[different actors per analysis mode?]]></Caption>
         </Node>
       </Node>
     </Node>

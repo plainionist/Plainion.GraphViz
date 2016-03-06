@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
@@ -30,6 +31,8 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
     {
         private int myProgress;
         private bool myIsReady;
+        private string myPackageName;
+        private AnalysisMode myAnalysisMode;
         private TextDocument myDocument;
         private IEnumerable<KeywordCompletionData> myCompletionData;
         private IActorRef myActor;
@@ -54,6 +57,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 .Select( t => new KeywordCompletionData( t ) )
                 .ToList();
 
+            AnalysisMode = AnalysisMode.CrossPackageDependencies;
             IsReady = true;
         }
 
@@ -94,6 +98,18 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         {
             get { return myCompletionData; }
             set { SetProperty( ref myCompletionData, value ); }
+        }
+
+        public AnalysisMode AnalysisMode
+        {
+            get { return myAnalysisMode; }
+            set { SetProperty( ref myAnalysisMode, value ); }
+        }
+
+        public string PackageName
+        {
+            get { return myPackageName; }
+            set { SetProperty( ref myPackageName, value ); }
         }
 
         public bool IsReady
@@ -170,6 +186,8 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             var request = new AnalysisRequest
             {
                 Spec = Document.Text,
+                AnalysisMode = AnalysisMode,
+                PackageName = PackageName
             };
 
             var config = ConfigurationFactory.ParseString( @"
@@ -189,11 +207,12 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
             var executable = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Plainion.Graphviz.Pioneer.exe" );
             var info = new ProcessStartInfo( executable, "-SAS" );
-            info.CreateNoWindow = true;
-            info.UseShellExecute = false;
+            //info.CreateNoWindow = true;
+            //info.UseShellExecute = false;
             var actorSystemHost = Process.Start( info );
 
             var remoteAddress = Address.Parse( "akka.tcp://CodeInspection@localhost:2525" );
+
             myActor = system.ActorOf( Props.Create( () => new PackageAnalysingActor() )
                 .WithDeploy( Deploy.None.WithScope( new RemoteScope( remoteAddress ) ) ), "PackagingDependencies" );
 
@@ -206,13 +225,13 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
 
             actorSystemHost.Kill();
 
-            if( !( response is Failure ) )
+            if( !( response is FailureResponse ) )
             {
                 BuildGraph( ( AnalysisResponse )response );
             }
             else
             {
-                throw ( ( Failure )response ).Exception;
+                throw new Exception( ( ( FailureResponse )response ).Error );
             }
 
             IsReady = true;

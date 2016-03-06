@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -33,7 +34,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 
                 Task.Run<AnalysisDocument>( () =>
                 {
-                    var activity = new AnalyzePackageDependencies();
+                    var activity = r.AnalysisMode == AnalysisMode.InnerPackageDependencies ?
+                        ( AnalyzeBase )new AnalyzeSubSystemDependencies { PackageName = r.PackageName } :
+                        ( AnalyzeBase )new AnalyzePackageDependencies();
 
                     using( var reader = new StringReader( r.Spec ) )
                     {
@@ -67,7 +70,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
             {
                 if( msg.Exception != null )
                 {
-                    msg.Sender.Tell( new Failure { Exception = msg.Exception }, Self );
+                    // https://github.com/akkadotnet/akka.net/issues/1409
+                    // -> exceptions are currently not serializable in raw version
+                    msg.Sender.Tell( new FailureResponse { Error = msg.Exception.ToString() }, Self );
                 }
                 else
                 {
