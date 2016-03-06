@@ -7,11 +7,12 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 {
+    // we use private properties here to support Json serialiation
     public class AnalysisDocument
     {
-        private HashSet<string> myNodes;
-        private HashSet<Tuple<string, string>> myEdges;
-        private Dictionary<string, IEnumerable<string>> myClusters;
+        private HashSet<string> myNodes { get; set; }
+        private HashSet<Tuple<string, string>> myEdges { get; set; }
+        private Dictionary<string, IEnumerable<string>> myClusters { get; set; }
 
         public AnalysisDocument()
         {

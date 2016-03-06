@@ -228,7 +228,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             {
                 if( !( response is FailureResponse ) )
                 {
-                    AnalysisResponse analysisResponse;
+                    AnalysisDocument analysisResponse;
 
                     var settings = new JsonSerializerSettings();
                     settings.ContractResolver = new PrivateSettersContractResolver();
@@ -238,7 +238,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                     {
                         using( var reader = new JsonTextReader( sr ) )
                         {
-                            analysisResponse = serializer.Deserialize<AnalysisResponse>( reader );
+                            analysisResponse = serializer.Deserialize<AnalysisDocument>( reader );
                         }
                     }
 
@@ -262,7 +262,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             }
         }
 
-        private void BuildGraph( AnalysisResponse response )
+        private void BuildGraph( AnalysisDocument response )
         {
             if( !response.Nodes.Any() && !response.Edges.Any() )
             {

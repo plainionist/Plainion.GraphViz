@@ -58,7 +58,7 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
                     {
                         using( var writer = new JsonTextWriter( sw ) )
                         {
-                            serializer.Serialize( writer, AnalysisResponse.Create( x.Result ) );
+                            serializer.Serialize( writer, x.Result );
                         }
                     }
 

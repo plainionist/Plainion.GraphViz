@@ -13,10 +13,10 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         {
             var props = type.GetProperties( BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance )
                 .Select( p => base.CreateProperty( p, memberSerialization ) )
-               .ToList();
+                .ToList();
 
             props.ForEach( p => { p.Writable = true; p.Readable = true; } );
-            
+
             return props;
         }
     }
