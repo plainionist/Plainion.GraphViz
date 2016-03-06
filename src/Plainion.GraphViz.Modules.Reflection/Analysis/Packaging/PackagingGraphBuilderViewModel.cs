@@ -5,8 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
+using System.Windows.Markup;
+using System.Xml;
 using Akka.Actor;
 using Akka.Configuration;
 using ICSharpCode.AvalonEdit.Document;
@@ -36,8 +37,9 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
         public PackagingGraphBuilderViewModel()
         {
             Document = new TextDocument();
+            Document.Changed += Document_Changed;
 
-            CreateGraphCommand = new DelegateCommand( OnCreateGraph, () => IsReady );
+            CreateGraphCommand = new DelegateCommand( OnCreateGraph, () => IsReady && IsValidDocument() );
             CancelCommand = new DelegateCommand( OnCancel, () => !IsReady );
 
             ClosedCommand = new DelegateCommand( OnClosed );
@@ -53,6 +55,33 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
                 .ToList();
 
             IsReady = true;
+        }
+
+        private bool IsValidDocument()
+        {
+            if( string.IsNullOrEmpty( Document.Text ) )
+            {
+                return false;
+            }
+
+            try
+            {
+                using( var reader = new StringReader( Document.Text ) )
+                {
+                    var spec = ( SystemPackaging )XamlReader.Load( XmlReader.Create( reader ) );
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private void Document_Changed( object sender, DocumentChangeEventArgs e )
+        {
+            CreateGraphCommand.RaiseCanExecuteChanged();
         }
 
         public TextDocument Document
@@ -159,7 +188,10 @@ namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging
             var system = ActorSystem.Create( "CodeInspectionClient", config );
 
             var executable = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Plainion.Graphviz.Pioneer.exe" );
-            var actorSystemHost = Process.Start( executable, "-SAS" );
+            var info = new ProcessStartInfo( executable, "-SAS" );
+            info.CreateNoWindow = true;
+            info.UseShellExecute = false;
+            var actorSystemHost = Process.Start( info );
 
             var remoteAddress = Address.Parse( "akka.tcp://CodeInspection@localhost:2525" );
             myActor = system.ActorOf( Props.Create( () => new PackageAnalysingActor() )
