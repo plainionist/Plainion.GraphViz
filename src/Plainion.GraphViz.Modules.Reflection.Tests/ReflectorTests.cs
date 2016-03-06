@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Plainion.GraphViz.Modules.Reflection.Analysis;
+using Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging;
 
 namespace Plainion.GraphViz.Modules.Reflection.Tests

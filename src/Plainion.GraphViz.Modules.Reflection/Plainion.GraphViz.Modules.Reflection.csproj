@@ -127,7 +127,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analysis\EdgeType.cs" />
+    <Compile Include="Analysis\Inheritance\EdgeType.cs" />
     <Compile Include="Analysis\Packaging\Actors\FailureResponse.cs" />
     <Compile Include="Analysis\Packaging\AnalysisMode.cs" />
     <Compile Include="Analysis\Packaging\EnumToBoolExtension.cs" />
@@ -175,7 +175,7 @@
     <Compile Include="Services\Framework\InspectorBase.cs" />
     <Compile Include="Services\BackgroundWorkerAdapter.cs" />
     <Compile Include="Services\Framework\ICancellationToken.cs" />
-    <Compile Include="Analysis\AllTypesInspector.cs" />
+    <Compile Include="Analysis\Inheritance\AllTypesInspector.cs" />
     <Compile Include="Services\Framework\AsyncInspectorBase.cs" />
     <Compile Include="Analysis\Inheritance\InheritanceGraphInspector.cs" />
     <Compile Include="Analysis\Inheritance\InheritanceGraphBuilder.cs" />
@@ -189,7 +189,7 @@
     <Compile Include="Services\InspectionDomain.cs" />
     <Compile Include="Services\Framework\TypeDescriptor.cs" />
     <Compile Include="Services\InspectionExtensions.cs" />
-    <Compile Include="Analysis\TypeRelationshipDocument.cs" />
+    <Compile Include="Analysis\Inheritance\TypeRelationshipDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

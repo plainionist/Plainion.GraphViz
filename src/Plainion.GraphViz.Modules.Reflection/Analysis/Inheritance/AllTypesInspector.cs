@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Plainion.GraphViz.Modules.Reflection.Services.Framework;
 
-namespace Plainion.GraphViz.Modules.Reflection.Analysis
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 {
     class AllTypesInspector : InspectorBase
     {

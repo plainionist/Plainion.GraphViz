@@ -6,6 +6,12 @@
       <Caption><![CDATA[Next steps]]></Caption>
       <Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902">
         <Caption><![CDATA[Akka]]></Caption>
+        <Node Id="3962eb39-ea7d-4d4e-b6bb-63559e3454a3">
+          <Caption><![CDATA[cancel support]]></Caption>
+        </Node>
+        <Node Id="ee4861f0-1ce2-49dd-8d29-185b5c3c4875">
+          <Caption><![CDATA[progress]]></Caption>
+        </Node>
         <Node Id="c76ad2c5-1a8f-4012-a1ee-a92b5769128c">
           <Caption><![CDATA[cleanup all the messages]]></Caption>
         </Node>
@@ -13,14 +19,14 @@
           <Caption><![CDATA[encapsulate into Service]]></Caption>
         </Node>
       </Node>
+      <Node Id="d1524d65-f8ed-4b07-856f-efcab1a6c3bd">
+        <Caption><![CDATA[Reflection module]]></Caption>
+        <Node Id="3d244602-6f4c-4588-8e17-3a6df066f6bd">
+          <Caption><![CDATA[project structure]]></Caption>
+        </Node>
+      </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
-        <Node Id="3962eb39-ea7d-4d4e-b6bb-63559e3454a3">
-          <Caption><![CDATA[cancel support]]></Caption>
-        </Node>
-        <Node Id="ee4861f0-1ce2-49dd-8d29-185b5c3c4875">
-          <Caption><![CDATA[progress]]></Caption>
-        </Node>
         <Node Id="fb401c48-f3b4-4897-ac46-41d1b3b77eef">
           <Caption><![CDATA[migrate inheritance to actor]]></Caption>
         </Node>

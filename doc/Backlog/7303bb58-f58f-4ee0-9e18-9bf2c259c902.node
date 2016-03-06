@@ -1,11 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902" Created="635928469808659142" LastModified="635928865475378576">
+<Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902" Created="635928469808659142" LastModified="635928873679817843">
   <Caption><![CDATA[Akka]]></Caption>
-  <Content><![CDATA[
-
-
-- rename "reflection" to "code inspection"
-- create separate actors assembly
-
-]]></Content>
+  <Content><![CDATA[]]></Content>
 </Node>

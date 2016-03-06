@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Markup;
@@ -10,7 +6,6 @@ using System.Xml;
 using Akka.Actor;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Spec;
-using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Reflection.Analysis.Packaging.Actors
 {

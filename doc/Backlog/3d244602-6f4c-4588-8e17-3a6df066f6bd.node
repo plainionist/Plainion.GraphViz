@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="3d244602-6f4c-4588-8e17-3a6df066f6bd" Created="635928873579372098" LastModified="635928873698858932">
+  <Caption><![CDATA[project structure]]></Caption>
+  <Content><![CDATA[
+Plainion.GraphViz.Modules.Reflection
+
+Plainion.GraphViz.Modules.CodeInspection
+Plainion.GraphViz.Modules.CodeInspection.Actors
+
+
+- rename "reflection" to "code inspection"
+- create separate actors assembly
+
+]]></Content>
+</Node>

@@ -1,5 +1,5 @@
 ﻿
-namespace Plainion.GraphViz.Modules.Reflection.Analysis
+namespace Plainion.GraphViz.Modules.Reflection.Analysis.Inheritance
 {
     public enum EdgeType
     {
