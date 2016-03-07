@@ -18,6 +18,9 @@
         <Node Id="a0761ef0-3905-4e04-be20-6b1a40b2f1c1">
           <Caption><![CDATA[encapsulate into Service]]></Caption>
         </Node>
+        <Node Id="0b4e8dbe-ddbd-4160-8085-8dd5281a4776">
+          <Caption><![CDATA[how to do message chunking?]]></Caption>
+        </Node>
       </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>

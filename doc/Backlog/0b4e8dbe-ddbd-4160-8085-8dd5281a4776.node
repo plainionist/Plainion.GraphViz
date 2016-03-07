@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="0b4e8dbe-ddbd-4160-8085-8dd5281a4776" Created="635929346716753515" LastModified="635929346912783515">
+  <Caption><![CDATA[how to do message chunking?]]></Caption>
+  <Content><![CDATA[saving bigger responses to disk is not great option]]></Content>
+</Node>

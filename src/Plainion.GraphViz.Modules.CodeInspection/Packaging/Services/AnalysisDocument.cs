@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Infrastructure;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
@@ -13,6 +11,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         private HashSet<string> myNodes { get; set; }
         private HashSet<Tuple<string, string>> myEdges { get; set; }
         private Dictionary<string, IEnumerable<string>> myClusters { get; set; }
+        private List<Caption> myCaptions { get; set; }
 
         public AnalysisDocument()
         {
@@ -20,7 +19,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             myEdges = new HashSet<Tuple<string, string>>();
             myClusters = new Dictionary<string, IEnumerable<string>>();
 
-            Captions = new List<Caption>();
+            myCaptions = new List<Caption>();
         }
 
         public IEnumerable<string> Nodes { get { return myNodes; } }
@@ -29,28 +28,36 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         public IReadOnlyDictionary<string, IEnumerable<string>> Clusters { get { return myClusters; } }
 
-        public List<Caption> Captions { get; private set; }
+        public IEnumerable<Caption> Captions { get { return myCaptions; } }
 
-        public void AddNode( string nodeId )
+        public void Add(Caption caption)
         {
-            myNodes.Add( nodeId );
+            if (!myCaptions.Any(c => c.OwnerId == caption.OwnerId))
+            {
+                myCaptions.Add(caption);
+            }
         }
 
-        public void AddEdge( string sourceNodeId, string targetNodeId )
+        public void AddNode(string nodeId)
         {
-            myEdges.Add( Tuple.Create( sourceNodeId, targetNodeId ) );
+            myNodes.Add(nodeId);
         }
 
-        public void AddToCluster( string clusterId, string nodeId )
+        public void AddEdge(string sourceNodeId, string targetNodeId)
+        {
+            myEdges.Add(Tuple.Create(sourceNodeId, targetNodeId));
+        }
+
+        public void AddToCluster(string clusterId, string nodeId)
         {
             IEnumerable<string> existing;
-            if( !myClusters.TryGetValue( clusterId, out existing ) )
+            if (!myClusters.TryGetValue(clusterId, out existing))
             {
                 existing = new HashSet<string>();
-                myClusters.Add( clusterId, existing );
+                myClusters.Add(clusterId, existing);
             }
 
-            ( ( HashSet<string> )existing ).Add( nodeId );
+            ((HashSet<string>)existing).Add(nodeId);
         }
     }
 }

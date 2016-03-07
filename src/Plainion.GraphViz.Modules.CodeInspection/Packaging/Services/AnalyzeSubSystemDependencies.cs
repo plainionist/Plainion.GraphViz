@@ -66,7 +66,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 }
 
                 doc.AddNode( node.FullName );
-                doc.Captions.Add( new Caption( node.FullName, node.Name ) );
+                doc.Add( new Caption( node.FullName, node.Name ) );
 
                 // in case multiple cluster match we just take the first one
                 var matchedCluster = myPackage.Clusters.FirstOrDefault( c => c.Matches( node.FullName ) );
