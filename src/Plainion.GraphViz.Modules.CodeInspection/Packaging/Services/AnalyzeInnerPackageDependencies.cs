@@ -8,7 +8,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
-    class AnalyzeSubSystemDependencies : AnalyzeBase
+    class AnalyzeInnerPackageDependencies : AnalyzeBase
     {
         private Package myPackage;
         private List<Type> myTypes;
@@ -45,7 +45,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             Console.Write( "." );
 
-            var cluster = myPackage.Clusters.FirstOrDefault( c => c.Matches( type.FullName ) );
+            CancellationToken.ThrowIfCancellationRequested();
+
+            var cluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(type.FullName));
 
             return new Reflector( AssemblyLoader, type ).GetUsedTypes()
                 .Where( myTypes.Contains )

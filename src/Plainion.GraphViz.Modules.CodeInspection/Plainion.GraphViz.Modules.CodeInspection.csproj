@@ -135,13 +135,13 @@
     <Compile Include="Controls\AbstractCompletionData.cs" />
     <Compile Include="Packaging\Services\AnalysisDocument.cs" />
     <Compile Include="Packaging\Services\AnalyzeBase.cs" />
-    <Compile Include="Packaging\Services\AnalyzePackageDependencies.cs" />
-    <Compile Include="Packaging\Services\AnalyzeSubSystemDependencies.cs" />
+    <Compile Include="Packaging\Services\AnalyzeCrossPackageDependencies.cs" />
+    <Compile Include="Packaging\Services\AnalyzeInnerPackageDependencies.cs" />
     <Compile Include="Packaging\Services\Cancel.cs" />
     <Compile Include="Packaging\Services\Finished.cs" />
     <Compile Include="Packaging\Services\AnalysisRequest.cs" />
     <Compile Include="Packaging\Services\GraphUtils.cs" />
-    <Compile Include="Packaging\Services\PackageAnalysingActor.cs" />
+    <Compile Include="Packaging\Services\PackageAnalysisActor.cs" />
     <Compile Include="Packaging\Services\AssemblyLoader.cs" />
     <Compile Include="Controls\KeywordCompletionData.cs" />
     <Compile Include="Controls\XmlEditor.xaml.cs">
@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
     <Compile Include="Controls\PropertyCompletionData.cs" />
+    <Compile Include="Packaging\Services\PackageAnalysisService.cs" />
     <Compile Include="Packaging\Services\Reflector.cs" />
     <Compile Include="Packaging\Spec\Cluster.cs" />
     <Compile Include="Packaging\Spec\SystemPackaging.cs" />

@@ -8,7 +8,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
-    class AnalyzePackageDependencies : AnalyzeBase
+    class AnalyzeCrossPackageDependencies : AnalyzeBase
     {
         private static string[] Colors = { "lightblue", "lightgreen", "lightgray" };
 
@@ -18,7 +18,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             foreach( var package in Config.Packages )
             {
-                myPackages[ package.Name ] = Load( package )
+                CancellationToken.ThrowIfCancellationRequested();
+                
+                myPackages[package.Name] = Load(package)
                     .SelectMany( asm => asm.GetTypes() )
                     .ToList();
             }
@@ -46,7 +48,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             Console.Write( "." );
 
-            return new Reflector( AssemblyLoader, type ).GetUsedTypes()
+            CancellationToken.ThrowIfCancellationRequested();
+
+            return new Reflector(AssemblyLoader, type).GetUsedTypes()
                 .Where( usedType => IsForeignPackage( package, usedType ) )
                 .Select( usedType => GraphUtils.Edge( type, usedType ) );
         }
