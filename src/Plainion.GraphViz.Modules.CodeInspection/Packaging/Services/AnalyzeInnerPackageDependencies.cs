@@ -24,21 +24,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 .ToList();
         }
 
-        protected override Task<Tuple<Type, Type>[]>[] Analyze()
+        protected override Tuple<Type, Type>[] Analyze()
         {
-            return new[]
-            {
-                Task.Run<Tuple<Type, Type>[]>(() =>
-                {
-                    var tasks = myTypes
-                        .Select(t => Task.Run<IEnumerable<Tuple<Type, Type>>>(() => Analyze(t)))
-                        .ToArray();
-
-                    Task.WaitAll(tasks);
-
-                    return tasks.SelectMany(t => t.Result).ToArray();
-                })
-            };
+            return myTypes
+                .AsParallel()
+                .WithCancellation(CancellationToken)
+                .SelectMany(t => Analyze(t))
+                .ToArray();
         }
 
         private IEnumerable<Tuple<Type, Type>> Analyze( Type type )

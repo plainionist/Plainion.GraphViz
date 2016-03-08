@@ -31,9 +31,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             Console.WriteLine("Analyzing ...");
 
-            var tasks = Analyze();
-
-            Task.WaitAll(tasks);
+            var edges = Analyze()
+                .Distinct()
+                .ToList();
 
             Console.WriteLine();
 
@@ -47,17 +47,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 Console.WriteLine();
             }
 
-            var edges = tasks
-                .SelectMany(t => t.Result)
-                .Distinct()
-                .ToList();
-
             return GenerateDocument(edges);
         }
 
         protected abstract void Load();
 
-        protected abstract Task<Tuple<Type, Type>[]>[] Analyze();
+        protected abstract Tuple<Type, Type>[] Analyze();
 
         protected abstract AnalysisDocument GenerateDocument(IReadOnlyCollection<Tuple<Type, Type>> edges);
 

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,6 +47,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 {
                     if (x.IsCanceled || x.IsFaulted)
                     {
+                        Console.WriteLine(" -- STOPPED -- (IsCanceled={0}) -- ", x.IsCanceled);
                         return new Finished(sender) { Exception = x.Exception, IsCanceled = x.IsCanceled };
                     }
 
@@ -71,22 +73,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             Receive<Cancel>(msg =>
             {
                 myCTS.Cancel();
+                Console.WriteLine(" -- CANCELED -- ");
                 BecomeReady();
             });
             Receive<Finished>(msg =>
             {
+                Console.WriteLine(" -- REPLY ");
                 if (msg.IsCanceled)
                 {
+                    Console.WriteLine(" - canceled -- ");
                     msg.Sender.Tell(null, Self);
                 }
                 else if (msg.Exception != null)
                 {
+                    Console.WriteLine(" - failed -- ");
                     // https://github.com/akkadotnet/akka.net/issues/1409
                     // -> exceptions are currently not serializable in raw version
                     msg.Sender.Tell(new FailureResponse { Error = msg.Exception.ToString() }, Self);
                 }
                 else
                 {
+                    Console.WriteLine(" - completed -- ");
                     msg.Sender.Tell(msg.ResponseFile, Self);
                 }
                 BecomeReady();

@@ -26,7 +26,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
         }
 
-        protected override Task<Tuple<Type, Type>[]>[] Analyze()
+        protected override Tuple<Type, Type>[] Analyze()
         {
             return Config.Packages
                 .SelectMany(p => myPackages[p.Name]
@@ -36,7 +36,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         Type = t
                     })
                 )
-                .Select(e => Task.Run<Tuple<Type, Type>[]>(() => Analyze(e.Package, e.Type), CancellationToken))
+                .AsParallel()
+                .WithCancellation(CancellationToken)
+                .SelectMany(e => Analyze(e.Package, e.Type))
                 .ToArray();
         }
 
