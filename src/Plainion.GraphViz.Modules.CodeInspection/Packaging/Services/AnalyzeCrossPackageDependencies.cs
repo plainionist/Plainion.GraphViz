@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging;
+using System.Windows.Media;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
@@ -10,18 +10,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     class AnalyzeCrossPackageDependencies : AnalyzeBase
     {
-        private static string[] Colors = { "lightblue", "lightgreen", "lightgray" };
+        private static Brush[] Colors = {Brushes.LightBlue, Brushes.LightGreen, Brushes.LightGray };
 
         private readonly Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
 
         protected override void Load()
         {
-            foreach( var package in Config.Packages )
+            foreach (var package in Config.Packages)
             {
                 CancellationToken.ThrowIfCancellationRequested();
-                
+
                 myPackages[package.Name] = Load(package)
-                    .SelectMany( asm => asm.GetTypes() )
+                    .SelectMany(asm => asm.GetTypes())
                     .ToList();
             }
         }
@@ -29,67 +29,65 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         protected override Task<Tuple<Type, Type>[]>[] Analyze()
         {
             return Config.Packages
-                .Select( p => Task.Run<Tuple<Type, Type>[]>( () => Analyze( p ) ) )
+                .SelectMany(p => myPackages[p.Name]
+                    .Select(t => new
+                    {
+                        Package = p,
+                        Type = t
+                    })
+                )
+                .Select(e => Task.Run<Tuple<Type, Type>[]>(() => Analyze(e.Package, e.Type), CancellationToken))
                 .ToArray();
         }
 
-        private Tuple<Type, Type>[] Analyze( Package package )
+        private Tuple<Type, Type>[] Analyze(Package package, Type type)
         {
-            var tasks = myPackages[ package.Name ]
-                .Select( t => Task.Run<IEnumerable<Tuple<Type, Type>>>( () => Analyze( package, t ) ) )
-                .ToArray();
-
-            Task.WaitAll( tasks );
-
-            return tasks.SelectMany( t => t.Result ).ToArray();
-        }
-
-        private IEnumerable<Tuple<Type, Type>> Analyze( Package package, Type type )
-        {
-            Console.Write( "." );
+            Console.Write(".");
 
             CancellationToken.ThrowIfCancellationRequested();
 
             return new Reflector(AssemblyLoader, type).GetUsedTypes()
-                .Where( usedType => IsForeignPackage( package, usedType ) )
-                .Select( usedType => GraphUtils.Edge( type, usedType ) );
+                .Where(usedType => IsForeignPackage(package, usedType))
+                .Select(usedType => GraphUtils.Edge(type, usedType))
+                .ToArray();
         }
 
-        private bool IsForeignPackage( Package package, Type dep )
+        private bool IsForeignPackage(Package package, Type dep)
         {
-            return myPackages.Where( e => e.Key != package.Name ).Any( entry => entry.Value.Contains( dep ) );
+            return myPackages.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
         }
 
-        protected override AnalysisDocument GenerateDocument( IReadOnlyCollection<Tuple<Type, Type>> edges )
+        protected override AnalysisDocument GenerateDocument(IReadOnlyCollection<Tuple<Type, Type>> edges)
         {
             var doc = new AnalysisDocument();
 
-            for( int i = 0; i < Config.Packages.Count; ++i )
+            for (int i = 0; i < Config.Packages.Count; ++i)
             {
-                var package = Config.Packages[ i ];
+                var package = Config.Packages[i];
 
-                foreach( var node in myPackages[ package.Name ].Select( GraphUtils.Node ).Distinct() )
+                foreach (var node in myPackages[package.Name].Select(GraphUtils.Node).Distinct())
                 {
-                    if( !edges.Any( e => e.Item1 == node || e.Item2 == node ) )
+                    if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
                     {
                         continue;
                     }
 
-                    doc.AddNode( node.FullName );
-                    doc.Add( new Caption( node.FullName, node.Name ) );
+                    doc.AddNode(node.FullName);
+                    doc.Add(new Caption(node.FullName, node.Name));
+                    doc.Add(new NodeStyle(node.FullName) { FillColor =  Colors[i % Colors.Length] });
 
                     // in case multiple cluster match we just take the first one
-                    var matchedCluster = package.Clusters.FirstOrDefault( c => c.Matches( node.FullName ) );
-                    if( matchedCluster != null )
+                    var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
+                    if (matchedCluster != null)
                     {
-                        doc.AddToCluster( matchedCluster.Name, node.FullName );
+                        doc.AddToCluster(matchedCluster.Name, node.FullName);
                     }
                 }
             }
 
-            foreach( var edge in edges )
+            foreach (var edge in edges)
             {
-                doc.AddEdge( edge.Item1.FullName, edge.Item2.FullName );
+                doc.AddEdge(edge.Item1.FullName, edge.Item2.FullName);
             }
 
             return doc;

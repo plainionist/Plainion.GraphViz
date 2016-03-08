@@ -5,10 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
-using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {

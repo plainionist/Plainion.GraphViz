@@ -12,6 +12,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         private HashSet<Tuple<string, string>> myEdges { get; set; }
         private Dictionary<string, IEnumerable<string>> myClusters { get; set; }
         private List<Caption> myCaptions { get; set; }
+        private List<NodeStyle> myNodeStyles { get; set; }
 
         public AnalysisDocument()
         {
@@ -20,6 +21,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             myClusters = new Dictionary<string, IEnumerable<string>>();
 
             myCaptions = new List<Caption>();
+            myNodeStyles = new List<NodeStyle>();
         }
 
         public IEnumerable<string> Nodes { get { return myNodes; } }
@@ -30,13 +32,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         public IEnumerable<Caption> Captions { get { return myCaptions; } }
 
-        public void Add(Caption caption)
-        {
-            if (!myCaptions.Any(c => c.OwnerId == caption.OwnerId))
-            {
-                myCaptions.Add(caption);
-            }
-        }
+        public IEnumerable<NodeStyle> NodeStyles { get { return myNodeStyles; } }
 
         public void AddNode(string nodeId)
         {
@@ -58,6 +54,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
 
             ((HashSet<string>)existing).Add(nodeId);
+        }
+
+        public void Add(Caption caption)
+        {
+            if (!myCaptions.Any(c => c.OwnerId == caption.OwnerId))
+            {
+                myCaptions.Add(caption);
+            }
+        }
+
+        public void Add(NodeStyle nodeStyle)
+        {
+            if (!myNodeStyles.Any(n => n.OwnerId == nodeStyle.OwnerId))
+            {
+                myNodeStyles.Add(nodeStyle);
+            }
         }
     }
 }

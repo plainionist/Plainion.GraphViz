@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Markup;
@@ -45,7 +46,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 {
                     if (x.IsCanceled || x.IsFaulted)
                     {
-                        return new Finished(sender) { Exception = x.Exception };
+                        return new Finished(sender) { Exception = x.Exception, IsCanceled = x.IsCanceled };
                     }
 
                     var serializer = new JsonSerializer();
@@ -70,14 +71,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             Receive<Cancel>(msg =>
             {
                 myCTS.Cancel();
-
-                Sender.Tell(null, Self);
-
                 BecomeReady();
             });
             Receive<Finished>(msg =>
             {
-                if (msg.Exception != null)
+                if (msg.IsCanceled)
+                {
+                    msg.Sender.Tell(null, Self);
+                }
+                else if (msg.Exception != null)
                 {
                     // https://github.com/akkadotnet/akka.net/issues/1409
                     // -> exceptions are currently not serializable in raw version

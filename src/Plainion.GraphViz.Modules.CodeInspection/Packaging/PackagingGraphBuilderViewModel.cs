@@ -218,8 +218,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
             var presentation = PresentationCreationService.CreatePresentation(Path.GetTempPath());
 
-            var captionModule = presentation.GetPropertySetFor<Caption>();
-
             var builder = new RelaxedGraphBuilder();
             foreach (var edge in response.Edges)
             {
@@ -236,9 +234,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
             presentation.Graph = builder.Graph;
 
+            var captionModule = presentation.GetPropertySetFor<Caption>();
             foreach (var caption in response.Captions)
             {
                 captionModule.Add(caption);
+            }
+
+            var nodeStyles = presentation.GetPropertySetFor<NodeStyle>();
+            foreach (var style in response.NodeStyles)
+            {
+                nodeStyles.Add(style);
             }
 
             Model.Presentation = presentation;

@@ -20,5 +20,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         public string ResponseFile { get; set; }
 
         public Exception Exception { get; set; }
+
+        public bool IsCanceled { get; set; }
     }
 }
