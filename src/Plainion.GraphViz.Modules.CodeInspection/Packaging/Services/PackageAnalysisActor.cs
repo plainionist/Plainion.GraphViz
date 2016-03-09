@@ -40,10 +40,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     using (var reader = new StringReader(r.Spec))
                     {
                         var spec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
-                        if (spec != null)
-                        {
-                            //throw new InvalidOperationException("ups");
-                        }
                         return activity.Execute(spec, myCTS.Token);
                     }
                 }, myCTS.Token)
@@ -51,8 +47,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 {
                     if (x.IsCanceled || x.IsFaulted)
                     {
-                        Console.WriteLine(" -- STOPPED -- (IsCanceled={0}) -- ", x.IsCanceled);
-                        return "ignore";
+                        // https://github.com/akkadotnet/akka.net/issues/1409
+                        // -> exceptions are currently not serializable in raw version
+                        //return x.Exception;
+                        return new Finished { Error = x.Exception.ToString() };
                     }
 
                     var serializer = new JsonSerializer();
@@ -77,22 +75,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             Receive<Cancel>(msg =>
             {
                 myCTS.Cancel();
-                Console.WriteLine(" -- CANCELED -- ");
                 Sender.Tell("canceled", Self);
                 BecomeReady();
             });
             Receive<Finished>(msg =>
             {
-                Console.WriteLine(" -- FINISHED -- ");
-                Sender.Tell(msg.ResponseFile, Self);
-                BecomeReady();
-            });
-            Receive<Status.Failure>(msg =>
-            {
-                Console.WriteLine(" -- FAILURE -- ");
-                // https://github.com/akkadotnet/akka.net/issues/1409
-                // -> exceptions are currently not serializable in raw version
-                Sender.Tell(new FailureResponse { Error = msg.Cause.ToString() }, Self);
+                if (msg.Error != null)
+                {
+                    // https://github.com/akkadotnet/akka.net/issues/1409
+                    // -> exceptions are currently not serializable in raw version
+                    Sender.Tell(new FailureResponse { Error = msg.Error }, Self);
+                }
+                else
+                {
+                    Sender.Tell(msg.ResponseFile, Self);
+                }
                 BecomeReady();
             });
             ReceiveAny(o => Stash.Stash());
