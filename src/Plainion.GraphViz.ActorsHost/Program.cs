@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.ActorsHost
     {
         private static void Main( string[] args )
         {
-            var config = ConfigurationFactory.ParseString( @"
+            var config = ConfigurationFactory.ParseString(@"
                 akka {
                     actor {
                         provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
@@ -22,7 +22,7 @@ namespace Plainion.GraphViz.ActorsHost
                         }
                     }
                 }
-                " );
+                ");
 
             using( var system = ActorSystem.Create( "CodeInspection", config ) )
             {

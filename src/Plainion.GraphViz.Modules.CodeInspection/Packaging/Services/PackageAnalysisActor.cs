@@ -40,6 +40,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     using (var reader = new StringReader(r.Spec))
                     {
                         var spec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
+                        if (spec != null)
+                        {
+                            //throw new InvalidOperationException("ups");
+                        }
                         return activity.Execute(spec, myCTS.Token);
                     }
                 }, myCTS.Token)
@@ -48,7 +52,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     if (x.IsCanceled || x.IsFaulted)
                     {
                         Console.WriteLine(" -- STOPPED -- (IsCanceled={0}) -- ", x.IsCanceled);
-                        return new Finished(sender) { Exception = x.Exception, IsCanceled = x.IsCanceled };
+                        return "ignore";
                     }
 
                     var serializer = new JsonSerializer();
@@ -60,9 +64,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         }
                     }
 
-                    return new Finished(sender) { ResponseFile = r.OutputFile };
+                    return new Finished { ResponseFile = r.OutputFile };
                 }, TaskContinuationOptions.ExecuteSynchronously)
-                .PipeTo(self);
+                .PipeTo(self, sender);
 
                 Become(Working);
             });
@@ -74,28 +78,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             {
                 myCTS.Cancel();
                 Console.WriteLine(" -- CANCELED -- ");
+                Sender.Tell("canceled", Self);
                 BecomeReady();
             });
             Receive<Finished>(msg =>
             {
-                Console.WriteLine(" -- REPLY ");
-                if (msg.IsCanceled)
-                {
-                    Console.WriteLine(" - canceled -- ");
-                    msg.Sender.Tell(null, Self);
-                }
-                else if (msg.Exception != null)
-                {
-                    Console.WriteLine(" - failed -- ");
-                    // https://github.com/akkadotnet/akka.net/issues/1409
-                    // -> exceptions are currently not serializable in raw version
-                    msg.Sender.Tell(new FailureResponse { Error = msg.Exception.ToString() }, Self);
-                }
-                else
-                {
-                    Console.WriteLine(" - completed -- ");
-                    msg.Sender.Tell(msg.ResponseFile, Self);
-                }
+                Console.WriteLine(" -- FINISHED -- ");
+                Sender.Tell(msg.ResponseFile, Self);
+                BecomeReady();
+            });
+            Receive<Status.Failure>(msg =>
+            {
+                Console.WriteLine(" -- FAILURE -- ");
+                // https://github.com/akkadotnet/akka.net/issues/1409
+                // -> exceptions are currently not serializable in raw version
+                Sender.Tell(new FailureResponse { Error = msg.Cause.ToString() }, Self);
                 BecomeReady();
             });
             ReceiveAny(o => Stash.Stash());

@@ -41,14 +41,25 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             var actor = system.ActorOf(Props.Create(() => new PackageAnalysisActor())
                 .WithDeploy(Deploy.None.WithScope(new RemoteScope(remoteAddress))), "PackagingDependencies");
 
-            cancellationToken.Register(() => actor.Tell(new Cancel()));
+            Action ShutdownAction = () =>
+            {
+                system.Stop(actor);
+                system.Dispose();
+                actorSystemHost.Kill();
+
+                if (File.Exists(request.OutputFile))
+                {
+                    File.Delete(request.OutputFile);
+                }
+            };
+
+            cancellationToken.Register(() =>
+            {
+                actor.Tell(new Cancel());
+                ShutdownAction();
+            });
 
             var response = await actor.Ask(request);
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
 
             if ((response is FailureResponse))
             {
@@ -75,14 +86,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
             finally
             {
-                system.Stop(actor);
-                system.Dispose();
-                actorSystemHost.Kill();
-
-                if (File.Exists(request.OutputFile))
-                {
-                    File.Delete(request.OutputFile);
-                }
+                ShutdownAction();
             }
         }
     }
