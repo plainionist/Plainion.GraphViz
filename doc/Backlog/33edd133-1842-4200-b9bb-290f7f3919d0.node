@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="33edd133-1842-4200-b9bb-290f7f3919d0" Created="635931395077763124" LastModified="635931395267713124">
+  <Caption><![CDATA[productize]]></Caption>
+  <Content><![CDATA[- cleanup service
+- cleanup messages
+]]></Content>
+</Node>

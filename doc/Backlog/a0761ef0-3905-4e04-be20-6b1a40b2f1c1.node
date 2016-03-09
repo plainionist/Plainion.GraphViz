@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="a0761ef0-3905-4e04-be20-6b1a40b2f1c1" Created="635928807163713339" LastModified="635928807722265287">
-  <Caption><![CDATA[encapsulate into Service]]></Caption>
-  <Content><![CDATA[also handle process start stop
-always kill]]></Content>
-</Node>
