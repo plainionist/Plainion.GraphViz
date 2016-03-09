@@ -37,11 +37,14 @@
       <Node Id="d7e65ef8-8294-400d-ba0c-eebf1d4da542">
         <Caption><![CDATA[XmlEditor to plainion libs]]></Caption>
       </Node>
-    </Node>
-    <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
-      <Caption><![CDATA[Akka.Cluster]]></Caption>
-      <Node Id="d0a6277c-ac25-4a8e-ac3f-c16918818081">
-        <Caption><![CDATA[no TPL inside actor - use child actors]]></Caption>
+      <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
+        <Caption><![CDATA[Akka.Cluster]]></Caption>
+        <Node Id="d0a6277c-ac25-4a8e-ac3f-c16918818081">
+          <Caption><![CDATA[no TPL inside actor - use child actors]]></Caption>
+        </Node>
+      </Node>
+      <Node Id="e15ae5c1-8370-4754-a989-921366957175">
+        <Caption><![CDATA[BirdsEye view from whiteboard]]></Caption>
       </Node>
     </Node>
   </Node>
