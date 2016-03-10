@@ -24,11 +24,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             var remoteAddress = Address.Parse("akka.tcp://CodeInspection@localhost:2525");
 
             var actor = mySystem.ActorOf(Props.Create(() => new PackageAnalysisActor())
-                .WithDeploy(Deploy.None.WithScope(new RemoteScope(remoteAddress))), "PackagingDependencies");
+                .WithDeploy(Deploy.None.WithScope(new RemoteScope(remoteAddress))));
 
             Action ShutdownAction = () =>
             {
                 mySystem.Stop(actor);
+                //actor.Tell(Kill.Instance);
 
                 if (File.Exists(request.OutputFile))
                 {
@@ -44,13 +45,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             var response = await actor.Ask(request);
 
-            if ((response is FailureResponse))
-            {
-                throw new Exception(((FailureResponse)response).Error);
-            }
-
             try
             {
+                if ((response is FailureResponse))
+                {
+                    throw new Exception(((FailureResponse)response).Error);
+                }
+
                 AnalysisDocument analysisResponse;
 
                 var settings = new JsonSerializerSettings();

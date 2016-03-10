@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 

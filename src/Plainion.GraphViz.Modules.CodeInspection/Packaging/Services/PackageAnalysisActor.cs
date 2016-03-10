@@ -74,10 +74,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             Receive<Cancel>(msg =>
             {
-                myCTS.Cancel();
-                Sender.Tell("canceled", Self);
-
                 Console.WriteLine("CANCELED");
+
+                myCTS.Cancel();
+
+                Sender.Tell("canceled");
 
                 BecomeReady();
             });
@@ -87,11 +88,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 {
                     // https://github.com/akkadotnet/akka.net/issues/1409
                     // -> exceptions are currently not serializable in raw version
-                    Sender.Tell(new FailureResponse { Error = msg.Error }, Self);
+                    Sender.Tell(new FailureResponse {Error = msg.Error});
                 }
                 else
                 {
-                    Sender.Tell(msg.ResponseFile, Self);
+                    Sender.Tell(msg.ResponseFile);
                 }
 
                 Console.WriteLine("FINISHED");
