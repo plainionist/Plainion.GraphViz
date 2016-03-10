@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
@@ -10,7 +9,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     class AnalyzeCrossPackageDependencies : AnalyzeBase
     {
-        private static Brush[] Colors = {Brushes.LightBlue, Brushes.LightGreen, Brushes.LightGray };
+        private static Brush[] Colors = { Brushes.LightBlue, Brushes.LightGreen, Brushes.LightGray };
 
         private readonly Dictionary<string, List<Type>> myPackages = new Dictionary<string, List<Type>>();
 
@@ -42,7 +41,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 .ToArray();
         }
 
-        private Tuple<Type, Type>[] Analyze(Package package, Type type)
+        private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
         {
             Console.Write(".");
 
@@ -51,7 +50,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             return new Reflector(AssemblyLoader, type).GetUsedTypes()
                 .Where(usedType => IsForeignPackage(package, usedType))
                 .Select(usedType => GraphUtils.Edge(type, usedType))
-                .ToArray();
+                .Where(edge => edge.Item1 != edge.Item2);
         }
 
         private bool IsForeignPackage(Package package, Type dep)
@@ -76,7 +75,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
                     doc.AddNode(node.FullName);
                     doc.Add(new Caption(node.FullName, node.Name));
-                    doc.Add(new NodeStyle(node.FullName) { FillColor =  Colors[i % Colors.Length] });
+                    doc.Add(new NodeStyle(node.FullName) { FillColor = Colors[i % Colors.Length] });
 
                     // in case multiple cluster match we just take the first one
                     var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));

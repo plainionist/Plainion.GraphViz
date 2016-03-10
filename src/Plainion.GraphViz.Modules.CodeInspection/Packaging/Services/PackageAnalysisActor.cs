@@ -76,6 +76,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             {
                 myCTS.Cancel();
                 Sender.Tell("canceled", Self);
+
+                Console.WriteLine("CANCELED");
+
                 BecomeReady();
             });
             Receive<Finished>(msg =>
@@ -90,6 +93,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 {
                     Sender.Tell(msg.ResponseFile, Self);
                 }
+
+                Console.WriteLine("FINISHED");
+                
                 BecomeReady();
             });
             ReceiveAny(o => Stash.Stash());

@@ -42,11 +42,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             var cluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(type.FullName));
 
-            return new Reflector( AssemblyLoader, type ).GetUsedTypes()
-                .Where( myTypes.Contains )
-                .Where( t => type != t )
-                .Where( t => cluster == null || cluster != myPackage.Clusters.FirstOrDefault( c => c.Matches( t.FullName ) ) )
-                .Select( usedType => GraphUtils.Edge( type, usedType ) );
+            return new Reflector(AssemblyLoader, type).GetUsedTypes()
+                .Where(myTypes.Contains)
+                .Where(t => type != t)
+                .Where(t => cluster == null || cluster != myPackage.Clusters.FirstOrDefault(c => c.Matches(t.FullName)))
+                .Select(usedType => GraphUtils.Edge(type, usedType))
+                .Where(edge => edge.Item1 != edge.Item2);
         }
 
         protected override AnalysisDocument GenerateDocument( IReadOnlyCollection<Tuple<Type, Type>> edges )
