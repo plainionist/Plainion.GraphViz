@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using Plainion;
 
 namespace Plainion.GraphViz.Dot
 {
@@ -10,34 +9,36 @@ namespace Plainion.GraphViz.Dot
     public class DotPlainReader : IDisposable
     {
         private TextReader myReader;
-        private string myCurrentLine;
         private int myPosInLine;
         private bool myLineMatchedTag;
-        private StringBuilder myReadBuffer = new StringBuilder();
+        private readonly StringBuilder myReadBuffer;
 
         public DotPlainReader( TextReader reader )
         {
             Contract.RequiresNotNull( reader, "reader" );
 
             myReader = reader;
+            myReadBuffer = new StringBuilder();
             myLineMatchedTag = true;
         }
+
+        public string CurrentLine { get; private set; }
 
         public bool ReadLine( string tag )
         {
             if( myLineMatchedTag )
             {
-                myCurrentLine = myReader.ReadLine();
+                CurrentLine = myReader.ReadLine();
 
-                if (myCurrentLine.Length > 0 && myCurrentLine[myCurrentLine.Length - 1] == '\\')
+                while (CurrentLine.Length > 0 && CurrentLine[CurrentLine.Length - 1] == '\\')
                 {
-                    myCurrentLine = myCurrentLine.TrimEnd('\\') + myReader.ReadLine();
+                    CurrentLine = CurrentLine.TrimEnd('\\') + myReader.ReadLine();
                 }
 
                 myLineMatchedTag = false;
             }
 
-            if( myCurrentLine != null && myCurrentLine.StartsWith( tag ) )
+            if( CurrentLine != null && CurrentLine.StartsWith( tag ) )
             {
                 myPosInLine = tag.Length;
                 myLineMatchedTag = true;
@@ -48,23 +49,25 @@ namespace Plainion.GraphViz.Dot
 
         public string ReadString()
         {
-            while( myCurrentLine[ myPosInLine ] == ' ' ) ++myPosInLine;
+            while( CurrentLine[ myPosInLine ] == ' ' ) ++myPosInLine;
+
             myReadBuffer.Length = 0;
-            if( myCurrentLine[ myPosInLine ] == '"' ) // Quoted
+
+            if( CurrentLine[ myPosInLine ] == '"' ) // Quoted
             {
                 ++myPosInLine;
-                while( myPosInLine < myCurrentLine.Length && myCurrentLine[ myPosInLine ] != '"' )
+                while( myPosInLine < CurrentLine.Length && CurrentLine[ myPosInLine ] != '"' )
                 {
-                    myReadBuffer.Append( myCurrentLine[ myPosInLine ] );
+                    myReadBuffer.Append( CurrentLine[ myPosInLine ] );
                     ++myPosInLine;
                 }
                 ++myPosInLine;
             }
             else
             {
-                while( myPosInLine < myCurrentLine.Length && myCurrentLine[ myPosInLine ] != ' ' )
+                while( myPosInLine < CurrentLine.Length && CurrentLine[ myPosInLine ] != ' ' )
                 {
-                    myReadBuffer.Append( myCurrentLine[ myPosInLine ] );
+                    myReadBuffer.Append( CurrentLine[ myPosInLine ] );
                     ++myPosInLine;
                 }
             }
@@ -80,7 +83,7 @@ namespace Plainion.GraphViz.Dot
             }
             catch( Exception ex )
             {
-                throw new Exception( "Failed to parse line: " + myCurrentLine, ex );
+                throw new Exception( "Failed to parse line: " + CurrentLine, ex );
             }
         }
 
@@ -93,7 +96,7 @@ namespace Plainion.GraphViz.Dot
             }
             catch( Exception ex )
             {
-                throw new Exception( "Failed to parse line: " + myCurrentLine, ex );
+                throw new Exception( "Failed to parse line: " + CurrentLine, ex );
             }
         }
 
