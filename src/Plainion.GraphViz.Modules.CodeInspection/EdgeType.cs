@@ -1,5 +1,5 @@
 ﻿
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
+namespace Plainion.GraphViz.Modules.CodeInspection
 {
     public enum EdgeType
     {

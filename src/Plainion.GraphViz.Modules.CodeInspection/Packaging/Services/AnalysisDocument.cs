@@ -6,7 +6,7 @@ using Plainion.GraphViz.Presentation;
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     // we use private properties here to support Json serialiation
-    public class AnalysisDocument
+    class AnalysisDocument
     {
         private HashSet<string> myNodes { get; set; }
         private HashSet<Tuple<string, string>> myEdges { get; set; }

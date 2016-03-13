@@ -127,7 +127,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Inheritance\EdgeType.cs" />
+    <Compile Include="EdgeType.cs" />
+    <Compile Include="Packaging\Services\Edge.cs" />
     <Compile Include="Packaging\Services\FailureResponse.cs" />
     <Compile Include="Packaging\AnalysisMode.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />

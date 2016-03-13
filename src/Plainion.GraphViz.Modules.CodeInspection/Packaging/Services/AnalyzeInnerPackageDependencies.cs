@@ -22,38 +22,38 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 .ToList();
         }
 
-        protected override Tuple<Type, Type>[] Analyze()
+        protected override Edge[] Analyze()
         {
             return myTypes
                 .AsParallel()
-                .WithCancellation(CancellationToken)
-                .SelectMany(t => Analyze(t))
+                .WithCancellation( CancellationToken )
+                .SelectMany( t => Analyze( t ) )
                 .ToArray();
         }
 
-        private IEnumerable<Tuple<Type, Type>> Analyze( Type type )
+        private IEnumerable<Edge> Analyze( Type type )
         {
             Console.Write( "." );
 
             CancellationToken.ThrowIfCancellationRequested();
 
-            var cluster = myPackage.Clusters.FirstOrDefault(c => c.Matches(type.FullName));
+            var cluster = myPackage.Clusters.FirstOrDefault( c => c.Matches( type.FullName ) );
 
-            return new Reflector(AssemblyLoader, type).GetUsedTypes()
-                .Where(myTypes.Contains)
-                .Where(t => type != t)
-                .Where(t => cluster == null || cluster != myPackage.Clusters.FirstOrDefault(c => c.Matches(t.FullName)))
-                .Select(usedType => GraphUtils.Edge(type, usedType))
-                .Where(edge => edge.Item1 != edge.Item2);
+            return new Reflector( AssemblyLoader, type ).GetUsedTypes()
+                .Where( myTypes.Contains )
+                .Where( t => type != t )
+                .Where( t => cluster == null || cluster != myPackage.Clusters.FirstOrDefault( c => c.Matches( t.FullName ) ) )
+                .Select( usedType => GraphUtils.Edge( type, usedType ) )
+                .Where( edge => edge.Source != edge.Target );
         }
 
-        protected override AnalysisDocument GenerateDocument( IReadOnlyCollection<Tuple<Type, Type>> edges )
+        protected override AnalysisDocument GenerateDocument( IReadOnlyCollection<Edge> edges )
         {
             var doc = new AnalysisDocument();
 
             foreach( var node in myTypes.Select( GraphUtils.Node ).Distinct() )
             {
-                if( !edges.Any( e => e.Item1 == node || e.Item2 == node ) )
+                if( !edges.Any( e => e.Source == node || e.Target == node ) )
                 {
                     continue;
                 }
@@ -71,7 +71,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             foreach( var edge in edges )
             {
-                doc.AddEdge( edge.Item1.FullName, edge.Item2.FullName );
+                doc.AddEdge( edge.Source.FullName, edge.Target.FullName );
             }
 
             return doc;

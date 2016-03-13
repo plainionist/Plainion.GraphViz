@@ -6,9 +6,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     static class GraphUtils
     {
-        public static Tuple<Type, Type> Edge(Type source, Type target)
+        public static Edge Edge( Type source, Type target )
         {
-            return new Tuple<Type, Type>(Node(source), Node(target));
+            return new Edge
+            {
+                Source = Node( source ),
+                Target = Node( target )
+            };
         }
 
         public static Type Node(Type type)
