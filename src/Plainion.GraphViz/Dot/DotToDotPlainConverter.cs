@@ -22,14 +22,24 @@ namespace Plainion.GraphViz.Dot
             {
                 throw new IOException( "DotToolsHome invalid. Dot.exe not found" );
             }
+
+            Algorithm = LayoutAlgorithm.Dot;
         }
+
+        public LayoutAlgorithm Algorithm { get; set; }
 
         public void Convert( FileInfo dotFile, FileInfo plainFile )
         {
             string arguments;
 
-            RunWithDot(  out arguments, dotFile, plainFile );
-            //RunWithSfdp( out arguments, dotFile, plainFile );
+            if( Algorithm == LayoutAlgorithm.Dot )
+            {
+                RunWithDot( out arguments, dotFile, plainFile );
+            }
+            else
+            {
+                RunWithSfdp( out arguments, dotFile, plainFile );
+            }
 
             var startInfo = new ProcessStartInfo( "cmd", arguments );
             startInfo.UseShellExecute = false;

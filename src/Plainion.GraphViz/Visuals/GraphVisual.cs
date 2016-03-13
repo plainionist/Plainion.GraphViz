@@ -7,8 +7,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
-using System.Windows.Media.Effects;
-using Plainion;
 
 namespace Plainion.GraphViz.Visuals
 {
@@ -37,10 +35,7 @@ namespace Plainion.GraphViz.Visuals
 
         public IGraphPresentation Presentation
         {
-            get
-            {
-                return myPresentation;
-            }
+            get { return myPresentation; }
             set
             {
                 if( myPresentation == value )
