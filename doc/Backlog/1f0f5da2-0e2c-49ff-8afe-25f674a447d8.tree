@@ -32,5 +32,8 @@
     <Node Id="a7d389b1-b6f1-4fc2-b5c4-07e2ec442b7f">
       <Caption><![CDATA[Collaboration with other Graph libraries]]></Caption>
     </Node>
+    <Node Id="e15ae5c1-8370-4754-a989-921366957175">
+      <Caption><![CDATA[BirdsEye view from whiteboard]]></Caption>
+    </Node>
   </Node>
 </Tree>

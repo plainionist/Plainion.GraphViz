@@ -4,6 +4,9 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next steps]]></Caption>
+      <Node Id="2a04a5c3-be7a-427b-8aea-152f3655bd85">
+        <Caption><![CDATA[folding]]></Caption>
+      </Node>
       <Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902">
         <Caption><![CDATA[Akka]]></Caption>
         <Node Id="ee4861f0-1ce2-49dd-8d29-185b5c3c4875">
@@ -42,9 +45,6 @@
         <Node Id="d0a6277c-ac25-4a8e-ac3f-c16918818081">
           <Caption><![CDATA[no TPL inside actor - use child actors]]></Caption>
         </Node>
-      </Node>
-      <Node Id="e15ae5c1-8370-4754-a989-921366957175">
-        <Caption><![CDATA[BirdsEye view from whiteboard]]></Caption>
       </Node>
     </Node>
   </Node>
