@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
@@ -81,6 +83,43 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             if( !myEdgeStyles.Any( e => e.OwnerId == edgeStyle.OwnerId ) )
             {
                 myEdgeStyles.Add( edgeStyle );
+            }
+        }
+
+        internal void Add( IReadOnlyCollection<Edge> edges )
+        {
+            foreach( var edge in edges )
+            {
+                AddEdge( edge.Source.FullName, edge.Target.FullName );
+
+                Brush edgeBrush = null;
+                if( edge.EdgeType == EdgeType.DerivesFrom || edge.EdgeType == EdgeType.Implements )
+                {
+                    edgeBrush = Brushes.Blue;
+                }
+                else if( edge.EdgeType != EdgeType.Calls )
+                {
+                    edgeBrush = Brushes.Brown;
+                }
+
+                if( edgeBrush != null )
+                {
+                    var edgeId = Model.Edge.CreateId( edge.Source.FullName, edge.Target.FullName );
+                    Add( new EdgeStyle( edgeId ) { Color = edgeBrush } );
+                }
+            }
+        }
+
+        internal void Add( Type node, Package package )
+        {
+            AddNode( node.FullName );
+            Add( new Caption( node.FullName, node.Name ) );
+
+            // in case multiple cluster match we just take the first one
+            var matchedCluster = package.Clusters.FirstOrDefault( c => c.Matches( node.FullName ) );
+            if( matchedCluster != null )
+            {
+                AddToCluster( matchedCluster.Name, node.FullName );
             }
         }
     }
