@@ -158,9 +158,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 else if( instr.OpCode == OpCodes.Call )
                 {
                     var callee = ( ( MethodReference )instr.Operand );
-                    var declaringType = callee.DeclaringType;
 
-                    yield return new Edge { Target = TryGetSystemType( declaringType ) };
+                    yield return new Edge { Target = TryGetSystemType( callee.DeclaringType ), EdgeType = EdgeType.Calls };
 
                     yield return new Edge { Target = TryGetSystemType( callee.ReturnType ) };
 

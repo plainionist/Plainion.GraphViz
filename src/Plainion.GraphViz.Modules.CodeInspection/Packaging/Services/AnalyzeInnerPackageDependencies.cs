@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
@@ -72,6 +73,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             foreach( var edge in edges )
             {
                 doc.AddEdge( edge.Source.FullName, edge.Target.FullName );
+
+                Brush edgeBrush = null;
+                if( edge.EdgeType == EdgeType.DerivesFrom || edge.EdgeType == EdgeType.Implements )
+                {
+                    edgeBrush = Brushes.Blue;
+                }
+                else if( edge.EdgeType != EdgeType.Calls )
+                {
+                    edgeBrush = Brushes.Brown;
+                }
+
+                if( edgeBrush != null )
+                {
+                    var edgeId = Model.Edge.CreateId( edge.Source.FullName, edge.Target.FullName );
+                    doc.Add( new EdgeStyle( edgeId ) { Color = edgeBrush } );
+                }
             }
 
             return doc;

@@ -33,9 +33,6 @@
         <Node Id="4ece55f9-17be-4941-9316-57a810fdcec7">
           <Caption><![CDATA[dynamic package creation]]></Caption>
         </Node>
-        <Node Id="aa2f5341-a277-484c-8ccc-d6dbe4f50c78">
-          <Caption><![CDATA[edge type encoding]]></Caption>
-        </Node>
       </Node>
       <Node Id="d7e65ef8-8294-400d-ba0c-eebf1d4da542">
         <Caption><![CDATA[XmlEditor to plainion libs]]></Caption>

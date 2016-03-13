@@ -13,6 +13,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         private Dictionary<string, IEnumerable<string>> myClusters { get; set; }
         private List<Caption> myCaptions { get; set; }
         private List<NodeStyle> myNodeStyles { get; set; }
+        private List<EdgeStyle> myEdgeStyles { get; set; }
 
         public AnalysisDocument()
         {
@@ -22,6 +23,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             myCaptions = new List<Caption>();
             myNodeStyles = new List<NodeStyle>();
+            myEdgeStyles = new List<EdgeStyle>();
         }
 
         public IEnumerable<string> Nodes { get { return myNodes; } }
@@ -33,6 +35,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         public IEnumerable<Caption> Captions { get { return myCaptions; } }
 
         public IEnumerable<NodeStyle> NodeStyles { get { return myNodeStyles; } }
+
+        public IEnumerable<EdgeStyle> EdgeStyles { get { return myEdgeStyles; } }
 
         public void AddNode(string nodeId)
         {
@@ -64,11 +68,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
         }
 
-        public void Add(NodeStyle nodeStyle)
+        public void Add( NodeStyle nodeStyle )
         {
-            if (!myNodeStyles.Any(n => n.OwnerId == nodeStyle.OwnerId))
+            if( !myNodeStyles.Any( n => n.OwnerId == nodeStyle.OwnerId ) )
             {
-                myNodeStyles.Add(nodeStyle);
+                myNodeStyles.Add( nodeStyle );
+            }
+        }
+
+        public void Add( EdgeStyle edgeStyle )
+        {
+            if( !myEdgeStyles.Any( e => e.OwnerId == edgeStyle.OwnerId ) )
+            {
+                myEdgeStyles.Add( edgeStyle );
             }
         }
     }

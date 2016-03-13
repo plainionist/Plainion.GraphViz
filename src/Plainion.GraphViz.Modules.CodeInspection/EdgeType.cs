@@ -5,6 +5,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection
     {
         Undefined,
         DerivesFrom,
-        Implements
+        Implements,
+        Calls
     }
 }
