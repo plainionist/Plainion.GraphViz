@@ -40,10 +40,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             var cluster = myPackage.Clusters.FirstOrDefault( c => c.Matches( type.FullName ) );
 
             return new Reflector( AssemblyLoader, type ).GetUsedTypes()
-                .Where( myTypes.Contains )
-                .Where( t => type != t )
-                .Where( t => cluster == null || cluster != myPackage.Clusters.FirstOrDefault( c => c.Matches( t.FullName ) ) )
-                .Select( usedType => GraphUtils.Edge( type, usedType ) )
+                .Where( edge => myTypes.Contains( edge.Target ) )
+                .Where( edge => type != edge.Target )
+                .Where( edge => cluster == null || cluster != myPackage.Clusters.FirstOrDefault( c => c.Matches( edge.Target.FullName ) ) )
+                .Select( edge => GraphUtils.Edge( edge ) )
                 .Where( edge => edge.Source != edge.Target );
         }
 

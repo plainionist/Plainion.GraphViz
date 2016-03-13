@@ -48,8 +48,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             CancellationToken.ThrowIfCancellationRequested();
 
             return new Reflector( AssemblyLoader, type ).GetUsedTypes()
-                .Where( usedType => IsForeignPackage( package, usedType ) )
-                .Select( usedType => GraphUtils.Edge( type, usedType ) )
+                .Where( edge => IsForeignPackage( package, edge.Target ) )
+                .Select( edge => GraphUtils.Edge( edge) )
                 .Where( edge => edge.Source != edge.Target );
         }
 
