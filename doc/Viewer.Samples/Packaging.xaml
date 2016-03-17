@@ -17,5 +17,16 @@
     </Package>
     <Package Name="Plaionion.GraphViz">
         <Include Pattern="Plainion.GraphViz.*dll"/>
+        <Package.Clusters>
+            <Cluster Name="Documents">
+                <Include Pattern="*Documents*"/>
+            </Cluster>
+            <Cluster Name="CodeInspection">
+                <Include Pattern="*CodeInspection*"/>
+            </Cluster>
+            <Cluster Name="Model">
+                <Include Pattern="*.Model.*"/>
+            </Cluster>
+        </Package.Clusters>
     </Package>
 </SystemPackaging>

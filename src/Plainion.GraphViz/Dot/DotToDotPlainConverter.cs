@@ -22,18 +22,26 @@ namespace Plainion.GraphViz.Dot
             {
                 throw new IOException( "DotToolsHome invalid. Dot.exe not found" );
             }
+
+            Algorithm = LayoutAlgorithm.Dot;
         }
 
-        public void Convert( FileInfo dotFile, FileInfo dotPlainFile )
+        public LayoutAlgorithm Algorithm { get; set; }
+
+        public void Convert( FileInfo dotFile, FileInfo plainFile )
         {
-            var unflattenExe = Path.Combine(  myDotToolsHome, "unflatten.exe" );
-            var dotExe = Path.Combine( myDotToolsHome, "dot.exe" );
+            string arguments;
 
-            var args = string.Format( "/C \"{0} -l5 -c8 {1} | {2} -Tplain -q -o{3}\"", 
-                unflattenExe, dotFile.FullName, 
-                dotExe, dotPlainFile.FullName );
+            if( Algorithm == LayoutAlgorithm.Dot )
+            {
+                RunWithDot( out arguments, dotFile, plainFile );
+            }
+            else
+            {
+                RunWithSfdp( out arguments, dotFile, plainFile );
+            }
 
-            var startInfo = new ProcessStartInfo( "cmd", args );
+            var startInfo = new ProcessStartInfo( "cmd", arguments );
             startInfo.UseShellExecute = false;
             startInfo.CreateNoWindow = true;
             startInfo.WorkingDirectory = Path.GetTempPath();
@@ -41,10 +49,28 @@ namespace Plainion.GraphViz.Dot
             var stdErr = new StringWriter();
             var ret = Processes.Execute( startInfo, null, stdErr );
 
-            if( ret != 0 || !dotPlainFile.Exists || dotFile.LastWriteTime > dotPlainFile.LastWriteTime )
+            if( ret != 0 || !plainFile.Exists || dotFile.LastWriteTime > plainFile.LastWriteTime )
             {
                 throw new InvalidOperationException( "Dot plain file generation failed: " + stdErr.ToString() );
             }
+        }
+
+        private void RunWithDot( out string arguments, FileInfo dotFile, FileInfo plainFile )
+        {
+            var unflattenExe = Path.Combine( myDotToolsHome, "unflatten.exe" );
+            var dotExe = Path.Combine( myDotToolsHome, "dot.exe" );
+
+            arguments = string.Format( "/C \"{0} -l5 -c8 {1} | {2} -Tplain -q -o{3}\"",
+                unflattenExe, dotFile.FullName,
+                dotExe, plainFile.FullName );
+        }
+
+        private void RunWithSfdp( out string arguments, FileInfo dotFile, FileInfo plainFile )
+        {
+            var exe = Path.Combine( myDotToolsHome, "sfdp.exe" );
+
+            arguments = string.Format( "/C \"{0} -x -Goverlap=scale -Tplain -q -o{1} {2}\"",
+                exe, plainFile.FullName, dotFile.FullName );
         }
     }
 }

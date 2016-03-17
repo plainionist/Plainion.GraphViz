@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
@@ -15,6 +16,8 @@ namespace Plainion.GraphViz.Presentation
             myNodeLayouts = new Dictionary<string, NodeLayout>();
             myEdgeLayouts = new Dictionary<string, EdgeLayout>();
         }
+
+        public LayoutAlgorithm Algorithm { get; set; }
 
         public void Add( NodeLayout layout )
         {

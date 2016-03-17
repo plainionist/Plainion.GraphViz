@@ -6,21 +6,36 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     static class GraphUtils
     {
-        public static Tuple<Type, Type> Edge(Type source, Type target)
+        public static Edge Edge( Edge edge )
         {
-            return new Tuple<Type, Type>(Node(source), Node(target));
+            return Edge( edge.Source, edge.Target, edge.EdgeType );
         }
 
-        public static Type Node(Type type)
+        public static Edge Edge( Type source, Type target )
+        {
+            return Edge( source, target, EdgeType.Undefined );
+        }
+
+        public static Edge Edge( Type source, Type target, EdgeType edgeType )
+        {
+            return new Edge
+            {
+                Source = Node( source ),
+                Target = Node( target ),
+                EdgeType = edgeType
+            };
+        }
+
+        public static Type Node( Type type )
         {
             var nodeType = type;
 
-            if (type.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) != null)
+            if( type.GetCustomAttribute( typeof( CompilerGeneratedAttribute ), true ) != null )
             {
                 nodeType = type.DeclaringType;
             }
 
-            if (nodeType == null)
+            if( nodeType == null )
             {
                 // e.g. code generated from Xml like ResourceManager
                 nodeType = type;

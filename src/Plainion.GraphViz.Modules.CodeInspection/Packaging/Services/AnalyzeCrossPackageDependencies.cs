@@ -15,81 +15,70 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         protected override void Load()
         {
-            foreach (var package in Config.Packages)
+            foreach( var package in Config.Packages )
             {
                 CancellationToken.ThrowIfCancellationRequested();
 
-                myPackages[package.Name] = Load(package)
-                    .SelectMany(asm => asm.GetTypes())
+                myPackages[ package.Name ] = Load( package )
+                    .SelectMany( asm => asm.GetTypes() )
                     .ToList();
             }
         }
 
-        protected override Tuple<Type, Type>[] Analyze()
+        protected override Edge[] Analyze()
         {
             return Config.Packages
-                .SelectMany(p => myPackages[p.Name]
-                    .Select(t => new
+                .SelectMany( p => myPackages[ p.Name ]
+                    .Select( t => new
                     {
                         Package = p,
                         Type = t
-                    })
+                    } )
                 )
                 .AsParallel()
-                .WithCancellation(CancellationToken)
-                .SelectMany(e => Analyze(e.Package, e.Type))
+                .WithCancellation( CancellationToken )
+                .SelectMany( e => Analyze( e.Package, e.Type ) )
                 .ToArray();
         }
 
-        private IEnumerable<Tuple<Type, Type>> Analyze(Package package, Type type)
+        private IEnumerable<Edge> Analyze( Package package, Type type )
         {
-            Console.Write(".");
+            Console.Write( "." );
 
             CancellationToken.ThrowIfCancellationRequested();
 
-            return new Reflector(AssemblyLoader, type).GetUsedTypes()
-                .Where(usedType => IsForeignPackage(package, usedType))
-                .Select(usedType => GraphUtils.Edge(type, usedType))
-                .Where(edge => edge.Item1 != edge.Item2);
+            return new Reflector( AssemblyLoader, type ).GetUsedTypes()
+                .Where( edge => IsForeignPackage( package, edge.Target ) )
+                .Select( edge => GraphUtils.Edge( edge) )
+                .Where( edge => edge.Source != edge.Target );
         }
 
-        private bool IsForeignPackage(Package package, Type dep)
+        private bool IsForeignPackage( Package package, Type dep )
         {
-            return myPackages.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
+            return myPackages.Where( e => e.Key != package.Name ).Any( entry => entry.Value.Contains( dep ) );
         }
 
-        protected override AnalysisDocument GenerateDocument(IReadOnlyCollection<Tuple<Type, Type>> edges)
+        protected override AnalysisDocument GenerateDocument( IReadOnlyCollection<Edge> edges )
         {
             var doc = new AnalysisDocument();
 
-            for (int i = 0; i < Config.Packages.Count; ++i)
+            for( int i = 0; i < Config.Packages.Count; ++i )
             {
-                var package = Config.Packages[i];
+                var package = Config.Packages[ i ];
 
-                foreach (var node in myPackages[package.Name].Select(GraphUtils.Node).Distinct())
+                foreach( var node in myPackages[ package.Name ].Select( GraphUtils.Node ).Distinct() )
                 {
-                    if (!edges.Any(e => e.Item1 == node || e.Item2 == node))
+                    if( !edges.Any( e => e.Source == node || e.Target == node ) )
                     {
                         continue;
                     }
 
-                    doc.AddNode(node.FullName);
-                    doc.Add(new Caption(node.FullName, node.Name));
-                    doc.Add(new NodeStyle(node.FullName) { FillColor = Colors[i % Colors.Length] });
-
-                    // in case multiple cluster match we just take the first one
-                    var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
-                    if (matchedCluster != null)
-                    {
-                        doc.AddToCluster(matchedCluster.Name, node.FullName);
-                    }
+                    doc.Add( node,package);
+                    doc.Add( new NodeStyle( node.FullName ) { FillColor = Colors[ i % Colors.Length ] } );
                 }
             }
 
-            foreach (var edge in edges)
-            {
-                doc.AddEdge(edge.Item1.FullName, edge.Item2.FullName);
-            }
+            doc.Add( edges );
 
             return doc;
         }

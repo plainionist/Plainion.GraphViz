@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="e15ae5c1-8370-4754-a989-921366957175" Created="635931598745513056" LastModified="635931598856533056">
+<Node Id="e15ae5c1-8370-4754-a989-921366957175" Created="635931598745513056" LastModified="635934508564194496" Origin="949fcebe-89de-4fcc-a65a-76889f666ebe">
   <Caption><![CDATA[BirdsEye view from whiteboard]]></Caption>
-  <Content><![CDATA[]]></Content>
+  <Content><![CDATA[seems to be tricky because if graph is very large the viewport
+in the birdseye gets also very small]]></Content>
 </Node>

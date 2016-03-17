@@ -21,26 +21,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             EdgeTypes = new Dictionary<string, EdgeType>();
         }
 
-        public IList<FailedItem> FailedItems
-        {
-            get;
-            private set;
-        }
+        public IList<FailedItem> FailedItems { get; private set; }
 
         public IGraph Graph
         {
-            get
-            {
-                return myGraphBuilder.Graph;
-            }
+            get { return myGraphBuilder.Graph; }
         }
 
         public IEnumerable<TypeDescriptor> Descriptors
         {
-            get
-            {
-                return myDescriptors.Values;
-            }
+            get { return myDescriptors.Values; }
         }
 
         public void AddEdge( TypeDescriptor source, TypeDescriptor target )

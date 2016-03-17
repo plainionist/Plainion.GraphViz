@@ -3,13 +3,13 @@
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework
 {
     [Serializable]
-    public class TypeDescriptor 
+    public class TypeDescriptor
     {
         private int myHashCode;
 
         public TypeDescriptor( Type type )
         {
-            if (type.IsGenericType)
+            if( type.IsGenericType )
             {
                 myHashCode = type.GetGenericTypeDefinition().GetHashCode();
             }
@@ -24,23 +24,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framewor
             FullName = type.FullName;
         }
 
-        public string Id
-        {
-            get;
-            private set;
-        }
+        public string Id { get; private set; }
 
-        public string Name
-        {
-            get;
-            private set;
-        }
+        public string Name { get; private set; }
 
-        public string FullName
-        {
-            get;
-            private set;
-        }
+        public string FullName { get; private set; }
 
         public override int GetHashCode()
         {

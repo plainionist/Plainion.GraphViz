@@ -26,6 +26,8 @@ namespace Plainion.GraphViz.Dot
         {
             GenerateDotFile(presentation);
 
+            myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
+
             myConverter.Convert(myDotFile, myPlainFile);
 
             var nodeLayouts = new List<NodeLayout>();

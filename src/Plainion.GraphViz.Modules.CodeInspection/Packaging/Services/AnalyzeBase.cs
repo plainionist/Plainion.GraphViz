@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
@@ -52,9 +51,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         protected abstract void Load();
 
-        protected abstract Tuple<Type, Type>[] Analyze();
+        protected abstract Edge[] Analyze();
 
-        protected abstract AnalysisDocument GenerateDocument(IReadOnlyCollection<Tuple<Type, Type>> edges);
+        protected abstract AnalysisDocument GenerateDocument( IReadOnlyCollection<Edge> edges );
 
         protected IEnumerable<Assembly> Load(Package package)
         {
