@@ -54,8 +54,15 @@ namespace Plainion.GraphViz.Viewer
         {
             base.Run( runWithDefaultConfiguration );
 
+            Application.Current.Exit += OnShutdown;
+            
             // we have to call this here in order to support regions which are provided by modules
             RegionManager.UpdateRegions();
+        }
+
+        protected virtual void OnShutdown( object sender, ExitEventArgs e )
+        {
+            Container.Dispose();
         }
     }
 }
