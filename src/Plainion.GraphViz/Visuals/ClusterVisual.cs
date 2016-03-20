@@ -71,7 +71,8 @@ namespace Plainion.GraphViz.Visuals
             }
 
             // 2. include all visible edges which have source and target within this cluster
-            var visibleEdges = myPresentation.Graph.Edges
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            var visibleEdges = transformationModule.Graph.Edges
                 .Where( e => visibleNodes.Contains( e.Source ) && visibleNodes.Contains( e.Target ) )
                 .Where( e => myPresentation.Picking.Pick( e ) )
                 .ToList();

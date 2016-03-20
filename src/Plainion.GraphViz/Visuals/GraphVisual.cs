@@ -75,9 +75,10 @@ namespace Plainion.GraphViz.Visuals
             }
 
             var layoutModule = Presentation.GetModule<IGraphLayoutModule>();
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
 
             // current assumption: it is enough to check the nodes as we would not render edges independent from nodes
-            var reLayout = Presentation.Graph.Nodes
+            var reLayout = transformationModule.Graph.Nodes
                 .Where( node => Presentation.Picking.Pick( node ) )
                 .Any( node => layoutModule.GetLayout( node ) == null );
 
@@ -102,7 +103,7 @@ namespace Plainion.GraphViz.Visuals
 
                 myDrawing = new DrawingVisual();
 
-                foreach( var node in Presentation.Graph.Nodes )
+                foreach( var node in transformationModule.Graph.Nodes )
                 {
                     var visual = new NodeVisual( node, Presentation );
 
@@ -117,7 +118,7 @@ namespace Plainion.GraphViz.Visuals
                     }
                 }
 
-                foreach( var edge in Presentation.Graph.Edges )
+                foreach( var edge in transformationModule.Graph.Edges )
                 {
                     var visual = new EdgeVisual( edge, Presentation );
 
@@ -132,7 +133,7 @@ namespace Plainion.GraphViz.Visuals
                     }
                 }
 
-                foreach( var cluster in Presentation.Graph.Clusters )
+                foreach( var cluster in transformationModule.Graph.Clusters )
                 {
                     var visual = new ClusterVisual( cluster, Presentation );
 
@@ -170,14 +171,14 @@ namespace Plainion.GraphViz.Visuals
             {
                 if( !myNodeMaskJournal.IsEmpty )
                 {
-                    foreach( var node in Presentation.Graph.Nodes )
+                    foreach( var node in transformationModule.Graph.Nodes )
                     {
                         SetVisibility( ( NodeVisual )myDrawingElements[ node.Id ],
                             Presentation.Picking.Pick( node ),
                             v => v.Draw( layoutModule.GetLayout( v.Owner ) ) );
                     }
 
-                    foreach( var edge in Presentation.Graph.Edges )
+                    foreach( var edge in transformationModule.Graph.Edges )
                     {
                         SetVisibility( ( EdgeVisual )myDrawingElements[ edge.Id ],
                             Presentation.Picking.Pick( edge ),

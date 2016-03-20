@@ -29,6 +29,7 @@ namespace Plainion.GraphViz.Presentation
             myModules.Add( new GraphLayoutModule() );
             myModules.Add( new NodeMaskModule() );
             myModules.Add( new EdgeMaskModule() );
+            myModules.Add( new TransformationModule( this ) );
 
             Picking = new PickingCache( this, new GraphPicking( this ) );
 
@@ -117,6 +118,11 @@ namespace Plainion.GraphViz.Presentation
                 builder.TryAddEdge( edge.Source.Id, edge.Target.Id );
             }
 
+            foreach( var cluster in GetClusters( this, other ) )
+            {
+                builder.TryAddCluster( cluster.Id, cluster.Nodes.Select( n => n.Id ) );
+            }
+
             result.Graph = builder.Graph;
 
             UnionWith<ToolTipContent>( this, other, result );
@@ -168,6 +174,14 @@ namespace Plainion.GraphViz.Presentation
             if( rhs.Graph == null ) return lhs.Graph.Edges;
 
             return lhs.Graph.Edges.Concat( rhs.Graph.Edges );
+        }
+
+        private IEnumerable<Cluster> GetClusters( GraphPresentation lhs, IGraphPresentation rhs )
+        {
+            if( lhs.Graph == null ) return rhs.Graph.Clusters;
+            if( rhs.Graph == null ) return lhs.Graph.Clusters;
+
+            return lhs.Graph.Clusters.Concat( rhs.Graph.Clusters );
         }
 
         private static void UnionWith<T1>( IGraphPresentation lhs, IGraphPresentation rhs, IGraphPresentation result ) where T1 : AbstractPropertySet

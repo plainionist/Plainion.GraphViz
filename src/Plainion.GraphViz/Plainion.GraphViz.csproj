@@ -101,6 +101,9 @@
     <Compile Include="Model\RelaxedGraphBuilder.cs" />
     <Compile Include="Dot\DotToDotPlainConverter.cs" />
     <Compile Include="Model\IGraph.cs" />
+    <Compile Include="Presentation\ClusterFoldingTransformation.cs" />
+    <Compile Include="Presentation\IGraphTransformation.cs" />
+    <Compile Include="Presentation\ITransformationModule.cs" />
     <Compile Include="Presentation\ILabelConversionStep.cs" />
     <Compile Include="Presentation\ILabelConverter.cs" />
     <Compile Include="Presentation\GenericLabelConverter.cs" />
@@ -134,6 +137,7 @@
     <Compile Include="Presentation\EdgeLayout.cs" />
     <Compile Include="Presentation\NodeLayout.cs" />
     <Compile Include="Presentation\Selection.cs" />
+    <Compile Include="Presentation\TransformationModule.cs" />
     <Compile Include="Visuals\AbstractElementVisual.cs" />
     <Compile Include="Presentation\GenericModuleChangedJournal.cs" />
     <Compile Include="Dot\DotToolLayoutEngine.cs" />

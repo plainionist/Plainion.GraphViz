@@ -44,6 +44,8 @@ namespace Plainion.GraphViz.Dot
         private void GenerateDotFile(IGraphPresentation presentation)
         {
             var labelModule = presentation.GetPropertySetFor<Caption>();
+            var transformationModule = presentation.GetModule<ITransformationModule>();
+
             using (var writer = new StreamWriter(myDotFile.FullName))
             {
                 writer.WriteLine("digraph {");
@@ -52,11 +54,11 @@ namespace Plainion.GraphViz.Dot
                 writer.WriteLine("  rankdir=BT");
                 writer.WriteLine("  ranksep=\"2.0 equally\"");
 
-                var visibleNodes = presentation.Graph.Nodes
+                var visibleNodes = transformationModule.Graph.Nodes
                     .Where(n => presentation.Picking.Pick(n))
                     .ToList();
 
-                foreach (var cluster in presentation.Graph.Clusters)
+                foreach( var cluster in transformationModule.Graph.Clusters )
                 {
                     var visibleClusterNodes = cluster.Nodes
                         .Where(n => visibleNodes.Contains(n))
@@ -90,7 +92,7 @@ namespace Plainion.GraphViz.Dot
                     writer.WriteLine("  \"{0}\" [label=\"{1}\"]", node.Id, label);
                 }
 
-                foreach (var edge in presentation.Graph.Edges.Where(e => presentation.Picking.Pick(e)))
+                foreach( var edge in transformationModule.Graph.Edges.Where( e => presentation.Picking.Pick( e ) ) )
                 {
                     // pass label to trigger dot.exe to create position of the label
                     var label = labelModule.Get(edge.Id);
