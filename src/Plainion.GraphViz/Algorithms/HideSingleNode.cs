@@ -17,12 +17,9 @@ namespace Plainion.GraphViz.Algorithms
 
         public void Execute( Node node )
         {
-            var nodesToHide = myPresentation.Graph.Nodes
-                .Where( n => n.Id == node.Id );
-
             var mask = new NodeMask();
             mask.IsShowMask = false;
-            mask.Set( nodesToHide );
+            mask.Set( node );
 
             var caption = myPresentation.GetPropertySetFor<Caption>().Get( node.Id );
             mask.Label = caption.DisplayText;
