@@ -21,6 +21,7 @@ namespace Plainion.GraphViz.Visuals
         private IModuleChangedJournal<Selection> mySelectionJournal;
         private IModuleChangedJournal<INodeMask> myNodeMaskJournal;
         private IModuleChangedJournal<Edge> myEdgeMaskJournal;
+        private IModuleChangedJournal<IGraphTransformation> myTransformationsJournal;
 
         public GraphVisual()
         {
@@ -48,6 +49,7 @@ namespace Plainion.GraphViz.Visuals
                     mySelectionJournal.Dispose();
                     myNodeMaskJournal.Dispose();
                     myEdgeMaskJournal.Dispose();
+                    myTransformationsJournal.Dispose();
 
                     myDrawingElements.Clear();
                 }
@@ -59,6 +61,7 @@ namespace Plainion.GraphViz.Visuals
                     mySelectionJournal = myPresentation.GetPropertySetFor<Selection>().CreateJournal();
                     myNodeMaskJournal = myPresentation.GetModule<INodeMaskModule>().CreateJournal();
                     myEdgeMaskJournal = myPresentation.GetModule<IEdgeMaskModule>().CreateJournal();
+                    myTransformationsJournal = myPresentation.GetModule<ITransformationModule>().CreateJournal();
                 }
             }
         }
@@ -80,7 +83,8 @@ namespace Plainion.GraphViz.Visuals
             // current assumption: it is enough to check the nodes as we would not render edges independent from nodes
             var reLayout = transformationModule.Graph.Nodes
                 .Where( node => Presentation.Picking.Pick( node ) )
-                .Any( node => layoutModule.GetLayout( node ) == null );
+                .Any( node => layoutModule.GetLayout( node ) == null )
+                || !myTransformationsJournal.IsEmpty;
 
             if( reLayout )
             {
@@ -156,6 +160,7 @@ namespace Plainion.GraphViz.Visuals
                 }
 
                 // clear journals - to avoid considering out-dated infos on next refresh
+                myTransformationsJournal.Clear();
                 myEdgeMaskJournal.Clear();
                 myNodeMaskJournal.Clear();
                 mySelectionJournal.Clear();

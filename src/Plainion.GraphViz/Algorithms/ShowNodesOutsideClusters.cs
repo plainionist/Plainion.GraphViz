@@ -8,9 +8,9 @@ namespace Plainion.GraphViz.Algorithms
     {
         private readonly IGraphPresentation myPresentation;
 
-        public ShowNodesOutsideClusters(IGraphPresentation presentation)
+        public ShowNodesOutsideClusters( IGraphPresentation presentation )
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull( presentation, "presentation" );
 
             myPresentation = presentation;
         }
@@ -18,20 +18,20 @@ namespace Plainion.GraphViz.Algorithms
         public void Execute()
         {
             var nodesToHide = myPresentation.Graph.Nodes
-                .Where(n => !IsInAnyCluster(n));
+                .Where( n => !IsInAnyCluster( n ) );
 
             var mask = new NodeMask();
             mask.IsShowMask = true;
-            mask.Set(nodesToHide);
+            mask.Set( nodesToHide );
             mask.Label = "Nodes outside clusters";
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push(mask);
+            module.Push( mask );
         }
 
-        private bool IsInAnyCluster(Node node)
+        private bool IsInAnyCluster( Node node )
         {
-            return myPresentation.Graph.Clusters.Any(c => c.Nodes.Contains(node));
+            return myPresentation.Graph.Clusters.Any( c => c.Nodes.Any( n => n.Id == node.Id ) );
         }
     }
 }

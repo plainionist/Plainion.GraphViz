@@ -40,8 +40,8 @@ namespace Plainion.GraphViz.Modules.Documents
             var notification = new OpenFileDialogNotification();
             notification.RestoreDirectory = true;
             notification.Filter = "DGML files (*.dgml)|*.dgml|DOT files (*.dot)|*.dot|GraphML files (*.graphml)|*.graphml|DOT plain files (*.plain)|*.plain";
-            notification.FilterIndex = 0;
-            notification.DefaultExt = ".dgml";
+            notification.FilterIndex = 1;
+            notification.DefaultExt = ".dot";
 
             OpenFileRequest.Raise(notification,
                 n =>

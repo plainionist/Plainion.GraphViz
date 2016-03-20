@@ -33,10 +33,15 @@
                 <MenuItem Header="Go to source" Command="{Binding GoToEdgeSourceCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <MenuItem Header="Go to target" Command="{Binding GoToEdgeTargetCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
             </ContextMenu>
+            <ContextMenu x:Key="Cluster">
+                <MenuItem Header="Fold/Unfold" Command="{Binding ToggleClusterFoldingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+            </ContextMenu>
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
                 <MenuItem Header="Hide nodes without edges" Command="{Binding HideNodesWithoutEdgesCommand}"/>
                 <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
+                <Separator/>
+                <MenuItem Header="Fold/Unfold all clusters" Command="{Binding FoldUnfoldAllClustersCommand}"/>
                 <Separator/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>
