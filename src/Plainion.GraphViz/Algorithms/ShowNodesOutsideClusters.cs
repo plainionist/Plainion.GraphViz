@@ -17,8 +17,9 @@ namespace Plainion.GraphViz.Algorithms
 
         public void Execute()
         {
-            var nodesToHide = myPresentation.Graph.Nodes
-                .Where( n => !IsInAnyCluster( n ) );
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            var nodesToHide = transformationModule.Graph.Nodes
+                .Where( node => !( transformationModule.Graph.Clusters.Any( c => c.Nodes.Any( n => n.Id == node.Id ) ) ) );
 
             var mask = new NodeMask();
             mask.IsShowMask = true;
@@ -27,11 +28,6 @@ namespace Plainion.GraphViz.Algorithms
 
             var module = myPresentation.GetModule<INodeMaskModule>();
             module.Push( mask );
-        }
-
-        private bool IsInAnyCluster( Node node )
-        {
-            return myPresentation.Graph.Clusters.Any( c => c.Nodes.Any( n => n.Id == node.Id ) );
         }
     }
 }

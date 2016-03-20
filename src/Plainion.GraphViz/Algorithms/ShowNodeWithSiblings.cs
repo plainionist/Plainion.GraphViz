@@ -32,7 +32,8 @@ namespace Plainion.GraphViz.Algorithms
 
         private IEnumerable<Node> GetNodeWithSiblings( string nodeId )
         {
-            foreach( var edge in myPresentation.Graph.Edges )
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            foreach( var edge in transformationModule.Graph.Edges )
             {
                 if( edge.Source.Id == nodeId || edge.Target.Id == nodeId )
                 {

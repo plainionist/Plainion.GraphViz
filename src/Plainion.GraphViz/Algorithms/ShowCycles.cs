@@ -22,14 +22,16 @@ namespace Plainion.GraphViz.Algorithms
             mask.Label = "Cycles";
             mask.IsShowMask = true;
 
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            
             try
             {
-                if (!myPresentation.Graph.Nodes.Any())
+                if( !transformationModule.Graph.Nodes.Any() )
                 {
                     return;
                 }
 
-                var unvisited = new HashSet<Node>(myPresentation.Graph.Nodes);
+                var unvisited = new HashSet<Node>( transformationModule.Graph.Nodes );
                 unvisited.RemoveWhere(n => n.In.Count == 0 || n.Out.Count == 0);
 
                 while (unvisited.Count > 0)

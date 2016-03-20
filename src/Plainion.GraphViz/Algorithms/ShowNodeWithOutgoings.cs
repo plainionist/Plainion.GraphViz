@@ -18,7 +18,8 @@ namespace Plainion.GraphViz.Algorithms
 
         public void Execute( Node node )
         {
-            var nodesToShow = myPresentation.Graph.Edges
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            var nodesToShow = transformationModule.Graph.Edges
                 .Where( e => e.Source.Id == node.Id )
                 .Select( e => e.Target )
                 .ToList();

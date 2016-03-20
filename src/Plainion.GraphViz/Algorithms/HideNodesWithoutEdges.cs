@@ -17,7 +17,9 @@ namespace Plainion.GraphViz.Algorithms
 
         public void Execute()
         {
-            var nodesToHide = myPresentation.Graph.Nodes
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+
+            var nodesToHide = transformationModule.Graph.Nodes
                 .Where(n => !HasEdges(n));
 
             var mask = new NodeMask();
