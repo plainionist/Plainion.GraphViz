@@ -163,15 +163,23 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
                     yield return new Edge { Target = TryGetSystemType( callee.ReturnType ) };
 
-                    if( callee.HasGenericParameters )
+                    if (callee.HasGenericParameters)
                     {
-                        foreach( var parameter in callee.GenericParameters )
+                        foreach (var parameter in callee.GenericParameters)
                         {
-                            yield return new Edge { Target = TryGetSystemType( parameter ) };
+                            yield return new Edge { Target = TryGetSystemType(parameter) };
                         }
                     }
 
-                    if( callee.HasParameters )
+                    if (callee.IsGenericInstance)
+                    {
+                        foreach (var parameter in ((GenericInstanceMethod)callee).GenericArguments)
+                        {
+                            yield return new Edge { Target = TryGetSystemType(parameter) };
+                        }
+                    }
+
+                    if (callee.HasParameters)
                     {
                         foreach( var parameter in callee.Parameters )
                         {

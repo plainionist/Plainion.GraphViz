@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plainion.GraphViz.Modules.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {
-    class Fake
+    class TypeOf
     {
         public List<Type> Types = new List<Type>();
 

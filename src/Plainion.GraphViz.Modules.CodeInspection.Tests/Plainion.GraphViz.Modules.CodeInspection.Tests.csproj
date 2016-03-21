@@ -16,7 +16,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fake.cs" />
+    <Compile Include="TestData\GenericMethod.cs" />
+    <Compile Include="TestData\TypeOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectorTests.cs" />
   </ItemGroup>
