@@ -27,7 +27,8 @@
                     <MenuItem Header="With outgoing" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Copy to clipboard" Command="{Binding CopyTextCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Copy caption to clipboard" Command="{Binding CaptionToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Copy identifier to clipboard" Command="{Binding IdToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
             </ContextMenu>
             <ContextMenu x:Key="Edge">
                 <MenuItem Header="Go to source" Command="{Binding GoToEdgeSourceCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
