@@ -99,7 +99,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 }
                 else if( edge.EdgeType != EdgeType.Calls )
                 {
-                    edgeBrush = Brushes.Brown;
+                    edgeBrush = Brushes.Gray;
                 }
 
                 if( edgeBrush != null )
