@@ -102,6 +102,7 @@
     <Compile Include="Dot\DotToDotPlainConverter.cs" />
     <Compile Include="Model\IGraph.cs" />
     <Compile Include="Presentation\ClusterFoldingTransformation.cs" />
+    <Compile Include="Presentation\DynamicClusterTransformation.cs" />
     <Compile Include="Presentation\IGraphTransformation.cs" />
     <Compile Include="Presentation\ITransformationModule.cs" />
     <Compile Include="Presentation\ILabelConversionStep.cs" />

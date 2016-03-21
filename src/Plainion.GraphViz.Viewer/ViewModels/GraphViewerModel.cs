@@ -47,7 +47,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
 
-            AddToClusterCommand = new DelegateCommand<string>( clusterId => Debug.WriteLine( "Add to cluster " + clusterId ) );
+            AddToClusterCommand = new DelegateCommand<string>( OnAddToCluster );
         }
 
         private void OnEventFocused( Node node )
@@ -188,5 +188,26 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ObservableCollection<ClusterWithCaption> Clusters { get; private set; }
 
         public ICommand AddToClusterCommand { get; private set; }
+
+        private void OnAddToCluster( string clusterId )
+        {
+            var transformations = Presentation.GetModule<ITransformationModule>();
+            var transformation = transformations.Items
+                .OfType<DynamicClusterTransformation>()
+                .SingleOrDefault( t => t.ClusterId == clusterId );
+
+            if( transformation == null )
+            {
+                transformation = new DynamicClusterTransformation( clusterId, GraphItemForContextMenu.Id );
+            }
+            else
+            {
+                transformations.Remove( transformation );
+            }
+            
+            transformation.Add( GraphItemForContextMenu.Id );
+
+            transformations.Add(transformation );
+        }
     }
 }
