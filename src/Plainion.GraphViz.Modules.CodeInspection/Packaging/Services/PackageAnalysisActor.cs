@@ -31,8 +31,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 var self = Self;
                 var sender = Sender;
                 
-                Debugger.Launch();
-
                 Task.Run<AnalysisDocument>(() =>
                 {
                     var activity = r.AnalysisMode == AnalysisMode.InnerPackageDependencies ?
