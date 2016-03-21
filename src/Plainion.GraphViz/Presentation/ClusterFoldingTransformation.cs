@@ -15,7 +15,8 @@ namespace Plainion.GraphViz.Presentation
             myClusterNodeId = Guid.NewGuid().ToString();
 
             // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
-            presentation.GetPropertySetFor<Caption>().Add( new Caption( myClusterNodeId, "[" + Cluster.Id + "]" ) );
+            var captions = presentation.GetPropertySetFor<Caption>();
+            captions.Add( new Caption( myClusterNodeId, "[" + captions.Get( Cluster.Id ).DisplayText + "]" ) );
         }
 
         public Cluster Cluster { get; private set; }

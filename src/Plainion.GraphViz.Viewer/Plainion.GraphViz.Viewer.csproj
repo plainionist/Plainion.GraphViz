@@ -92,6 +92,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Services\Config.cs" />
     <Compile Include="Services\RegexConversion.cs" />
+    <Compile Include="ViewModels\ClusterWithCaption.cs" />
     <Compile Include="Views\GraphViewer.xaml.cs">
       <DependentUpon>GraphViewer.xaml</DependentUpon>
     </Compile>

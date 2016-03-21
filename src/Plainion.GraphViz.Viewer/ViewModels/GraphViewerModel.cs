@@ -10,45 +10,51 @@ using Plainion.GraphViz.Presentation;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.PubSubEvents;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
-    [Export(typeof(GraphViewerModel))]
-    public class GraphViewerModel : ViewModelBase
+    [Export( typeof( GraphViewerModel ) )]
+    class GraphViewerModel : ViewModelBase
     {
         [ImportingConstructor]
-        public GraphViewerModel(IEventAggregator eventAggregator)
+        public GraphViewerModel( IEventAggregator eventAggregator )
         {
-            HideNodeCommand = new DelegateCommand<Node>(n => new HideSingleNode(Presentation).Execute(n));
-            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowNodeWithSiblings(Presentation).Execute(n));
-            ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowNodeWithIncomings(Presentation).Execute(n));
-            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowNodeWithOutgoings(Presentation).Execute(n));
+            HideNodeCommand = new DelegateCommand<Node>( n => new HideSingleNode( Presentation ).Execute( n ) );
+            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>( n => new ShowNodeWithSiblings( Presentation ).Execute( n ) );
+            ShowNodeWithIncomingCommand = new DelegateCommand<Node>( n => new ShowNodeWithIncomings( Presentation ).Execute( n ) );
+            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>( n => new ShowNodeWithOutgoings( Presentation ).Execute( n ) );
 
-            CaptionToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(Presentation.GetModule<CaptionModule>().Get(n.Id).DisplayText));
-            IdToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(n.Id));
+            CaptionToClipboardCommand = new DelegateCommand<Node>( n => Clipboard.SetText( Presentation.GetModule<CaptionModule>().Get( n.Id ).DisplayText ) );
+            IdToClipboardCommand = new DelegateCommand<Node>( n => Clipboard.SetText( n.Id ) );
 
-            GoToEdgeSourceCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Source));
-            GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
+            GoToEdgeSourceCommand = new DelegateCommand<Edge>( edge => Navigation.NavigateTo( edge.Source ) );
+            GoToEdgeTargetCommand = new DelegateCommand<Edge>( edge => Navigation.NavigateTo( edge.Target ) );
 
-            ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(OnToggleClusterFolding);
+            ToggleClusterFoldingCommand = new DelegateCommand<Cluster>( OnToggleClusterFolding );
 
-            ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
-            HideNodesWithoutEdgesCommand = new DelegateCommand(() => new HideNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
-            ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
-            FoldUnfoldAllClustersCommand = new DelegateCommand(OnFoldUnfoldAllClusters, () => Presentation != null);
-            InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
+            ShowCyclesCommand = new DelegateCommand( () => new ShowCycles( Presentation ).Execute(), () => Presentation != null );
+            HideNodesWithoutEdgesCommand = new DelegateCommand( () => new HideNodesWithoutEdges( Presentation ).Execute(), () => Presentation != null );
+            ShowNodesOutsideClustersCommand = new DelegateCommand( () => new ShowNodesOutsideClusters( Presentation ).Execute(), () => Presentation != null );
+            FoldUnfoldAllClustersCommand = new DelegateCommand( OnFoldUnfoldAllClusters, () => Presentation != null );
+            InvalidateLayoutCommand = new DelegateCommand( () => Presentation.InvalidateLayout(), () => Presentation != null );
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
-            PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
+            PrintGraphCommand = new DelegateCommand( OnPrintGrpah, () => Presentation != null );
 
-            eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe(OnEventFocused);
+            eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe( OnEventFocused );
+
+            Clusters = new ObservableCollection<ClusterWithCaption>();
+
+            AddToClusterCommand = new DelegateCommand<string>( clusterId => Debug.WriteLine( "Add to cluster " + clusterId ) );
         }
 
-        private void OnEventFocused(Node node)
+        private void OnEventFocused( Node node )
         {
-            if (node != null)
+            if( node != null )
             {
-                Navigation.NavigateTo(node);
+                Navigation.NavigateTo( node );
 
                 //myGraphViewer.GraphVisual.Presentation.GetModuleFor<SelectionState>().Get( selectedNode.Id ).IsSelected = true;
             }
@@ -63,7 +69,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             var notification = new Confirmation();
             notification.Title = "Plainion.GraphViz.Viewer";
 
-            PrintGraphRequest.Raise(notification, c => { });
+            PrintGraphRequest.Raise( notification, c => { } );
         }
 
         public IGraphViewNavigation Navigation { get; set; }
@@ -94,21 +100,21 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ICommand ToggleClusterFoldingCommand { get; private set; }
 
-        private void OnToggleClusterFolding(Cluster cluster)
+        private void OnToggleClusterFolding( Cluster cluster )
         {
             var transformationModule = Presentation.GetModule<ITransformationModule>();
 
             var transformation = transformationModule.Items
                 .OfType<ClusterFoldingTransformation>()
-                .SingleOrDefault(t => t.Cluster.Id == cluster.Id);
+                .SingleOrDefault( t => t.Cluster.Id == cluster.Id );
 
-            if (transformation == null)
+            if( transformation == null )
             {
-                transformationModule.Add(new ClusterFoldingTransformation(cluster, Presentation));
+                transformationModule.Add( new ClusterFoldingTransformation( cluster, Presentation ) );
             }
             else
             {
-                transformationModule.Remove(transformation);
+                transformationModule.Remove( transformation );
             }
         }
 
@@ -122,33 +128,48 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 .OfType<ClusterFoldingTransformation>()
                 .ToList();
 
-            if (transformations.Count == 0)
+            if( transformations.Count == 0 )
             {
-                foreach (var cluster in Presentation.Graph.Clusters)
+                foreach( var cluster in Presentation.Graph.Clusters )
                 {
-                    transformationModule.Add(new ClusterFoldingTransformation(cluster, Presentation));
+                    transformationModule.Add( new ClusterFoldingTransformation( cluster, Presentation ) );
                 }
             }
             else
             {
-                foreach (var t in transformations)
+                foreach( var t in transformations )
                 {
-                    transformationModule.Remove(t);
+                    transformationModule.Remove( t );
                 }
             }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnModelPropertyChanged( string propertyName )
         {
-            OnPropertyChanged(propertyName);
+            OnPropertyChanged( propertyName );
 
-            if (propertyName == "Presentation")
+            if( propertyName == "Presentation" )
             {
                 ShowCyclesCommand.RaiseCanExecuteChanged();
                 HideNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
                 ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
+
+                Clusters.Clear();
+                if( Presentation != null )
+                {
+                    var transformations = Presentation.GetModule<ITransformationModule>();
+                    var captions = Presentation.GetModule<ICaptionModule>();
+                    foreach( var cluster in transformations.Graph.Clusters )
+                    {
+                        Clusters.Add( new ClusterWithCaption
+                        {
+                            Id = cluster.Id,
+                            Caption = captions.Get( cluster.Id ).DisplayText
+                        } );
+                    }
+                }
             }
         }
 
@@ -163,5 +184,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         }
 
         public IGraphItem GraphItemForContextMenu { get; set; }
+
+        public ObservableCollection<ClusterWithCaption> Clusters { get; private set; }
+
+        public ICommand AddToClusterCommand { get; private set; }
     }
 }

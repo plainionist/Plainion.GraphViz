@@ -18,6 +18,11 @@
                 <pn:PopupPrintDialogAction/>
             </prism:InteractionRequestTrigger>
         </i:Interaction.Triggers>
+        
+        <r:GraphView.Resources>
+            <pn:BindingProxy x:Key="RootDataContext" Data="{Binding}"/>
+        </r:GraphView.Resources>
+        
         <r:GraphView.ContextMenus>
             <ContextMenu x:Key="Node">
                 <MenuItem Header="Hide" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
@@ -25,6 +30,14 @@
                     <MenuItem Header="With siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="With incoming" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="With outgoing" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Add to cluster" ItemsSource="{Binding Clusters}">
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <MenuItem Header="{Binding Caption}" Command="{Binding Data.AddToClusterCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Id}"/>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Copy caption to clipboard" Command="{Binding CaptionToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
