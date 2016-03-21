@@ -1,7 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
+
+using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
+using Plainion.GraphViz.Modules.CodeInspection.Tests.TestData;
+
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {
@@ -11,7 +16,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void GetUsedTypes_typeof_Found()
         {
-            var reflector = new Reflector(new AssemblyLoader(), typeof(TypeOf));
+            Verify(typeof(TypeOf), typeof(AllTypesInspector));
+        }
+
+        private void Verify(Type code, Type usedType)
+        {
+            var reflector = new Reflector(new AssemblyLoader(), code);
 
             var edges = reflector.GetUsedTypes();
 
@@ -19,21 +29,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                 .SelectMany(e => new[] { e.Source, e.Target })
                 .Distinct();
 
-            Assert.That(types, Contains.Item(typeof(AllTypesInspector)));
+            Assert.That(types, Contains.Item(usedType));
         }
 
         [Test]
         public void GetUsedTypes_GenericMethod_Found()
         {
-            var reflector = new Reflector(new AssemblyLoader(), typeof(GenericMethod));
+            Verify(typeof(GenericMethod), typeof(AnalysisDocument));
+        }
 
-            var edges = reflector.GetUsedTypes();
-
-            var types = edges
-                .SelectMany(e => new[] { e.Source, e.Target })
-                .Distinct();
-
-            Assert.That(types, Contains.Item(typeof(AnalysisDocument)));
+        [Test]
+        public void GetUsedTypes_LinqAnonymousType_Found()
+        {
+            Verify(typeof(LinqAnonymousType), typeof(Node));
         }
     }
 }

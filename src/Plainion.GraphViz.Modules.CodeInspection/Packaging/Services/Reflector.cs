@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
@@ -14,42 +15,42 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         private readonly Type myType;
         private readonly string myFullName;
 
-        public Reflector( AssemblyLoader loader, Type type )
+        public Reflector(AssemblyLoader loader, Type type)
         {
             myLoader = loader;
             myType = type;
 
             // .net fullnames do escape "."
-            myFullName = myType.FullName.Replace( "\\,", "," );
+            myFullName = myType.FullName.Replace("\\,", ",");
         }
 
         internal IEnumerable<Edge> GetUsedTypes()
         {
             IEnumerable<Edge> edges = GetBaseTypes()
-                .Concat( GetInterfaces() )
-                .Concat( GetFieldTypes() )
-                .Concat( GetPropertyTypes() )
-                .Concat( GetMethodTypes() )
-                .Concat( GetConstructorTypes() )
-                .Concat( GetCalledTypes() )
+                .Concat(GetInterfaces())
+                .Concat(GetFieldTypes())
+                .Concat(GetPropertyTypes())
+                .Concat(GetMethodTypes())
+                .Concat(GetConstructorTypes())
+                .Concat(GetCalledTypes())
                 .Distinct()
                 .ToList();
 
             var elementTypes = edges
-                .Where( e => e.Target.HasElementType )
-                .Select( e => new Edge { Target = e.Target.GetElementType(), EdgeType = e.EdgeType } );
+                .Where(e => e.Target.HasElementType)
+                .Select(e => new Edge { Target = e.Target.GetElementType(), EdgeType = e.EdgeType });
 
-            edges = edges.Concat( elementTypes )
+            edges = edges.Concat(elementTypes)
                 .ToList();
 
             var genericTypes = edges
-                .Where( e => e.Target.IsGenericType )
-                .SelectMany( e => e.Target.GetGenericArguments().Select( t => new Edge { Target = t, EdgeType = e.EdgeType } ) );
+                .Where(e => e.Target.IsGenericType)
+                .SelectMany(e => e.Target.GetGenericArguments().Select(t => new Edge { Target = t, EdgeType = e.EdgeType }));
 
-            edges = edges.Concat( genericTypes )
+            edges = edges.Concat(genericTypes)
                 .ToList();
 
-            foreach( var edge in edges )
+            foreach (var edge in edges)
             {
                 edge.Source = myType;
             }
@@ -60,7 +61,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         private IEnumerable<Edge> GetBaseTypes()
         {
             var baseType = myType.BaseType;
-            while( baseType != null && baseType != typeof( object ) )
+            while (baseType != null && baseType != typeof(object))
             {
                 yield return new Edge { Target = baseType, EdgeType = EdgeType.DerivesFrom };
 
@@ -71,97 +72,95 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         private IEnumerable<Edge> GetInterfaces()
         {
             return myType.GetInterfaces()
-                .Select( t => new Edge { Target = t, EdgeType = EdgeType.Implements } );
+                .Select(t => new Edge { Target = t, EdgeType = EdgeType.Implements });
         }
 
         private IEnumerable<Edge> GetFieldTypes()
         {
-            return myType.GetFields( BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static )
-                .Select( field => new Edge { Target = field.FieldType } );
+            return myType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                .Select(field => new Edge { Target = field.FieldType });
         }
 
         private IEnumerable<Edge> GetPropertyTypes()
         {
-            return myType.GetProperties( BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static )
-                .Select( property => new Edge { Target = property.PropertyType } );
+            return myType.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                .Select(property => new Edge { Target = property.PropertyType });
         }
 
         private IEnumerable<Edge> GetMethodTypes()
         {
-            return myType.GetMethods( BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static )
-                .SelectMany( GetMethodTypes );
+            return myType.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                .SelectMany(GetMethodTypes);
         }
 
-        private IEnumerable<Edge> GetMethodTypes( MethodInfo method )
+        private IEnumerable<Edge> GetMethodTypes(MethodInfo method)
         {
             IEnumerable<Edge> types = new[] { new Edge { Target = method.ReturnType } };
 
-            if( method.IsGenericMethod )
+            if (method.IsGenericMethod)
             {
-                types = types.Concat( method.GetGenericArguments().Select( t => new Edge { Target = t } ) );
+                types = types.Concat(method.GetGenericArguments().Select(t => new Edge { Target = t }));
             }
 
-            return types.Concat( GetParameterTypes( method ) );
+            return types.Concat(GetParameterTypes(method));
         }
 
-        private IEnumerable<Edge> GetParameterTypes( MethodBase method )
+        private IEnumerable<Edge> GetParameterTypes(MethodBase method)
         {
             return method.GetParameters()
-                .Select( p => new Edge { Target = p.ParameterType } );
+                .Select(p => new Edge { Target = p.ParameterType });
         }
 
         private IEnumerable<Edge> GetConstructorTypes()
         {
-            return myType.GetConstructors( BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static )
-                .SelectMany( GetParameterTypes );
+            return myType.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
+                .SelectMany(GetParameterTypes);
         }
 
         //http://stackoverflow.com/questions/4184384/mono-cecil-typereference-to-type
         private IEnumerable<Edge> GetCalledTypes()
         {
-            if( myType.IsInterface || myType.IsNested || !myType.IsClass )
+            if (myType.IsInterface || myType.IsNested || !myType.IsClass)
             {
                 return Enumerable.Empty<Edge>();
             }
 
-            var cecilType = myLoader.MonoLoad( myType.Assembly ).MainModule.Types
-                .SingleOrDefault( t => t.FullName == myFullName );
+            var cecilType = myLoader.MonoLoad(myType.Assembly).MainModule.Types
+                .SingleOrDefault(t => t.FullName == myFullName);
 
-            if( cecilType == null )
+            if (cecilType == null)
             {
-                Console.Write( "!{0}!", myFullName );
+                Console.Write("!{0}!", myFullName);
 
                 return Enumerable.Empty<Edge>();
             }
 
-            var methods = cecilType.Methods
-                .Where( m => m.HasBody )
-                .SelectMany( m => m.Body.Instructions );
-
-            return GetCalledTypes( methods )
-                .Where( edge => edge.Target != null )
+            return cecilType.Methods
+                .Where(m => m.HasBody)
+                .SelectMany(GetCalledTypes)
+                .Where(edge => edge.Target != null)
                 .ToList();
         }
 
-        private IEnumerable<Edge> GetCalledTypes( IEnumerable<Instruction> methods )
+        private IEnumerable<Edge> GetCalledTypes(MethodDefinition method)
         {
-            foreach( var instr in methods )
+            foreach (var instr in method.Body.Instructions)
             {
-                if( instr.OpCode == OpCodes.Ldtoken )
+                if (instr.OpCode == OpCodes.Ldtoken)
                 {
                     var typeRef = instr.Operand as TypeReference;
-                    if( typeRef != null )
+                    if (typeRef != null)
                     {
-                        yield return new Edge { Target = TryGetSystemType( typeRef ) };
+                        yield return new Edge { Target = TryGetSystemType(typeRef) };
                     }
                 }
-                else if( instr.OpCode == OpCodes.Call )
+                else if (instr.OpCode == OpCodes.Call)
                 {
-                    var callee = ( ( MethodReference )instr.Operand );
+                    var callee = ((MethodReference)instr.Operand);
 
-                    yield return new Edge { Target = TryGetSystemType( callee.DeclaringType ), EdgeType = EdgeType.Calls };
+                    yield return new Edge { Target = TryGetSystemType(callee.DeclaringType), EdgeType = EdgeType.Calls };
 
-                    yield return new Edge { Target = TryGetSystemType( callee.ReturnType ) };
+                    yield return new Edge { Target = TryGetSystemType(callee.ReturnType) };
 
                     if (callee.HasGenericParameters)
                     {
@@ -181,24 +180,24 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
                     if (callee.HasParameters)
                     {
-                        foreach( var parameter in callee.Parameters )
+                        foreach (var parameter in callee.Parameters)
                         {
-                            yield return new Edge { Target = TryGetSystemType( parameter.ParameterType ) };
+                            yield return new Edge { Target = TryGetSystemType(parameter.ParameterType) };
                         }
                     }
                 }
             }
         }
 
-        private Type TryGetSystemType( TypeReference typeRef )
+        private Type TryGetSystemType(TypeReference typeRef)
         {
-            if( typeRef.FullName.StartsWith( "System.", StringComparison.OrdinalIgnoreCase ) )
+            if (typeRef.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
 
-            var dotNetType = myLoader.FindTypeByName( typeRef );
-            if( dotNetType != null )
+            var dotNetType = myLoader.FindTypeByName(typeRef);
+            if (dotNetType != null)
             {
                 return dotNetType;
             }

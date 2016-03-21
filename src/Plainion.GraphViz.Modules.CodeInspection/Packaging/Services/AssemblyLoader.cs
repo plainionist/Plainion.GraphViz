@@ -112,6 +112,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             if (typeRef.IsGenericInstance)
             {
                 var idx = typeFullName.IndexOf('<');
+
+                // compiler generated classes start with <> 
+                // -> keep
+                if (idx + 1 < typeFullName.Length && typeFullName[idx + 1] == '>')
+                {
+                    idx = typeFullName.IndexOf('<', idx + 1);
+                }
+
                 typeFullName = typeFullName.Substring(0, idx);
             }
 

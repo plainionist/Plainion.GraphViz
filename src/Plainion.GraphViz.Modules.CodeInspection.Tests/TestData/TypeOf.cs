@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Tests
+namespace Plainion.GraphViz.Modules.CodeInspection.Tests.TestData
 {
     class TypeOf
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Tests
+namespace Plainion.GraphViz.Modules.CodeInspection.Tests.TestData
 {
     class GenericMethod
     {

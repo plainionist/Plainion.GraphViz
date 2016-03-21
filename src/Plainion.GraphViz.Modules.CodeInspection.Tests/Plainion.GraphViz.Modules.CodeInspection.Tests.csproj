@@ -17,6 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestData\GenericMethod.cs" />
+    <Compile Include="TestData\LinqAnonymousType.cs" />
     <Compile Include="TestData\TypeOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectorTests.cs" />
@@ -29,6 +30,10 @@
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj">
       <Project>{21cc39c6-6535-4f17-aba3-82af9f49fe0c}</Project>
       <Name>Plainion.GraphViz.Modules.CodeInspection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj">
+      <Project>{8cc5c764-ace2-4af2-bca1-f78753e709aa}</Project>
+      <Name>Plainion.GraphViz</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
