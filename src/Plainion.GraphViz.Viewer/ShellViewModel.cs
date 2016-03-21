@@ -23,6 +23,7 @@ namespace Plainion.GraphViz.Viewer
         private IGraphPresentation myPresentation;
         private IStatusMessageService myStatusMessageService;
         private ConfigurationService myConfigurationService;
+        private LayoutAlgorithm myLayoutAlgorithm;
 
         [ImportingConstructor]
         public ShellViewModel(IStatusMessageService statusMessageService, ConfigurationService configService)
@@ -134,21 +135,8 @@ namespace Plainion.GraphViz.Viewer
 
                 myPresentation.GetModule<INodeMaskModule>().AutoHideAllNodesForShowMasks = true;
 
-                if (myPresentation.Graph.Nodes.Count() > 300)
-                {
-                    var hideAllButOne = new NodeMask();
-                    hideAllButOne.IsShowMask = true;
-                    hideAllButOne.IsApplied = true;
-                    hideAllButOne.Label = "Hide all but one node";
-
-                    hideAllButOne.Set(myPresentation.Graph.Nodes.Take(1));
-
-                    myPresentation.GetModule<INodeMaskModule>().Push(hideAllButOne);
-
-                    OnOpenFilterEditor();
-                }
-
-                OnPropertyChanged("IsEnabled");
+                LayoutAlgorithm = Dot.LayoutAlgorithm.Auto;
+                OnPropertyChanged(() => IsEnabled);
             }
         }
 
@@ -172,6 +160,19 @@ namespace Plainion.GraphViz.Viewer
         void IDropable.Drop(object data, DropLocation location)
         {
             DocumentLoader.Load(((string[])data).First());
+        }
+
+        public LayoutAlgorithm LayoutAlgorithm
+        {
+            get { return myLayoutAlgorithm; }
+            set
+            {
+                if (SetProperty(ref myLayoutAlgorithm, value))
+                {
+                    myPresentation.GetModule<IGraphLayoutModule>().Algorithm = value;
+                    myPresentation.InvalidateLayout();
+                }
+            }
         }
     }
 }

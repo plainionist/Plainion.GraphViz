@@ -6,6 +6,8 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:pn="http://github.com/ronin4net/plainion"
         xmlns:prism="http://www.codeplex.com/prism"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:dot="clr-namespace:Plainion.GraphViz.Dot;assembly=Plainion.GraphViz"
         Icon="Resources/GraphIcon.png"
         Title="Plainion GraphViz Viewer" MinWidth="640" MinHeight="480" Height="768" Width="1024" WindowStartupLocation="CenterScreen" Background="#FDFDF5">
     <i:Interaction.Triggers>
@@ -30,6 +32,15 @@
 
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Margin ="6">
             <StackPanel Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <ObjectDataProvider x:Key="LayoutAlgorithms" MethodName="GetValues"
+                            ObjectType="{x:Type System:Enum}">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="dot:LayoutAlgorithm"/>
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                </StackPanel.Resources>
+
                 <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.OpenDocuments}"/>
 
                 <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.SaveDocuments}"/>
@@ -49,9 +60,12 @@
                               ToolTip="Enable/disable rendering">
                     <Image Source="/Resources/Refresh.png" Width="16" ToolTip="Enable/disable rendering"/>
                 </ToggleButton>
+
+                <ComboBox Margin="2" ItemsSource="{Binding Source={StaticResource LayoutAlgorithms}}"
+                          SelectedItem="{Binding LayoutAlgorithm}" IsEnabled="{Binding Path=IsEnabled}"/>
                 
                 <Menu>
-                    <MenuItem Header="Tools" prism:RegionManager.RegionName="{x:Static inf:RegionNames.AddIns}" />
+                    <MenuItem Header="Tools" prism:RegionManager.RegionName="{x:Static inf:RegionNames.AddIns}" VerticalAlignment="Center"/>
                 </Menu>
             </StackPanel>
         </StackPanel>

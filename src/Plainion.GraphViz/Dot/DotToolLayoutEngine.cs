@@ -26,8 +26,6 @@ namespace Plainion.GraphViz.Dot
         {
             GenerateDotFile(presentation);
 
-            myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
-
             myConverter.Convert(myDotFile, myPlainFile);
 
             var nodeLayouts = new List<NodeLayout>();
@@ -58,7 +56,11 @@ namespace Plainion.GraphViz.Dot
                     .Where(n => presentation.Picking.Pick(n))
                     .ToList();
 
-                foreach( var cluster in transformationModule.Graph.Clusters )
+                myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Auto && visibleNodes.Count > 300
+                    ? LayoutAlgorithm.Sfdp
+                    : presentation.GetModule<IGraphLayoutModule>().Algorithm;
+
+                foreach (var cluster in transformationModule.Graph.Clusters)
                 {
                     var visibleClusterNodes = cluster.Nodes
                         .Where(n => visibleNodes.Contains(n))
@@ -92,7 +94,7 @@ namespace Plainion.GraphViz.Dot
                     writer.WriteLine("  \"{0}\" [label=\"{1}\"]", node.Id, label);
                 }
 
-                foreach( var edge in transformationModule.Graph.Edges.Where( e => presentation.Picking.Pick( e ) ) )
+                foreach (var edge in transformationModule.Graph.Edges.Where(e => presentation.Picking.Pick(e)))
                 {
                     // pass label to trigger dot.exe to create position of the label
                     var label = labelModule.Get(edge.Id);

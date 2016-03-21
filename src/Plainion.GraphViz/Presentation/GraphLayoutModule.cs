@@ -15,6 +15,8 @@ namespace Plainion.GraphViz.Presentation
         {
             myNodeLayouts = new Dictionary<string, NodeLayout>();
             myEdgeLayouts = new Dictionary<string, EdgeLayout>();
+
+            Algorithm = LayoutAlgorithm.Auto;
         }
 
         public LayoutAlgorithm Algorithm { get; set; }
