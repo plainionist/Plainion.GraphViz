@@ -15,6 +15,7 @@ namespace Plainion.GraphViz.Presentation
         private IGraph myGraph;
         private IModuleChangedObserver myNodeMaskModuleObserver;
         private IModuleChangedObserver myEdgeMaskModuleObserver;
+        private IModuleChangedObserver myTransformationModuleObserver;
 
         public GraphPresentation()
         {
@@ -38,6 +39,9 @@ namespace Plainion.GraphViz.Presentation
 
             myEdgeMaskModuleObserver = GetModule<IEdgeMaskModule>().CreateObserver();
             myEdgeMaskModuleObserver.ModuleChanged += OnModuleChanged;
+
+            myTransformationModuleObserver = GetModule<ITransformationModule>().CreateObserver();
+            myTransformationModuleObserver.ModuleChanged += OnModuleChanged;
         }
 
         private void OnModuleChanged( object sender, EventArgs e )
@@ -94,6 +98,9 @@ namespace Plainion.GraphViz.Presentation
 
                 myEdgeMaskModuleObserver.ModuleChanged -= OnModuleChanged;
                 myEdgeMaskModuleObserver.Dispose();
+
+                myTransformationModuleObserver.ModuleChanged -= OnModuleChanged;
+                myTransformationModuleObserver.Dispose();
 
                 GraphVisibilityChanged = null;
 

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:r="clr-namespace:Plainion.GraphViz;assembly=Plainion.GraphViz"
-             xmlns:v="clr-namespace:Plainion.GraphViz.Viewer"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:pn="http://github.com/ronin4net/plainion"
@@ -18,11 +17,11 @@
                 <pn:PopupPrintDialogAction/>
             </prism:InteractionRequestTrigger>
         </i:Interaction.Triggers>
-        
+
         <r:GraphView.Resources>
             <pn:BindingProxy x:Key="RootDataContext" Data="{Binding}"/>
         </r:GraphView.Resources>
-        
+
         <r:GraphView.ContextMenus>
             <ContextMenu x:Key="Node">
                 <MenuItem Header="Hide" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
@@ -32,12 +31,15 @@
                     <MenuItem Header="With outgoing" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Add to cluster" ItemsSource="{Binding Clusters}">
-                    <MenuItem.ItemTemplate>
-                        <DataTemplate>
-                            <MenuItem Header="{Binding Caption}" Command="{Binding Data.AddToClusterCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Id}"/>
-                        </DataTemplate>
-                    </MenuItem.ItemTemplate>
+                <MenuItem Header="Clusters">
+                    <MenuItem Header="Add to" ItemsSource="{Binding Clusters}">
+                        <MenuItem.ItemTemplate>
+                            <DataTemplate>
+                                <MenuItem Header="{Binding Caption}" Command="{Binding Data.AddToClusterCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Id}"/>
+                            </DataTemplate>
+                        </MenuItem.ItemTemplate>
+                    </MenuItem>
+                    <MenuItem Header="Remove" Command="{Binding RemoveFromClusterCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Copy caption to clipboard" Command="{Binding CaptionToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>

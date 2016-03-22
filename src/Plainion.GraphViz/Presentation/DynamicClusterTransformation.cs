@@ -6,48 +6,45 @@ namespace Plainion.GraphViz.Presentation
 {
     public class DynamicClusterTransformation : IGraphTransformation
     {
-        private List<string> myNodes;
+        private Dictionary<string, string> myNodeToClusterMapping;
 
-        public DynamicClusterTransformation( string clusterId, string nodeId )
+        public DynamicClusterTransformation()
         {
-            ClusterId = clusterId;
-            myNodes = new List<string> { nodeId };
+            myNodeToClusterMapping = new Dictionary<string, string>();
         }
 
-        public string ClusterId { get; set; }
-
-        public void Add( string nodeId )
+        public void AddToCluster(string nodeId, string clusterId)
         {
-            myNodes.Add( nodeId );
+            myNodeToClusterMapping[nodeId] = clusterId;
         }
 
-        public IGraph Transform( IGraph graph )
+        public void RemoveFromClusters(string nodeId)
+        {
+            myNodeToClusterMapping[nodeId] = null;
+        }
+
+        public IGraph Transform(IGraph graph)
         {
             var result = new Graph();
 
-            foreach( var node in graph.Nodes )
+            foreach (var node in graph.Nodes)
             {
-                result.Add( node );
+                result.Add(node);
             }
 
-            foreach( var edge in graph.Edges )
+            foreach (var edge in graph.Edges)
             {
-                result.Add( edge );
+                result.Add(edge);
             }
 
-            foreach( var cluster in graph.Clusters )
+            foreach (var cluster in graph.Clusters)
             {
-                if( cluster.Id == ClusterId )
-                {
-                    var nodes = cluster.Nodes
-                        .Concat(graph.Nodes.Where(n=>myNodes.Contains(n.Id)));
-                    var newCluster = new Cluster( ClusterId, nodes );
-                    result.Add( newCluster );
-                }
-                else
-                {
-                    result.Add( cluster );
-                }
+                var nodes = cluster.Nodes
+                    .Where(n => !myNodeToClusterMapping.ContainsKey(n.Id) || myNodeToClusterMapping[n.Id] == cluster.Id)
+                    .Concat(graph.Nodes.Where(n => myNodeToClusterMapping.ContainsKey(n.Id) && myNodeToClusterMapping[n.Id] == cluster.Id));
+
+                var newCluster = new Cluster(cluster.Id, nodes);
+                result.Add(newCluster);
             }
 
             return result;

@@ -38,7 +38,8 @@ namespace Plainion.GraphViz.Modules.Analysis
         private IEnumerable<NodeWithCaption> GetVisibleNodes()
         {
             var captionModule = myPresentation.GetPropertySetFor<Caption>();
-            return myPresentation.Graph.Nodes
+            var transformations = myPresentation.GetModule<ITransformationModule>();
+            return transformations.Graph.Nodes
                 .Where( n => myPresentation.Picking.Pick( n ) )
                 .Select( n => new NodeWithCaption( n, captionModule.Get( n.Id ).DisplayText ) );
         }

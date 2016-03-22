@@ -37,12 +37,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             CancellationToken.ThrowIfCancellationRequested();
 
-            var cluster = myPackage.Clusters.FirstOrDefault( c => c.Matches( type.FullName ) );
-
             return new Reflector( AssemblyLoader, type ).GetUsedTypes()
                 .Where( edge => myTypes.Contains( edge.Target ) )
-                .Where( edge => type != edge.Target )
-                .Where( edge => cluster == null || cluster != myPackage.Clusters.FirstOrDefault( c => c.Matches( edge.Target.FullName ) ) )
                 .Select( edge => GraphUtils.Edge( edge ) )
                 .Where( edge => edge.Source != edge.Target );
         }
