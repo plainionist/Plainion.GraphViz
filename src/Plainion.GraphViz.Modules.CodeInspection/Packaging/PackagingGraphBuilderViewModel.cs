@@ -159,6 +159,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         if (File.Exists(n.FileName))
                         {
                             Document.Text = File.ReadAllText(n.FileName);
+                            try
+                            {
+                                using (var reader = new StringReader(Document.Text))
+                                {
+                                    var spec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
+                                    if (spec.Packages.Count == 1)
+                                    {
+                                        AnalysisMode = Packaging.AnalysisMode.InnerPackageDependencies;
+                                        PackageName = spec.Packages.Single().Name;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // we try to optimize usability - ignore exceptions here
+                            }
                         }
                         else
                         {
