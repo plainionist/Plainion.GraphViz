@@ -33,6 +33,9 @@
       </Node>
       <Node Id="d7e65ef8-8294-400d-ba0c-eebf1d4da542">
         <Caption><![CDATA[XmlEditor to plainion libs]]></Caption>
+        <Node Id="ef8258f8-8619-4e63-ae23-6bd2108e60dc">
+          <Caption><![CDATA[bug: adding package.clusters throws exception]]></Caption>
+        </Node>
       </Node>
       <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
         <Caption><![CDATA[Akka.Cluster]]></Caption>

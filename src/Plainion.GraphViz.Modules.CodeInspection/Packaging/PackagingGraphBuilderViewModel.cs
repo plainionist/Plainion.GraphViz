@@ -1,6 +1,8 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +11,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 using System.Xml;
-using Akka.Actor;
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
@@ -257,15 +258,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             }
 
             var nodeStyles = presentation.GetPropertySetFor<NodeStyle>();
-            foreach( var style in response.NodeStyles )
+            foreach (var style in response.NodeStyles)
             {
-                nodeStyles.Add( style );
+                nodeStyles.Add(style);
             }
 
             var edgeStyles = presentation.GetPropertySetFor<EdgeStyle>();
-            foreach( var style in response.EdgeStyles )
+            foreach (var style in response.EdgeStyles)
             {
-                edgeStyles.Add( style );
+                edgeStyles.Add(style);
             }
 
             Model.Presentation = presentation;
@@ -304,6 +305,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         protected override void OnModelPropertyChanged(string propertyName)
         {
+            if (propertyName == "Presentation" && Model.Presentation != null)
+            {
+                var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
+                CollectionChangedEventManager.AddHandler(transformationModule, OnTransformationsChanged);
+            }
+        }
+
+        private void OnTransformationsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var clusterTransformations = GetClusterTransformations(e.NewItems)
+                .Concat(GetClusterTransformations(e.OldItems))
+                .ToList();
+            if (clusterTransformations.Any())
+            {
+                Debug.WriteLine("cluster changed");
+            }
+        }
+
+        private IEnumerable<DynamicClusterTransformation> GetClusterTransformations(IEnumerable collection)
+        {
+            return collection == null ? Enumerable.Empty<DynamicClusterTransformation>() : collection.OfType<DynamicClusterTransformation>();
         }
 
         public int ProgressValue

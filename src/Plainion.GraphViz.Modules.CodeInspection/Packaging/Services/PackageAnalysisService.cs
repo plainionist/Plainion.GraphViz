@@ -139,8 +139,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 try
                 {
                     var host = TryGetHostProcess();
-                    host.Kill();
-                    host.Dispose();
+                    if (host != null)
+                    {
+                        host.Kill();
+                        host.Dispose();
+                    }
                 }
                 catch
                 {
