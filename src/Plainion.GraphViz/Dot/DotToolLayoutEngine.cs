@@ -62,6 +62,15 @@ namespace Plainion.GraphViz.Dot
                     ? LayoutAlgorithm.Sfdp
                     : presentation.GetModule<IGraphLayoutModule>().Algorithm;
 
+                if (visibleNodes.Count > FastRenderingNodeCountLimit)
+                {
+                    // http://www.graphviz.org/content/attrs#dnslimit
+                    writer.WriteLine("  nslimit=0.2");
+                    writer.WriteLine("  nslimit1=0.2");
+                    writer.WriteLine("  splines=line");
+                    writer.WriteLine("  mclimit=0.5");
+                }
+
                 foreach (var cluster in transformationModule.Graph.Clusters)
                 {
                     var visibleClusterNodes = cluster.Nodes
