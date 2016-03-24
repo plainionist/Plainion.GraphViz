@@ -49,6 +49,12 @@ namespace Plainion.GraphViz.Dot
             var stdErr = new StringWriter();
             var ret = Processes.Execute(startInfo, null, stdErr);
 
+            if (Algorithm == LayoutAlgorithm.Sfdp)
+            {
+                // ignore the error code for this engine - it mostly still works :)
+                ret = 0;
+            }
+
             if (ret != 0 || !plainFile.Exists || dotFile.LastWriteTime > plainFile.LastWriteTime)
             {
                 throw new InvalidOperationException("Dot plain file generation failed: " + stdErr.ToString());
