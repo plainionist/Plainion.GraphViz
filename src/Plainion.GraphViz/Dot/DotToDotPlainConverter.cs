@@ -57,7 +57,9 @@ namespace Plainion.GraphViz.Dot
 
             if (ret != 0 || !plainFile.Exists || dotFile.LastWriteTime > plainFile.LastWriteTime)
             {
-                throw new InvalidOperationException("Dot plain file generation failed: " + stdErr.ToString());
+                // limit the size of the error message otherwise we will blow the messagebox window
+                // showing this unhandled exception later on
+                throw new InvalidOperationException("Dot plain file generation failed: " + stdErr.ToString().Substring(0,512));
             }
         }
 

@@ -13,6 +13,8 @@ namespace Plainion.GraphViz.Dot
         private FileInfo myPlainFile;
         private DotToDotPlainConverter myConverter;
 
+        public static readonly int FastRenderingNodeCountLimit = 300;
+
         public DotToolLayoutEngine(DotToDotPlainConverter converter)
         {
             myConverter = converter;
@@ -56,7 +58,7 @@ namespace Plainion.GraphViz.Dot
                     .Where(n => presentation.Picking.Pick(n))
                     .ToList();
 
-                myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Auto && visibleNodes.Count > 300
+                myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Auto && visibleNodes.Count > FastRenderingNodeCountLimit
                     ? LayoutAlgorithm.Sfdp
                     : presentation.GetModule<IGraphLayoutModule>().Algorithm;
 
