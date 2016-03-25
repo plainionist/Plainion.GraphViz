@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.Composition;
@@ -35,6 +36,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private TextDocument myDocument;
         private IEnumerable<KeywordCompletionData> myCompletionData;
         private CancellationTokenSource myCTS;
+        private IModuleChangedObserver myTransformationsObserver;
 
         public PackagingGraphBuilderViewModel()
         {
@@ -237,13 +239,29 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 builder.TryAddEdge( edge.Item1, edge.Item2 );
             }
+
             foreach( var node in response.Nodes )
             {
                 builder.TryAddNode( node );
             }
+
             foreach( var cluster in response.Clusters )
             {
                 builder.TryAddCluster( cluster.Key, cluster.Value );
+            }
+
+            // add potentially empty clusters
+            {
+                var spec = SpecUtils.Deserialize( Document.Text );
+                var emptyClusters = spec.Packages
+                    .SelectMany( p => p.Clusters )
+                    .Select( c => c.Name )
+                    .Except( response.Clusters.Select( c => c.Key ) );
+
+                foreach( var cluster in emptyClusters )
+                {
+                    builder.TryAddCluster( cluster, Enumerable.Empty<string>() );
+                }
             }
 
             presentation.Graph = builder.Graph;
@@ -304,53 +322,63 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             if( propertyName == "Presentation" && Model.Presentation != null )
             {
+                if( myTransformationsObserver != null )
+                {
+                    myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+                    myTransformationsObserver.Dispose();
+                }
+
                 var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-                CollectionChangedEventManager.AddHandler( transformationModule, OnTransformationsChanged );
+                myTransformationsObserver = transformationModule.CreateObserver();
+                myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
             }
         }
 
-        private void OnTransformationsChanged( object sender, NotifyCollectionChangedEventArgs eventArgs )
+        private void OnTransformationsChanged( object sender, EventArgs e )
         {
-            var addedClusterTransformations = GetClusterTransformations( eventArgs.NewItems );
-            var removedClusterTransformations = GetClusterTransformations( eventArgs.OldItems );
+            var spec = SpecUtils.Deserialize( Document.Text );
 
-            if( !addedClusterTransformations.Any() && !removedClusterTransformations.Any() )
+            var clusters = spec.Packages
+                .SelectMany( p => p.Clusters )
+                .ToList();
+
+            var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
+            foreach( var transformation in transformationModule.Items.OfType<DynamicClusterTransformation>() )
             {
-                return;
+                foreach( var entry in transformation.NodeToClusterMapping )
+                {
+                    var clustersMatchingNode = clusters
+                        .Where( c => c.Matches( entry.Key ) )
+                        .ToList();
+
+                    var clustersToRemoveFrom = clustersMatchingNode
+                        .Where( c => c.Name == entry.Value || entry.Value == null );
+                    foreach( var cluster in clustersToRemoveFrom )
+                    {
+                        cluster.Patterns.Add( new Exclude { Pattern = entry.Key } );
+                    }
+
+                    if( entry.Value == null )
+                    {
+                        continue;
+                    }
+
+                    var clusterToAddTo = clusters
+                        .FirstOrDefault( c => c.Name == entry.Value );
+                    if( clusterToAddTo.Matches( entry.Key ) )
+                    {
+                        // node already or again matched
+                        // -> ignore
+                        continue;
+                    }
+                    else
+                    {
+                        clusterToAddTo.Patterns.Add( new Include { Pattern = entry.Key } );
+                    }
+                }
             }
 
-            //var spec = SpecUtils.Deserialize( Document.Text );
-
-            //var clusters = spec.Packages
-            //    .SelectMany( p => p.Clusters )
-            //    .ToDictionary( c => c.Name, c => c );
-
-            //foreach( var transformation in addedClusterTransformations )
-            //{
-            //    foreach( var entry in transformation.NodeToClusterMapping )
-            //    {
-            //        var clustersMatchingNode = clusters.Values
-            //            .Where( c => c.Matches( entry.Key ) )
-            //            .ToList();
-
-            //        var clustersToRemoveFrom = clustersMatchingNode
-            //            .Where( c => c.Name == entry.Value || entry.Value == null );
-            //        foreach( var cluster in clustersToRemoveFrom )
-            //        {
-            //            cluster.Patterns.Add( new Exclude { Pattern = entry.Key } );
-            //        }
-
-            //        var clusterToAddTo = clustersMatchingNode
-            //            .FirstOrDefault( c => c.Name == entry.Value );
-            //        clusterToAddTo.Patterns.Add( new Include { Pattern = entry.Key } );
-            //    }
-            //}
-
-        }
-
-        private IEnumerable<DynamicClusterTransformation> GetClusterTransformations( IEnumerable collection )
-        {
-            return collection == null ? Enumerable.Empty<DynamicClusterTransformation>() : collection.OfType<DynamicClusterTransformation>();
+            var text = SpecUtils.Serialize( spec );
         }
 
         public int ProgressValue

@@ -11,7 +11,23 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             using( var reader = new StringReader( text ) )
             {
-                return ( SystemPackaging )XamlReader.Load( XmlReader.Create( reader ) );
+                using( var xmlReader = XmlReader.Create( reader ) )
+                {
+                    return ( SystemPackaging )XamlReader.Load( xmlReader );
+                }
+            }
+        }
+
+        public static string Serialize( SystemPackaging spec )
+        {
+            using( var writer = new StringWriter() )
+            {
+                var settings = new XmlWriterSettings();
+                settings.Indent = true;
+                using( var xmlWriter = XmlWriter.Create( writer, settings ) )
+                {
+                    return XamlWriter.Save( spec );
+                }
             }
         }
     }

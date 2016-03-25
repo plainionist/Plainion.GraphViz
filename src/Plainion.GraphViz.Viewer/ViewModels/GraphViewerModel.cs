@@ -163,7 +163,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 {
                     var transformations = Presentation.GetModule<ITransformationModule>();
                     var captions = Presentation.GetModule<ICaptionModule>();
-                    foreach( var cluster in transformations.Graph.Clusters )
+                    foreach( var cluster in transformations.Graph.Clusters.Union( Presentation.Graph.Clusters ) )
                     {
                         Clusters.Add( new ClusterWithCaption
                         {
