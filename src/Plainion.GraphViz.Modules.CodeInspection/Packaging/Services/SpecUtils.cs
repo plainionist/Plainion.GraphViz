@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Markup;
 using System.Xml;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
@@ -7,7 +8,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     class SpecUtils
     {
-        public static SystemPackaging Deserialize(string text)
+        public static SystemPackaging Deserialize( string text )
         {
             using( var reader = new StringReader( text ) )
             {
@@ -24,9 +25,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             {
                 var settings = new XmlWriterSettings();
                 settings.Indent = true;
+                settings.IndentChars = "    ";
+                settings.NewLineChars = Environment.NewLine;
+                settings.NewLineHandling = NewLineHandling.Replace;
+
                 using( var xmlWriter = XmlWriter.Create( writer, settings ) )
                 {
-                    return XamlWriter.Save( spec );
+                    XamlWriter.Save( spec, xmlWriter );
+                    return writer.ToString();
                 }
             }
         }
