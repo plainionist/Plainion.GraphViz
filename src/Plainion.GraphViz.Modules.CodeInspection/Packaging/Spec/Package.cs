@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Markup;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
 {
-    [ContentProperty("Patterns")]
+    [ContentProperty( "Patterns" )]
     public class Package : PackageBase
     {
         public Package()
@@ -11,6 +12,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
             Clusters = new List<Cluster>();
         }
 
+        [DesignerSerializationVisibility( DesignerSerializationVisibility.Visible )]
         public List<Cluster> Clusters { get; private set; }
     }
 }

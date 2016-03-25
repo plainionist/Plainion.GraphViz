@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using System.Windows.Markup;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
 {
+    [ContentProperty( "Patterns" )]
     public class Cluster : PackageBase
     {
         internal bool Matches(string str)

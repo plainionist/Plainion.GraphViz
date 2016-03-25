@@ -18,11 +18,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<Wildcard> Patterns { get; private set; }
 
+        [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
         public IEnumerable<Include> Includes
         {
             get { return Patterns.OfType<Include>(); }
         }
 
+        [DesignerSerializationVisibility( DesignerSerializationVisibility.Hidden )]
         public IEnumerable<Exclude> Excludes
         {
             get { return Patterns.OfType<Exclude>(); }
