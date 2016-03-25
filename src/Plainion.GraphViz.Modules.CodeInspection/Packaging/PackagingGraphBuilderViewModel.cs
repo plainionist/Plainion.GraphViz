@@ -25,7 +25,7 @@ using Plainion.Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
-    [Export(typeof(PackagingGraphBuilderViewModel))]
+    [Export( typeof( PackagingGraphBuilderViewModel ) )]
     class PackagingGraphBuilderViewModel : ViewModelBase
     {
         private int myProgress;
@@ -41,19 +41,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             Document = new TextDocument();
             Document.Changed += Document_Changed;
 
-            CreateGraphCommand = new DelegateCommand(OnCreateGraph, () => IsReady && IsValidDocument());
-            CancelCommand = new DelegateCommand(OnCancel, () => !IsReady);
+            CreateGraphCommand = new DelegateCommand( OnCreateGraph, () => IsReady && IsValidDocument() );
+            CancelCommand = new DelegateCommand( OnCancel, () => !IsReady );
 
-            ClosedCommand = new DelegateCommand(OnClosed);
+            ClosedCommand = new DelegateCommand( OnClosed );
 
-            OpenCommand = new DelegateCommand(OnOpen, () => IsReady);
+            OpenCommand = new DelegateCommand( OnOpen, () => IsReady );
             OpenFileRequest = new InteractionRequest<OpenFileDialogNotification>();
 
             myCompletionData = GetType().Assembly.GetTypes()
-                .Where(t => t.Namespace == typeof(SystemPackaging).Namespace)
-                .Where(t => !t.IsAbstract)
-                .Where(t => t.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) == null)
-                .Select(t => new KeywordCompletionData(t))
+                .Where( t => t.Namespace == typeof( SystemPackaging ).Namespace )
+                .Where( t => !t.IsAbstract )
+                .Where( t => t.GetCustomAttribute( typeof( CompilerGeneratedAttribute ), true ) == null )
+                .Select( t => new KeywordCompletionData( t ) )
                 .ToList();
 
             AnalysisMode = AnalysisMode.CrossPackageDependencies;
@@ -62,16 +62,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         private bool IsValidDocument()
         {
-            if (string.IsNullOrEmpty(Document.Text))
+            if( string.IsNullOrEmpty( Document.Text ) )
             {
                 return false;
             }
 
             try
             {
-                using (var reader = new StringReader(Document.Text))
+                using( var reader = new StringReader( Document.Text ) )
                 {
-                    XamlReader.Load(XmlReader.Create(reader));
+                    XamlReader.Load( XmlReader.Create( reader ) );
                 }
 
                 return true;
@@ -82,7 +82,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             }
         }
 
-        private void Document_Changed(object sender, DocumentChangeEventArgs e)
+        private void Document_Changed( object sender, DocumentChangeEventArgs e )
         {
             CreateGraphCommand.RaiseCanExecuteChanged();
         }
@@ -90,25 +90,25 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         public TextDocument Document
         {
             get { return myDocument; }
-            set { SetProperty(ref myDocument, value); }
+            set { SetProperty( ref myDocument, value ); }
         }
 
         public IEnumerable<KeywordCompletionData> CompletionData
         {
             get { return myCompletionData; }
-            set { SetProperty(ref myCompletionData, value); }
+            set { SetProperty( ref myCompletionData, value ); }
         }
 
         public AnalysisMode AnalysisMode
         {
             get { return myAnalysisMode; }
-            set { SetProperty(ref myAnalysisMode, value); }
+            set { SetProperty( ref myAnalysisMode, value ); }
         }
 
         public string PackageName
         {
             get { return myPackageName; }
-            set { SetProperty(ref myPackageName, value); }
+            set { SetProperty( ref myPackageName, value ); }
         }
 
         public bool IsReady
@@ -116,7 +116,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             get { return myIsReady; }
             set
             {
-                if (SetProperty(ref myIsReady, value))
+                if( SetProperty( ref myIsReady, value ) )
                 {
                     CreateGraphCommand.RaiseCanExecuteChanged();
                     CancelCommand.RaiseCanExecuteChanged();
@@ -152,24 +152,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             notification.FilterIndex = 0;
             notification.CheckFileExists = false;
 
-            OpenFileRequest.Raise(notification,
+            OpenFileRequest.Raise( notification,
                 n =>
                 {
-                    if (n.Confirmed)
+                    if( n.Confirmed )
                     {
-                        if (File.Exists(n.FileName))
+                        if( File.Exists( n.FileName ) )
                         {
-                            Document.Text = File.ReadAllText(n.FileName);
+                            Document.Text = File.ReadAllText( n.FileName );
                             try
                             {
-                                using (var reader = new StringReader(Document.Text))
+                                var spec = SpecUtils.Deserialize( Document.Text );
+                                if( spec.Packages.Count == 1 )
                                 {
-                                    var spec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
-                                    if (spec.Packages.Count == 1)
-                                    {
-                                        AnalysisMode = Packaging.AnalysisMode.InnerPackageDependencies;
-                                        PackageName = spec.Packages.Single().Name;
-                                    }
+                                    AnalysisMode = Packaging.AnalysisMode.InnerPackageDependencies;
+                                    PackageName = spec.Packages.Single().Name;
                                 }
                             }
                             catch
@@ -179,9 +176,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         }
                         else
                         {
-                            using (var stream = GetType().Assembly.GetManifestResourceStream("Plainion.GraphViz.Modules.CodeInspection.Resources.SystemPackagingTemplate.xaml"))
+                            using( var stream = GetType().Assembly.GetManifestResourceStream( "Plainion.GraphViz.Modules.CodeInspection.Resources.SystemPackagingTemplate.xaml" ) )
                             {
-                                using (var reader = new StreamReader(stream))
+                                using( var reader = new StreamReader( stream ) )
                                 {
                                     Document.Text = reader.ReadToEnd();
                                 }
@@ -189,7 +186,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         }
                         Document.FileName = n.FileName;
                     }
-                });
+                } );
         }
 
         private async void OnCreateGraph()
@@ -210,13 +207,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 myCTS = new CancellationTokenSource();
 
-                var doc = await AnalysisService.Analyse(request, myCTS.Token);
+                var doc = await AnalysisService.Analyse( request, myCTS.Token );
 
                 myCTS = null;
 
-                if (doc != null)
+                if( doc != null )
                 {
-                    BuildGraph(doc);
+                    BuildGraph( doc );
                 }
             }
             finally
@@ -225,48 +222,48 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             }
         }
 
-        private void BuildGraph(AnalysisDocument response)
+        private void BuildGraph( AnalysisDocument response )
         {
-            if (!response.Nodes.Any() && !response.Edges.Any())
+            if( !response.Nodes.Any() && !response.Edges.Any() )
             {
-                MessageBox.Show("Neither nodes nor edges found");
+                MessageBox.Show( "Neither nodes nor edges found" );
                 return;
             }
 
-            var presentation = PresentationCreationService.CreatePresentation(Path.GetTempPath());
+            var presentation = PresentationCreationService.CreatePresentation( Path.GetTempPath() );
 
             var builder = new RelaxedGraphBuilder();
-            foreach (var edge in response.Edges)
+            foreach( var edge in response.Edges )
             {
-                builder.TryAddEdge(edge.Item1, edge.Item2);
+                builder.TryAddEdge( edge.Item1, edge.Item2 );
             }
-            foreach (var node in response.Nodes)
+            foreach( var node in response.Nodes )
             {
-                builder.TryAddNode(node);
+                builder.TryAddNode( node );
             }
-            foreach (var cluster in response.Clusters)
+            foreach( var cluster in response.Clusters )
             {
-                builder.TryAddCluster(cluster.Key, cluster.Value);
+                builder.TryAddCluster( cluster.Key, cluster.Value );
             }
 
             presentation.Graph = builder.Graph;
 
             var captionModule = presentation.GetPropertySetFor<Caption>();
-            foreach (var caption in response.Captions)
+            foreach( var caption in response.Captions )
             {
-                captionModule.Add(caption);
+                captionModule.Add( caption );
             }
 
             var nodeStyles = presentation.GetPropertySetFor<NodeStyle>();
-            foreach (var style in response.NodeStyles)
+            foreach( var style in response.NodeStyles )
             {
-                nodeStyles.Add(style);
+                nodeStyles.Add( style );
             }
 
             var edgeStyles = presentation.GetPropertySetFor<EdgeStyle>();
-            foreach (var style in response.EdgeStyles)
+            foreach( var style in response.EdgeStyles )
             {
-                edgeStyles.Add(style);
+                edgeStyles.Add( style );
             }
 
             Model.Presentation = presentation;
@@ -274,7 +271,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         private void OnCancel()
         {
-            if (myCTS != null)
+            if( myCTS != null )
             {
                 myCTS.Cancel();
             }
@@ -287,7 +284,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             Save();
             Document.Text = string.Empty;
 
-            if (myCTS != null)
+            if( myCTS != null )
             {
                 myCTS.Cancel();
             }
@@ -297,33 +294,61 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         private void Save()
         {
-            if (Document.FileName != null)
+            if( Document.FileName != null )
             {
-                File.WriteAllText(Document.FileName, Document.Text);
+                File.WriteAllText( Document.FileName, Document.Text );
             }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnModelPropertyChanged( string propertyName )
         {
-            if (propertyName == "Presentation" && Model.Presentation != null)
+            if( propertyName == "Presentation" && Model.Presentation != null )
             {
                 var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-                CollectionChangedEventManager.AddHandler(transformationModule, OnTransformationsChanged);
+                CollectionChangedEventManager.AddHandler( transformationModule, OnTransformationsChanged );
             }
         }
 
-        private void OnTransformationsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnTransformationsChanged( object sender, NotifyCollectionChangedEventArgs eventArgs )
         {
-            var clusterTransformations = GetClusterTransformations(e.NewItems)
-                .Concat(GetClusterTransformations(e.OldItems))
-                .ToList();
-            if (clusterTransformations.Any())
+            var addedClusterTransformations = GetClusterTransformations( eventArgs.NewItems );
+            var removedClusterTransformations = GetClusterTransformations( eventArgs.OldItems );
+
+            if( !addedClusterTransformations.Any() && !removedClusterTransformations.Any() )
             {
-                Debug.WriteLine("cluster changed");
+                return;
             }
+
+            //var spec = SpecUtils.Deserialize( Document.Text );
+
+            //var clusters = spec.Packages
+            //    .SelectMany( p => p.Clusters )
+            //    .ToDictionary( c => c.Name, c => c );
+
+            //foreach( var transformation in addedClusterTransformations )
+            //{
+            //    foreach( var entry in transformation.NodeToClusterMapping )
+            //    {
+            //        var clustersMatchingNode = clusters.Values
+            //            .Where( c => c.Matches( entry.Key ) )
+            //            .ToList();
+
+            //        var clustersToRemoveFrom = clustersMatchingNode
+            //            .Where( c => c.Name == entry.Value || entry.Value == null );
+            //        foreach( var cluster in clustersToRemoveFrom )
+            //        {
+            //            cluster.Patterns.Add( new Exclude { Pattern = entry.Key } );
+            //        }
+
+            //        var clusterToAddTo = clustersMatchingNode
+            //            .FirstOrDefault( c => c.Name == entry.Value );
+            //        clusterToAddTo.Patterns.Add( new Include { Pattern = entry.Key } );
+            //    }
+            //}
+
         }
 
-        private IEnumerable<DynamicClusterTransformation> GetClusterTransformations(IEnumerable collection)
+        private IEnumerable<DynamicClusterTransformation> GetClusterTransformations( IEnumerable collection )
         {
             return collection == null ? Enumerable.Empty<DynamicClusterTransformation>() : collection.OfType<DynamicClusterTransformation>();
         }
@@ -331,7 +356,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         public int ProgressValue
         {
             get { return myProgress; }
-            set { SetProperty(ref myProgress, value); }
+            set { SetProperty( ref myProgress, value ); }
         }
     }
 }

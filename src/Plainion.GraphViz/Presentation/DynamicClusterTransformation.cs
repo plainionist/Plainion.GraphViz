@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Practices.Prism.Mvvm;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
-    public class DynamicClusterTransformation : IGraphTransformation
+    public class DynamicClusterTransformation : BindableBase, IGraphTransformation
     {
         private readonly Dictionary<string, string> myNodeToClusterMapping;
 
@@ -21,11 +22,13 @@ namespace Plainion.GraphViz.Presentation
         public void AddToCluster(string nodeId, string clusterId)
         {
             myNodeToClusterMapping[nodeId] = clusterId;
+            OnPropertyChanged( () => NodeToClusterMapping );
         }
 
         public void RemoveFromClusters(string nodeId)
         {
             myNodeToClusterMapping[nodeId] = null;
+            OnPropertyChanged( () => NodeToClusterMapping );
         }
 
         public IGraph Transform(IGraph graph)

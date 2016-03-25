@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
@@ -30,9 +31,20 @@ namespace Plainion.GraphViz.Presentation
         {
             myTransformations.Add( transformation );
 
+            var notifyPropertyChanged = transformation as INotifyPropertyChanged;
+            if( notifyPropertyChanged != null )
+            {
+                notifyPropertyChanged.PropertyChanged += OnTransformationChanged;
+            }
+
             ApplyTransformations();
 
             RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, transformation ) );
+        }
+
+        private void OnTransformationChanged( object sender, PropertyChangedEventArgs e )
+        {
+            ApplyTransformations();
         }
 
         private void ApplyTransformations()
@@ -48,6 +60,12 @@ namespace Plainion.GraphViz.Presentation
         public void Remove( IGraphTransformation transformation )
         {
             myTransformations.Remove( transformation );
+
+            var notifyPropertyChanged = transformation as INotifyPropertyChanged;
+            if( notifyPropertyChanged != null )
+            {
+                notifyPropertyChanged.PropertyChanged -= OnTransformationChanged;
+            }
 
             ApplyTransformations();
 

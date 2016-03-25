@@ -26,26 +26,23 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         private void Ready()
         {
-            Receive<AnalysisRequest>(r =>
+            Receive<AnalysisRequest>( r =>
             {
                 var self = Self;
                 var sender = Sender;
-                
-                Task.Run<AnalysisDocument>(() =>
+
+                Task.Run<AnalysisDocument>( () =>
                 {
                     var activity = r.AnalysisMode == AnalysisMode.InnerPackageDependencies ?
-                        (AnalyzeBase)new AnalyzeInnerPackageDependencies { PackageName = r.PackageName } :
-                        (AnalyzeBase)new AnalyzeCrossPackageDependencies();
+                        ( AnalyzeBase )new AnalyzeInnerPackageDependencies { PackageName = r.PackageName } :
+                        ( AnalyzeBase )new AnalyzeCrossPackageDependencies();
 
-                    using (var reader = new StringReader(r.Spec))
-                    {
-                        var spec = (SystemPackaging)XamlReader.Load(XmlReader.Create(reader));
-                        return activity.Execute(spec, myCTS.Token);
-                    }
-                }, myCTS.Token)
-                .ContinueWith<object>(x =>
+                    var spec = SpecUtils.Deserialize( r.Spec );
+                    return activity.Execute( spec, myCTS.Token );
+                }, myCTS.Token )
+                .ContinueWith<object>( x =>
                 {
-                    if (x.IsCanceled || x.IsFaulted)
+                    if( x.IsCanceled || x.IsFaulted )
                     {
                         // https://github.com/akkadotnet/akka.net/issues/1409
                         // -> exceptions are currently not serializable in raw version
@@ -54,59 +51,59 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     }
 
                     var serializer = new JsonSerializer();
-                    using (var sw = new StreamWriter(r.OutputFile))
+                    using( var sw = new StreamWriter( r.OutputFile ) )
                     {
-                        using (var writer = new JsonTextWriter(sw))
+                        using( var writer = new JsonTextWriter( sw ) )
                         {
-                            serializer.Serialize(writer, x.Result);
+                            serializer.Serialize( writer, x.Result );
                         }
                     }
 
                     return new Finished { ResponseFile = r.OutputFile };
-                }, TaskContinuationOptions.ExecuteSynchronously)
-                .PipeTo(self, sender);
+                }, TaskContinuationOptions.ExecuteSynchronously )
+                .PipeTo( self, sender );
 
-                Become(Working);
-            });
+                Become( Working );
+            } );
         }
 
         private void Working()
         {
-            Receive<Cancel>(msg =>
+            Receive<Cancel>( msg =>
             {
-                Console.WriteLine("CANCELED");
+                Console.WriteLine( "CANCELED" );
 
                 myCTS.Cancel();
 
-                Sender.Tell("canceled");
+                Sender.Tell( "canceled" );
 
                 BecomeReady();
-            });
-            Receive<Finished>(msg =>
+            } );
+            Receive<Finished>( msg =>
             {
-                if (msg.Error != null)
+                if( msg.Error != null )
                 {
                     // https://github.com/akkadotnet/akka.net/issues/1409
                     // -> exceptions are currently not serializable in raw version
-                    Sender.Tell(new FailureResponse {Error = msg.Error});
+                    Sender.Tell( new FailureResponse { Error = msg.Error } );
                 }
                 else
                 {
-                    Sender.Tell(msg.ResponseFile);
+                    Sender.Tell( msg.ResponseFile );
                 }
 
-                Console.WriteLine("FINISHED");
-                
+                Console.WriteLine( "FINISHED" );
+
                 BecomeReady();
-            });
-            ReceiveAny(o => Stash.Stash());
+            } );
+            ReceiveAny( o => Stash.Stash() );
         }
 
         private void BecomeReady()
         {
             myCTS = new CancellationTokenSource();
             Stash.UnstashAll();
-            Become(Ready);
+            Become( Ready );
         }
     }
 }

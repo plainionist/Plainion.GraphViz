@@ -163,6 +163,7 @@
     <Compile Include="Controls\PropertyCompletionData.cs" />
     <Compile Include="Packaging\Services\PackageAnalysisService.cs" />
     <Compile Include="Packaging\Services\Reflector.cs" />
+    <Compile Include="Packaging\Services\SpecUtils.cs" />
     <Compile Include="Packaging\Spec\Cluster.cs" />
     <Compile Include="Packaging\Spec\SystemPackaging.cs" />
     <Compile Include="Packaging\Spec\Exclude.cs" />
