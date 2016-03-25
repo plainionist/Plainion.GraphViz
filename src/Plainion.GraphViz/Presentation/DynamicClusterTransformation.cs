@@ -6,11 +6,16 @@ namespace Plainion.GraphViz.Presentation
 {
     public class DynamicClusterTransformation : IGraphTransformation
     {
-        private Dictionary<string, string> myNodeToClusterMapping;
+        private readonly Dictionary<string, string> myNodeToClusterMapping;
 
         public DynamicClusterTransformation()
         {
             myNodeToClusterMapping = new Dictionary<string, string>();
+        }
+
+        public IReadOnlyDictionary<string, string> NodeToClusterMapping
+        {
+            get { return myNodeToClusterMapping; }
         }
 
         public void AddToCluster(string nodeId, string clusterId)
