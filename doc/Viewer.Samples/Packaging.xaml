@@ -12,6 +12,7 @@
         <Include Pattern="Plainion.Prism.dll" />
     </Package>
     <Package Name="Plaionion.GraphViz">
+    <Package.Cluseter>
         <Package.Clusters>
             <Cluster Name="Documents">
                 <Include Pattern="*Documents*" />
