@@ -7,12 +7,21 @@
       <Node Id="4ece55f9-17be-4941-9316-57a810fdcec7">
         <Caption><![CDATA[dynamic package creation]]></Caption>
       </Node>
+      <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">
+        <Caption><![CDATA[auto-packaging]]></Caption>
+      </Node>
       <Node Id="d7e65ef8-8294-400d-ba0c-eebf1d4da542">
         <Caption><![CDATA[XmlEditor to plainion libs]]></Caption>
         <Node Id="ef8258f8-8619-4e63-ae23-6bd2108e60dc">
           <Caption><![CDATA[bug: adding package.clusters throws exception]]></Caption>
         </Node>
       </Node>
+      <Node Id="90326d42-101d-497f-8a53-9cc38531ca0c">
+        <Caption><![CDATA[Create new release on GitHub]]></Caption>
+      </Node>
+    </Node>
+    <Node Id="a212522b-9026-4b13-bc92-3fc4113fddb8">
+      <Caption><![CDATA[vNext]]></Caption>
       <Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902">
         <Caption><![CDATA[Akka]]></Caption>
         <Node Id="ee4861f0-1ce2-49dd-8d29-185b5c3c4875">
@@ -32,9 +41,6 @@
         </Node>
         <Node Id="7d088e5a-840f-40d7-a65a-4d973adea1fe">
           <Caption><![CDATA[different actors per analysis mode?]]></Caption>
-        </Node>
-        <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">
-          <Caption><![CDATA[auto-packaging]]></Caption>
         </Node>
       </Node>
       <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">

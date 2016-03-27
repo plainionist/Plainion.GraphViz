@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="4d84b300-952f-4f87-8400-74faba82c3b9" Created="635928850686342691" LastModified="635928850861012682">
+<Node Id="4d84b300-952f-4f87-8400-74faba82c3b9" Created="635928850686342691" LastModified="635946834754460821">
   <Caption><![CDATA[auto-packaging]]></Caption>
   <Content><![CDATA[- packages from namespaces?]]></Content>
 </Node>
