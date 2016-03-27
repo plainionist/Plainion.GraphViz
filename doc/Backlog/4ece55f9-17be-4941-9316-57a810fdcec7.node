@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="4ece55f9-17be-4941-9316-57a810fdcec7" Created="635928850870153205" LastModified="635945955723300993">
-  <Caption><![CDATA[dynamic package creation]]></Caption>
+<Node Id="4ece55f9-17be-4941-9316-57a810fdcec7" Created="635928850870153205" LastModified="635946838218468951">
+  <Caption><![CDATA[Cluster editor]]></Caption>
   <Content><![CDATA[we need some dialog like with mask.
 
-due to preview we could define clusters much faster]]></Content>
+due to preview we could define clusters much faster
+
+a tree would be helpful to visualize clusters in text form]]></Content>
 </Node>
