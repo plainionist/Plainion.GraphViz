@@ -99,6 +99,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Plainion.Prism.1.5.0.0\lib\NET45\Plainion.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Plainion.Windows.Editors, Version=1.0.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plainion.Windows.Editors.1.0.0.0\lib\NET45\Plainion.Windows.Editors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -133,7 +137,6 @@
     <Compile Include="Packaging\AnalysisMode.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
-    <Compile Include="Controls\AbstractCompletionData.cs" />
     <Compile Include="Packaging\Services\AnalysisDocument.cs" />
     <Compile Include="Packaging\Services\AnalyzeBase.cs" />
     <Compile Include="Packaging\Services\AnalyzeCrossPackageDependencies.cs" />
@@ -144,10 +147,6 @@
     <Compile Include="Packaging\Services\GraphUtils.cs" />
     <Compile Include="Packaging\Services\PackageAnalysisActor.cs" />
     <Compile Include="Packaging\Services\AssemblyLoader.cs" />
-    <Compile Include="Controls\KeywordCompletionData.cs" />
-    <Compile Include="Controls\XmlEditor.xaml.cs">
-      <DependentUpon>XmlEditor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Packaging\PackagingGraphBuilderView.xaml.cs">
       <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
     </Compile>
@@ -160,7 +159,6 @@
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
-    <Compile Include="Controls\PropertyCompletionData.cs" />
     <Compile Include="Packaging\Services\PackageAnalysisService.cs" />
     <Compile Include="Packaging\Services\Reflector.cs" />
     <Compile Include="Packaging\Services\SpecUtils.cs" />
@@ -208,10 +206,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\XmlEditor.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Packaging\PackagingGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

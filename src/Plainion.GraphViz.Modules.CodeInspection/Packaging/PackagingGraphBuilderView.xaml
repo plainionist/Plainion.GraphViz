@@ -9,7 +9,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:v="clr-namespace:Plainion.GraphViz.Modules.CodeInspection.Packaging"
-        xmlns:c="clr-namespace:Plainion.GraphViz.Modules.CodeInspection.Controls"
         mc:Ignorable="d"  
         d:DesignHeight="400" d:DesignWidth="500">
     <UserControl.Resources>
@@ -35,7 +34,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <c:XmlEditor Grid.Row="0" Document="{Binding Document}" CompletionData="{Binding CompletionData}"/>
+        <pn:XmlEditor Grid.Row="0" Document="{Binding Document}" CompletionData="{Binding CompletionData}"/>
 
         <GroupBox Grid.Row="1" Header="Analysis options">
             <GroupBox.Resources>

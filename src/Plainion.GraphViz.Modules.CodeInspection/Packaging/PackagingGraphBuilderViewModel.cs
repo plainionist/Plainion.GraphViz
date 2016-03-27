@@ -18,11 +18,11 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Controls;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
+using Plainion.Windows.Editors.Xml;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
