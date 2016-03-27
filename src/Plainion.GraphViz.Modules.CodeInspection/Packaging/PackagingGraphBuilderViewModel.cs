@@ -355,7 +355,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         .Where( c => c.Name == entry.Value || entry.Value == null );
                     foreach( var cluster in clustersToRemoveFrom )
                     {
-                        cluster.Patterns.Add( new Exclude { Pattern = entry.Key } );
+                        var exactMatch = cluster.Includes.FirstOrDefault( p => p.Pattern == entry.Key );
+                        if( exactMatch != null )
+                        {
+                            cluster.Patterns.Remove( exactMatch );
+                        }
+                        else
+                        {
+                            cluster.Patterns.Add( new Exclude { Pattern = entry.Key } );
+                        }
                     }
 
                     if( entry.Value == null )
@@ -378,7 +386,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 }
             }
 
-            var text = SpecUtils.Serialize( spec );
+            Document.Text = SpecUtils.Serialize( spec );
+
+            Save();
         }
 
         public int ProgressValue

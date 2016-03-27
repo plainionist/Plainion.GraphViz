@@ -1,11 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="4ece55f9-17be-4941-9316-57a810fdcec7" Created="635928850870153205" LastModified="635934510927939695">
+<Node Id="4ece55f9-17be-4941-9316-57a810fdcec7" Created="635928850870153205" LastModified="635945955723300993">
   <Caption><![CDATA[dynamic package creation]]></Caption>
-  <Content><![CDATA[masks?
+  <Content><![CDATA[we need some dialog like with mask.
 
-but how do we play this back into the spec?
-
-and shouldnt we therefore move clusters to modules?
-
-but then we would not support context menu anylonger]]></Content>
+due to preview we could define clusters much faster]]></Content>
 </Node>

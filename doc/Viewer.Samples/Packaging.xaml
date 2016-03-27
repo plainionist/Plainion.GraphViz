@@ -1,32 +1,28 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<SystemPackaging xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec" 
-                 xmlns:s="clr-namespace:System;assembly=mscorlib"
-                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <SystemPackaging.AssemblyRoot>.</SystemPackaging.AssemblyRoot>
+<?xml version="1.0" encoding="utf-16"?>
+<SystemPackaging AssemblyRoot="." xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
     <Package Name="Plainion.Core">
-        <Include Pattern="Plainion.Core.dll"/>
-        <Include Pattern="Plainion.Windows.dll"/>
-        <Include Pattern="Plainion.Prism.dll"/>
         <Package.Clusters>
             <Cluster Name="UI">
-                <Include Pattern="Plainion.Windows.*"/>
-                <Include Pattern="Plainion.Prism.*"/>
+                <Include Pattern="Plainion.Windows.*" />
+                <Include Pattern="Plainion.Prism.*" />
             </Cluster>
         </Package.Clusters>
+        <Include Pattern="Plainion.Core.dll" />
+        <Include Pattern="Plainion.Windows.dll" />
+        <Include Pattern="Plainion.Prism.dll" />
     </Package>
     <Package Name="Plaionion.GraphViz">
-        <Include Pattern="Plainion.GraphViz.*dll"/>
         <Package.Clusters>
             <Cluster Name="Documents">
-                <Include Pattern="*Documents*"/>
+                <Include Pattern="*Documents*" />
             </Cluster>
             <Cluster Name="CodeInspection">
-                <Include Pattern="*CodeInspection*"/>
+                <Include Pattern="*CodeInspection*" />
             </Cluster>
             <Cluster Name="Model">
-                <Include Pattern="*.Model.*"/>
+                <Include Pattern="*.Model.*" />
             </Cluster>
         </Package.Clusters>
+        <Include Pattern="Plainion.GraphViz.*dll" />
     </Package>
 </SystemPackaging>

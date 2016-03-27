@@ -8,7 +8,7 @@ using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
 using Plainion.GraphViz.Modules.CodeInspection.Tests.TestData;
 
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Tests
+namespace Plainion.GraphViz.Modules.CodeInspection.Tests.Packaging.Services
 {
     [TestFixture]
     class ReflectorTests
