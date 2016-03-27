@@ -92,9 +92,13 @@
   <ItemGroup>
     <Compile Include="ExtendedAutoCompleteBox.cs" />
     <Compile Include="AnalysisModule.cs" />
+    <Compile Include="ClusterEditor.xaml.cs">
+      <DependentUpon>ClusterEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NodeMasksEditor.xaml.cs">
       <DependentUpon>NodeMasksEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ClusterEditorModel.cs" />
     <Compile Include="NodeMasksEditorModel.cs" />
     <Compile Include="NodeMasksView.xaml.cs">
       <DependentUpon>NodeMasksView.xaml</DependentUpon>
@@ -112,6 +116,10 @@
     <Compile Include="Services\NodeMasksPersistanceService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="ClusterEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="NodeMasksEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

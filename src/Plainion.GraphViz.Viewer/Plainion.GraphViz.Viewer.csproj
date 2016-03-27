@@ -116,6 +116,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resources\Clusters.png" />
     <Resource Include="Resources\Refresh.png" />
     <Page Include="Views\GraphViewer.xaml">
       <SubType>Designer</SubType>

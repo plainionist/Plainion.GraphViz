@@ -9,5 +9,6 @@ namespace Plainion.GraphViz.Infrastructure
         public static readonly string SearchBox = "Region.SearchBox";
         public static readonly string NodeMasksEditor = "Region.Node.Masks.Editor";
         public static readonly string NodeMasksView = "Region.Node.Masks.View";
+        public static readonly string ClusterEditor = "Region.Cluster.Editor";
     }
 }

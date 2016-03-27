@@ -16,6 +16,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.SearchBox, typeof( SearchBox ) );
             RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.NodeMasksEditor, typeof( NodeMasksEditor ) );
             RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.NodeMasksView, typeof( NodeMasksView ) );
+            RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.ClusterEditor, typeof( ClusterEditor ) );
         }
     }
 }

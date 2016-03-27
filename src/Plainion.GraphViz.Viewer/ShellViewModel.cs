@@ -34,7 +34,10 @@ namespace Plainion.GraphViz.Viewer
             myConfigurationService = configService;
 
             NodeMasksEditorRequest = new InteractionRequest<INotification>();
-            OpenFilterEditor = new DelegateCommand(OnOpenFilterEditor);
+            OpenFilterEditor = new DelegateCommand( OnOpenFilterEditor );
+
+            ClusterEditorRequest = new InteractionRequest<INotification>();
+            OpenClusterEditor = new DelegateCommand( OnOpenClusterEditor );
 
             SettingsEditorRequest = new InteractionRequest<IConfirmation>();
             OpenSettingsEditor = new DelegateCommand(OnOpenSettingsEditor);
@@ -79,19 +82,31 @@ namespace Plainion.GraphViz.Viewer
                 });
         }
 
+        public ICommand OpenFilterEditor { get; private set; }
+
         private void OnOpenFilterEditor()
         {
             var notification = new Notification();
             notification.Title = "Filters";
 
-            NodeMasksEditorRequest.Raise(notification, c => { });
+            NodeMasksEditorRequest.Raise( notification, c => { } );
         }
 
-        public ICommand OpenFilterEditor { get; private set; }
-
-        public ICommand OpenSettingsEditor { get; private set; }
-
         public InteractionRequest<INotification> NodeMasksEditorRequest { get; private set; }
+
+        public ICommand OpenClusterEditor { get; private set; }
+
+        private void OnOpenClusterEditor()
+        {
+            var notification = new Notification();
+            notification.Title = "Clusters";
+
+            ClusterEditorRequest.Raise( notification, c => { } );
+        }
+
+        public InteractionRequest<INotification> ClusterEditorRequest { get; private set; }
+        
+        public ICommand OpenSettingsEditor { get; private set; }
 
         public InteractionRequest<IConfirmation> SettingsEditorRequest { get; private set; }
 
