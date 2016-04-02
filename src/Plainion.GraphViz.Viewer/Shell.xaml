@@ -17,7 +17,7 @@
         </prism:InteractionRequestTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding ClusterEditorRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.ClusterEditor}"
-                                WindowWidth="400" WindowHeight="500"/>
+                                WindowWidth="1000" WindowHeight="700"/>
         </prism:InteractionRequestTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding SettingsEditorRequest, Mode=OneWay}">
             <prism:PopupWindowAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.SettingsEditor}"/>

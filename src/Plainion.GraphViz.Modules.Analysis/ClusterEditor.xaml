@@ -13,6 +13,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Plainion.Prism;component/Resources/Templates.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Plainion.Windows;component/Controls/Tree/TreeEditor.Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -68,7 +69,15 @@
         </DockPanel>
         
         <Grid Grid.Column="1">
-            <TextBlock>tree</TextBlock>
+            <pn:TreeEditor Root="{Binding Root}" FilterLabel="Filter on caption or id" Margin="5"
+                           DropCommand="{Binding DropCommand}">
+                <pn:TreeEditor.NodeStyle>
+                    <Style TargetType="{x:Type pn:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
+                        <Setter Property="Text" Value="{Binding Name}"/>
+                        <Setter Property="ToolTip" Value="{Binding Id}"/>
+                    </Style>
+                </pn:TreeEditor.NodeStyle>
+            </pn:TreeEditor>
         </Grid>
     </Grid>
 </UserControl>
