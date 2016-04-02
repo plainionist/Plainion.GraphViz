@@ -9,15 +9,6 @@
         xmlns:inf="clr-namespace:Plainion.GraphViz.Infrastructure;assembly=Plainion.GraphViz.Infrastructure"
         x:Name="_this">
 
-    <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
-            <pn:PopupFileDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
-        </prism:InteractionRequestTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest, Mode=OneWay}">
-            <pn:PopupFileDialogAction FileDialogType="{x:Type win32:SaveFileDialog}"/>
-        </prism:InteractionRequestTrigger>
-    </i:Interaction.Triggers>
-
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -25,10 +16,14 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Background="#FDFDF5" LastChildFill="True">
-        <ContentControl DockPanel.Dock="Top" prism:RegionManager.RegionName="{x:Static inf:RegionNames.NodeMasksView}"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,0,0" MinHeight="150"/>
-        <DockPanel LastChildFill="True">
+    
+    <Grid Background="#FDFDF5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0" LastChildFill="True">
             <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -54,10 +49,6 @@
             </Grid>
             <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" >
                 <CheckBox Margin="5,5,5,5" Content="Show visible nodes only" IsChecked="{Binding PreviewVisibleNodesOnly}"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Load" Command="{Binding LoadMasksCommand}" Margin="3"/>
-                    <Button Content="Save" Command="{Binding SaveMasksCommand}" Margin="3"/>
-                </StackPanel>
             </StackPanel>
             <ListView Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       Margin="5,0,5,0" MinHeight="200" 
@@ -75,5 +66,9 @@
                 </ListView.ItemTemplate>
             </ListView>
         </DockPanel>
-    </DockPanel>
+        
+        <Grid Grid.Column="1">
+            <TextBlock>tree</TextBlock>
+        </Grid>
+    </Grid>
 </UserControl>

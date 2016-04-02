@@ -4,10 +4,9 @@ using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
+using Microsoft.Practices.Prism.Commands;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
-using Microsoft.Practices.Prism.Commands;
-using Plainion;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
