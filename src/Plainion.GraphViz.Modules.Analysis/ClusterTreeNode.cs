@@ -15,6 +15,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         private Node myModel;
         private INode myParent;
         private bool myIsExpanded;
+        private bool myIsSelected;
 
         public ClusterTreeNode( IGraphPresentation presentation, Node model )
         {
@@ -32,6 +33,12 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             get { return myIsExpanded; }
             set { SetProperty( ref myIsExpanded, value ); }
+        }
+
+        public bool IsSelected
+        {
+            get { return myIsSelected; }
+            set { SetProperty( ref myIsSelected, value ); }
         }
 
         IEnumerable<INode> INode.Children

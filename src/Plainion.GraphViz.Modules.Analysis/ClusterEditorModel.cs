@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Mvvm;
 using Plainion.Collections;
+using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Mvvm;
@@ -23,11 +25,14 @@ namespace Plainion.GraphViz.Modules.Analysis
         private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
         private DragDropBehavior myDragDropBehavior;
+        private string mySelectedCluster;
+        private string myAddButtonCaption;
 
         [ImportingConstructor]
         public ClusterEditorModel()
         {
-            AddCommand = new DelegateCommand( OnAdd );
+            AddButtonCaption = "Add ...";
+            AddCommand = new DelegateCommand( OnAdd, () => SelectedCluster != null );
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>( OnMouseDown );
 
             Root = new ClusterTreeNode( null, null );
@@ -50,11 +55,37 @@ namespace Plainion.GraphViz.Modules.Analysis
             }
         }
 
+        public DelegateCommand AddCommand { get; private set; }
+
         private void OnAdd()
         {
-            // TODO:
+            var operation = new ChangeClusterAssignment( myPresentation );
+
+            foreach( NodeWithCaption node in PreviewNodes )
+            {
+                operation.Execute( t => t.AddToCluster( node.Node.Id, SelectedCluster ) );
+            }
 
             Filter = null;
+        }
+
+        public string SelectedCluster
+        {
+            get { return mySelectedCluster; }
+            set
+            {
+                if( SetProperty( ref mySelectedCluster, value ) )
+                {
+                    AddButtonCaption = SelectedCluster != null ? "Add to '" + mySelectedCluster + "'" : "Add ...";
+                    AddCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        public string AddButtonCaption
+        {
+            get { return myAddButtonCaption; }
+            set { SetProperty( ref myAddButtonCaption, value ); }
         }
 
         public NodeWithCaption SelectedPreviewItem
@@ -62,8 +93,6 @@ namespace Plainion.GraphViz.Modules.Analysis
             get { return mySelectedPreviewItem; }
             set { SetProperty( ref mySelectedPreviewItem, value ); }
         }
-
-        public ICommand AddCommand { get; private set; }
 
         protected override void OnModelPropertyChanged( string propertyName )
         {
@@ -98,6 +127,8 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             Root.Children.Clear();
 
+            SelectedCluster = null;
+
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             foreach( var cluster in transformationModule.Graph.Clusters )
@@ -109,6 +140,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                     Caption = captionModule.Get( cluster.Id ).DisplayText,
                     IsExpanded = true
                 };
+                PropertyChangedEventManager.AddHandler( clusterNode, OnSelectionChanged, PropertySupport.ExtractPropertyName( () => clusterNode.IsSelected ) );
                 Root.Children.Add( clusterNode );
 
                 clusterNode.Children.AddRange( cluster.Nodes
@@ -118,6 +150,36 @@ namespace Plainion.GraphViz.Modules.Analysis
                         Id = n.Id,
                         Caption = captionModule.Get( n.Id ).DisplayText
                     } ) );
+
+                foreach( var node in clusterNode.Children )
+                {
+                    PropertyChangedEventManager.AddHandler( node, OnSelectionChanged, PropertySupport.ExtractPropertyName( () => node.IsSelected ) );
+                }
+            }
+        }
+
+        private void OnSelectionChanged( object sender, PropertyChangedEventArgs e )
+        {
+            var selectedCluster = Root.Children.FirstOrDefault( n => n.IsSelected );
+            if( selectedCluster == null )
+            {
+                var selectedNode = Root.Children
+                    .SelectMany( n => n.Children )
+                    .FirstOrDefault( n => n.IsSelected );
+
+                if( selectedNode != null )
+                {
+                    selectedCluster = ( ClusterTreeNode )selectedNode.Parent;
+                }
+            }
+
+            if( selectedCluster == null )
+            {
+                SelectedCluster = null;
+            }
+            else
+            {
+                SelectedCluster = selectedCluster.Id;
             }
         }
 
@@ -194,13 +256,16 @@ namespace Plainion.GraphViz.Modules.Analysis
                 return true;
             }
 
-            var pattern = Filter.ToLower();
+            var pattern = Filter;
+
+            if( !pattern.Contains( '*' ) )
+            {
+                pattern = "*" + pattern + "*";
+            }
 
             try
             {
-                var regEx = new Regex( pattern, RegexOptions.IgnoreCase );
-
-                return regEx.IsMatch( node.DisplayText );
+                return new Plainion.Text.Wildcard( pattern, RegexOptions.IgnoreCase ).IsMatch( node.DisplayText );
             }
             catch
             {
