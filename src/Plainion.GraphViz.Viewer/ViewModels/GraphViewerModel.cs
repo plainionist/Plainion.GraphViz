@@ -193,35 +193,16 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         private void OnAddToCluster( string clusterId )
         {
-            ChangeClusterAssignment( t => t.AddToCluster( GraphItemForContextMenu.Id, clusterId ) );
-        }
-
-        private void ChangeClusterAssignment( Action<DynamicClusterTransformation> action )
-        {
-            var transformations = Presentation.GetModule<ITransformationModule>();
-            var transformation = transformations.Items
-                .OfType<DynamicClusterTransformation>()
-                .SingleOrDefault();
-
-            if( transformation == null )
-            {
-                transformation = new DynamicClusterTransformation();
-
-                action( transformation );
-
-                transformations.Add( transformation );
-            }
-            else
-            {
-                action( transformation );
-            }
+            new ChangeClusterAssignment(Presentation)
+                .Execute( t => t.AddToCluster( GraphItemForContextMenu.Id, clusterId ) );
         }
 
         public ICommand RemoveFromClusterCommand { get; private set; }
 
         private void OnRemoveFromCluster( Node node )
         {
-            ChangeClusterAssignment( t => t.RemoveFromClusters( GraphItemForContextMenu.Id ) );
+            new ChangeClusterAssignment( Presentation )
+                .Execute( t => t.RemoveFromClusters( GraphItemForContextMenu.Id ) );
         }
     }
 }

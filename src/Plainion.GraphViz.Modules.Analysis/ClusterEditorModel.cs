@@ -1,7 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
@@ -9,7 +8,6 @@ using System.Windows.Input;
 using Microsoft.Practices.Prism.Commands;
 using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.ViewModel;
-using Plainion.GraphViz.Modules.Analysis.Services;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Mvvm;
 using Plainion.Windows.Controls.Tree;
@@ -21,43 +19,27 @@ namespace Plainion.GraphViz.Modules.Analysis
     {
         private string myFilter;
         private bool myFilterOnId;
-        private bool myPreviewVisibleNodesOnly;
         private ICollectionView myPreviewNodes;
         private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
-        private INodeMasksPersistanceService myPersistanceService;
         private DragDropBehavior myDragDropBehavior;
 
         [ImportingConstructor]
-        public ClusterEditorModel( INodeMasksPersistanceService persistancyService )
+        public ClusterEditorModel()
         {
-            myPersistanceService = persistancyService;
-
-            myPreviewVisibleNodesOnly = true;
-
             AddCommand = new DelegateCommand( OnAdd );
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>( OnMouseDown );
 
-            Root = new Node();
-
-            foreach( var process in Process.GetProcesses() )
-            {
-                var processNode = new Node() { Parent = Root, Id = process.Id.ToString(), Name = process.ProcessName };
-                Root.Children.Add( processNode );
-
-                processNode.Children.AddRange( process.Threads
-                    .OfType<ProcessThread>()
-                    .Select( t => new Node { Parent = processNode, Id = t.Id.ToString(), Name = "unknown" } ) );
-            }
+            Root = new ClusterTreeNode( null, null );
 
             myDragDropBehavior = new DragDropBehavior( Root );
             DropCommand = new DelegateCommand<NodeDropRequest>( myDragDropBehavior.ApplyDrop );
         }
 
-        public Node Root { get; private set; }
+        public ClusterTreeNode Root { get; private set; }
 
         public ICommand DropCommand { get; private set; }
-        
+
         public ICommand MouseDownCommand { get; private set; }
 
         private void OnMouseDown( MouseButtonEventArgs args )
@@ -70,20 +52,7 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         private void OnAdd()
         {
-            var regex = new Regex( Filter.ToLower(), RegexOptions.IgnoreCase );
-
-            var matchedNodes = myPresentation.Graph.Nodes
-                .Where( n => myFilterOnId ? regex.IsMatch( n.Id ) : regex.IsMatch( myPresentation.GetPropertySetFor<Caption>().Get( n.Id ).DisplayText ) );
-
-            // TODO: should we have default "hide" really?
-            var mask = new NodeMask();
-            mask.IsShowMask = false;
-            mask.Set( matchedNodes );
-            mask.Label = string.Format( "Pattern '{0}'", Filter );
-
-            var module = myPresentation.GetModule<INodeMaskModule>();
-
-            module.Push( mask );
+            // TODO:
 
             Filter = null;
         }
@@ -107,7 +76,7 @@ namespace Plainion.GraphViz.Modules.Analysis
 
                 if( myPresentation != null )
                 {
-                    myPresentation.GetModule<INodeMaskModule>().CollectionChanged -= OnMasksChanged;
+                    myPresentation.GetModule<ITransformationModule>().CollectionChanged -= OnTransformationsChanged;
                 }
 
                 myPresentation = Model.Presentation;
@@ -115,16 +84,46 @@ namespace Plainion.GraphViz.Modules.Analysis
                 Filter = null;
 
                 {
-                    myPresentation.GetModule<INodeMaskModule>().CollectionChanged += OnMasksChanged;
+                    myPresentation.GetModule<ITransformationModule>().CollectionChanged += OnTransformationsChanged;
                 }
 
                 myPreviewNodes = null;
                 PreviewNodes.Refresh();
+
+                BuildTree();
             }
         }
 
-        private void OnMasksChanged( object sender, NotifyCollectionChangedEventArgs e )
+        private void BuildTree()
         {
+            Root.Children.Clear();
+
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            var captionModule = myPresentation.GetModule<ICaptionModule>();
+            foreach( var cluster in transformationModule.Graph.Clusters )
+            {
+                var clusterNode = new ClusterTreeNode( myPresentation, null )
+                {
+                    Parent = Root,
+                    Id = cluster.Id,
+                    Caption = captionModule.Get( cluster.Id ).DisplayText,
+                    IsExpanded = true
+                };
+                Root.Children.Add( clusterNode );
+
+                clusterNode.Children.AddRange( cluster.Nodes
+                    .Select( n => new ClusterTreeNode( myPresentation, n )
+                    {
+                        Parent = clusterNode,
+                        Id = n.Id,
+                        Caption = captionModule.Get( n.Id ).DisplayText
+                    } ) );
+            }
+        }
+
+        private void OnTransformationsChanged( object sender, NotifyCollectionChangedEventArgs e )
+        {
+            BuildTree();
             PreviewNodes.Refresh();
         }
 
@@ -149,18 +148,6 @@ namespace Plainion.GraphViz.Modules.Analysis
                 if( SetProperty( ref myFilterOnId, value ) )
                 {
                     ClearErrors();
-                    PreviewNodes.Refresh();
-                }
-            }
-        }
-
-        public bool PreviewVisibleNodesOnly
-        {
-            get { return myPreviewVisibleNodesOnly; }
-            set
-            {
-                if( SetProperty( ref myPreviewVisibleNodesOnly, value ) )
-                {
                     PreviewNodes.Refresh();
                 }
             }
@@ -196,7 +183,8 @@ namespace Plainion.GraphViz.Modules.Analysis
 
             var node = ( NodeWithCaption )item;
 
-            if( myPreviewVisibleNodesOnly && !myPresentation.Picking.Pick( node.Node ) )
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            if( !transformationModule.Graph.Clusters.Any( c => c.Nodes.Any( n => n.Id == node.Node.Id ) ) )
             {
                 return false;
             }

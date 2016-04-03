@@ -95,7 +95,7 @@
     <Compile Include="ClusterEditor.xaml.cs">
       <DependentUpon>ClusterEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Node.cs" />
+    <Compile Include="ClusterTreeNode.cs" />
     <Compile Include="NodeMasksEditor.xaml.cs">
       <DependentUpon>NodeMasksEditor.xaml</DependentUpon>
     </Compile>

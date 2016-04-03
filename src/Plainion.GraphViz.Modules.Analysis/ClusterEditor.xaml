@@ -48,11 +48,8 @@
                 
                 <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Content="Filter on identifier" IsChecked="{Binding FilterOnId}"/>
             </Grid>
-            <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" >
-                <CheckBox Margin="5,5,5,5" Content="Show visible nodes only" IsChecked="{Binding PreviewVisibleNodesOnly}"/>
-            </StackPanel>
             <ListView Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      Margin="5,0,5,0" MinHeight="200" 
+                      Margin="5,0,5,5" MinHeight="200" 
                       ItemsSource="{Binding PreviewNodes}" SelectedItem="{Binding SelectedPreviewItem}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -73,8 +70,9 @@
                            DropCommand="{Binding DropCommand}">
                 <pn:TreeEditor.NodeStyle>
                     <Style TargetType="{x:Type pn:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
-                        <Setter Property="Text" Value="{Binding Name}"/>
+                        <Setter Property="Text" Value="{Binding Caption}"/>
                         <Setter Property="ToolTip" Value="{Binding Id}"/>
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                     </Style>
                 </pn:TreeEditor.NodeStyle>
             </pn:TreeEditor>
