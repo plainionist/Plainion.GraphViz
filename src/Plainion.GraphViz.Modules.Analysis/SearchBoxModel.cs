@@ -76,11 +76,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             get { return myPresentation != null; }
         }
 
-        public ObservableCollection<NodeWithCaption> VisibleNodes
-        {
-            get;
-            private set;
-        }
+        public ObservableCollection<NodeWithCaption> VisibleNodes { get; private set; }
 
         public AutoCompleteFilterPredicate<object> ItemFilter { get; private set; }
 
@@ -91,11 +87,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             return node.DisplayText.ToLower().Contains( search.ToLower() );
         }
 
-        public ICommand SearchCommittedCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand SearchCommittedCommand { get; private set; }
 
         public NodeWithCaption SelectedItem
         {

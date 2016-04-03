@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         private DragDropBehavior myDragDropBehavior;
         private string mySelectedCluster;
         private string myAddButtonCaption;
+        private IModuleChangedObserver myTransformationsObserver;
 
         [ImportingConstructor]
         public ClusterEditorModel()
@@ -35,7 +37,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             AddCommand = new DelegateCommand( OnAdd, () => SelectedCluster != null );
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>( OnMouseDown );
 
-            Root = new ClusterTreeNode( null, null );
+            Root = new ClusterTreeNode();
 
             myDragDropBehavior = new DragDropBehavior( Root );
             DropCommand = new DelegateCommand<NodeDropRequest>( myDragDropBehavior.ApplyDrop );
@@ -61,7 +63,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             var operation = new ChangeClusterAssignment( myPresentation );
 
-            foreach( NodeWithCaption node in PreviewNodes )
+            foreach( var node in PreviewNodes.Cast<NodeWithCaption>().ToList() )
             {
                 operation.Execute( t => t.AddToCluster( node.Node.Id, SelectedCluster ) );
             }
@@ -103,23 +105,25 @@ namespace Plainion.GraphViz.Modules.Analysis
                     return;
                 }
 
-                if( myPresentation != null )
+                if( myTransformationsObserver != null )
                 {
-                    myPresentation.GetModule<ITransformationModule>().CollectionChanged -= OnTransformationsChanged;
+                    myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+                    myTransformationsObserver.Dispose();
                 }
 
                 myPresentation = Model.Presentation;
 
                 Filter = null;
 
-                {
-                    myPresentation.GetModule<ITransformationModule>().CollectionChanged += OnTransformationsChanged;
-                }
-
                 myPreviewNodes = null;
                 PreviewNodes.Refresh();
 
                 BuildTree();
+
+                // register for updates only AFTER tree is built up completely to avoid getting notified by the built up process
+                var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
+                myTransformationsObserver = transformationModule.CreateObserver();
+                myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
             }
         }
 
@@ -133,31 +137,45 @@ namespace Plainion.GraphViz.Modules.Analysis
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             foreach( var cluster in transformationModule.Graph.Clusters )
             {
-                var clusterNode = new ClusterTreeNode( myPresentation, null )
+                var clusterNode = new ClusterTreeNode
                 {
                     Parent = Root,
                     Id = cluster.Id,
                     Caption = captionModule.Get( cluster.Id ).DisplayText,
                     IsExpanded = true
                 };
-                PropertyChangedEventManager.AddHandler( clusterNode, OnSelectionChanged, PropertySupport.ExtractPropertyName( () => clusterNode.IsSelected ) );
                 Root.Children.Add( clusterNode );
 
                 clusterNode.Children.AddRange( cluster.Nodes
-                    .Select( n => new ClusterTreeNode( myPresentation, n )
+                    .Select( n => new ClusterTreeNode
                     {
                         Parent = clusterNode,
                         Id = n.Id,
                         Caption = captionModule.Get( n.Id ).DisplayText
                     } ) );
+            }
 
-                foreach( var node in clusterNode.Children )
+            // register for notifications after tree is built to avoid intermediate states getting notified
+
+            foreach( ClusterTreeNode cluster in Root.Children )
+            {
+                PropertyChangedEventManager.AddHandler( cluster, OnSelectionChanged, PropertySupport.ExtractPropertyName( () => cluster.IsSelected ) );
+
+                foreach( ClusterTreeNode node in cluster.Children )
                 {
                     PropertyChangedEventManager.AddHandler( node, OnSelectionChanged, PropertySupport.ExtractPropertyName( () => node.IsSelected ) );
+                    PropertyChangedEventManager.AddHandler( node, OnParentChanged, PropertySupport.ExtractPropertyName( () => node.Parent ) );
                 }
             }
         }
 
+        private void OnParentChanged( object sender, PropertyChangedEventArgs e )
+        {
+            var node = ( ClusterTreeNode )sender;
+
+            new ChangeClusterAssignment( myPresentation )
+                .Execute( t => t.AddToCluster( node.Id, ( ( ClusterTreeNode )node.Parent ).Id ) );
+        }
         private void OnSelectionChanged( object sender, PropertyChangedEventArgs e )
         {
             var selectedCluster = Root.Children.FirstOrDefault( n => n.IsSelected );
@@ -183,7 +201,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             }
         }
 
-        private void OnTransformationsChanged( object sender, NotifyCollectionChangedEventArgs e )
+        private void OnTransformationsChanged( object sender, EventArgs e )
         {
             BuildTree();
             PreviewNodes.Refresh();
@@ -246,7 +264,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             var node = ( NodeWithCaption )item;
 
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            if( !transformationModule.Graph.Clusters.Any( c => c.Nodes.Any( n => n.Id == node.Node.Id ) ) )
+            if( transformationModule.Graph.Clusters.Any( c => c.Nodes.Any( n => n.Id == node.Node.Id ) ) )
             {
                 return false;
             }

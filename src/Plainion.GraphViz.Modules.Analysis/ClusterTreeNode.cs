@@ -11,17 +11,12 @@ namespace Plainion.GraphViz.Modules.Analysis
 {
     class ClusterTreeNode : BindableBase, INode
     {
-        private IGraphPresentation myPresentation;
-        private Node myModel;
         private INode myParent;
         private bool myIsExpanded;
         private bool myIsSelected;
 
-        public ClusterTreeNode( IGraphPresentation presentation, Node model )
+        public ClusterTreeNode()
         {
-            myPresentation = presentation;
-            myModel = model;
-
             Children = new ObservableCollection<ClusterTreeNode>();
         }
 
@@ -51,15 +46,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         public INode Parent
         {
             get { return myParent; }
-            set
-            {
-                if( SetProperty( ref myParent, value ) && myModel != null )
-                {
-                    // i am a node (not a cluster)
-                    new ChangeClusterAssignment( myPresentation )
-                        .Execute( t => t.AddToCluster( myModel.Id, ( ( ClusterTreeNode )myParent ).Id ) );
-                }
-            }
+            set { SetProperty( ref myParent, value ); }
         }
 
         bool INode.Matches( string pattern )
