@@ -352,7 +352,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         .ToList();
 
                     var clustersToRemoveFrom = clustersMatchingNode
-                        .Where( c => c.Name == entry.Value || entry.Value == null );
+                        .Where( c => c.Name != entry.Value || entry.Value == null );
                     foreach( var cluster in clustersToRemoveFrom )
                     {
                         var exactMatch = cluster.Includes.FirstOrDefault( p => p.Pattern == entry.Key );
