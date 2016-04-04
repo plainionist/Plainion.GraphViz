@@ -351,6 +351,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         .Where( c => c.Matches( entry.Key ) )
                         .ToList();
 
+                    // remove from all (potentially old) clusters
                     var clustersToRemoveFrom = clustersMatchingNode
                         .Where( c => c.Name != entry.Value || entry.Value == null );
                     foreach( var cluster in clustersToRemoveFrom )
@@ -371,6 +372,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         continue;
                     }
 
+                    // add to the cluster it should now belong to
                     var clusterToAddTo = clusters
                         .FirstOrDefault( c => c.Name == entry.Value );
                     if( clusterToAddTo.Matches( entry.Key ) )

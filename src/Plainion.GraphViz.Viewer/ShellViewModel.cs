@@ -4,6 +4,8 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+
+using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
@@ -152,12 +154,8 @@ namespace Plainion.GraphViz.Viewer
 
                 if (myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit)
                 {
-                    var transformationModule = myPresentation.GetModule<ITransformationModule>();
-
-                    foreach (var cluster in myPresentation.Graph.Clusters)
-                    {
-                        transformationModule.Add(new ClusterFoldingTransformation(cluster, myPresentation));
-                    }
+                    new ChangeClusterFolding(myPresentation)
+                        .FoldUnfoldAllClusters();
                 }
 
                 LayoutAlgorithm = Dot.LayoutAlgorithm.Auto;

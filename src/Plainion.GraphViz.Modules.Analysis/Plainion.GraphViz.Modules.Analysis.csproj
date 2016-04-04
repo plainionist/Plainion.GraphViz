@@ -105,6 +105,7 @@
       <DependentUpon>NodeMasksView.xaml</DependentUpon>
     </Compile>
     <Compile Include="NodeMasksViewModel.cs" />
+    <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -115,7 +116,6 @@
     <Compile Include="SearchBoxModel.cs" />
     <Compile Include="Services\INodeMasksPersistanceService.cs" />
     <Compile Include="Services\NodeMasksPersistanceService.cs" />
-    <Compile Include="TreeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ClusterEditor.xaml">

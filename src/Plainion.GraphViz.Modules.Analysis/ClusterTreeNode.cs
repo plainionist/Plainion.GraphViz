@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Microsoft.Practices.Prism.Mvvm;
-using Plainion.GraphViz.Algorithms;
-using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Presentation;
 using Plainion.Windows.Controls.Tree;
 
 namespace Plainion.GraphViz.Modules.Analysis

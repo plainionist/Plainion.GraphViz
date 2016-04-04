@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
@@ -29,6 +30,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         private string mySelectedCluster;
         private string myAddButtonCaption;
         private IModuleChangedObserver myTransformationsObserver;
+        private Dictionary<string, string> myNodeClusterCache;
 
         [ImportingConstructor]
         public ClusterEditorModel()
@@ -72,11 +74,11 @@ namespace Plainion.GraphViz.Modules.Analysis
             var operation = new ChangeClusterAssignment(myPresentation);
             operation.Execute(t => t.AddToCluster(nodes, SelectedCluster));
 
-            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
-
             BuildTree();
 
             Filter = null;
+
+            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
         public string SelectedCluster
@@ -121,12 +123,19 @@ namespace Plainion.GraphViz.Modules.Analysis
 
                 myPresentation = Model.Presentation;
 
-                Filter = null;
-
-                myPreviewNodes = null;
-                PreviewNodes.Refresh();
-
+                // first build tree - master for preview
                 BuildTree();
+
+                // rebuild preview
+                myPreviewNodes = null;
+                if (Filter == null)
+                {
+                    PreviewNodes.Refresh();
+                }
+                else
+                {
+                    Filter = null;
+                }
 
                 // register for updates only AFTER tree is built up completely to avoid getting notified by the built up process
                 var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
@@ -137,50 +146,56 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         private void BuildTree()
         {
-            Root.Children.Clear();
-
-            SelectedCluster = null;
-
-            var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            var captionModule = myPresentation.GetModule<ICaptionModule>();
-            foreach (var cluster in transformationModule.Graph.Clusters)
+            using (new Profile("BuildTree"))
             {
-                var clusterNode = new ClusterTreeNode
+                Root.Children.Clear();
+
+                SelectedCluster = null;
+
+                var transformationModule = myPresentation.GetModule<ITransformationModule>();
+                var captionModule = myPresentation.GetModule<ICaptionModule>();
+                
+                foreach (var cluster in transformationModule.Graph.Clusters)
                 {
-                    Parent = Root,
-                    Id = cluster.Id,
-                    Caption = captionModule.Get(cluster.Id).DisplayText,
-                    IsExpanded = true
-                };
-                Root.Children.Add(clusterNode);
-
-                // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
-                var folding = transformationModule.Items
-                    .OfType<ClusterFoldingTransformation>()
-                    .SingleOrDefault(f => f.Cluster.Id == cluster.Id);
-
-                var nodes = folding == null ? cluster.Nodes : folding.Cluster.Nodes;
-
-                clusterNode.Children.AddRange(nodes
-                    .Select(n => new ClusterTreeNode
+                    var clusterNode = new ClusterTreeNode
                     {
-                        Parent = clusterNode,
-                        Id = n.Id,
-                        Caption = captionModule.Get(n.Id).DisplayText
-                    }));
-            }
+                        Parent = Root,
+                        Id = cluster.Id,
+                        Caption = captionModule.Get(cluster.Id).DisplayText,
+                        IsExpanded = true
+                    };
+                    Root.Children.Add(clusterNode);
 
-            // register for notifications after tree is built to avoid intermediate states getting notified
+                    // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
+                    var folding = transformationModule.Items
+                        .OfType<ClusterFoldingTransformation>()
+                        .SingleOrDefault(f => f.Clusters.Contains(cluster.Id));
 
-            foreach (ClusterTreeNode cluster in Root.Children)
-            {
-                PropertyChangedEventManager.AddHandler(cluster, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => cluster.IsSelected));
+                    var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
 
-                foreach (ClusterTreeNode node in cluster.Children)
-                {
-                    PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
-                    PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
+                    clusterNode.Children.AddRange(nodes
+                        .Select(n => new ClusterTreeNode
+                        {
+                            Parent = clusterNode,
+                            Id = n.Id,
+                            Caption = captionModule.Get(n.Id).DisplayText
+                        }));
                 }
+
+                // register for notifications after tree is built to avoid intermediate states getting notified
+
+                foreach (ClusterTreeNode cluster in Root.Children)
+                {
+                    PropertyChangedEventManager.AddHandler(cluster, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => cluster.IsSelected));
+
+                    foreach (ClusterTreeNode node in cluster.Children)
+                    {
+                        PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
+                        PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
+                    }
+                }
+
+                myNodeClusterCache = null;
             }
         }
 
@@ -279,9 +294,24 @@ namespace Plainion.GraphViz.Modules.Analysis
 
             var node = (NodeWithCaption)item;
 
-            // we do not look into model because hadnlign the ITransformationModule esp. with folding
+            // we do not look into model because handlign the ITransformationModule esp. with folding
             // is too complex. anyhow the "model" for the preview can also be the tree in this case.
-            if (Root.Any(n => n.Id == node.Node.Id))
+            if (myNodeClusterCache == null)
+            {
+                Debug.WriteLine("Rebuilding NodeClusterCache");
+
+                myNodeClusterCache = new Dictionary<string, string>();
+
+                foreach (ClusterTreeNode cluster in Root.Children)
+                {
+                    foreach (ClusterTreeNode clusterNode in cluster.Children)
+                    {
+                        myNodeClusterCache[clusterNode.Id] = cluster.Id;
+                    }
+                }
+            }
+
+            if (myNodeClusterCache.ContainsKey(node.Node.Id))
             {
                 return false;
             }

@@ -42,6 +42,11 @@ namespace Plainion.GraphViz.Presentation
 
         public IGraph Transform(IGraph graph)
         {
+            if (myNodeToClusterMapping.Count == 0)
+            {
+                return graph;
+            }
+
             var result = new Graph();
 
             foreach (var node in graph.Nodes)

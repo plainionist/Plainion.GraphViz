@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
@@ -11,10 +12,14 @@ namespace Plainion.GraphViz.Presentation
         private IGraph myGraph;
         private List<IGraphTransformation> myTransformations;
 
-        public TransformationModule( GraphPresentation presentation )
+        public TransformationModule(GraphPresentation presentation)
         {
             myPresentation = presentation;
             myTransformations = new List<IGraphTransformation>();
+
+            // Hint: we already add DynamicClusterTransformation here so that all fold operations are behind that and
+            // that newly added nodes to a cluster are automatically folded (if folding is applied)
+            Add(new DynamicClusterTransformation());
         }
 
         public IGraph Graph
@@ -27,49 +32,57 @@ namespace Plainion.GraphViz.Presentation
             get { return myTransformations; }
         }
 
-        public void Add( IGraphTransformation transformation )
+        public void Add(IGraphTransformation transformation)
         {
-            myTransformations.Add( transformation );
+            myTransformations.Add(transformation);
 
             var notifyPropertyChanged = transformation as INotifyPropertyChanged;
-            if( notifyPropertyChanged != null )
+            if (notifyPropertyChanged != null)
             {
                 notifyPropertyChanged.PropertyChanged += OnTransformationChanged;
             }
 
             ApplyTransformations();
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, transformation ) );
+            RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, transformation));
         }
 
-        private void OnTransformationChanged( object sender, PropertyChangedEventArgs e )
+        private void OnTransformationChanged(object sender, PropertyChangedEventArgs e)
         {
             ApplyTransformations();
         }
 
         private void ApplyTransformations()
         {
+            if (myPresentation.Graph == null)
+            {
+                // e.g. because we added initial DynamicClusterTransformation here
+                return;
+            }
+
+            Debug.WriteLine("ApplyTransformations");
+
             myGraph = myPresentation.Graph;
 
-            foreach( var transformation in myTransformations )
+            foreach (var transformation in myTransformations)
             {
-                myGraph = transformation.Transform( myGraph );
+                myGraph = transformation.Transform(myGraph);
             }
         }
 
-        public void Remove( IGraphTransformation transformation )
+        public void Remove(IGraphTransformation transformation)
         {
-            myTransformations.Remove( transformation );
+            myTransformations.Remove(transformation);
 
             var notifyPropertyChanged = transformation as INotifyPropertyChanged;
-            if( notifyPropertyChanged != null )
+            if (notifyPropertyChanged != null)
             {
                 notifyPropertyChanged.PropertyChanged -= OnTransformationChanged;
             }
 
             ApplyTransformations();
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, transformation ) );
+            RaiseCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, transformation));
         }
     }
 }

@@ -86,6 +86,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\ChangeClusterFolding.cs" />
     <Compile Include="Algorithms\ChangeClusterAssignment.cs" />
     <Compile Include="Algorithms\ShowNodesOutsideClusters.cs" />
     <Compile Include="Algorithms\HideNodesWithoutEdges.cs" />

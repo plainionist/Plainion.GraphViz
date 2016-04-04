@@ -1,63 +1,142 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Practices.Prism.Mvvm;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
-    public class ClusterFoldingTransformation : IGraphTransformation
+    public class ClusterFoldingTransformation : BindableBase, IGraphTransformation
     {
-        private readonly string myClusterNodeId;
+        private readonly IGraphPresentation myPresentation;
 
-        public ClusterFoldingTransformation( Cluster cluster, IGraphPresentation presentation )
+        // key: cluster.Id, value: cluster-node-id
+        private readonly Dictionary<string, string> myFoldedClusters;
+
+        // we remember the most recent input graph so that we can figure out
+        // later which nodes where in which cluster BEFORE folding
+        private IGraph myGraph;
+
+        public ClusterFoldingTransformation(IGraphPresentation presentation)
         {
-            Cluster = cluster;
+            myPresentation = presentation;
 
-            myClusterNodeId = Guid.NewGuid().ToString();
-
-            // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
-            var captions = presentation.GetPropertySetFor<Caption>();
-            captions.Add( new Caption( myClusterNodeId, "[" + captions.Get( Cluster.Id ).DisplayText + "]" ) );
+            myFoldedClusters = new Dictionary<string, string>();
         }
 
-        public Cluster Cluster { get; private set; }
-
-        public IGraph Transform( IGraph graph )
+        public IEnumerable<string> Clusters
         {
+            get { return myFoldedClusters.Keys; }
+        }
+
+        public IEnumerable<Node> GetNodes(string clusterId)
+        {
+            var graph = myGraph ?? myPresentation.Graph;
+
+            return graph.Clusters.Single(c => c.Id == clusterId).Nodes;
+        }
+
+        public void Add(string clusterId)
+        {
+            if (myFoldedClusters.ContainsKey(clusterId))
+            {
+                return;
+            }
+
+            var clusterNodeId = Guid.NewGuid().ToString();
+
+            myFoldedClusters.Add(clusterId, clusterNodeId);
+
+            // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
+            var captions = myPresentation.GetPropertySetFor<Caption>();
+            captions.Add(new Caption(clusterNodeId, "[" + captions.Get(clusterId).DisplayText + "]"));
+
+            OnPropertyChanged(() => Clusters);
+        }
+
+        public void Remove(string clusterId)
+        {
+            myFoldedClusters.Remove(clusterId);
+
+            OnPropertyChanged(() => Clusters);
+        }
+
+        public void Toggle(string clusterId)
+        {
+            if (myFoldedClusters.ContainsKey(clusterId))
+            {
+                Remove(clusterId);
+            }
+            else
+            {
+                Add(clusterId);
+            }
+        }
+
+        public IGraph Transform(IGraph graph)
+        {
+            myGraph = graph;
+
+            if (myFoldedClusters.Count == 0)
+            {
+                return graph;
+            }
+
             var builder = new RelaxedGraphBuilder();
 
-            builder.TryAddNode( myClusterNodeId );
-            builder.TryAddCluster( Cluster.Id, new[] { myClusterNodeId } );
+            var clusteredNodes = new List<string>();
 
-            foreach( var cluster in graph.Clusters.Where( c => c.Id != Cluster.Id ) )
+            // add unfolded clusters
+            foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusters.ContainsKey(c.Id)))
             {
-                builder.TryAddCluster( cluster.Id, cluster.Nodes.Select( n => n.Id ) );
+                var nodes = cluster.Nodes
+                    .Select(n => n.Id)
+                    .ToList();
+                builder.TryAddCluster(cluster.Id, nodes);
+
+                clusteredNodes.AddRange(nodes);
             }
 
-            foreach( var edge in graph.Edges )
+            // add folded clusters
+            foreach (var entry in myFoldedClusters)
             {
-                var source = edge.Source.Id;
-                var target = edge.Target.Id;
+                builder.TryAddNode(entry.Value);
+                builder.TryAddCluster(entry.Key, new[] { entry.Value });
 
-                if( Cluster.Nodes.Any( n => n.Id == source ) )
-                {
-                    source = myClusterNodeId;
-                }
+                var foldedCluster = graph.Clusters.Single(c => c.Id == entry.Key);
+                var foldedNodes = foldedCluster.Nodes
+                    .Select(n => n.Id)
+                    .ToList();
 
-                if( Cluster.Nodes.Any( n => n.Id == target ) )
-                {
-                    target = myClusterNodeId;
-                }
+                clusteredNodes.AddRange(foldedNodes);
 
-                // ignore self-edges
-                if( source != target )
+                foreach (var edge in graph.Edges)
                 {
-                    builder.TryAddEdge( source, target );
+                    var source = edge.Source.Id;
+                    var target = edge.Target.Id;
+
+                    if (foldedNodes.Contains(source))
+                    {
+                        source = entry.Value;
+                    }
+
+                    if (foldedNodes.Contains(target))
+                    {
+                        target = entry.Value;
+                    }
+
+                    // ignore self-edges
+                    if (source != target)
+                    {
+                        builder.TryAddEdge(source, target);
+                    }
                 }
             }
 
-            foreach( var node in graph.Nodes.Select( n => n.Id ).Except( Cluster.Nodes.Select( n => n.Id ) ) )
+            // add non-clustered nodes
+            foreach (var node in graph.Nodes.Select(n => n.Id).Except(clusteredNodes))
             {
-                builder.TryAddNode( node );
+                builder.TryAddNode(node);
             }
 
             return builder.Graph;

@@ -8,31 +8,31 @@ namespace Plainion.GraphViz.Algorithms
     {
         private readonly IGraphPresentation myPresentation;
 
-        public ChangeClusterAssignment( IGraphPresentation presentation )
+        public ChangeClusterAssignment(IGraphPresentation presentation)
         {
-            Contract.RequiresNotNull( presentation, "presentation" );
+            Contract.RequiresNotNull(presentation, "presentation");
 
             myPresentation = presentation;
         }
 
-        public void Execute( Action<DynamicClusterTransformation> action )
+        public void Execute(Action<DynamicClusterTransformation> action)
         {
             var transformations = myPresentation.GetModule<ITransformationModule>();
             var transformation = transformations.Items
                 .OfType<DynamicClusterTransformation>()
                 .SingleOrDefault();
 
-            if( transformation == null )
+            if (transformation == null)
             {
                 transformation = new DynamicClusterTransformation();
 
-                action( transformation );
+                action(transformation);
 
-                transformations.Add( transformation );
+                transformations.Add(transformation);
             }
             else
             {
-                action( transformation );
+                action(transformation);
             }
         }
     }
