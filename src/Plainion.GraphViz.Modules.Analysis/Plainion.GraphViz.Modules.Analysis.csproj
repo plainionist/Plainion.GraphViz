@@ -115,6 +115,7 @@
     <Compile Include="SearchBoxModel.cs" />
     <Compile Include="Services\INodeMasksPersistanceService.cs" />
     <Compile Include="Services\NodeMasksPersistanceService.cs" />
+    <Compile Include="TreeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ClusterEditor.xaml">

@@ -6,7 +6,7 @@ namespace Plainion.GraphViz.Presentation
 {
     public class ClusterFoldingTransformation : IGraphTransformation
     {
-        private string myClusterNodeId;
+        private readonly string myClusterNodeId;
 
         public ClusterFoldingTransformation( Cluster cluster, IGraphPresentation presentation )
         {

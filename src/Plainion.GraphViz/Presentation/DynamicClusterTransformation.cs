@@ -25,6 +25,15 @@ namespace Plainion.GraphViz.Presentation
             OnPropertyChanged( () => NodeToClusterMapping );
         }
 
+        public void AddToCluster(IEnumerable<string> nodeIds, string clusterId)
+        {
+            foreach (var nodeId in nodeIds)
+            {
+                myNodeToClusterMapping[nodeId] = clusterId;
+            }
+            OnPropertyChanged(() => NodeToClusterMapping);
+        }
+        
         public void RemoveFromClusters(string nodeId)
         {
             myNodeToClusterMapping[nodeId] = null;
