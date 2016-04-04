@@ -6,7 +6,7 @@ using Plainion.Windows.Controls.Tree;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    class ClusterTreeNode : BindableBase, INode
+    class ClusterTreeNode : BindableBase, INode, IDragDropSupport
     {
         private INode myParent;
         private bool myIsExpanded;
@@ -15,6 +15,9 @@ namespace Plainion.GraphViz.Modules.Analysis
         public ClusterTreeNode()
         {
             Children = new ObservableCollection<ClusterTreeNode>();
+
+            IsDropAllowed = true;
+            IsDragAllowed = true;
         }
 
         public string Id { get; set; }
@@ -33,6 +36,10 @@ namespace Plainion.GraphViz.Modules.Analysis
             set { SetProperty( ref myIsSelected, value ); }
         }
 
+        public bool IsDragAllowed { get; set; }
+
+        public bool IsDropAllowed { get; set; }
+        
         IEnumerable<INode> INode.Children
         {
             get { return Children; }

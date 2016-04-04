@@ -40,6 +40,8 @@ namespace Plainion.GraphViz.Modules.Analysis
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
             Root = new ClusterTreeNode();
+            Root.IsDragAllowed = false;
+            Root.IsDropAllowed = false;
 
             myDragDropBehavior = new DragDropBehavior(Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
@@ -162,7 +164,8 @@ namespace Plainion.GraphViz.Modules.Analysis
                         Parent = Root,
                         Id = cluster.Id,
                         Caption = captionModule.Get(cluster.Id).DisplayText,
-                        IsExpanded = true
+                        IsExpanded = true,
+                        IsDragAllowed = false
                     };
                     Root.Children.Add(clusterNode);
 
@@ -178,7 +181,8 @@ namespace Plainion.GraphViz.Modules.Analysis
                         {
                             Parent = clusterNode,
                             Id = n.Id,
-                            Caption = captionModule.Get(n.Id).DisplayText
+                            Caption = captionModule.Get(n.Id).DisplayText,
+                            IsDropAllowed = false
                         }));
                 }
 
