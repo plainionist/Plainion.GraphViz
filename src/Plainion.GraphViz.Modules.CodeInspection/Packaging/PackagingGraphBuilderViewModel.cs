@@ -34,7 +34,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private string myPackageName;
         private AnalysisMode myAnalysisMode;
         private TextDocument myDocument;
-        private IEnumerable<KeywordCompletionData> myCompletionData;
+        private IEnumerable<ElementCompletionData> myCompletionData;
         private CancellationTokenSource myCTS;
         private IModuleChangedObserver myTransformationsObserver;
 
@@ -55,7 +55,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 .Where( t => t.Namespace == typeof( SystemPackaging ).Namespace )
                 .Where( t => !t.IsAbstract )
                 .Where( t => t.GetCustomAttribute( typeof( CompilerGeneratedAttribute ), true ) == null )
-                .Select( t => new KeywordCompletionData( t ) )
+                .Select(t => new ElementCompletionData(t))
                 .ToList();
 
             AnalysisMode = AnalysisMode.CrossPackageDependencies;
@@ -95,7 +95,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             set { SetProperty( ref myDocument, value ); }
         }
 
-        public IEnumerable<KeywordCompletionData> CompletionData
+        public IEnumerable<ElementCompletionData> CompletionData
         {
             get { return myCompletionData; }
             set { SetProperty( ref myCompletionData, value ); }
