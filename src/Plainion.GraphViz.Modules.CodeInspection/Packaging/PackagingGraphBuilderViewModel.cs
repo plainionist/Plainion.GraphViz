@@ -375,15 +375,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                     // add to the cluster it should now belong to
                     var clusterToAddTo = clusters
                         .FirstOrDefault( c => c.Name == entry.Value );
-                    if( clusterToAddTo.Matches( entry.Key ) )
+                    if (clusterToAddTo != null)
                     {
-                        // node already or again matched
-                        // -> ignore
-                        continue;
+                        if (clusterToAddTo.Matches(entry.Key))
+                        {
+                            // node already or again matched
+                            // -> ignore
+                            continue;
+                        }
+                        else
+                        {
+                            clusterToAddTo.Patterns.Add(new Include {Pattern = entry.Key});
+                        }
                     }
                     else
                     {
-                        clusterToAddTo.Patterns.Add( new Include { Pattern = entry.Key } );
+                        // actually this should be an error ...
                     }
                 }
             }
