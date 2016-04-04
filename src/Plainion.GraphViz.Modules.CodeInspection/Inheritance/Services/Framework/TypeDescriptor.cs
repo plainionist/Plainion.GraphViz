@@ -7,9 +7,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framewor
     {
         private int myHashCode;
 
-        public TypeDescriptor( Type type )
+        public TypeDescriptor(Type type)
         {
-            if( type.IsGenericType )
+            if (type.IsGenericType)
             {
                 myHashCode = type.GetGenericTypeDefinition().GetHashCode();
             }
@@ -18,7 +18,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framewor
                 myHashCode = type.GetHashCode();
             }
 
-            Id = myHashCode.ToString();
+            // Hint: encode the fullname into the Id of the nodes to allow filtering by Id 
+            Id = type.FullName == null ? myHashCode.ToString() : type.FullName + "#" + myHashCode;
+
             Name = type.Name;
             // TODO: fullname might be null!!!
             FullName = type.FullName;
@@ -35,10 +37,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framewor
             return myHashCode;
         }
 
-        public override bool Equals( object obj )
+        public override bool Equals(object obj)
         {
             var other = obj as TypeDescriptor;
-            if( other == null )
+            if (other == null)
             {
                 return false;
             }

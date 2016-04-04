@@ -10,8 +10,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
     [Serializable]
     class TypeRelationshipDocument
     {
-        private RelaxedGraphBuilder myGraphBuilder;
-        private IDictionary<string, TypeDescriptor> myDescriptors;
+        private readonly RelaxedGraphBuilder myGraphBuilder;
+        private readonly IDictionary<string, TypeDescriptor> myDescriptors;
 
         public TypeRelationshipDocument()
         {
@@ -33,29 +33,29 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             get { return myDescriptors.Values; }
         }
 
-        public void AddEdge( TypeDescriptor source, TypeDescriptor target )
+        public void AddEdge(TypeDescriptor source, TypeDescriptor target)
         {
-            if( !myDescriptors.ContainsKey( source.Id ) )
+            if (!myDescriptors.ContainsKey(source.Id))
             {
-                myDescriptors.Add( source.Id, source );
+                myDescriptors.Add(source.Id, source);
             }
 
-            if( !myDescriptors.ContainsKey( target.Id ) )
+            if (!myDescriptors.ContainsKey(target.Id))
             {
-                myDescriptors.Add( target.Id, target );
+                myDescriptors.Add(target.Id, target);
             }
 
-            myGraphBuilder.TryAddEdge( source.Id, target.Id );
+            myGraphBuilder.TryAddEdge(source.Id, target.Id);
         }
 
-        public void AddNode( TypeDescriptor node )
+        public void AddNode(TypeDescriptor node)
         {
-            if( !myDescriptors.ContainsKey( node.Id ) )
+            if (!myDescriptors.ContainsKey(node.Id))
             {
-                myDescriptors.Add( node.Id, node );
+                myDescriptors.Add(node.Id, node);
             }
 
-            myGraphBuilder.TryAddNode( node.Id );
+            myGraphBuilder.TryAddNode(node.Id);
         }
 
         public IDictionary<string, EdgeType> EdgeTypes { get; private set; }
