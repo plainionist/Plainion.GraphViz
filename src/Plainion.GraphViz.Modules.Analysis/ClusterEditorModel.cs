@@ -158,7 +158,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                 var transformationModule = myPresentation.GetModule<ITransformationModule>();
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
 
-                foreach (var cluster in transformationModule.Graph.Clusters)
+                foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
                     var clusterNode = new ClusterTreeNode
                     {
