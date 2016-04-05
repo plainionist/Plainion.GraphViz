@@ -31,6 +31,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         private string myAddButtonCaption;
         private IModuleChangedObserver myTransformationsObserver;
         private Dictionary<string, string> myNodeClusterCache;
+        private bool myTreeShowId;
 
         [ImportingConstructor]
         public ClusterEditorModel()
@@ -156,7 +157,7 @@ namespace Plainion.GraphViz.Modules.Analysis
 
                 var transformationModule = myPresentation.GetModule<ITransformationModule>();
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
-                
+
                 foreach (var cluster in transformationModule.Graph.Clusters)
                 {
                     var clusterNode = new ClusterTreeNode
@@ -181,7 +182,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                         {
                             Parent = clusterNode,
                             Id = n.Id,
-                            Caption = captionModule.Get(n.Id).DisplayText,
+                            Caption = TreeShowId ? n.Id : captionModule.Get(n.Id).DisplayText,
                             IsDropAllowed = false
                         }));
                 }
@@ -240,6 +241,18 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             BuildTree();
             PreviewNodes.Refresh();
+        }
+
+        public bool TreeShowId
+        {
+            get { return myTreeShowId; }
+            set
+            {
+                if (SetProperty(ref myTreeShowId, value))
+                {
+                    BuildTree();
+                }
+            }
         }
 
         public string Filter

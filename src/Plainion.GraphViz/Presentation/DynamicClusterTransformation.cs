@@ -33,7 +33,7 @@ namespace Plainion.GraphViz.Presentation
             }
             OnPropertyChanged(() => NodeToClusterMapping);
         }
-        
+
         public void RemoveFromClusters(string nodeId)
         {
             myNodeToClusterMapping[nodeId] = null;
