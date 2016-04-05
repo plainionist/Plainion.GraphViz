@@ -1,24 +1,25 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Microsoft.Practices.Prism.PubSubEvents;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Microsoft.Practices.Prism.PubSubEvents;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
     [Export(typeof(GraphViewerModel))]
     class GraphViewerModel : ViewModelBase
     {
+        private IModuleChangedObserver myTransformationsModuleObserver;
+
         [ImportingConstructor]
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
@@ -128,21 +129,55 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
 
-                Clusters.Clear();
+                BuildClustersMenu();
+
+                if (myTransformationsModuleObserver != null)
+                {
+                    myTransformationsModuleObserver.ModuleChanged -= OnTransformationsModuleChanged;
+                    myTransformationsModuleObserver.Dispose();
+                }
+
                 if (Presentation != null)
                 {
                     var transformations = Presentation.GetModule<ITransformationModule>();
-                    var captions = Presentation.GetModule<ICaptionModule>();
-                    foreach (var cluster in transformations.Graph.Clusters.Union(Presentation.Graph.Clusters))
-                    {
-                        Clusters.Add(new ClusterWithCaption
-                        {
-                            Id = cluster.Id,
-                            Caption = captions.Get(cluster.Id).DisplayText
-                        });
-                    }
+                    myTransformationsModuleObserver = transformations.CreateObserver();
+                    myTransformationsModuleObserver.ModuleChanged += OnTransformationsModuleChanged;
                 }
             }
+        }
+
+        private void BuildClustersMenu()
+        {
+            Clusters.Clear();
+
+            if (Presentation == null)
+            {
+                return;
+            }
+
+            var transformations = Presentation.GetModule<ITransformationModule>();
+            var captions = Presentation.GetModule<ICaptionModule>();
+
+            var clusters = transformations.Graph.Clusters
+                .Union(Presentation.Graph.Clusters)
+                .Select(c => c.Id)
+                .Distinct()
+                .Select(id => new ClusterWithCaption
+                {
+                    Id = id,
+                    Caption = captions.Get(id).DisplayText
+                })
+                .OrderBy(id => id.Caption);
+
+            foreach (var cluster in clusters)
+            {
+                Clusters.Add(cluster);
+            }
+        }
+
+        private void OnTransformationsModuleChanged(object sender, EventArgs e)
+        {
+            BuildClustersMenu();
         }
 
         public IGraphPresentation Presentation
