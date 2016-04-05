@@ -84,7 +84,7 @@ namespace Plainion.GraphViz.Presentation
 
             var builder = new RelaxedGraphBuilder();
 
-            var clusteredNodes = new List<string>();
+            var nodesToClusterMap = new Dictionary<string, string>();
 
             // add unfolded clusters
             foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusters.ContainsKey(c.Id)))
@@ -94,7 +94,10 @@ namespace Plainion.GraphViz.Presentation
                     .ToList();
                 builder.TryAddCluster(cluster.Id, nodes);
 
-                clusteredNodes.AddRange(nodes);
+                foreach (var n in nodes)
+                {
+                    nodesToClusterMap[n] = cluster.Id;
+                }
             }
 
             // add folded clusters
@@ -108,35 +111,40 @@ namespace Plainion.GraphViz.Presentation
                     .Select(n => n.Id)
                     .ToList();
 
-                clusteredNodes.AddRange(foldedNodes);
-
-                foreach (var edge in graph.Edges)
+                foreach (var n in foldedNodes)
                 {
-                    var source = edge.Source.Id;
-                    var target = edge.Target.Id;
-
-                    if (foldedNodes.Contains(source))
-                    {
-                        source = entry.Value;
-                    }
-
-                    if (foldedNodes.Contains(target))
-                    {
-                        target = entry.Value;
-                    }
-
-                    // ignore self-edges
-                    if (source != target)
-                    {
-                        builder.TryAddEdge(source, target);
-                    }
+                    nodesToClusterMap[n] = foldedCluster.Id;
                 }
             }
 
             // add non-clustered nodes
-            foreach (var node in graph.Nodes.Select(n => n.Id).Except(clusteredNodes))
+            foreach (var node in graph.Nodes.Select(n => n.Id).Except(nodesToClusterMap.Keys))
             {
                 builder.TryAddNode(node);
+            }
+
+            // add edges 
+            foreach (var edge in graph.Edges)
+            {
+                var source = edge.Source.Id;
+                var target = edge.Target.Id;
+
+                string foldedClusterId;
+                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && foldedClusterId != null)
+                {
+                    source = myFoldedClusters[foldedClusterId];
+                }
+
+                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && foldedClusterId != null)
+                {
+                    target = myFoldedClusters[foldedClusterId];
+                }
+
+                // ignore self-edges
+                if (source != target)
+                {
+                    builder.TryAddEdge(source, target);
+                }
             }
 
             return builder.Graph;
