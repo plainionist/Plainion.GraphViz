@@ -9,11 +9,12 @@ namespace Plainion.GraphViz.Modules.Analysis
 {
     class ClusterTreeNode : BindableBase, INode, IDragDropSupport
     {
-        private IGraphPresentation myPresentation;
+        private readonly IGraphPresentation myPresentation;
         private INode myParent;
         private bool myIsExpanded;
         private bool myIsSelected;
         private string myCaption;
+        private bool myShowId;
 
         public ClusterTreeNode(IGraphPresentation presentation)
         {
@@ -37,6 +38,23 @@ namespace Plainion.GraphViz.Modules.Analysis
                     myPresentation.GetPropertySetFor<Caption>().Get(Id).DisplayText = myCaption;
                 }
             }
+        }
+
+        public bool ShowId
+        {
+            get { return myShowId; }
+            set
+            {
+                if (SetProperty(ref myShowId, value))
+                {
+                    OnPropertyChanged(() => DisplayText);
+                }
+            }
+        }
+
+        public string DisplayText
+        {
+            get { return ShowId ? Id : Caption; }
         }
 
         public bool IsExpanded

@@ -81,6 +81,7 @@
                         <Setter Property="ToolTip" Value="{Binding Id}"/>
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                         <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                        <Setter Property="FormattedText" Value="{Binding DisplayText}"/>
                     </Style>
                 </pn:TreeEditor.NodeStyle>
             </pn:TreeEditor>

@@ -229,7 +229,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                         {
                             Parent = clusterNode,
                             Id = n.Id,
-                            Caption = TreeShowId ? n.Id : captionModule.Get(n.Id).DisplayText,
+                            Caption = captionModule.Get(n.Id).DisplayText,
                             IsDropAllowed = false
                         }));
                 }
@@ -297,7 +297,13 @@ namespace Plainion.GraphViz.Modules.Analysis
             {
                 if (SetProperty(ref myTreeShowId, value))
                 {
-                    BuildTree();
+                    foreach (var clusterNode in Root.Children)
+                    {
+                        foreach (var node in clusterNode.Children)
+                        {
+                            node.ShowId = myTreeShowId;
+                        }
+                    }
                 }
             }
         }
