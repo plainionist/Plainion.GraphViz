@@ -2,6 +2,15 @@
 <Tree>
   <Node Id="9700cc1d-2776-4dfb-854b-9b35e34ede98">
     <Caption><![CDATA[Planning]]></Caption>
+    <Node Id="90063699-af33-4a35-ab9f-e93c26b4603d">
+      <Caption><![CDATA[bugs]]></Caption>
+      <Node Id="91a8a155-a09a-4bf1-aded-2c73a2bf0992">
+        <Caption><![CDATA[filter broken]]></Caption>
+      </Node>
+      <Node Id="ddd3742f-39e6-4e75-bc79-7d9e810c0bf6">
+        <Caption><![CDATA[two way editabletextblock binding breaks caption.displaytext]]></Caption>
+      </Node>
+    </Node>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next steps]]></Caption>
       <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
