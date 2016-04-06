@@ -37,18 +37,42 @@ namespace Plainion.GraphViz.Modules.Analysis
         public ClusterEditorModel()
         {
             AddButtonCaption = "Add ...";
-            AddCommand = new DelegateCommand(OnAdd, () => SelectedCluster != null);
+            AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
             Root = new ClusterTreeNode(null);
             Root.IsDragAllowed = false;
             Root.IsDropAllowed = false;
 
+            CreateChildCommand = new DelegateCommand<ClusterTreeNode>(OnAddCluster,
+                // only allow adding clusters
+                p => p == null || p == Root );
+
             myDragDropBehavior = new DragDropBehavior(Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
         }
 
+        private void OnAddCluster(ClusterTreeNode parent)
+        {
+            // avoid many intermediate updates
+            myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+
+            var newClusterId = Guid.NewGuid().ToString();
+            var captionModule = myPresentation.GetModule<ICaptionModule>();
+            captionModule.Add(new Caption(newClusterId, "<new>"));
+
+            var operation = new ChangeClusterAssignment(myPresentation);
+            operation.Execute(t => t.AddCluster(newClusterId));
+
+            // TODO: optimize!! (only update root)
+            BuildTree();
+
+            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
+        }
+
         public ClusterTreeNode Root { get; private set; }
+
+        public ICommand CreateChildCommand { get; private set; }
 
         public ICommand DropCommand { get; private set; }
 
@@ -62,9 +86,9 @@ namespace Plainion.GraphViz.Modules.Analysis
             }
         }
 
-        public DelegateCommand AddCommand { get; private set; }
+        public DelegateCommand AddNodesToClusterCommand { get; private set; }
 
-        private void OnAdd()
+        private void OnAddNodesToCluster()
         {
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
@@ -91,8 +115,9 @@ namespace Plainion.GraphViz.Modules.Analysis
             {
                 if (SetProperty(ref mySelectedCluster, value))
                 {
-                    AddButtonCaption = SelectedCluster != null ? "Add to '" + mySelectedCluster + "'" : "Add ...";
-                    AddCommand.RaiseCanExecuteChanged();
+                    var captionModule = myPresentation.GetModule<ICaptionModule>();
+                    AddButtonCaption = SelectedCluster != null ? "Add to '" + captionModule.Get(mySelectedCluster).DisplayText + "'" : "Add ...";
+                    AddNodesToClusterCommand.RaiseCanExecuteChanged();
                 }
             }
         }

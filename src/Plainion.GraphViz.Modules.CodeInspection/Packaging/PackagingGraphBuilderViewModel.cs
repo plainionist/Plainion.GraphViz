@@ -353,7 +353,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
                     // remove from all (potentially old) clusters
                     var clustersToRemoveFrom = clustersMatchingNode
-                        .Where( c => c.Name != entry.Value || entry.Value == null );
+                        .Where( c => entry.Value == null  || c.Name != entry.Value );
                     foreach( var cluster in clustersToRemoveFrom )
                     {
                         var exactMatch = cluster.Includes.FirstOrDefault( p => p.Pattern == entry.Key );

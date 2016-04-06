@@ -39,10 +39,10 @@
                           Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                           Validation.ErrorTemplate="{StaticResource HighlightErrorsWithBorder}">
                     <i:Interaction.Behaviors>
-                        <pn:TextBoxRaiseCommandOnEnterBehavior Command="{Binding AddCommand}"/>
+                        <pn:TextBoxRaiseCommandOnEnterBehavior Command="{Binding AddNodesToClusterCommand }"/>
                     </i:Interaction.Behaviors>
                 </TextBox>
-                <Button Grid.Row="0" Grid.Column="2" Content="{Binding AddButtonCaption}" Command="{Binding AddCommand}" Margin="5,0,0,0"/>
+                <Button Grid.Row="0" Grid.Column="2" Content="{Binding AddButtonCaption}" Command="{Binding AddNodesToClusterCommand }" Margin="5,0,0,0"/>
                 
                 <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Content="Filter on identifier" IsChecked="{Binding FilterOnId}"/>
             </Grid>
@@ -72,6 +72,7 @@
             </Grid.RowDefinitions>
 
             <pn:TreeEditor Grid.Row="0" Root="{Binding Root}" FilterLabel="Filter on caption or id"
+                           CreateChildCommand="{Binding CreateChildCommand}"
                            DropCommand="{Binding DropCommand}">
                 <pn:TreeEditor.NodeStyle>
                     <Style TargetType="{x:Type pn:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
