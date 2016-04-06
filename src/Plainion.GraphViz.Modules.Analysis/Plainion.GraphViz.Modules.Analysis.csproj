@@ -56,8 +56,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Plainion.Prism.1.5.0.0\lib\NET45\Plainion.Prism.dll</HintPath>
     </Reference>
-    <Reference Include="Plainion.Windows, Version=1.17.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Windows.1.17.0.0\lib\NET45\Plainion.Windows.dll</HintPath>
+    <Reference Include="Plainion.Windows, Version=1.18.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plainion.Windows.1.18.0.0\lib\NET45\Plainion.Windows.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />

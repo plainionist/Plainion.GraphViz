@@ -46,7 +46,7 @@ namespace Plainion.GraphViz.Modules.Analysis
 
             CreateChildCommand = new DelegateCommand<ClusterTreeNode>(OnAddCluster,
                 // only allow adding clusters
-                p => p == null || p == Root );
+                p => p == Root);
 
             myDragDropBehavior = new DragDropBehavior(Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
@@ -66,6 +66,8 @@ namespace Plainion.GraphViz.Modules.Analysis
 
             // TODO: optimize!! (only update root)
             BuildTree();
+
+            Root.Children.Single(n => n.Id == newClusterId).IsSelected = true;
 
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
@@ -190,7 +192,6 @@ namespace Plainion.GraphViz.Modules.Analysis
                         Parent = Root,
                         Id = cluster.Id,
                         Caption = captionModule.Get(cluster.Id).DisplayText,
-                        IsExpanded = true,
                         IsDragAllowed = false
                     };
                     Root.Children.Add(clusterNode);
