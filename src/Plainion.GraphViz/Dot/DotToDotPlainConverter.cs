@@ -59,7 +59,12 @@ namespace Plainion.GraphViz.Dot
             {
                 // limit the size of the error message otherwise we will blow the messagebox window
                 // showing this unhandled exception later on
-                throw new InvalidOperationException("Dot plain file generation failed: " + stdErr.ToString().Substring(0,512));
+                var msg = stdErr.ToString();
+                if (msg.Length > 512)
+                {
+                    msg = msg.Substring(0, 512);
+                }
+                throw new InvalidOperationException("Dot plain file generation failed: " + msg);
             }
         }
 

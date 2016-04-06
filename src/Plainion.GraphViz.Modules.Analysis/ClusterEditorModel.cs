@@ -47,10 +47,15 @@ namespace Plainion.GraphViz.Modules.Analysis
             CreateChildCommand = new DelegateCommand<ClusterTreeNode>(OnAddCluster,
                 // only allow adding clusters
                 p => p == Root);
+            DeleteNode = new DelegateCommand<ClusterTreeNode>(OnDeleteCluster, n => n != null && n.Parent == Root);
 
             myDragDropBehavior = new DragDropBehavior(Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
         }
+
+        public ClusterTreeNode Root { get; private set; }
+
+        public ICommand CreateChildCommand { get; private set; }
 
         private void OnAddCluster(ClusterTreeNode parent)
         {
@@ -61,8 +66,12 @@ namespace Plainion.GraphViz.Modules.Analysis
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             captionModule.Add(new Caption(newClusterId, "<new>"));
 
-            var operation = new ChangeClusterAssignment(myPresentation);
-            operation.Execute(t => t.AddCluster(newClusterId));
+            new ChangeClusterAssignment(myPresentation)
+                .Execute(t => t.AddCluster(newClusterId));
+
+            // start new clusters folded
+            new ChangeClusterFolding(myPresentation)
+                .Execute(t => t.Toggle(newClusterId));
 
             // TODO: optimize!! (only update root)
             BuildTree();
@@ -72,9 +81,21 @@ namespace Plainion.GraphViz.Modules.Analysis
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
-        public ClusterTreeNode Root { get; private set; }
+        public ICommand DeleteNode { get; private set; }
 
-        public ICommand CreateChildCommand { get; private set; }
+        private void OnDeleteCluster(ClusterTreeNode node)
+        {
+            // avoid many intermediate updates
+            myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+
+            var operation = new ChangeClusterAssignment(myPresentation);
+            operation.Execute(t => t.HideCluster(node.Id));
+
+            // TODO: optimize!! (only update root)
+            BuildTree();
+
+            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
+        }
 
         public ICommand DropCommand { get; private set; }
 
