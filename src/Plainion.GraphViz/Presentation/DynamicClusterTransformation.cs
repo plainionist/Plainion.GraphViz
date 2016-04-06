@@ -109,12 +109,17 @@ namespace Plainion.GraphViz.Presentation
                 result.Add(newCluster);
             }
 
-            var newClusters = myClusterVisibility
+            var newClusterIds = myClusterVisibility
                 .Where(e => e.Value == true)
-                .Where(e => !graph.Clusters.Any(c => c.Id == e.Key));
-            foreach (var entry in newClusters)
+                .Where(e => !graph.Clusters.Any(c => c.Id == e.Key))
+                .Select(e => e.Key);
+            foreach (var clusterId in newClusterIds)
             {
-                var newCluster = new Cluster(entry.Key, Enumerable.Empty<Node>());
+                var nodes = myNodeToClusterMapping
+                    .Where(e => e.Value == clusterId)
+                    .Select(e => graph.Nodes.First(n => n.Id == e.Key));
+
+                var newCluster = new Cluster(clusterId, nodes);
                 result.Add(newCluster);
             }
 

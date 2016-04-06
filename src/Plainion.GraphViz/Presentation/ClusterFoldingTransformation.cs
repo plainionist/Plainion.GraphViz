@@ -130,14 +130,15 @@ namespace Plainion.GraphViz.Presentation
                 var target = edge.Target.Id;
 
                 string foldedClusterId;
-                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && foldedClusterId != null)
+                string foldedClusterNodeId;
+                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && myFoldedClusters.TryGetValue(foldedClusterId, out foldedClusterNodeId))
                 {
-                    source = myFoldedClusters[foldedClusterId];
+                    source = foldedClusterNodeId;
                 }
 
-                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && foldedClusterId != null)
+                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && myFoldedClusters.TryGetValue(foldedClusterId, out foldedClusterNodeId))
                 {
-                    target = myFoldedClusters[foldedClusterId];
+                    target = foldedClusterNodeId;
                 }
 
                 // ignore self-edges
