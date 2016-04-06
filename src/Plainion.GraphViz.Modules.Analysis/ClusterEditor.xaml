@@ -72,8 +72,8 @@
             </Grid.RowDefinitions>
 
             <pn:TreeEditor Grid.Row="0" Root="{Binding Root}" FilterLabel="Filter on caption or id"
-                           CreateChildCommand="{Binding CreateChildCommand}"
-                           DeleteCommand="{Binding DeleteCommand}"
+                           CreateChildCommand="{Binding AddClusterCommand}"
+                           DeleteCommand="{Binding DeleteClusterCommand}"
                            DropCommand="{Binding DropCommand}">
                 <pn:TreeEditor.NodeStyle>
                     <Style TargetType="{x:Type pn:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
