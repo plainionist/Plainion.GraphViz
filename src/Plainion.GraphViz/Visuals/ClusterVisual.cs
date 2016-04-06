@@ -33,7 +33,7 @@ namespace Plainion.GraphViz.Visuals
 
         public void Draw( IDictionary<string, AbstractElementVisual> drawingElements )
         {
-            var label = myPresentation.GetPropertySetFor<Caption>().Get( Owner.Id );
+            var caption = myPresentation.GetPropertySetFor<Caption>().Get( Owner.Id );
 
             Visual = new DrawingVisual();
             var dc = Visual.RenderOpen();
@@ -41,7 +41,7 @@ namespace Plainion.GraphViz.Visuals
             var rect = GetBoundingBox( drawingElements );
             dc.DrawRectangle( Brushes.Transparent, new Pen( Brushes.Blue, BorderThickness ), rect );
 
-            var tx = new FormattedText( label.DisplayText,
+            var tx = new FormattedText( caption.DisplayText,
                   CultureInfo.InvariantCulture,
                   FlowDirection.LeftToRight,
                   myFont,

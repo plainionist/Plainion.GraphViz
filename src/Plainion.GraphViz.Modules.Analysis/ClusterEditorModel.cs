@@ -40,7 +40,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             AddCommand = new DelegateCommand(OnAdd, () => SelectedCluster != null);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
-            Root = new ClusterTreeNode();
+            Root = new ClusterTreeNode(null);
             Root.IsDragAllowed = false;
             Root.IsDropAllowed = false;
 
@@ -160,7 +160,7 @@ namespace Plainion.GraphViz.Modules.Analysis
 
                 foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
-                    var clusterNode = new ClusterTreeNode
+                    var clusterNode = new ClusterTreeNode(myPresentation)
                     {
                         Parent = Root,
                         Id = cluster.Id,
@@ -178,7 +178,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                     var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
 
                     clusterNode.Children.AddRange(nodes
-                        .Select(n => new ClusterTreeNode
+                        .Select(n => new ClusterTreeNode(myPresentation)
                         {
                             Parent = clusterNode,
                             Id = n.Id,

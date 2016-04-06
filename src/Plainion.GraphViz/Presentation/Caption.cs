@@ -18,7 +18,7 @@ namespace Plainion.GraphViz.Presentation
         public string DisplayText
         {
             get { return myDisplayText; }
-            set { SetProperty( ref myDisplayText, value, "DisplayText" ); }
+            set { SetProperty( ref myDisplayText, value ); }
         }
     }
 }
