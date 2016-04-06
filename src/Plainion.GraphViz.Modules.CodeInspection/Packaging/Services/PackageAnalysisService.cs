@@ -43,6 +43,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 ShutdownAction();
             });
 
+            request.Spec = SpecUtils.Zip(request.Spec);
+
             var response = await actor.Ask(request);
 
             try

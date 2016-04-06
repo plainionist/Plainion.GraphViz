@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Markup;
-using System.Xml;
 using Akka.Actor;
 using Newtonsoft.Json;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
@@ -28,6 +24,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             Receive<AnalysisRequest>( r =>
             {
+                Console.WriteLine("WORKING");
+
                 var self = Self;
                 var sender = Sender;
 
@@ -37,7 +35,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         ( AnalyzeBase )new AnalyzeInnerPackageDependencies { PackageName = r.PackageName } :
                         ( AnalyzeBase )new AnalyzeCrossPackageDependencies();
 
-                    var spec = SpecUtils.Deserialize( r.Spec );
+                    var spec = SpecUtils.Deserialize( SpecUtils.Unzip(r.Spec ));
                     return activity.Execute( spec, myCTS.Token );
                 }, myCTS.Token )
                 .ContinueWith<object>( x =>
