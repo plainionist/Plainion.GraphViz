@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="d7e65ef8-8294-400d-ba0c-eebf1d4da542" Created="635929502194063447" LastModified="635946838421960590">
-  <Caption><![CDATA[XmlEditor to plainion libs]]></Caption>
-  <Content><![CDATA[Plainion.Windows.Editors
-(separate package as this requires AvalonEdit deps)
-
-==> separate SCP?]]></Content>
-</Node>

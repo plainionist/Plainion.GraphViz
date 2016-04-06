@@ -4,11 +4,8 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next steps]]></Caption>
-      <Node Id="d7e65ef8-8294-400d-ba0c-eebf1d4da542">
-        <Caption><![CDATA[XmlEditor to plainion libs]]></Caption>
-        <Node Id="ef8258f8-8619-4e63-ae23-6bd2108e60dc">
-          <Caption><![CDATA[bug: adding package.clusters throws exception]]></Caption>
-        </Node>
+      <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
+        <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
       </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
