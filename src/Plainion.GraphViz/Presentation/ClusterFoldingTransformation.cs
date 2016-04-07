@@ -101,12 +101,19 @@ namespace Plainion.GraphViz.Presentation
             }
 
             // add folded clusters
-            foreach (var entry in myFoldedClusters)
+            foreach (var entry in myFoldedClusters.ToList())
             {
                 builder.TryAddNode(entry.Value);
                 builder.TryAddCluster(entry.Key, new[] { entry.Value });
 
-                var foldedCluster = graph.Clusters.Single(c => c.Id == entry.Key);
+                var foldedCluster = graph.Clusters.SingleOrDefault(c => c.Id == entry.Key);
+                if (foldedCluster == null)
+                {
+                    // this cluster was deleted
+                    myFoldedClusters.Remove(entry.Key);
+                    continue;
+                }
+
                 var foldedNodes = foldedCluster.Nodes
                     .Select(n => n.Id)
                     .ToList();

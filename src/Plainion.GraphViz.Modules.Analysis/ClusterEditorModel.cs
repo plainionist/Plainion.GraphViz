@@ -44,10 +44,9 @@ namespace Plainion.GraphViz.Modules.Analysis
             Root.IsDragAllowed = false;
             Root.IsDropAllowed = false;
 
-            AddClusterCommand = new DelegateCommand<ClusterTreeNode>(OnAddCluster,
-                // only allow adding clusters
-                p => p == Root);
-            DeleteClusterCommand = new DelegateCommand<ClusterTreeNode>(OnDeleteCluster, n => n != null && n.Parent == Root);
+            // TODO: dimming does not work currently correctly
+            AddClusterCommand = new DelegateCommand<ClusterTreeNode>(OnAddCluster);
+            DeleteClusterCommand = new DelegateCommand<ClusterTreeNode>(OnDeleteCluster);
 
             myDragDropBehavior = new DragDropBehavior(Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
@@ -55,10 +54,15 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         public ClusterTreeNode Root { get; private set; }
 
-        public ICommand AddClusterCommand { get; private set; }
+        public DelegateCommand<ClusterTreeNode> AddClusterCommand { get; private set; }
 
         private void OnAddCluster(ClusterTreeNode parent)
         {
+            if (parent != Root)
+            {
+                return;
+            }
+
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
@@ -97,10 +101,15 @@ namespace Plainion.GraphViz.Modules.Analysis
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
-        public ICommand DeleteClusterCommand { get; private set; }
+        public DelegateCommand<ClusterTreeNode> DeleteClusterCommand { get; private set; }
 
         private void OnDeleteCluster(ClusterTreeNode clusterNode)
         {
+            if (clusterNode.Parent != Root)
+            {
+                return;
+            }
+
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
@@ -193,6 +202,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                 {
                     var captionModule = myPresentation.GetModule<ICaptionModule>();
                     AddButtonCaption = SelectedCluster != null ? "Add to '" + captionModule.Get(mySelectedCluster).DisplayText + "'" : "Add ...";
+
                     AddNodesToClusterCommand.RaiseCanExecuteChanged();
                 }
             }
