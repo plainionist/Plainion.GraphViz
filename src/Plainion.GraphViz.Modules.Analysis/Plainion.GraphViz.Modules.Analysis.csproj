@@ -105,7 +105,6 @@
       <DependentUpon>NodeMasksView.xaml</DependentUpon>
     </Compile>
     <Compile Include="NodeMasksViewModel.cs" />
-    <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

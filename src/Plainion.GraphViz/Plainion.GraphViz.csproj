@@ -141,6 +141,7 @@
     <Compile Include="Presentation\NodeLayout.cs" />
     <Compile Include="Presentation\Selection.cs" />
     <Compile Include="Presentation\TransformationModule.cs" />
+    <Compile Include="Profile.cs" />
     <Compile Include="Visuals\AbstractElementVisual.cs" />
     <Compile Include="Presentation\GenericModuleChangedJournal.cs" />
     <Compile Include="Dot\DotToolLayoutEngine.cs" />

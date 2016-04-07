@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Plainion.GraphViz.Modules.Analysis
+namespace Plainion.GraphViz
 {
-    class Profile : IDisposable
+    public class Profile : IDisposable
     {
-        private string myMessage;
-        private DateTime myStart;
+        private readonly string myMessage;
+        private readonly DateTime myStart;
 
         public Profile(string msg)
         {

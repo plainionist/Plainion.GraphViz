@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -336,84 +333,87 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         private void OnTransformationsChanged(object sender, EventArgs eventArgs)
         {
-            var spec = SpecUtils.Deserialize(Document.Text);
-
-            var clusters = spec.Packages
-                .SelectMany(p => p.Clusters)
-                .ToList();
-
-            var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-            foreach (var transformation in transformationModule.Items.OfType<DynamicClusterTransformation>())
+            using (new Profile("PackagingGraphBuilderViewModel:OnTransformationsChanged"))
             {
-                foreach (var entry in transformation.NodeToClusterMapping)
-                {
-                    var clustersMatchingNode = clusters
-                        .Where(c => c.Matches(entry.Key))
-                        .ToList();
+                var spec = SpecUtils.Deserialize(Document.Text);
 
-                    // remove from all (potentially old) clusters
-                    var clustersToRemoveFrom = clustersMatchingNode
-                        .Where(c => entry.Value == null || c.Name != entry.Value);
-                    foreach (var cluster in clustersToRemoveFrom)
+                var clusters = spec.Packages
+                    .SelectMany(p => p.Clusters)
+                    .ToList();
+
+                var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
+                foreach (var transformation in transformationModule.Items.OfType<DynamicClusterTransformation>())
+                {
+                    foreach (var entry in transformation.NodeToClusterMapping)
                     {
-                        var exactMatch = cluster.Includes.FirstOrDefault(p => p.Pattern == entry.Key);
-                        if (exactMatch != null)
+                        var clustersMatchingNode = clusters
+                            .Where(c => c.Matches(entry.Key))
+                            .ToList();
+
+                        // remove from all (potentially old) clusters
+                        var clustersToRemoveFrom = clustersMatchingNode
+                            .Where(c => entry.Value == null || c.Name != entry.Value);
+                        foreach (var cluster in clustersToRemoveFrom)
                         {
-                            cluster.Patterns.Remove(exactMatch);
+                            var exactMatch = cluster.Includes.FirstOrDefault(p => p.Pattern == entry.Key);
+                            if (exactMatch != null)
+                            {
+                                cluster.Patterns.Remove(exactMatch);
+                            }
+                            else
+                            {
+                                cluster.Patterns.Add(new Exclude {Pattern = entry.Key});
+                            }
+                        }
+
+                        if (entry.Value == null)
+                        {
+                            continue;
+                        }
+
+                        // add to the cluster it should now belong to
+                        var clusterToAddTo = clusters
+                            .FirstOrDefault(c => c.Name == entry.Value);
+
+                        if (clusterToAddTo == null)
+                        {
+                            // --> new cluster added in UI
+                            clusterToAddTo = new Spec.Cluster {Name = entry.Value};
+                            clusters.Add(clusterToAddTo);
+                            spec.Packages.First().Clusters.Add(clusterToAddTo);
+                        }
+
+                        if (clusterToAddTo.Matches(entry.Key))
+                        {
+                            // node already or again matched
+                            // -> ignore
+                            continue;
                         }
                         else
                         {
-                            cluster.Patterns.Add(new Exclude { Pattern = entry.Key });
+                            clusterToAddTo.Patterns.Add(new Include {Pattern = entry.Key});
                         }
                     }
 
-                    if (entry.Value == null)
+                    foreach (var removedCluster in transformation.ClusterVisibility.Where(e => e.Value == false))
                     {
-                        continue;
-                    }
-
-                    // add to the cluster it should now belong to
-                    var clusterToAddTo = clusters
-                        .FirstOrDefault(c => c.Name == entry.Value);
-
-                    if (clusterToAddTo == null)
-                    {
-                        // --> new cluster added in UI
-                        clusterToAddTo = new Spec.Cluster { Name = entry.Value };
-                        clusters.Add(clusterToAddTo);
-                        spec.Packages.First().Clusters.Add(clusterToAddTo);
-                    }
-
-                    if (clusterToAddTo.Matches(entry.Key))
-                    {
-                        // node already or again matched
-                        // -> ignore
-                        continue;
-                    }
-                    else
-                    {
-                        clusterToAddTo.Patterns.Add(new Include { Pattern = entry.Key });
-                    }
-                }
-
-                foreach (var removedCluster in transformation.ClusterVisibility.Where(e => e.Value == false))
-                {
-                    foreach (var package in spec.Packages)
-                    {
-                        var cluster = package.Clusters.FirstOrDefault(c => c.Name == removedCluster.Key);
-                        if (cluster != null)
+                        foreach (var package in spec.Packages)
                         {
-                            package.Clusters.Remove(cluster);
-                            break;
+                            var cluster = package.Clusters.FirstOrDefault(c => c.Name == removedCluster.Key);
+                            if (cluster != null)
+                            {
+                                package.Clusters.Remove(cluster);
+                                break;
+                            }
                         }
+
                     }
-
                 }
+
+                Document.Text = SpecUtils.Serialize(spec);
+
+                Save();
             }
-
-            Document.Text = SpecUtils.Serialize(spec);
-
-            Save();
         }
 
         public int ProgressValue

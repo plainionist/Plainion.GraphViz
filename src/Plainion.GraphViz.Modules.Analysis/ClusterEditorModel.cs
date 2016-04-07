@@ -30,7 +30,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         private string mySelectedCluster;
         private string myAddButtonCaption;
         private IModuleChangedObserver myTransformationsObserver;
-        private Dictionary<string, string> myNodeClusterCache;
+        private Dictionary<string, string> myNodeToClusterCache;
         private bool myTreeShowId;
 
         [ImportingConstructor]
@@ -73,8 +73,24 @@ namespace Plainion.GraphViz.Modules.Analysis
             new ChangeClusterFolding(myPresentation)
                 .Execute(t => t.Toggle(newClusterId));
 
-            // TODO: optimize!! (only update root)
-            BuildTree();
+            // update tree
+            {
+                var clusterNode = new ClusterTreeNode(myPresentation)
+                {
+                    Parent = Root,
+                    Id = newClusterId,
+                    Caption = captionModule.Get(newClusterId).DisplayText,
+                    IsDragAllowed = false
+                };
+                Root.Children.Add(clusterNode);
+
+                // register for notifications after tree is built to avoid intermediate states getting notified
+
+                PropertyChangedEventManager.AddHandler(clusterNode, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => clusterNode.IsSelected));
+
+                // nothing ot update
+                //myNodeClusterCache = null;
+            }
 
             Root.Children.Single(n => n.Id == newClusterId).IsSelected = true;
 
@@ -83,16 +99,28 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         public ICommand DeleteClusterCommand { get; private set; }
 
-        private void OnDeleteCluster(ClusterTreeNode node)
+        private void OnDeleteCluster(ClusterTreeNode clusterNode)
         {
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
             var operation = new ChangeClusterAssignment(myPresentation);
-            operation.Execute(t => t.HideCluster(node.Id));
+            operation.Execute(t => t.HideCluster(clusterNode.Id));
 
-            // TODO: optimize!! (only update root)
-            BuildTree();
+            // update tree
+            {
+                Root.Children.Remove(clusterNode);
+
+                if (clusterNode.Id == SelectedCluster)
+                {
+                    SelectedCluster = null;
+                }
+
+                foreach (var treeNode in clusterNode.Children)
+                {
+                    myNodeToClusterCache.Remove(treeNode.Id);
+                }
+            }
 
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
@@ -124,7 +152,32 @@ namespace Plainion.GraphViz.Modules.Analysis
             var operation = new ChangeClusterAssignment(myPresentation);
             operation.Execute(t => t.AddToCluster(nodes, SelectedCluster));
 
-            BuildTree();
+            // update tree
+            {
+                var clusterNode = Root.Children.Single(n => n.Id == SelectedCluster);
+
+                var captionModule = myPresentation.GetModule<ICaptionModule>();
+
+                var newTreeNodes = nodes
+                    .Select(n => new ClusterTreeNode(myPresentation)
+                    {
+                        Parent = clusterNode,
+                        Id = n,
+                        Caption = captionModule.Get(n).DisplayText,
+                        IsDropAllowed = false
+                    });
+                clusterNode.Children.AddRange(newTreeNodes);
+
+                // register for notifications after tree is built to avoid intermediate states getting notified
+
+                foreach (var node in newTreeNodes)
+                {
+                    PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
+                    PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
+
+                    myNodeToClusterCache[node.Id] = clusterNode.Id;
+                }
+            }
 
             Filter = null;
 
@@ -247,7 +300,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                     }
                 }
 
-                myNodeClusterCache = null;
+                myNodeToClusterCache = null;
             }
         }
 
@@ -366,22 +419,22 @@ namespace Plainion.GraphViz.Modules.Analysis
 
             // we do not look into model because handlign the ITransformationModule esp. with folding
             // is too complex. anyhow the "model" for the preview can also be the tree in this case.
-            if (myNodeClusterCache == null)
+            if (myNodeToClusterCache == null)
             {
                 Debug.WriteLine("Rebuilding NodeClusterCache");
 
-                myNodeClusterCache = new Dictionary<string, string>();
+                myNodeToClusterCache = new Dictionary<string, string>();
 
                 foreach (ClusterTreeNode cluster in Root.Children)
                 {
-                    foreach (ClusterTreeNode clusterNode in cluster.Children)
+                    foreach (ClusterTreeNode treeNode in cluster.Children)
                     {
-                        myNodeClusterCache[clusterNode.Id] = cluster.Id;
+                        myNodeToClusterCache[treeNode.Id] = cluster.Id;
                     }
                 }
             }
 
-            if (myNodeClusterCache.ContainsKey(node.Node.Id))
+            if (myNodeToClusterCache.ContainsKey(node.Node.Id))
             {
                 return false;
             }
