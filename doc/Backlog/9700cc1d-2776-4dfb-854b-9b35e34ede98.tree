@@ -49,6 +49,9 @@
           <Caption><![CDATA[productize]]></Caption>
         </Node>
       </Node>
+      <Node Id="c79438c4-be4c-4811-9283-5668145fcc0e">
+        <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
+      </Node>
     </Node>
   </Node>
 </Tree>

@@ -51,6 +51,7 @@
             </ContextMenu>
             <ContextMenu x:Key="Cluster">
                 <MenuItem Header="Fold/Unfold" Command="{Binding ToggleClusterFoldingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Unfold and hide unreferenced nodes" Command="{Binding UnfoldAndHideUnreferencedNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
             </ContextMenu>
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>

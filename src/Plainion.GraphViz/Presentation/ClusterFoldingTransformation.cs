@@ -11,7 +11,7 @@ namespace Plainion.GraphViz.Presentation
         private readonly IGraphPresentation myPresentation;
 
         // key: cluster.Id, value: cluster-node-id
-        private readonly Dictionary<string, string> myFoldedClusters;
+        private readonly Dictionary<string, string> myFoldedClusterToClusterNodeMapping;
 
         // we remember the most recent input graph so that we can figure out
         // later which nodes where in which cluster BEFORE folding
@@ -21,12 +21,12 @@ namespace Plainion.GraphViz.Presentation
         {
             myPresentation = presentation;
 
-            myFoldedClusters = new Dictionary<string, string>();
+            myFoldedClusterToClusterNodeMapping = new Dictionary<string, string>();
         }
 
-        public IEnumerable<string> Clusters
+        public IReadOnlyDictionary<string, string> ClusterToClusterNodeMapping
         {
-            get { return myFoldedClusters.Keys; }
+            get { return myFoldedClusterToClusterNodeMapping; }
         }
 
         public IEnumerable<Node> GetNodes(string clusterId)
@@ -38,32 +38,32 @@ namespace Plainion.GraphViz.Presentation
 
         public void Add(string clusterId)
         {
-            if (myFoldedClusters.ContainsKey(clusterId))
+            if (myFoldedClusterToClusterNodeMapping.ContainsKey(clusterId))
             {
                 return;
             }
 
             var clusterNodeId = Guid.NewGuid().ToString();
 
-            myFoldedClusters.Add(clusterId, clusterNodeId);
+            myFoldedClusterToClusterNodeMapping.Add(clusterId, clusterNodeId);
 
             // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
             var captions = myPresentation.GetPropertySetFor<Caption>();
             captions.Add(new Caption(clusterNodeId, "[" + captions.Get(clusterId).DisplayText + "]"));
 
-            OnPropertyChanged(() => Clusters);
+            OnPropertyChanged(() => ClusterToClusterNodeMapping);
         }
 
         public void Remove(string clusterId)
         {
-            myFoldedClusters.Remove(clusterId);
+            myFoldedClusterToClusterNodeMapping.Remove(clusterId);
 
-            OnPropertyChanged(() => Clusters);
+            OnPropertyChanged(() => ClusterToClusterNodeMapping);
         }
 
         public void Toggle(string clusterId)
         {
-            if (myFoldedClusters.ContainsKey(clusterId))
+            if (myFoldedClusterToClusterNodeMapping.ContainsKey(clusterId))
             {
                 Remove(clusterId);
             }
@@ -77,7 +77,7 @@ namespace Plainion.GraphViz.Presentation
         {
             myGraph = graph;
 
-            if (myFoldedClusters.Count == 0)
+            if (myFoldedClusterToClusterNodeMapping.Count == 0)
             {
                 return graph;
             }
@@ -87,7 +87,7 @@ namespace Plainion.GraphViz.Presentation
             var nodesToClusterMap = new Dictionary<string, string>();
 
             // add unfolded clusters
-            foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusters.ContainsKey(c.Id)))
+            foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusterToClusterNodeMapping.ContainsKey(c.Id)))
             {
                 var nodes = cluster.Nodes
                     .Select(n => n.Id)
@@ -101,7 +101,7 @@ namespace Plainion.GraphViz.Presentation
             }
 
             // add folded clusters
-            foreach (var entry in myFoldedClusters.ToList())
+            foreach (var entry in myFoldedClusterToClusterNodeMapping.ToList())
             {
                 builder.TryAddNode(entry.Value);
                 builder.TryAddCluster(entry.Key, new[] { entry.Value });
@@ -110,7 +110,7 @@ namespace Plainion.GraphViz.Presentation
                 if (foldedCluster == null)
                 {
                     // this cluster was deleted
-                    myFoldedClusters.Remove(entry.Key);
+                    myFoldedClusterToClusterNodeMapping.Remove(entry.Key);
                     continue;
                 }
 
@@ -138,12 +138,12 @@ namespace Plainion.GraphViz.Presentation
 
                 string foldedClusterId;
                 string foldedClusterNodeId;
-                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && myFoldedClusters.TryGetValue(foldedClusterId, out foldedClusterNodeId))
+                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && myFoldedClusterToClusterNodeMapping.TryGetValue(foldedClusterId, out foldedClusterNodeId))
                 {
                     source = foldedClusterNodeId;
                 }
 
-                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && myFoldedClusters.TryGetValue(foldedClusterId, out foldedClusterNodeId))
+                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && myFoldedClusterToClusterNodeMapping.TryGetValue(foldedClusterId, out foldedClusterNodeId))
                 {
                     target = foldedClusterNodeId;
                 }

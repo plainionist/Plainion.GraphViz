@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -35,6 +36,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
 
             ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(OnToggleClusterFolding);
+            UnfoldAndHideUnreferencedNodesCommand = new DelegateCommand<Cluster>(OnUnfoldAndHideUnreferencedNodes);
 
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
             HideNodesWithoutEdgesCommand = new DelegateCommand(() => new HideNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
@@ -107,6 +109,48 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         {
             new ChangeClusterFolding(Presentation)
                 .Execute(t => t.Toggle(cluster.Id));
+        }
+
+        public ICommand UnfoldAndHideUnreferencedNodesCommand { get; private set; }
+
+        private void OnUnfoldAndHideUnreferencedNodes(Cluster cluster)
+        {
+            var transformations = Presentation.GetModule<ITransformationModule>();
+            var transformation = transformations.Items
+                .OfType<ClusterFoldingTransformation>()
+                .SingleOrDefault();
+
+            if (transformation == null)
+            {
+                return;
+            }
+
+            string clusterNodeId;
+            if (!transformation.ClusterToClusterNodeMapping.TryGetValue(cluster.Id, out clusterNodeId))
+            {
+                return;
+            }
+
+            var clusterNode = transformations.Graph.Nodes.Single(n => n.Id == clusterNodeId);
+            var referencingNodes = new HashSet<string>(clusterNode.In.Select(e => e.Source.Id)
+                .Concat(clusterNode.Out.Select(e => e.Target.Id)));
+
+            // unfold
+            transformation.Toggle(cluster.Id);
+
+            var referencedNodes = transformations.Graph.Clusters.Single(c => c.Id == cluster.Id).Nodes
+                .Where(n => n.In.Select(e => e.Source.Id)
+                    .Concat(n.Out.Select(e=>e.Target.Id))
+                    .Any(referencingNodes.Contains));
+
+            var mask = new NodeMask();
+            mask.Set(referencedNodes);
+
+            var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
+            mask.Label = "Referenced outside " + caption.DisplayText;
+
+            var module = Presentation.GetModule<INodeMaskModule>();
+            module.Push(mask);
         }
 
         public ICommand FoldUnfoldAllClustersCommand { get; private set; }

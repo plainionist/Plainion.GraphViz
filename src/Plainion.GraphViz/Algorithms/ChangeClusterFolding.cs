@@ -56,7 +56,7 @@ namespace Plainion.GraphViz.Algorithms
             }
             else
             {
-                foreach (var cluster in transformation.Clusters.ToList())
+                foreach (var cluster in transformation.ClusterToClusterNodeMapping.Keys.ToList())
                 {
                     transformation.Remove(cluster);
                 }

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="c79438c4-be4c-4811-9283-5668145fcc0e" Created="635956604463160546" LastModified="635956604838570546">
+  <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
+  <Content><![CDATA[e.g. unfold on unfolded clusters]]></Content>
+</Node>
