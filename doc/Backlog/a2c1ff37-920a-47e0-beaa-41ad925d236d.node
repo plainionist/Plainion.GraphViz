@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="a2c1ff37-920a-47e0-beaa-41ad925d236d" Created="635956295202970631" LastModified="635956295375110631">
+  <Caption><![CDATA[hide clusters from graph]]></Caption>
+  <Content><![CDATA[if everything is unfolded we may not want to show the cluster rectangels]]></Content>
+</Node>

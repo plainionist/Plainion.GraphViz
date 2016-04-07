@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="146d4477-df29-49ef-8b44-671ab37f8a63" Created="635956293836630631" LastModified="635956294207170631">
+  <Caption><![CDATA[reference package specs across package specs]]></Caption>
+  <Content><![CDATA[clusters of common code should be defined only once and reused in different 
+system spacs]]></Content>
+</Node>

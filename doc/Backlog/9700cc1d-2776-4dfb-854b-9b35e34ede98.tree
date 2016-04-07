@@ -10,6 +10,12 @@
       <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
         <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
       </Node>
+      <Node Id="146d4477-df29-49ef-8b44-671ab37f8a63">
+        <Caption><![CDATA[reference package specs across package specs]]></Caption>
+      </Node>
+      <Node Id="a2c1ff37-920a-47e0-beaa-41ad925d236d">
+        <Caption><![CDATA[hide clusters from graph]]></Caption>
+      </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
         <Node Id="fb401c48-f3b4-4897-ac46-41d1b3b77eef">

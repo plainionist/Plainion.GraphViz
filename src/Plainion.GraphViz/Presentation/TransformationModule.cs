@@ -60,13 +60,14 @@ namespace Plainion.GraphViz.Presentation
                 return;
             }
 
-            Debug.WriteLine("ApplyTransformations");
-
-            myGraph = myPresentation.Graph;
-
-            foreach (var transformation in myTransformations)
+            using (new Profile("ApplyTransformations"))
             {
-                myGraph = transformation.Transform(myGraph);
+                myGraph = myPresentation.Graph;
+
+                foreach (var transformation in myTransformations)
+                {
+                    myGraph = transformation.Transform(myGraph);
+                }
             }
         }
 
