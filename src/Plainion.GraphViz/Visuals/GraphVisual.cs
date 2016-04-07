@@ -156,7 +156,11 @@ namespace Plainion.GraphViz.Visuals
                 var selectionModule = Presentation.GetPropertySetFor<Selection>();
                 foreach (var e in selectionModule.Items)
                 {
-                    myDrawingElements[e.OwnerId].Select(e.IsSelected);
+                    AbstractElementVisual drawing;
+                    if (myDrawingElements.TryGetValue(e.OwnerId, out drawing))
+                    {
+                        drawing.Select(e.IsSelected);
+                    }
                 }
 
                 // clear journals - to avoid considering out-dated infos on next refresh
