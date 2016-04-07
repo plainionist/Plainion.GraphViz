@@ -173,7 +173,8 @@ namespace Plainion.GraphViz.Modules.Analysis
                         Parent = clusterNode,
                         Id = n,
                         Caption = captionModule.Get(n).DisplayText,
-                        IsDropAllowed = false
+                        IsDropAllowed = false,
+                        ShowId=TreeShowId
                     });
                 clusterNode.Children.AddRange(newTreeNodes);
 
@@ -293,7 +294,8 @@ namespace Plainion.GraphViz.Modules.Analysis
                             Parent = clusterNode,
                             Id = n.Id,
                             Caption = captionModule.Get(n.Id).DisplayText,
-                            IsDropAllowed = false
+                            IsDropAllowed = false,
+                            ShowId=TreeShowId
                         }));
                 }
 

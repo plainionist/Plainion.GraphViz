@@ -36,6 +36,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                 if (SetProperty(ref myCaption, value))
                 {
                     myPresentation.GetPropertySetFor<Caption>().Get(Id).DisplayText = myCaption;
+                    OnPropertyChanged(() => DisplayText);
                 }
             }
         }
