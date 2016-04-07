@@ -8,7 +8,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
 
         internal bool Matches(string file)
         {
-            return new Plainion.Text.Wildcard(Pattern, RegexOptions.IgnoreCase).IsMatch(file);
+            return new Plainion.Text.Wildcard("*" + Pattern + "*", RegexOptions.IgnoreCase).IsMatch(file);
         }
     }
 }
