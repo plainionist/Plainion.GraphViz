@@ -132,16 +132,17 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             var clusterNodeId = transformation.GetClusterNodeId(cluster.Id);
             var clusterNode = transformations.Graph.Nodes.Single(n => n.Id == clusterNodeId);
-            var referencingNodes = new HashSet<string>(clusterNode.In.Select(e => e.Source.Id)
-                .Concat(clusterNode.Out.Select(e => e.Target.Id)));
+            var referencingNodes = new HashSet<string>(GetVisibleSiblings(clusterNode));
 
             // unfold
             transformation.Toggle(cluster.Id);
 
-            var referencedNodes = transformations.Graph.Clusters.Single(c => c.Id == cluster.Id).Nodes
-                .Where(n => n.In.Select(e => e.Source.Id)
-                    .Concat(n.Out.Select(e=>e.Target.Id))
-                    .Any(referencingNodes.Contains));
+            var unfoldedCluster = transformations.Graph.Clusters.Single(c => c.Id == cluster.Id);
+
+            // so fare the unfoldedCluster nodes are NOT visible ... if we have used s.th. like "show siblings"
+            // on the cluster node!
+            var referencedNodes = unfoldedCluster.Nodes
+                .Where(n => n.In.Select(e => e.Source.Id).Concat(n.Out.Select(e => e.Target.Id)).Any(referencingNodes.Contains));
 
             var mask = new NodeMask();
             mask.Set(referencedNodes);
@@ -151,6 +152,18 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             var module = Presentation.GetModule<INodeMaskModule>();
             module.Push(mask);
+        }
+
+        private IEnumerable<string> GetVisibleSiblings(Node node)
+        {
+            return node.In
+                .Where(e => Presentation.Picking.Pick(e))
+                .Select(e => e.Source)
+                .Concat(node.Out
+                    .Where(e => Presentation.Picking.Pick(e))
+                    .Select(e => e.Target))
+                .Where(n => Presentation.Picking.Pick(n))
+                .Select(n => n.Id);
         }
 
         public ICommand FoldUnfoldAllClustersCommand { get; private set; }
