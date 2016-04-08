@@ -107,21 +107,7 @@ namespace Plainion.GraphViz.Visuals
 
                 myDrawing = new DrawingVisual();
 
-                foreach (var node in transformationModule.Graph.Nodes)
-                {
-                    var visual = new NodeVisual(node, Presentation);
-
-                    myDrawingElements.Add(node.Id, visual);
-
-                    if (Presentation.Picking.Pick(node))
-                    {
-                        var layoutState = layoutModule.GetLayout(node);
-                        visual.Draw(layoutState);
-
-                        myDrawing.Children.Add(visual.Visual);
-                    }
-                }
-
+                // first draw edges so that in case of overlap with nodes nodes are on top
                 foreach (var edge in transformationModule.Graph.Edges)
                 {
                     var visual = new EdgeVisual(edge, Presentation);
@@ -131,6 +117,21 @@ namespace Plainion.GraphViz.Visuals
                     if (Presentation.Picking.Pick(edge))
                     {
                         var layoutState = layoutModule.GetLayout(edge);
+                        visual.Draw(layoutState);
+
+                        myDrawing.Children.Add(visual.Visual);
+                    }
+                }
+
+                foreach (var node in transformationModule.Graph.Nodes)
+                {
+                    var visual = new NodeVisual(node, Presentation);
+
+                    myDrawingElements.Add(node.Id, visual);
+
+                    if (Presentation.Picking.Pick(node))
+                    {
+                        var layoutState = layoutModule.GetLayout(node);
                         visual.Draw(layoutState);
 
                         myDrawing.Children.Add(visual.Visual);
@@ -178,6 +179,19 @@ namespace Plainion.GraphViz.Visuals
             }
             else
             {
+                // first draw edges so that in case of overlap with nodes nodes are on top
+                if (!myEdgeMaskJournal.IsEmpty)
+                {
+                    // EdgeMask module can only hide additional edges so no picking required here
+                    foreach (var edge in myEdgeMaskJournal.Entries)
+                    {
+                        SetVisibility((EdgeVisual)myDrawingElements[edge.Id], false, null);
+                    }
+
+                    myEdgeMaskJournal.Clear();
+                    InvalidateVisual();
+                }
+
                 if (!myNodeMaskJournal.IsEmpty)
                 {
                     foreach (var node in transformationModule.Graph.Nodes)
@@ -223,18 +237,6 @@ namespace Plainion.GraphViz.Visuals
                     }
 
                     myNodeMaskJournal.Clear();
-                    InvalidateVisual();
-                }
-
-                if (!myEdgeMaskJournal.IsEmpty)
-                {
-                    // EdgeMask module can only hide additional edges so no picking required here
-                    foreach (var edge in myEdgeMaskJournal.Entries)
-                    {
-                        SetVisibility((EdgeVisual)myDrawingElements[edge.Id], false, null);
-                    }
-
-                    myEdgeMaskJournal.Clear();
                     InvalidateVisual();
                 }
 
