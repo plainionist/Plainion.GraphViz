@@ -10,8 +10,12 @@ namespace Plainion.GraphViz.Presentation
     {
         private readonly IGraphPresentation myPresentation;
 
+        // always keep node id of once folded clusters because we would generate new IDs when refolding
+        // but that would destroy masks with folded clusters included ...
         // key: cluster.Id, value: cluster-node-id
-        private readonly Dictionary<string, string> myFoldedClusterToClusterNodeMapping;
+        private readonly Dictionary<string, string> myClusterToClusterNodeMapping;
+
+        private readonly HashSet<string> myFoldedClusters;
 
         // we remember the most recent input graph so that we can figure out
         // later which nodes where in which cluster BEFORE folding
@@ -21,12 +25,18 @@ namespace Plainion.GraphViz.Presentation
         {
             myPresentation = presentation;
 
-            myFoldedClusterToClusterNodeMapping = new Dictionary<string, string>();
+            myClusterToClusterNodeMapping = new Dictionary<string, string>();
+            myFoldedClusters = new HashSet<string>();
         }
 
-        public IReadOnlyDictionary<string, string> ClusterToClusterNodeMapping
+        public IEnumerable<string> Clusters
         {
-            get { return myFoldedClusterToClusterNodeMapping; }
+            get { return myFoldedClusters; }
+        }
+
+        public string GetClusterNodeId(string clusterId)
+        {
+            return myClusterToClusterNodeMapping[clusterId];
         }
 
         public IEnumerable<Node> GetNodes(string clusterId)
@@ -38,32 +48,37 @@ namespace Plainion.GraphViz.Presentation
 
         public void Add(string clusterId)
         {
-            if (myFoldedClusterToClusterNodeMapping.ContainsKey(clusterId))
+            if (myFoldedClusters.Contains(clusterId))
             {
                 return;
             }
 
-            var clusterNodeId = Guid.NewGuid().ToString();
+            string clusterNodeId;
+            if (!myClusterToClusterNodeMapping.TryGetValue(clusterId, out clusterNodeId))
+            {
+                clusterNodeId = Guid.NewGuid().ToString();
+                myClusterToClusterNodeMapping.Add(clusterId, clusterNodeId);
 
-            myFoldedClusterToClusterNodeMapping.Add(clusterId, clusterNodeId);
+                // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
+                var captions = myPresentation.GetPropertySetFor<Caption>();
+                captions.Add(new Caption(clusterNodeId, "[" + captions.Get(clusterId).DisplayText + "]"));
+            }
 
-            // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
-            var captions = myPresentation.GetPropertySetFor<Caption>();
-            captions.Add(new Caption(clusterNodeId, "[" + captions.Get(clusterId).DisplayText + "]"));
+            myFoldedClusters.Add(clusterId);
 
-            OnPropertyChanged(() => ClusterToClusterNodeMapping);
+            OnPropertyChanged(() => Clusters);
         }
 
         public void Remove(string clusterId)
         {
-            myFoldedClusterToClusterNodeMapping.Remove(clusterId);
+            myFoldedClusters.Remove(clusterId);
 
-            OnPropertyChanged(() => ClusterToClusterNodeMapping);
+            OnPropertyChanged(() => Clusters);
         }
 
         public void Toggle(string clusterId)
         {
-            if (myFoldedClusterToClusterNodeMapping.ContainsKey(clusterId))
+            if (myFoldedClusters.Contains(clusterId))
             {
                 Remove(clusterId);
             }
@@ -77,7 +92,7 @@ namespace Plainion.GraphViz.Presentation
         {
             myGraph = graph;
 
-            if (myFoldedClusterToClusterNodeMapping.Count == 0)
+            if (myFoldedClusters.Count == 0)
             {
                 return graph;
             }
@@ -87,7 +102,7 @@ namespace Plainion.GraphViz.Presentation
             var nodesToClusterMap = new Dictionary<string, string>();
 
             // add unfolded clusters
-            foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusterToClusterNodeMapping.ContainsKey(c.Id)))
+            foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusters.Contains(c.Id)))
             {
                 var nodes = cluster.Nodes
                     .Select(n => n.Id)
@@ -101,16 +116,18 @@ namespace Plainion.GraphViz.Presentation
             }
 
             // add folded clusters
-            foreach (var entry in myFoldedClusterToClusterNodeMapping.ToList())
+            foreach (var clusterId in myFoldedClusters.ToList())
             {
-                builder.TryAddNode(entry.Value);
-                builder.TryAddCluster(entry.Key, new[] { entry.Value });
+                var clusterNodeId = myClusterToClusterNodeMapping[clusterId];
 
-                var foldedCluster = graph.Clusters.SingleOrDefault(c => c.Id == entry.Key);
+                builder.TryAddNode(clusterNodeId);
+                builder.TryAddCluster(clusterId, new[] { clusterNodeId });
+
+                var foldedCluster = graph.Clusters.SingleOrDefault(c => c.Id == clusterId);
                 if (foldedCluster == null)
                 {
                     // this cluster was deleted
-                    myFoldedClusterToClusterNodeMapping.Remove(entry.Key);
+                    myFoldedClusters.Remove(clusterId);
                     continue;
                 }
 
@@ -137,15 +154,14 @@ namespace Plainion.GraphViz.Presentation
                 var target = edge.Target.Id;
 
                 string foldedClusterId;
-                string foldedClusterNodeId;
-                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && myFoldedClusterToClusterNodeMapping.TryGetValue(foldedClusterId, out foldedClusterNodeId))
+                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && myFoldedClusters.Contains(foldedClusterId))
                 {
-                    source = foldedClusterNodeId;
+                    source = myClusterToClusterNodeMapping[foldedClusterId];
                 }
 
-                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && myFoldedClusterToClusterNodeMapping.TryGetValue(foldedClusterId, out foldedClusterNodeId))
+                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && myFoldedClusters.Contains(foldedClusterId))
                 {
-                    target = foldedClusterNodeId;
+                    target = myClusterToClusterNodeMapping[foldedClusterId];
                 }
 
                 // ignore self-edges

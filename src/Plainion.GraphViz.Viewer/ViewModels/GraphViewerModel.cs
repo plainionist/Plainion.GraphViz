@@ -125,12 +125,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 return;
             }
 
-            string clusterNodeId;
-            if (!transformation.ClusterToClusterNodeMapping.TryGetValue(cluster.Id, out clusterNodeId))
+            if (!transformation.Clusters.Contains(cluster.Id))
             {
                 return;
             }
 
+            var clusterNodeId = transformation.GetClusterNodeId(cluster.Id);
             var clusterNode = transformations.Graph.Nodes.Single(n => n.Id == clusterNodeId);
             var referencingNodes = new HashSet<string>(clusterNode.In.Select(e => e.Source.Id)
                 .Concat(clusterNode.Out.Select(e => e.Target.Id)));

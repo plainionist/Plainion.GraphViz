@@ -284,7 +284,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                     // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
                     var folding = transformationModule.Items
                         .OfType<ClusterFoldingTransformation>()
-                        .SingleOrDefault(f => f.ClusterToClusterNodeMapping.ContainsKey(cluster.Id));
+                        .SingleOrDefault(f => f.Clusters.Contains(cluster.Id));
 
                     var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
 
