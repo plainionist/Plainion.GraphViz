@@ -17,8 +17,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packaging\Services\SpecUtilsTests.cs" />
+    <Compile Include="TestData\InterfaceMethod.cs" />
+    <Compile Include="TestData\VirtualMethodCall.cs" />
     <Compile Include="TestData\GenericMethod.cs" />
     <Compile Include="TestData\LinqAnonymousType.cs" />
+    <Compile Include="TestData\Contructor.cs" />
     <Compile Include="TestData\TypeOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Packaging\Services\ReflectorTests.cs" />

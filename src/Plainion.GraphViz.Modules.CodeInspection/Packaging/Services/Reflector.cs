@@ -154,7 +154,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         yield return new Edge { Target = TryGetSystemType(typeRef) };
                     }
                 }
-                else if (instr.OpCode == OpCodes.Call)
+                else if (instr.OpCode == OpCodes.Newobj)
+                {
+                    var methodRef = instr.Operand as MethodReference;
+                    if (methodRef != null)
+                    {
+                        yield return new Edge { Target = TryGetSystemType(methodRef.DeclaringType) };
+                    }
+                }
+                else if (instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli)
                 {
                     var callee = ((MethodReference)instr.Operand);
 

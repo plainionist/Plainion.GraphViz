@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 
+using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
@@ -21,12 +22,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests.Packaging.Services
 
         private void Verify(Type code, Type usedType)
         {
+            Verify(code, usedType, EdgeType.Undefined);
+        }
+
+        private void Verify(Type code, Type usedType, EdgeType edgeType)
+        {
             var reflector = new Reflector(new AssemblyLoader(), code);
 
             var edges = reflector.GetUsedTypes();
 
             var types = edges
-                .SelectMany(e => new[] { e.Source, e.Target })
+                .Where(e => edgeType == EdgeType.Undefined || e.EdgeType == edgeType)
+                .Select(e => e.Target)
                 .Distinct();
 
             Assert.That(types, Contains.Item(usedType));
@@ -42,6 +49,24 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests.Packaging.Services
         public void GetUsedTypes_LinqAnonymousType_Found()
         {
             Verify(typeof(LinqAnonymousType), typeof(Node));
+        }
+
+        [Test]
+        public void GetUsedTypes_Constructor_Found()
+        {
+            Verify(typeof(Constructor), typeof(ShowCycles));
+        }
+
+        [Test]
+        public void GetUsedTypes_VirtualMethodCall_Found()
+        {
+            Verify(typeof(VirtualMethodCall), typeof(ShowCycles));
+        }
+
+        [Test]
+        public void GetUsedTypes_InterfaceMethod_Found()
+        {
+            Verify(typeof(InterfaceMethod), typeof(ILayoutEngine));
         }
     }
 }
