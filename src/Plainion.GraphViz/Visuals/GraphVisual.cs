@@ -194,6 +194,34 @@ namespace Plainion.GraphViz.Visuals
                             v => v.Draw(layoutModule.GetLayout(v.Owner)));
                     }
 
+                    // if node visibility changed we should check whether clusters have to be redrawn
+                    foreach (var cluster in transformationModule.Graph.Clusters)
+                    {
+                        if (cluster.Nodes.Any(n => Presentation.Picking.Pick(n)))
+                        {
+                            if (!myDrawingElements.ContainsKey(cluster.Id))
+                            {
+                                var visual = new ClusterVisual(cluster, Presentation);
+
+                                myDrawingElements.Add(cluster.Id, visual);
+
+                                visual.Draw(myDrawingElements);
+
+                                myDrawing.Children.Insert(0, visual.Visual);
+                            }
+                        }
+                        else
+                        {
+                            AbstractElementVisual visual;
+                            if (myDrawingElements.TryGetValue(cluster.Id, out visual))
+                            {
+                                myDrawingElements.Remove(cluster.Id);
+
+                                myDrawing.Children.Remove(visual.Visual);
+                            }
+                        }
+                    }
+
                     myNodeMaskJournal.Clear();
                     InvalidateVisual();
                 }

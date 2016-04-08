@@ -4,6 +4,9 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="90063699-af33-4a35-ab9f-e93c26b4603d">
       <Caption><![CDATA[bugs]]></Caption>
+      <Node Id="c79438c4-be4c-4811-9283-5668145fcc0e">
+        <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
+      </Node>
     </Node>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next steps]]></Caption>
@@ -12,9 +15,6 @@
       </Node>
       <Node Id="146d4477-df29-49ef-8b44-671ab37f8a63">
         <Caption><![CDATA[reference package specs across package specs]]></Caption>
-      </Node>
-      <Node Id="a2c1ff37-920a-47e0-beaa-41ad925d236d">
-        <Caption><![CDATA[hide clusters from graph]]></Caption>
       </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
@@ -48,9 +48,6 @@
         <Node Id="33edd133-1842-4200-b9bb-290f7f3919d0">
           <Caption><![CDATA[productize]]></Caption>
         </Node>
-      </Node>
-      <Node Id="c79438c4-be4c-4811-9283-5668145fcc0e">
-        <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
       </Node>
     </Node>
   </Node>
