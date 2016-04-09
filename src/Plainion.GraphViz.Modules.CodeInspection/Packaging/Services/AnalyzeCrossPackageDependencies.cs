@@ -60,13 +60,20 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             var doc = new AnalysisDocument();
 
+            var nodesWithEdgesIndex = new HashSet<Type>();
+            foreach (var edge in edges)
+            {
+                nodesWithEdgesIndex.Add(edge.Source);
+                nodesWithEdgesIndex.Add(edge.Target);
+            }
+            
             for (int i = 0; i < Config.Packages.Count; ++i)
             {
                 var package = Config.Packages[i];
 
                 foreach (var node in myPackages[package.Name].Select(GraphUtils.Node).Distinct())
                 {
-                    if (!edges.Any(e => e.Source == node || e.Target == node))
+                    if (!nodesWithEdgesIndex.Contains(node))
                     {
                         continue;
                     }

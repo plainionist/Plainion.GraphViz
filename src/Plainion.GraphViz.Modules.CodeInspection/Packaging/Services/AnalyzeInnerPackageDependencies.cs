@@ -14,10 +14,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         protected override void Load()
         {
-            myPackage = Config.Packages.Single( p => p.Name.Equals( PackageName, StringComparison.OrdinalIgnoreCase ) );
+            myPackage = Config.Packages.Single(p => p.Name.Equals(PackageName, StringComparison.OrdinalIgnoreCase));
 
-            myTypes = Load( myPackage )
-                .SelectMany( asm => asm.GetTypes() )
+            myTypes = Load(myPackage)
+                .SelectMany(asm => asm.GetTypes())
                 .ToList();
         }
 
@@ -25,38 +25,45 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             return myTypes
                 .AsParallel()
-                .WithCancellation( CancellationToken )
-                .SelectMany( t => Analyze( t ) )
+                .WithCancellation(CancellationToken)
+                .SelectMany(t => Analyze(t))
                 .ToArray();
         }
 
-        private IEnumerable<Edge> Analyze( Type type )
+        private IEnumerable<Edge> Analyze(Type type)
         {
-            Console.Write( "." );
+            Console.Write(".");
 
             CancellationToken.ThrowIfCancellationRequested();
 
-            return new Reflector( AssemblyLoader, type ).GetUsedTypes()
-                .Where( edge => myTypes.Contains( edge.Target ) )
-                .Select( edge => GraphUtils.Edge( edge ) )
-                .Where( edge => edge.Source != edge.Target );
+            return new Reflector(AssemblyLoader, type).GetUsedTypes()
+                .Where(edge => myTypes.Contains(edge.Target))
+                .Select(edge => GraphUtils.Edge(edge))
+                .Where(edge => edge.Source != edge.Target);
         }
 
-        protected override AnalysisDocument GenerateDocument( IReadOnlyCollection<Edge> edges )
+        protected override AnalysisDocument GenerateDocument(IReadOnlyCollection<Edge> edges)
         {
             var doc = new AnalysisDocument();
 
-            foreach( var node in myTypes.Select( GraphUtils.Node ).Distinct() )
+            var nodesWithEdgesIndex = new HashSet<Type>();
+            foreach (var edge in edges)
             {
-                if( !edges.Any( e => e.Source == node || e.Target == node ) )
+                nodesWithEdgesIndex.Add(edge.Source);
+                nodesWithEdgesIndex.Add(edge.Target);
+            }
+
+            foreach (var node in myTypes.Select(GraphUtils.Node).Distinct())
+            {
+                if (!nodesWithEdgesIndex.Contains(node))
                 {
                     continue;
                 }
 
-                doc.Add( node, myPackage );
+                doc.Add(node, myPackage);
             }
 
-            doc.Add( edges );
+            doc.Add(edges);
 
             return doc;
         }

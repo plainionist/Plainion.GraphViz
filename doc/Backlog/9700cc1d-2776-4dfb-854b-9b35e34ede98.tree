@@ -30,6 +30,12 @@
         <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">
           <Caption><![CDATA[auto-packaging]]></Caption>
         </Node>
+        <Node Id="c6fcd77b-c0e5-465a-981d-c58bea9b9979">
+          <Caption><![CDATA[performance]]></Caption>
+        </Node>
+        <Node Id="c827ed52-aae3-474e-93af-a1afd909ad14">
+          <Caption><![CDATA[option to show all nodes]]></Caption>
+        </Node>
       </Node>
       <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
         <Caption><![CDATA[Akka.Cluster]]></Caption>
