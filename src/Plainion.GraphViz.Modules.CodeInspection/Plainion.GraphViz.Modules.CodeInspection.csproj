@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdgeType.cs" />
+    <Compile Include="Packaging\Services\AnalysisDocumentSerializer.cs" />
     <Compile Include="Packaging\Services\Edge.cs" />
     <Compile Include="Packaging\Services\FailureResponse.cs" />
     <Compile Include="Packaging\AnalysisMode.cs" />

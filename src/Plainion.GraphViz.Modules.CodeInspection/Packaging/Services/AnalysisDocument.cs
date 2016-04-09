@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
-using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     // we use private properties here to support Json serialiation
+    [Serializable]
     class AnalysisDocument
     {
         private HashSet<string> myNodes { get; set; }
         private HashSet<Tuple<string, string>> myEdges { get; set; }
         private Dictionary<string, IEnumerable<string>> myClusters { get; set; }
-        private List<Caption> myCaptions { get; set; }
-        private List<NodeStyle> myNodeStyles { get; set; }
-        private List<EdgeStyle> myEdgeStyles { get; set; }
+        // key: id, value: caption
+        private Dictionary<string, string> myCaptions { get; set; }
+        // key: id, value: color
+        private Dictionary<string, string> myNodeStyles { get; set; }
+        // key: id, value: color
+        private Dictionary<string, string> myEdgeStyles { get; set; }
 
         public AnalysisDocument()
         {
@@ -23,9 +25,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             myEdges = new HashSet<Tuple<string, string>>();
             myClusters = new Dictionary<string, IEnumerable<string>>();
 
-            myCaptions = new List<Caption>();
-            myNodeStyles = new List<NodeStyle>();
-            myEdgeStyles = new List<EdgeStyle>();
+            myCaptions = new Dictionary<string, string>();
+            myNodeStyles = new Dictionary<string, string>();
+            myEdgeStyles = new Dictionary<string, string>();
         }
 
         public IEnumerable<string> Nodes { get { return myNodes; } }
@@ -34,92 +36,70 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         public IReadOnlyDictionary<string, IEnumerable<string>> Clusters { get { return myClusters; } }
 
-        public IEnumerable<Caption> Captions { get { return myCaptions; } }
+        public IReadOnlyDictionary<string, string> Captions { get { return myCaptions; } }
 
-        public IEnumerable<NodeStyle> NodeStyles { get { return myNodeStyles; } }
+        public IReadOnlyDictionary<string, string> NodeStyles { get { return myNodeStyles; } }
 
-        public IEnumerable<EdgeStyle> EdgeStyles { get { return myEdgeStyles; } }
+        public IReadOnlyDictionary<string, string> EdgeStyles { get { return myEdgeStyles; } }
 
-        public void AddNode(string nodeId)
+        internal void Add(IReadOnlyCollection<Edge> edges)
         {
-            myNodes.Add(nodeId);
-        }
-
-        public void AddEdge(string sourceNodeId, string targetNodeId)
-        {
-            myEdges.Add(Tuple.Create(sourceNodeId, targetNodeId));
-        }
-
-        public void AddToCluster(string clusterId, string nodeId)
-        {
-            IEnumerable<string> existing;
-            if (!myClusters.TryGetValue(clusterId, out existing))
+            foreach (var edge in edges)
             {
-                existing = new HashSet<string>();
-                myClusters.Add(clusterId, existing);
-            }
+                myEdges.Add(Tuple.Create(edge.Source.FullName, edge.Target.FullName));
 
-            ((HashSet<string>)existing).Add(nodeId);
-        }
-
-        public void Add(Caption caption)
-        {
-            if (!myCaptions.Any(c => c.OwnerId == caption.OwnerId))
-            {
-                myCaptions.Add(caption);
-            }
-        }
-
-        public void Add( NodeStyle nodeStyle )
-        {
-            if( !myNodeStyles.Any( n => n.OwnerId == nodeStyle.OwnerId ) )
-            {
-                myNodeStyles.Add( nodeStyle );
-            }
-        }
-
-        public void Add( EdgeStyle edgeStyle )
-        {
-            if( !myEdgeStyles.Any( e => e.OwnerId == edgeStyle.OwnerId ) )
-            {
-                myEdgeStyles.Add( edgeStyle );
-            }
-        }
-
-        internal void Add( IReadOnlyCollection<Edge> edges )
-        {
-            foreach( var edge in edges )
-            {
-                AddEdge( edge.Source.FullName, edge.Target.FullName );
-
-                Brush edgeBrush = null;
-                if( edge.EdgeType == EdgeType.DerivesFrom || edge.EdgeType == EdgeType.Implements )
+                string edgeBrush = null;
+                if (edge.EdgeType == EdgeType.DerivesFrom || edge.EdgeType == EdgeType.Implements)
                 {
-                    edgeBrush = Brushes.Blue;
+                    edgeBrush = "Blue";
                 }
-                else if( edge.EdgeType != EdgeType.Calls )
+                else if (edge.EdgeType != EdgeType.Calls)
                 {
-                    edgeBrush = Brushes.Gray;
+                    edgeBrush = "Gray";
                 }
 
-                if( edgeBrush != null )
+                if (edgeBrush != null)
                 {
-                    var edgeId = Model.Edge.CreateId( edge.Source.FullName, edge.Target.FullName );
-                    Add( new EdgeStyle( edgeId ) { Color = edgeBrush } );
+                    var edgeId = Model.Edge.CreateId(edge.Source.FullName, edge.Target.FullName);
+                    if (!myEdgeStyles.ContainsKey(edgeId))
+                    {
+                        myEdgeStyles.Add(edgeId, edgeBrush);
+                    }
                 }
             }
         }
 
-        internal void Add( Type node, Package package )
+        internal void Add(Type node, Package package)
         {
-            AddNode( node.FullName );
-            Add( new Caption( node.FullName, node.Name ) );
+            Add(node, package, null);
+        }
+
+        internal void Add(Type node, Package package, string fillColor)
+        {
+            myNodes.Add(node.FullName);
+
+            if (!myCaptions.ContainsKey(node.FullName))
+            {
+                myCaptions.Add(node.FullName, node.Name);
+            }
 
             // in case multiple cluster match we just take the first one
-            var matchedCluster = package.Clusters.FirstOrDefault( c => c.Matches( node.FullName ) );
-            if( matchedCluster != null )
+            var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
+            if (matchedCluster != null)
             {
-                AddToCluster( matchedCluster.Name, node.FullName );
+                IEnumerable<string> existing;
+                if (!myClusters.TryGetValue(matchedCluster.Name, out existing))
+                {
+                    existing = new HashSet<string>();
+                    myClusters.Add(matchedCluster.Name, existing);
+                }
+
+                ((HashSet<string>)existing).Add(node.FullName);
+            }
+
+            if (fillColor != null && !myNodeStyles.ContainsKey(node.FullName))
+            {
+                myNodeStyles.Add(node.FullName, fillColor);
             }
         }
     }

@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Xml;
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
@@ -266,19 +267,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             var captionModule = presentation.GetPropertySetFor<Caption>();
             foreach (var caption in response.Captions)
             {
-                captionModule.Add(caption);
+                captionModule.Add(new Caption(caption.Key, caption.Value));
             }
+
+            var converter = new BrushConverter();
 
             var nodeStyles = presentation.GetPropertySetFor<NodeStyle>();
             foreach (var style in response.NodeStyles)
             {
-                nodeStyles.Add(style);
+                nodeStyles.Add(new NodeStyle(style.Key) { FillColor = (Brush)converter.ConvertFromString(style.Value) });
             }
 
             var edgeStyles = presentation.GetPropertySetFor<EdgeStyle>();
             foreach (var style in response.EdgeStyles)
             {
-                edgeStyles.Add(style);
+                edgeStyles.Add(new EdgeStyle(style.Key) { Color = (Brush)converter.ConvertFromString(style.Value) });
             }
 
             Model.Presentation = presentation;
@@ -362,7 +365,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                             }
                             else
                             {
-                                cluster.Patterns.Add(new Exclude {Pattern = entry.Key});
+                                cluster.Patterns.Add(new Exclude { Pattern = entry.Key });
                             }
                         }
 
@@ -378,7 +381,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         if (clusterToAddTo == null)
                         {
                             // --> new cluster added in UI
-                            clusterToAddTo = new Spec.Cluster {Name = entry.Value};
+                            clusterToAddTo = new Spec.Cluster { Name = entry.Value };
                             clusters.Add(clusterToAddTo);
                             spec.Packages.First().Clusters.Add(clusterToAddTo);
                         }
@@ -391,7 +394,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                         }
                         else
                         {
-                            clusterToAddTo.Patterns.Add(new Include {Pattern = entry.Key});
+                            clusterToAddTo.Patterns.Add(new Include { Pattern = entry.Key });
                         }
                     }
 

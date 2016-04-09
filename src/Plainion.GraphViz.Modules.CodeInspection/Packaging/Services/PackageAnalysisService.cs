@@ -54,21 +54,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     throw new Exception(((FailureResponse)response).Error);
                 }
 
-                AnalysisDocument analysisResponse;
-
-                var settings = new JsonSerializerSettings();
-                settings.ContractResolver = new PrivateSettersContractResolver();
-
-                var serializer = JsonSerializer.Create(settings);
-                using (var sr = new StreamReader((string)response))
-                {
-                    using (var reader = new JsonTextReader(sr))
-                    {
-                        analysisResponse = serializer.Deserialize<AnalysisDocument>(reader);
-                    }
-                }
-
-                return analysisResponse;
+                var serializer = new AnalysisDocumentSerializer();
+                return serializer.Deserialize((string) response);
             }
             finally
             {

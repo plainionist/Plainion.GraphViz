@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         ( AnalyzeBase )new AnalyzeInnerPackageDependencies { PackageName = r.PackageName } :
                         ( AnalyzeBase )new AnalyzeCrossPackageDependencies();
 
-                    var spec = SpecUtils.Deserialize( SpecUtils.Unzip(r.Spec ));
+                    var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
                     return activity.Execute( spec, myCTS.Token );
                 }, myCTS.Token )
                 .ContinueWith<object>( x =>
@@ -48,14 +49,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         return new Finished { Error = x.Exception.ToString() };
                     }
 
-                    var serializer = new JsonSerializer();
-                    using( var sw = new StreamWriter( r.OutputFile ) )
-                    {
-                        using( var writer = new JsonTextWriter( sw ) )
-                        {
-                            serializer.Serialize( writer, x.Result );
-                        }
-                    }
+                    Console.WriteLine("Writing response ...");
+                    
+                    var serializer = new AnalysisDocumentSerializer();
+                    serializer.Serialize(x.Result, r.OutputFile);
 
                     return new Finished { ResponseFile = r.OutputFile };
                 }, TaskContinuationOptions.ExecuteSynchronously )
