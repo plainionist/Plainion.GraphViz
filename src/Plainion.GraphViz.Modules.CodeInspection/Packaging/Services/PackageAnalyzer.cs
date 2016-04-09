@@ -10,18 +10,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
     class PackageAnalyzer
     {
-        private static string[] Colors = { "LightBlue", "LightGreen", "LightGray", "Coral", "Brown" };
+        private static string[] Colors = { "LightBlue", "LightGreen", "LightGray", "LightCoral", "Brown" };
 
         private SystemPackaging myConfig;
         private CancellationToken myCancellationToken;
-        private AssemblyLoader myAssemblyLoader;
-        private readonly Dictionary<string, List<Type>> myPackageToTypesMap;
+        private readonly AssemblyLoader myAssemblyLoader;
+        private Dictionary<string, List<Type>> myPackageToTypesMap;
         private List<Package> myRelevantPackages;
 
         public PackageAnalyzer()
         {
             myAssemblyLoader = new AssemblyLoader();
-            myPackageToTypesMap = new Dictionary<string, List<Type>>();
             PackagesToAnalyze = new List<string>();
         }
 
@@ -41,6 +40,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     .ToList()
                 : myConfig.Packages;
 
+            myPackageToTypesMap = new Dictionary<string, List<Type>>();
+            
             Load();
 
             Console.WriteLine( "Analyzing ..." );
