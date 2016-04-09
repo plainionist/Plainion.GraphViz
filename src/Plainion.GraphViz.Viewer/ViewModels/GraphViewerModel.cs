@@ -20,6 +20,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
     class GraphViewerModel : ViewModelBase
     {
         private IModuleChangedObserver myTransformationsModuleObserver;
+        private IGraphItem myGraphItemForContextMenu;
 
         [ImportingConstructor]
         public GraphViewerModel( IEventAggregator eventAggregator )
@@ -58,11 +59,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
             PrintGraphCommand = new DelegateCommand( OnPrintGrpah, () => Presentation != null );
 
-            PreviewOpenContextMenuCommand = new DelegateCommand<IGraphItem>( graphItem =>
-            {
-                UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
-            } );
-
             eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe( OnEventFocused );
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
@@ -91,8 +87,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         }
 
         public IGraphViewNavigation Navigation { get; set; }
-
-        public ICommand PreviewOpenContextMenuCommand { get; private set; }
 
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
@@ -197,7 +191,17 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             get { return Model.LayoutEngine; }
         }
 
-        public IGraphItem GraphItemForContextMenu { get; set; }
+        public IGraphItem GraphItemForContextMenu
+        {
+            get { return myGraphItemForContextMenu; }
+            set
+            {
+                if( SetProperty( ref myGraphItemForContextMenu, value ) )
+                {
+                    UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
 
         public ObservableCollection<ClusterWithCaption> Clusters { get; private set; }
 
