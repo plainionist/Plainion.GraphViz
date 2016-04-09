@@ -136,6 +136,7 @@
     <Compile Include="Presentation\EdgeStyle.cs" />
     <Compile Include="Presentation\NodeStyle.cs" />
     <Compile Include="Presentation\AbstractStyle.cs" />
+    <Compile Include="Presentation\NotifyPropertyChangedBase.cs" />
     <Compile Include="Presentation\PickingCache.cs" />
     <Compile Include="Presentation\PropertySetComparer.cs" />
     <Compile Include="Presentation\EdgeLayout.cs" />

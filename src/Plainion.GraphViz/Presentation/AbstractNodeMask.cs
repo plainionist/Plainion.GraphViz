@@ -6,7 +6,7 @@ using Plainion.GraphViz.Model;
 namespace Plainion.GraphViz.Presentation
 {
     [Serializable]
-    public abstract class AbstractNodeMask : INodeMask
+    public abstract class AbstractNodeMask : NotifyPropertyChangedBase, INodeMask
     {
         private bool myIsApplied;
         private bool myIsShowMask;
@@ -30,51 +30,29 @@ namespace Plainion.GraphViz.Presentation
             info.AddValue( "IsShowMask", myIsShowMask );
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void SetProperty<T>( ref T member, T value, string propertyName )
-        {
-            if( object.ReferenceEquals( member, default( T ) ) && object.ReferenceEquals( value, default( T ) ) )
-            {
-                return;
-            }
-
-            if( !object.ReferenceEquals( member, default( T ) ) && member.Equals( value ) )
-            {
-                return;
-            }
-
-            member = value;
-
-            RaisePropertyChanged( propertyName );
-        }
-
-        protected void RaisePropertyChanged( string propertyName )
+        protected override void OnPropertyChanged( string propertyName )
         {
             IsDirty = true;
 
-            if( PropertyChanged != null )
-            {
-                PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
-            }
+            base.OnPropertyChanged( propertyName );
         }
 
         public string Label
         {
             get { return myLabel; }
-            set { SetProperty( ref myLabel, value, "Label" ); }
+            set { SetProperty( ref myLabel, value ); }
         }
 
         public bool IsShowMask
         {
             get { return myIsShowMask; }
-            set { SetProperty( ref myIsShowMask, value, "IsShowMask" ); }
+            set { SetProperty( ref myIsShowMask, value ); }
         }
 
         public bool IsApplied
         {
             get { return myIsApplied; }
-            set { SetProperty( ref myIsApplied, value, "IsApplied" ); }
+            set { SetProperty( ref myIsApplied, value ); }
         }
 
         public abstract bool? IsSet( Node node );

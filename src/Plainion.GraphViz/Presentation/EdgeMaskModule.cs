@@ -20,14 +20,14 @@ namespace Plainion.GraphViz.Presentation
         {
             myEdgesToHide.Add( edge );
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, edge ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, edge ) );
         }
 
         public void Remove( Edge edge )
         {
             myEdgesToHide.Remove( edge );
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, edge ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, edge ) );
         }
 
         public override IEnumerable<Edge> Items

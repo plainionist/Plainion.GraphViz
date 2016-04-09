@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 
 namespace Plainion.GraphViz.Presentation
 {
-    public abstract class AbstractModule<T> : IModule<T>
+    public abstract class AbstractModule<T> : NotifyPropertyChangedBase, IModule<T>
     {
         public abstract IEnumerable<T> Items { get; }
 
@@ -31,7 +31,7 @@ namespace Plainion.GraphViz.Presentation
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        protected void RaiseCollectionChanged( NotifyCollectionChangedEventArgs args )
+        protected void OnCollectionChanged( NotifyCollectionChangedEventArgs args )
         {
             if( CollectionChanged != null )
             {

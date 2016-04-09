@@ -33,7 +33,7 @@ namespace Plainion.GraphViz.Presentation
 
         private void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
         {
-            RaiseCollectionChanged( e );
+            OnCollectionChanged( e );
         }
 
         public override IEnumerable<INodeMask> Items

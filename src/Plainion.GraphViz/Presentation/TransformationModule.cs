@@ -44,7 +44,7 @@ namespace Plainion.GraphViz.Presentation
 
             ApplyTransformations();
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, transformation ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, transformation ) );
         }
 
         private void OnTransformationChanged( object sender, PropertyChangedEventArgs e )
@@ -83,7 +83,7 @@ namespace Plainion.GraphViz.Presentation
 
             ApplyTransformations();
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, transformation ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, transformation ) );
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Plainion.GraphViz.Presentation
 
             myItems.Add( item.OwnerId, item );
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, item ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, item ) );
         }
 
         protected virtual void OnAdding( T item )
@@ -70,7 +70,7 @@ namespace Plainion.GraphViz.Presentation
             var item = myItems[ id ];
             myItems.Remove( id );
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, item ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, item ) );
         }
 
         public void Clear()
@@ -83,7 +83,7 @@ namespace Plainion.GraphViz.Presentation
             var removedItems = myItems.Values.ToList();
             myItems.Clear();
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, removedItems ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, removedItems ) );
         }
 
         public override IEnumerable<T> Items

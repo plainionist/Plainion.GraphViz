@@ -10,6 +10,7 @@ namespace Plainion.GraphViz.Presentation
     {
         private Dictionary<string, NodeLayout> myNodeLayouts;
         private Dictionary<string, EdgeLayout> myEdgeLayouts;
+        private LayoutAlgorithm myLayoutAlgorithm;
 
         public GraphLayoutModule()
         {
@@ -19,20 +20,24 @@ namespace Plainion.GraphViz.Presentation
             Algorithm = LayoutAlgorithm.Auto;
         }
 
-        public LayoutAlgorithm Algorithm { get; set; }
+        public LayoutAlgorithm Algorithm
+        {
+            get { return myLayoutAlgorithm; }
+            set { SetProperty( ref myLayoutAlgorithm, value ); }
+        }
 
         public void Add( NodeLayout layout )
         {
             myNodeLayouts.Add( layout.OwnerId, layout );
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, layout ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, layout ) );
         }
 
         public void Add( EdgeLayout layout )
         {
             myEdgeLayouts.Add( layout.OwnerId, layout );
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, layout ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, layout ) );
         }
 
         public void Clear()
@@ -42,7 +47,7 @@ namespace Plainion.GraphViz.Presentation
             myNodeLayouts.Clear();
             myEdgeLayouts.Clear();
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, items ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, items ) );
         }
 
         public NodeLayout GetLayout( Node node )
@@ -79,7 +84,7 @@ namespace Plainion.GraphViz.Presentation
                 Add( layout );
             }
 
-            RaiseCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, Items ) );
+            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, Items ) );
         }
 
         public override IEnumerable<AbstractPropertySet> Items
