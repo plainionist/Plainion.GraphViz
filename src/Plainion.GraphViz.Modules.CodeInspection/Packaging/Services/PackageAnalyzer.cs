@@ -143,7 +143,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             for( int i = 0; i < myRelevantPackages.Count; ++i )
             {
-                var package = myConfig.Packages[ i ];
+                var package = myRelevantPackages[ i ];
 
                 foreach( var node in myPackageToTypesMap[ package.Name ].Select( GraphUtils.Node ).Distinct() )
                 {

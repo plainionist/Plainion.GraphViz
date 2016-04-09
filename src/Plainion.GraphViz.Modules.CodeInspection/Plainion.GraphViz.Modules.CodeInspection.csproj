@@ -135,7 +135,6 @@
     <Compile Include="Packaging\Services\AnalysisDocumentSerializer.cs" />
     <Compile Include="Packaging\Services\Edge.cs" />
     <Compile Include="Packaging\Services\FailureResponse.cs" />
-    <Compile Include="Packaging\AnalysisMode.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Packaging\Services\AnalysisDocument.cs" />

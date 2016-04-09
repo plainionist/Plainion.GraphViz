@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Newtonsoft.Json;
+using Plainion.Collections;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
@@ -34,9 +32,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 {
                     var analyzer = new PackageAnalyzer();
 
-                    if( r.AnalysisMode == AnalysisMode.InnerPackageDependencies )
+                    if( r.PackagesToAnalyze != null )
                     {
-                        analyzer.PackagesToAnalyze.Add( r.PackageName );
+                        analyzer.PackagesToAnalyze.AddRange( r.PackagesToAnalyze );
                     }
 
                     var spec = SpecUtils.Deserialize( SpecUtils.Unzip( r.Spec ) );
