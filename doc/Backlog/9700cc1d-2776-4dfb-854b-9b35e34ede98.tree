@@ -7,9 +7,6 @@
       <Node Id="c79438c4-be4c-4811-9283-5668145fcc0e">
         <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
       </Node>
-      <Node Id="146d4477-df29-49ef-8b44-671ab37f8a63">
-        <Caption><![CDATA[reference package specs across package specs]]></Caption>
-      </Node>
     </Node>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[vNext]]></Caption>
@@ -18,9 +15,6 @@
       </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
-        <Node Id="4ece55f9-17be-4941-9316-57a810fdcec7">
-          <Caption><![CDATA[Cluster editor]]></Caption>
-        </Node>
         <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">
           <Caption><![CDATA[auto-packaging]]></Caption>
         </Node>
