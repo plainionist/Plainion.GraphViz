@@ -36,7 +36,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
                     if( r.AnalysisMode == AnalysisMode.InnerPackageDependencies )
                     {
-                        analyzer.PackageName = r.PackageName;
+                        analyzer.PackagesToAnalyze.Add( r.PackageName );
                     }
 
                     var spec = SpecUtils.Deserialize( SpecUtils.Unzip( r.Spec ) );

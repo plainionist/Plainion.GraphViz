@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-16"?>
 <SystemPackaging AssemblyRoot="." xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
-    <Package Name="Plainion.Core">
+    <Package Name="Plainion.Foundations">
         <Package.Clusters>
             <Cluster Name="UI">
                 <Include Pattern="Plainion.Windows.*" />
@@ -10,6 +10,13 @@
         <Include Pattern="Plainion.Core.dll" />
         <Include Pattern="Plainion.Windows.dll" />
         <Include Pattern="Plainion.Prism.dll" />
+    </Package>
+    <Package Name="Prism">
+        <Include Pattern="Microsoft.Practices.Prism.*.dll" />
+    </Package>
+    <Package Name="Akka">
+        <Include Pattern="Akka.dll" />
+        <Include Pattern="Akka.*.dll" />
     </Package>
     <Package Name="Plaionion.GraphViz">
         <Package.Clusters>

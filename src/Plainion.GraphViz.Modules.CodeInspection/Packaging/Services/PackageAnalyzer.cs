@@ -8,31 +8,42 @@ using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
-    class PackageAnalyzer 
+    class PackageAnalyzer
     {
-        private static string[] Colors = { "LightBlue", "LightGreen", "LightGray" };
+        private static string[] Colors = { "LightBlue", "LightGreen", "LightGray", "Coral", "Brown" };
 
         private SystemPackaging myConfig;
         private CancellationToken myCancellationToken;
         private AssemblyLoader myAssemblyLoader;
-        private readonly Dictionary<string, List<Type>> myPackages;
+        private readonly Dictionary<string, List<Type>> myPackageToTypesMap;
+        private List<Package> myRelevantPackages;
 
         public PackageAnalyzer()
         {
             myAssemblyLoader = new AssemblyLoader();
-            myPackages = new Dictionary<string, List<Type>>();
+            myPackageToTypesMap = new Dictionary<string, List<Type>>();
+            PackagesToAnalyze = new List<string>();
         }
 
-        public string PackageName { get; set; }
-        
+        /// <summary>
+        /// If empty the dependencies between all packages will be analyzed
+        /// </summary>
+        public IList<string> PackagesToAnalyze { get; private set; }
+
         public AnalysisDocument Execute( SystemPackaging config, CancellationToken cancellationToken )
         {
             myConfig = config;
             myCancellationToken = cancellationToken;
 
+            myRelevantPackages = PackagesToAnalyze.Any()
+                ? myConfig.Packages
+                    .Where( p => PackagesToAnalyze.Any( name => p.Name.Equals( name, StringComparison.OrdinalIgnoreCase ) ) )
+                    .ToList()
+                : myConfig.Packages;
+
             Load();
 
-            Console.WriteLine("Analyzing ...");
+            Console.WriteLine( "Analyzing ..." );
 
             var edges = Analyze()
                 .Distinct()
@@ -40,31 +51,28 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             Console.WriteLine();
 
-            if (myAssemblyLoader.SkippedAssemblies.Any())
+            if( myAssemblyLoader.SkippedAssemblies.Any() )
             {
-                Console.WriteLine("Skipped assemblies:");
-                foreach (var asm in myAssemblyLoader.SkippedAssemblies)
+                Console.WriteLine( "Skipped assemblies:" );
+                foreach( var asm in myAssemblyLoader.SkippedAssemblies )
                 {
-                    Console.WriteLine("  {0}", asm);
+                    Console.WriteLine( "  {0}", asm );
                 }
                 Console.WriteLine();
             }
 
-            Console.WriteLine("Building Graph ...");
+            Console.WriteLine( "Building Graph ..." );
 
-            return GenerateDocument(edges);
+            return GenerateDocument( edges );
         }
 
         private void Load()
         {
-            var relevantPackages = myConfig.Packages
-                .Where( p => string.IsNullOrEmpty( PackageName ) || p.Name.Equals( PackageName, StringComparison.OrdinalIgnoreCase ) );
-
-            foreach( var package in relevantPackages )
+            foreach( var package in myRelevantPackages )
             {
                 myCancellationToken.ThrowIfCancellationRequested();
 
-                myPackages[ package.Name ] = Load( package )
+                myPackageToTypesMap[ package.Name ] = Load( package )
                     .SelectMany( asm => asm.GetTypes() )
                     .ToList();
             }
@@ -72,24 +80,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         private IEnumerable<Assembly> Load( Package package )
         {
-            Console.WriteLine("Assembly root {0}", Path.GetFullPath(myConfig.AssemblyRoot));
-            Console.WriteLine("Loading package {0}", package.Name);
+            Console.WriteLine( "Assembly root {0}", Path.GetFullPath( myConfig.AssemblyRoot ) );
+            Console.WriteLine( "Loading package {0}", package.Name );
 
             return package.Includes
-                .SelectMany(i => Directory.GetFiles(myConfig.AssemblyRoot, i.Pattern))
-                .Where(file => !package.Excludes.Any(e => e.Matches(file)))
-                .Select(myAssemblyLoader.Load)
-                .Where(asm => asm != null)
+                .SelectMany( i => Directory.GetFiles( myConfig.AssemblyRoot, i.Pattern ) )
+                .Where( file => !package.Excludes.Any( e => e.Matches( file ) ) )
+                .Select( myAssemblyLoader.Load )
+                .Where( asm => asm != null )
                 .ToList();
         }
 
         private Edge[] Analyze()
         {
-            var relevantPackages = myConfig.Packages
-                .Where( p => string.IsNullOrEmpty( PackageName ) || p.Name.Equals( PackageName, StringComparison.OrdinalIgnoreCase ) );
-
-            return relevantPackages
-                .SelectMany( p => myPackages[ p.Name ]
+            return myRelevantPackages
+                .SelectMany( p => myPackageToTypesMap[ p.Name ]
                     .Select( t => new
                     {
                         Package = p,
@@ -108,9 +113,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             myCancellationToken.ThrowIfCancellationRequested();
 
-            var focusedPackageTypes = string.IsNullOrEmpty( PackageName )
+            var focusedPackageTypes = myPackageToTypesMap.Count > 1
                 ? null
-                : myPackages.Single( p => p.Key.Equals( PackageName, StringComparison.OrdinalIgnoreCase ) ).Value;
+                : myPackageToTypesMap.Single().Value;
 
             return new Reflector( myAssemblyLoader, type ).GetUsedTypes()
                 // if only one package is given we analyse the deps within the package - otherwise between the packages
@@ -121,7 +126,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         private bool IsForeignPackage( Package package, Type dep )
         {
-            return myPackages.Where( e => e.Key != package.Name ).Any( entry => entry.Value.Contains( dep ) );
+            return myPackageToTypesMap.Where( e => e.Key != package.Name ).Any( entry => entry.Value.Contains( dep ) );
         }
 
         private AnalysisDocument GenerateDocument( IReadOnlyCollection<Edge> edges )
@@ -135,17 +140,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 nodesWithEdgesIndex.Add( edge.Target );
             }
 
-            for( int i = 0; i < myConfig.Packages.Count; ++i )
+            for( int i = 0; i < myRelevantPackages.Count; ++i )
             {
                 var package = myConfig.Packages[ i ];
 
-                if( !myPackages.ContainsKey( package.Name ) )
-                {
-                    // package not analyzed
-                    continue;
-                }
-
-                foreach( var node in myPackages[ package.Name ].Select( GraphUtils.Node ).Distinct() )
+                foreach( var node in myPackageToTypesMap[ package.Name ].Select( GraphUtils.Node ).Distinct() )
                 {
                     if( !nodesWithEdgesIndex.Contains( node ) )
                     {
@@ -153,7 +152,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     }
 
                     // color coding of nodes we only need if multiple packages were analyzed
-                    doc.Add( node, package, myPackages.Count == 1 ? null : Colors[ i % Colors.Length ] );
+                    doc.Add( node, package, myPackageToTypesMap.Count == 1 ? null : Colors[ i % Colors.Length ] );
                 }
             }
 
