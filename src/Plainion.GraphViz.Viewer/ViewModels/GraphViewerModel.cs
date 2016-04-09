@@ -36,7 +36,15 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             GoToEdgeTargetCommand = new DelegateCommand<Edge>( edge => Navigation.NavigateTo( edge.Target ) );
 
             ToggleClusterFoldingCommand = new DelegateCommand<Cluster>( c => new ChangeClusterFolding( Presentation ).Execute( t => t.Toggle( c.Id ) ) );
-            UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>( c => new UnfoldAndHidePrivateNodes( Presentation ).Execute( c ) );
+            UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>( c => new UnfoldAndHidePrivateNodes( Presentation ).Execute( c ),
+                c =>
+                {
+                    var transformation = Presentation.GetModule<ITransformationModule>().Items
+                        .OfType<ClusterFoldingTransformation>()
+                        .SingleOrDefault();
+
+                    return transformation == null ? false : transformation.Clusters.Contains( GraphItemForContextMenu.Id );
+                } );
 
             ShowCyclesCommand = new DelegateCommand( () => new ShowCycles( Presentation ).Execute(), () => Presentation != null );
             HideNodesWithoutEdgesCommand = new DelegateCommand( () => new HideNodesWithoutEdges( Presentation ).Execute(), () => Presentation != null );
@@ -49,6 +57,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
             PrintGraphCommand = new DelegateCommand( OnPrintGrpah, () => Presentation != null );
+
+            PreviewOpenContextMenuCommand = new DelegateCommand<IGraphItem>( graphItem =>
+            {
+                UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
+            } );
 
             eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe( OnEventFocused );
 
@@ -79,6 +92,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public IGraphViewNavigation Navigation { get; set; }
 
+        public ICommand PreviewOpenContextMenuCommand { get; private set; }
+
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
         public DelegateCommand HideNodesWithoutEdgesCommand { get; private set; }
@@ -105,7 +120,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ICommand ToggleClusterFoldingCommand { get; private set; }
 
-        public ICommand UnfoldAndHidePrivateNodesCommand { get; private set; }
+        public DelegateCommand<Cluster> UnfoldAndHidePrivateNodesCommand { get; private set; }
 
         public ICommand FoldUnfoldAllClustersCommand { get; private set; }
 

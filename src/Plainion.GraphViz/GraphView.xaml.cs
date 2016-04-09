@@ -117,7 +117,19 @@ namespace Plainion.GraphViz
             ((GraphView)d).myGraphVisual.LayoutEngine = (ILayoutEngine)e.NewValue;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Raised before context menu is opened allowing update of command state and so menu entry dimming.
+        /// </summary>
+        public static readonly DependencyProperty PreviewOpenContextMenuCommandProperty = DependencyProperty.Register( "PreviewOpenContextMenuCommand", typeof( ICommand ),
+            typeof( GraphView ), new FrameworkPropertyMetadata( null ) );
+
+        public ICommand PreviewOpenContextMenuCommand
+        {
+            get { return ( ICommand )GetValue( PreviewOpenContextMenuCommandProperty ); }
+            set { SetValue( PreviewOpenContextMenuCommandProperty, value ); }
+        }
+        
+        private void OnLoaded( object sender, RoutedEventArgs e )
         {
             SetValue(NavigationProperty, this);
 
@@ -228,6 +240,12 @@ namespace Plainion.GraphViz
             }
 
             ContextMenu.PlacementTarget = this;
+
+            if( PreviewOpenContextMenuCommand != null && PreviewOpenContextMenuCommand.CanExecute( GraphItemForContextMenu ) )
+            {
+                PreviewOpenContextMenuCommand.Execute( GraphItemForContextMenu );
+            }
+
             ContextMenu.IsOpen = true;
         }
 

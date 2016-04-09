@@ -172,7 +172,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             var request = new AnalysisRequest
             {
                 Spec = Document.Text,
-                PackagesToAnalyze = PackagesToAnalyze.ToArray(),
+                PackagesToAnalyze = PackagesToAnalyze != null ? PackagesToAnalyze.ToArray() : null,
                 OutputFile = Path.GetTempFileName()
             };
 
