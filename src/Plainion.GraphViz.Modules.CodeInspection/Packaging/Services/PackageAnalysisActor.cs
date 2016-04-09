@@ -25,19 +25,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         {
             Receive<AnalysisRequest>( r =>
             {
-                Console.WriteLine("WORKING");
+                Console.WriteLine( "WORKING" );
 
                 var self = Self;
                 var sender = Sender;
 
                 Task.Run<AnalysisDocument>( () =>
                 {
-                    var activity = r.AnalysisMode == AnalysisMode.InnerPackageDependencies ?
-                        ( AnalyzeBase )new AnalyzeInnerPackageDependencies { PackageName = r.PackageName } :
-                        ( AnalyzeBase )new AnalyzeCrossPackageDependencies();
+                    var analyzer = new PackageAnalyzer();
 
-                    var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
-                    return activity.Execute( spec, myCTS.Token );
+                    if( r.AnalysisMode == AnalysisMode.InnerPackageDependencies )
+                    {
+                        analyzer.PackageName = r.PackageName;
+                    }
+
+                    var spec = SpecUtils.Deserialize( SpecUtils.Unzip( r.Spec ) );
+                    return analyzer.Execute( spec, myCTS.Token );
                 }, myCTS.Token )
                 .ContinueWith<object>( x =>
                 {
@@ -49,10 +52,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         return new Finished { Error = x.Exception.ToString() };
                     }
 
-                    Console.WriteLine("Writing response ...");
-                    
+                    Console.WriteLine( "Writing response ..." );
+
                     var serializer = new AnalysisDocumentSerializer();
-                    serializer.Serialize(x.Result, r.OutputFile);
+                    serializer.Serialize( x.Result, r.OutputFile );
 
                     return new Finished { ResponseFile = r.OutputFile };
                 }, TaskContinuationOptions.ExecuteSynchronously )

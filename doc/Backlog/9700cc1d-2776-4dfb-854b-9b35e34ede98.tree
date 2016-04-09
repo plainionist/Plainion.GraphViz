@@ -10,9 +10,6 @@
       <Node Id="146d4477-df29-49ef-8b44-671ab37f8a63">
         <Caption><![CDATA[reference package specs across package specs]]></Caption>
       </Node>
-      <Node Id="7d088e5a-840f-40d7-a65a-4d973adea1fe">
-        <Caption><![CDATA[different actors per analysis mode?]]></Caption>
-      </Node>
     </Node>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[vNext]]></Caption>

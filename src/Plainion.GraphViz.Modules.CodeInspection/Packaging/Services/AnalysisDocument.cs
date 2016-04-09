@@ -69,11 +69,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
         }
 
-        internal void Add(Type node, Package package)
-        {
-            Add(node, package, null);
-        }
-
         internal void Add(Type node, Package package, string fillColor)
         {
             myNodes.Add(node.FullName);
