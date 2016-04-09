@@ -95,6 +95,7 @@
     <Compile Include="Algorithms\ShowNodeWithIncomings.cs" />
     <Compile Include="Algorithms\ShowNodeWithOutgoings.cs" />
     <Compile Include="Algorithms\ShowNodeWithSiblings.cs" />
+    <Compile Include="Algorithms\UnfoldAndHidePrivateNodes.cs" />
     <Compile Include="Dot\DotGraphHeader.cs" />
     <Compile Include="Dot\DotPlainParser.cs" />
     <Compile Include="Dot\LayoutAlgorithm.cs" />

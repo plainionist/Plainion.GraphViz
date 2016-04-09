@@ -4,9 +4,6 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="90063699-af33-4a35-ab9f-e93c26b4603d">
       <Caption><![CDATA[Next Steps]]></Caption>
-      <Node Id="ac8b9785-3771-4dd8-9a7c-1a33ccf7d275">
-        <Caption><![CDATA[extract fold and hide private]]></Caption>
-      </Node>
       <Node Id="c79438c4-be4c-4811-9283-5668145fcc0e">
         <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
       </Node>
