@@ -139,7 +139,6 @@
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Packaging\Services\AnalysisDocument.cs" />
-    <Compile Include="Packaging\Services\AnalyzeBase.cs" />
     <Compile Include="Packaging\Services\PackageAnalyzer.cs" />
     <Compile Include="Packaging\Services\Cancel.cs" />
     <Compile Include="Packaging\Services\Finished.cs" />
