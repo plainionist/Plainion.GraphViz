@@ -3,27 +3,27 @@
   <Node Id="9700cc1d-2776-4dfb-854b-9b35e34ede98">
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="90063699-af33-4a35-ab9f-e93c26b4603d">
-      <Caption><![CDATA[bugs]]></Caption>
+      <Caption><![CDATA[Next Steps]]></Caption>
+      <Node Id="ac8b9785-3771-4dd8-9a7c-1a33ccf7d275">
+        <Caption><![CDATA[extract fold and hide private]]></Caption>
+      </Node>
       <Node Id="c79438c4-be4c-4811-9283-5668145fcc0e">
         <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
-      </Node>
-    </Node>
-    <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
-      <Caption><![CDATA[Next steps]]></Caption>
-      <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
-        <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
       </Node>
       <Node Id="146d4477-df29-49ef-8b44-671ab37f8a63">
         <Caption><![CDATA[reference package specs across package specs]]></Caption>
       </Node>
+      <Node Id="7d088e5a-840f-40d7-a65a-4d973adea1fe">
+        <Caption><![CDATA[different actors per analysis mode?]]></Caption>
+      </Node>
+    </Node>
+    <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
+      <Caption><![CDATA[vNext]]></Caption>
+      <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
+        <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
+      </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
-        <Node Id="fb401c48-f3b4-4897-ac46-41d1b3b77eef">
-          <Caption><![CDATA[migrate inheritance to actor]]></Caption>
-        </Node>
-        <Node Id="7d088e5a-840f-40d7-a65a-4d973adea1fe">
-          <Caption><![CDATA[different actors per analysis mode?]]></Caption>
-        </Node>
         <Node Id="4ece55f9-17be-4941-9316-57a810fdcec7">
           <Caption><![CDATA[Cluster editor]]></Caption>
         </Node>
