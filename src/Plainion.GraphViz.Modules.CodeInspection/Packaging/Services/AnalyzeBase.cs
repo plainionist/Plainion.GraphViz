@@ -48,7 +48,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
 
             Console.WriteLine("Building Graph ...");
-            Debugger.Launch();
+
             return GenerateDocument(edges);
         }
 

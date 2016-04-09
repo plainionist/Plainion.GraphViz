@@ -27,7 +27,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
 
             public bool IsMatch(string str)
             {
-                return myWildcard != null ? myWildcard.IsMatch(str) : str.Contains(mySubstring);
+                return myWildcard != null ? myWildcard.IsMatch(str) : str.Contains(mySubstring, StringComparison.OrdinalIgnoreCase);
             }
         }
 

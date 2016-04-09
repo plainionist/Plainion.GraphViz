@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
-using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
