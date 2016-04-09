@@ -71,12 +71,16 @@ namespace Plainion.GraphViz.Dot
             }
             catch
             {
-                if( Algorithm == LayoutAlgorithm.Dot )
+                if( Algorithm == LayoutAlgorithm.Dot || Algorithm == LayoutAlgorithm.Auto )
                 {
                     // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
                     // -> try fallback with sfdp.exe
                     Algorithm = LayoutAlgorithm.Sfdp;
                     Convert( dotFile, plainFile );
+                }
+                else
+                {
+                    throw;
                 }
             }
         }
