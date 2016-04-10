@@ -38,17 +38,30 @@ namespace Plainion.GraphViz.Visuals
             Visual = new DrawingVisual();
             var dc = Visual.RenderOpen();
 
-            var rect = GetBoundingBox( drawingElements );
-            dc.DrawRectangle( Brushes.Transparent, new Pen( Brushes.Blue, BorderThickness ), rect );
-
             var tx = new FormattedText( caption.DisplayText,
                   CultureInfo.InvariantCulture,
                   FlowDirection.LeftToRight,
                   myFont,
                   FontSize, Brushes.Black );
 
-            var fontPadding = BorderThickness * 3;
-            dc.DrawText( tx, new Point( rect.Left + fontPadding, rect.Top + fontPadding ) );
+            const double FontPadding = BorderThickness * 3;
+
+            var rect = GetBoundingBox( drawingElements );
+
+            // resize rect so that cluster caption can be drawn
+            rect = new Rect(
+                rect.Left - FontPadding,
+                rect.Top - ( tx.Height + 2 * FontPadding ),
+                Math.Max( rect.Width, tx.Width ) + 2 * FontPadding,
+                rect.Height + tx.Height + 3 * FontPadding );
+
+            // add some extra padding
+            const double ExtraPadding = BorderThickness * 3;
+            rect.Inflate( ExtraPadding, ExtraPadding );
+
+            dc.DrawRectangle( Brushes.Transparent, new Pen( Brushes.Blue, BorderThickness ), rect );
+
+            dc.DrawText( tx, new Point( rect.Left + FontPadding, rect.Top + FontPadding ) );
 
             dc.Close();
 
@@ -82,12 +95,6 @@ namespace Plainion.GraphViz.Visuals
                 var nodeBox = drawingElements[ edge.Id ].Visual.ContentBounds;
                 box.Union( nodeBox );
             }
-
-            // 3. add some padding for label
-            box = new Rect( box.Left, box.Top - FontSize * 2, box.Width, box.Height + FontSize * 2 );
-
-            // 4. add some padding
-            box.Inflate( BorderThickness * 7, BorderThickness * 7 );
 
             return box;
         }

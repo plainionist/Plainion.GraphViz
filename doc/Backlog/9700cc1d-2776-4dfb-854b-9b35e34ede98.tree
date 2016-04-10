@@ -4,11 +4,8 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next Steps]]></Caption>
-      <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
-        <Caption><![CDATA[packaging]]></Caption>
-        <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">
-          <Caption><![CDATA[auto-packaging]]></Caption>
-        </Node>
+      <Node Id="25cbfad4-59d5-4597-be37-1b493655c5f0">
+        <Caption><![CDATA[add nodespacing for cluster bounding box]]></Caption>
       </Node>
       <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
         <Caption><![CDATA[Akka.Cluster]]></Caption>
