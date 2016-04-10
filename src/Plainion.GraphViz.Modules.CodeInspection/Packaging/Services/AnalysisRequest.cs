@@ -9,5 +9,7 @@
         public string OutputFile { get; set; }
 
         public bool UsedTypesOnly { get; set; }
+
+        public bool CreateClustersForNamespaces { get; set; }
     }
 }

@@ -36,6 +36,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private CancellationTokenSource myCTS;
         private IModuleChangedObserver myTransformationsObserver;
         private bool myUsedTypesOnly;
+        private bool myCreateClustersForNamespaces;
 
         public PackagingGraphBuilderViewModel()
         {
@@ -177,7 +178,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 Spec = Document.Text,
                 PackagesToAnalyze = PackagesToAnalyze != null ? PackagesToAnalyze.ToArray() : null,
                 OutputFile = Path.GetTempFileName(),
-                UsedTypesOnly = UsedTypesOnly
+                UsedTypesOnly = UsedTypesOnly,
+                CreateClustersForNamespaces = CreateClustersForNamespaces
             };
 
             try
@@ -406,6 +408,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             get { return myUsedTypesOnly; }
             set { SetProperty( ref myUsedTypesOnly, value ); }
+        }
+
+        public bool CreateClustersForNamespaces
+        {
+            get { return myCreateClustersForNamespaces; }
+            set { SetProperty( ref myCreateClustersForNamespaces, value ); }
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 {
                     var analyzer = new PackageAnalyzer();
                     analyzer.UsedTypesOnly = r.UsedTypesOnly;
+                    analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
 
                     if( r.PackagesToAnalyze != null )
                     {

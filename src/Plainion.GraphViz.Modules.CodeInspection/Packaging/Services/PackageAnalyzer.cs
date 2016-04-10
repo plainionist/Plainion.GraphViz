@@ -31,6 +31,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         public bool UsedTypesOnly { get; set; }
 
+        /// <summary>
+        /// If no matching cluster was found for a node it will be put in a cluster for its namespace
+        /// </summary>
+        public bool CreateClustersForNamespaces { get; set; }
+
         public AnalysisDocument Execute( SystemPackaging config, CancellationToken cancellationToken )
         {
             myConfig = config;
@@ -164,7 +169,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 .Select( e => new
                 {
                     Node = GraphUtils.Node( e.Type ),
-                    Cluster = e.Package.Clusters.FirstOrDefault( c => c.Matches( e.Type.FullName ) ),
+                    Cluster = GetCluster( e.Package, e.Type ),
                     PackageIndex = e.PackageIndex
                 } );
 
@@ -196,6 +201,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
 
             return doc;
+        }
+
+        private string GetCluster( Package package, Type type )
+        {
+            var cluster = package.Clusters.FirstOrDefault( c => c.Matches( type.FullName ) );
+            if( cluster != null )
+            {
+                return cluster.Name;
+            }
+
+            if( CreateClustersForNamespaces )
+            {
+                return type.Namespace;
+            }
+
+            return null;
         }
 
         private static string GetEdgeColor( Edge edge )

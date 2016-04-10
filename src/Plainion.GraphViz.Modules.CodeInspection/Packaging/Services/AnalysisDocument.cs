@@ -65,13 +65,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
         }
 
-        internal void AddToCluster( Type node, Cluster cluster )
+        internal void AddToCluster( Type node, string cluster )
         {
             IEnumerable<string> existing;
-            if( !myClusters.TryGetValue( cluster.Name, out existing ) )
+            if( !myClusters.TryGetValue( cluster, out existing ) )
             {
                 existing = new HashSet<string>();
-                myClusters.Add( cluster.Name, existing );
+                myClusters.Add( cluster, existing );
             }
 
             ( ( HashSet<string> )existing ).Add( node.FullName );
