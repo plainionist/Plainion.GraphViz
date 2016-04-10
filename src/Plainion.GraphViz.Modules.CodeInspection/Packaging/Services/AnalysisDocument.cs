@@ -42,59 +42,52 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         public IReadOnlyDictionary<string, string> EdgeStyles { get { return myEdgeStyles; } }
 
-        internal void Add(IReadOnlyCollection<Edge> edges)
+        internal void Add( Edge edge )
         {
-            foreach (var edge in edges)
+            myEdges.Add( Tuple.Create( edge.Source.FullName, edge.Target.FullName ) );
+        }
+
+        internal void AddEdgeColor( Edge edge, string color )
+        {
+            var edgeId = Model.Edge.CreateId( edge.Source.FullName, edge.Target.FullName );
+            if( !myEdgeStyles.ContainsKey( edgeId ) )
             {
-                myEdges.Add(Tuple.Create(edge.Source.FullName, edge.Target.FullName));
-
-                string edgeBrush = null;
-                if (edge.EdgeType == EdgeType.DerivesFrom || edge.EdgeType == EdgeType.Implements)
-                {
-                    edgeBrush = "Blue";
-                }
-                else if (edge.EdgeType != EdgeType.Calls)
-                {
-                    edgeBrush = "Gray";
-                }
-
-                if (edgeBrush != null)
-                {
-                    var edgeId = Model.Edge.CreateId(edge.Source.FullName, edge.Target.FullName);
-                    if (!myEdgeStyles.ContainsKey(edgeId))
-                    {
-                        myEdgeStyles.Add(edgeId, edgeBrush);
-                    }
-                }
+                myEdgeStyles.Add( edgeId, color );
             }
         }
 
-        internal void Add(Type node, Package package, string fillColor)
+        internal void Add( Type node )
         {
-            myNodes.Add(node.FullName);
+            myNodes.Add( node.FullName );
 
-            if (!myCaptions.ContainsKey(node.FullName))
+            if( !myCaptions.ContainsKey( node.FullName ) )
             {
-                myCaptions.Add(node.FullName, node.Name);
+                myCaptions.Add( node.FullName, node.Name );
             }
+        }
 
+        internal void AddToCluster( Type node, Package package )
+        {
             // in case multiple cluster match we just take the first one
-            var matchedCluster = package.Clusters.FirstOrDefault(c => c.Matches(node.FullName));
-            if (matchedCluster != null)
+            var matchedCluster = package.Clusters.FirstOrDefault( c => c.Matches( node.FullName ) );
+            if( matchedCluster != null )
             {
                 IEnumerable<string> existing;
-                if (!myClusters.TryGetValue(matchedCluster.Name, out existing))
+                if( !myClusters.TryGetValue( matchedCluster.Name, out existing ) )
                 {
                     existing = new HashSet<string>();
-                    myClusters.Add(matchedCluster.Name, existing);
+                    myClusters.Add( matchedCluster.Name, existing );
                 }
 
-                ((HashSet<string>)existing).Add(node.FullName);
+                ( ( HashSet<string> )existing ).Add( node.FullName );
             }
+        }
 
-            if (fillColor != null && !myNodeStyles.ContainsKey(node.FullName))
+        internal void AddNodeColor( Type node, string fillColor )
+        {
+            if( !myNodeStyles.ContainsKey( node.FullName ) )
             {
-                myNodeStyles.Add(node.FullName, fillColor);
+                myNodeStyles.Add( node.FullName, fillColor );
             }
         }
     }

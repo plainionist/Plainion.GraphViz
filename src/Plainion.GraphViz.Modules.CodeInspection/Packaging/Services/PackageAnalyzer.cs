@@ -41,7 +41,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 : myConfig.Packages;
 
             myPackageToTypesMap = new Dictionary<string, List<Type>>();
-            
+
             Load();
 
             Console.WriteLine( "Analyzing ..." );
@@ -152,14 +152,43 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         continue;
                     }
 
-                    // color coding of nodes we only need if multiple packages were analyzed
-                    doc.Add( node, package, myPackageToTypesMap.Count == 1 ? null : Colors[ i % Colors.Length ] );
+                    doc.Add( node );
+
+                    doc.AddToCluster( node, package );
+
+                    if( myPackageToTypesMap.Count > 1 )
+                    {
+                        // color coding of nodes we only need if multiple packages were analyzed
+                        doc.AddNodeColor( node, Colors[ i % Colors.Length ] );
+                    }
                 }
             }
 
-            doc.Add( edges );
+            foreach( var edge in edges )
+            {
+                doc.Add( edge );
+
+                var color = GetEdgeColor( edge );
+                if( color != null )
+                {
+                    doc.AddEdgeColor( edge, color );
+                }
+            }
 
             return doc;
+        }
+
+        private static string GetEdgeColor( Edge edge )
+        {
+            if( edge.EdgeType == EdgeType.DerivesFrom || edge.EdgeType == EdgeType.Implements )
+            {
+                return "Blue";
+            }
+            else if( edge.EdgeType != EdgeType.Calls )
+            {
+                return "Gray";
+            }
+            return null;
         }
     }
 }
