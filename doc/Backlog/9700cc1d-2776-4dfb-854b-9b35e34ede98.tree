@@ -2,14 +2,8 @@
 <Tree>
   <Node Id="9700cc1d-2776-4dfb-854b-9b35e34ede98">
     <Caption><![CDATA[Planning]]></Caption>
-    <Node Id="90063699-af33-4a35-ab9f-e93c26b4603d">
-      <Caption><![CDATA[Next Steps]]></Caption>
-      <Node Id="c79438c4-be4c-4811-9283-5668145fcc0e">
-        <Caption><![CDATA[context menu entry dimming depending on context not possible]]></Caption>
-      </Node>
-    </Node>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
-      <Caption><![CDATA[vNext]]></Caption>
+      <Caption><![CDATA[Next Steps]]></Caption>
       <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
         <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
       </Node>
