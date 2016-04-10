@@ -141,36 +141,41 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 nodesWithEdgesIndex.Add( edge.Target );
             }
 
-            for( int i = 0; i < myRelevantPackages.Count; ++i )
-            {
-                var package = myRelevantPackages[ i ];
-
-                var relevantNotesWithCluster = myPackageToTypesMap[ package.Name ]
-                    .AsParallel()
-                    .Select( GraphUtils.Node )
-                    .Distinct()
-                    .Where( nodesWithEdgesIndex.Contains )
-                    .Select( n => new
-                    {
-                        Node = n,
-                        // in case multiple cluster match we just take the first one
-                        Cluster = package.Clusters.FirstOrDefault( c => c.Matches( n.FullName ) )
-                    } );
-
-                foreach( var nodeInfo in relevantNotesWithCluster )
+            var relevantNotesWithCluster = myPackageToTypesMap
+                .Select( e => new
                 {
-                    doc.Add( nodeInfo.Node );
-
-                    if( nodeInfo.Cluster != null )
+                    Package = myRelevantPackages.Single( p => p.Name == e.Key ),
+                    Types = e.Value
+                } )
+                .SelectMany( ( e, idx ) => e.Types
+                    .Select( t => new
                     {
-                        doc.AddToCluster( nodeInfo.Node, nodeInfo.Cluster );
-                    }
+                        Type = t,
+                        Package = e.Package,
+                        PackageIndex = idx
+                    } ) )
+                .AsParallel()
+                .Where( e => nodesWithEdgesIndex.Contains( e.Type ) )
+                .Select( e => new
+                {
+                    Node = GraphUtils.Node( e.Type ),
+                    Cluster = e.Package.Clusters.FirstOrDefault( c => c.Matches( e.Type.FullName ) ),
+                    PackageIndex = e.PackageIndex
+                } );
 
-                    if( myPackageToTypesMap.Count > 1 )
-                    {
-                        // color coding of nodes we only need if multiple packages were analyzed
-                        doc.AddNodeColor( nodeInfo.Node, Colors[ i % Colors.Length ] );
-                    }
+            foreach( var entry in relevantNotesWithCluster )
+            {
+                doc.Add( entry.Node );
+
+                if( entry.Cluster != null )
+                {
+                    doc.AddToCluster( entry.Node, entry.Cluster );
+                }
+
+                if( myPackageToTypesMap.Count > 1 )
+                {
+                    // color coding of nodes we only need if multiple packages were analyzed
+                    doc.AddNodeColor( entry.Node, Colors[ entry.PackageIndex % Colors.Length ] );
                 }
             }
 
