@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="c827ed52-aae3-474e-93af-a1afd909ad14" Created="635957855070920223" LastModified="635957855430660223">
-  <Caption><![CDATA[option to show all nodes]]></Caption>
-  <Content><![CDATA[today we only include nodes which have edges]]></Content>
-</Node>

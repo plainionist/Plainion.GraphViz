@@ -35,6 +35,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private IEnumerable<ElementCompletionData> myCompletionData;
         private CancellationTokenSource myCTS;
         private IModuleChangedObserver myTransformationsObserver;
+        private bool myUsedTypesOnly;
 
         public PackagingGraphBuilderViewModel()
         {
@@ -57,6 +58,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 .Where( t => t.GetCustomAttribute( typeof( CompilerGeneratedAttribute ), true ) == null )
                 .Select( t => new ElementCompletionData( t ) )
                 .ToList();
+
+            UsedTypesOnly = true;
 
             IsReady = true;
         }
@@ -173,7 +176,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 Spec = Document.Text,
                 PackagesToAnalyze = PackagesToAnalyze != null ? PackagesToAnalyze.ToArray() : null,
-                OutputFile = Path.GetTempFileName()
+                OutputFile = Path.GetTempFileName(),
+                UsedTypesOnly = UsedTypesOnly
             };
 
             try
@@ -396,6 +400,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             get { return myProgress; }
             set { SetProperty( ref myProgress, value ); }
+        }
+
+        public bool UsedTypesOnly
+        {
+            get { return myUsedTypesOnly; }
+            set { SetProperty( ref myUsedTypesOnly, value ); }
         }
     }
 }

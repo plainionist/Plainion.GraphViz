@@ -31,6 +31,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 Task.Run<AnalysisDocument>( () =>
                 {
                     var analyzer = new PackageAnalyzer();
+                    analyzer.UsedTypesOnly = r.UsedTypesOnly;
 
                     if( r.PackagesToAnalyze != null )
                     {

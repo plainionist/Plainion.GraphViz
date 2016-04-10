@@ -36,21 +36,33 @@
 
         <pn:XmlEditor Grid.Row="0" Document="{Binding Document}" CompletionData="{Binding CompletionData}"/>
 
-        <GroupBox Grid.Row="1" Header="Package filter">
-            <ListBox ItemsSource="{Binding Packages}" Height="60" SelectionMode="Multiple" x:Name="myPackagesFilter">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" Margin="5"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+        <GroupBox Grid.Row="1" Header="Options">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Grid.Row="0" Text="Filter pacakges (optional, default: all packages):"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Packages}" Height="60" SelectionMode="Multiple" x:Name="myPackagesFilter" Margin="0,5,0,0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Margin="5"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
+                    <CheckBox Content="Used types only" IsChecked="{Binding UsedTypesOnly}"/>
+                </StackPanel>
+            </Grid>
         </GroupBox>
-        
+
         <Grid Grid.Row="2" Margin="0,5,0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

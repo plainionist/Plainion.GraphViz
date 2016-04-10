@@ -4,16 +4,10 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next Steps]]></Caption>
-      <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
-        <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
-      </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
         <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">
           <Caption><![CDATA[auto-packaging]]></Caption>
-        </Node>
-        <Node Id="c827ed52-aae3-474e-93af-a1afd909ad14">
-          <Caption><![CDATA[option to show all nodes]]></Caption>
         </Node>
       </Node>
       <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">

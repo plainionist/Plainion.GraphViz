@@ -38,5 +38,8 @@
     <Node Id="aa2f5341-a277-484c-8ccc-d6dbe4f50c78">
       <Caption><![CDATA[edge type encoding]]></Caption>
     </Node>
+    <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
+      <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
+    </Node>
   </Node>
 </Tree>

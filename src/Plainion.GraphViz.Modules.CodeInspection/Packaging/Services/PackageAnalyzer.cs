@@ -29,6 +29,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         /// </summary>
         public IList<string> PackagesToAnalyze { get; private set; }
 
+        public bool UsedTypesOnly { get; set; }
+
         public AnalysisDocument Execute( SystemPackaging config, CancellationToken cancellationToken )
         {
             myConfig = config;
@@ -135,10 +137,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             var doc = new AnalysisDocument();
 
             var nodesWithEdgesIndex = new HashSet<Type>();
-            foreach( var edge in edges )
+            if( UsedTypesOnly )
             {
-                nodesWithEdgesIndex.Add( edge.Source );
-                nodesWithEdgesIndex.Add( edge.Target );
+                foreach( var edge in edges )
+                {
+                    nodesWithEdgesIndex.Add( edge.Source );
+                    nodesWithEdgesIndex.Add( edge.Target );
+                }
             }
 
             var relevantNotesWithCluster = myPackageToTypesMap
@@ -155,7 +160,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         PackageIndex = idx
                     } ) )
                 .AsParallel()
-                .Where( e => nodesWithEdgesIndex.Contains( e.Type ) )
+                .Where( e => !UsedTypesOnly || nodesWithEdgesIndex.Contains( e.Type ) )
                 .Select( e => new
                 {
                     Node = GraphUtils.Node( e.Type ),

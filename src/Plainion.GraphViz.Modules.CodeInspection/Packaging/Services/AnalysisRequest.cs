@@ -7,5 +7,7 @@
         public string[] PackagesToAnalyze { get; set; }
 
         public string OutputFile { get; set; }
+
+        public bool UsedTypesOnly { get; set; }
     }
 }
