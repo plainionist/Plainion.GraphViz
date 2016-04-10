@@ -66,21 +66,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             }
         }
 
-        internal void AddToCluster( Type node, Package package )
+        internal void AddToCluster( Type node, Cluster cluster )
         {
-            // in case multiple cluster match we just take the first one
-            var matchedCluster = package.Clusters.FirstOrDefault( c => c.Matches( node.FullName ) );
-            if( matchedCluster != null )
+            IEnumerable<string> existing;
+            if( !myClusters.TryGetValue( cluster.Name, out existing ) )
             {
-                IEnumerable<string> existing;
-                if( !myClusters.TryGetValue( matchedCluster.Name, out existing ) )
-                {
-                    existing = new HashSet<string>();
-                    myClusters.Add( matchedCluster.Name, existing );
-                }
-
-                ( ( HashSet<string> )existing ).Add( node.FullName );
+                existing = new HashSet<string>();
+                myClusters.Add( cluster.Name, existing );
             }
+
+            ( ( HashSet<string> )existing ).Add( node.FullName );
         }
 
         internal void AddNodeColor( Type node, string fillColor )

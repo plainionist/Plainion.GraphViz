@@ -145,21 +145,31 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             {
                 var package = myRelevantPackages[ i ];
 
-                foreach( var node in myPackageToTypesMap[ package.Name ].Select( GraphUtils.Node ).Distinct() )
-                {
-                    if( !nodesWithEdgesIndex.Contains( node ) )
+                var relevantNotesWithCluster = myPackageToTypesMap[ package.Name ]
+                    .AsParallel()
+                    .Select( GraphUtils.Node )
+                    .Distinct()
+                    .Where( nodesWithEdgesIndex.Contains )
+                    .Select( n => new
                     {
-                        continue;
+                        Node = n,
+                        // in case multiple cluster match we just take the first one
+                        Cluster = package.Clusters.FirstOrDefault( c => c.Matches( n.FullName ) )
+                    } );
+
+                foreach( var nodeInfo in relevantNotesWithCluster )
+                {
+                    doc.Add( nodeInfo.Node );
+
+                    if( nodeInfo.Cluster != null )
+                    {
+                        doc.AddToCluster( nodeInfo.Node, nodeInfo.Cluster );
                     }
-
-                    doc.Add( node );
-
-                    doc.AddToCluster( node, package );
 
                     if( myPackageToTypesMap.Count > 1 )
                     {
                         // color coding of nodes we only need if multiple packages were analyzed
-                        doc.AddNodeColor( node, Colors[ i % Colors.Length ] );
+                        doc.AddNodeColor( nodeInfo.Node, Colors[ i % Colors.Length ] );
                     }
                 }
             }
