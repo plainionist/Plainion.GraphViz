@@ -17,6 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packaging\Services\SpecUtilsTests.cs" />
+    <Compile Include="TestData\CastClass.cs" />
+    <Compile Include="TestData\NewArray.cs" />
     <Compile Include="TestData\InterfaceMethod.cs" />
     <Compile Include="TestData\VirtualMethodCall.cs" />
     <Compile Include="TestData\GenericMethod.cs" />

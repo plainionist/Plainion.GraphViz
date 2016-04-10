@@ -54,7 +54,25 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests.Packaging.Services
         [Test]
         public void GetUsedTypes_Constructor_Found()
         {
-            Verify(typeof(Constructor), typeof(ShowCycles));
+            Verify( typeof( Constructor ), typeof( ShowCycles ) );
+        }
+
+        [Test]
+        public void GetUsedTypes_NewArray_Found()
+        {
+            Verify( typeof( NewArray ), typeof( ShowCycles ) );
+        }
+
+        [Test]
+        public void GetUsedTypes_HardCast_Found()
+        {
+            Verify( typeof( CastClass ), typeof( ShowCycles ) );
+        }
+
+        [Test]
+        public void GetUsedTypes_AsCast_Found()
+        {
+            Verify( typeof( CastClass ), typeof( UnfoldAndHidePrivateNodes ) );
         }
 
         [Test]

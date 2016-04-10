@@ -7,12 +7,6 @@
       <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
         <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
       </Node>
-      <Node Id="c6fcd77b-c0e5-465a-981d-c58bea9b9979">
-        <Caption><![CDATA[performance]]></Caption>
-      </Node>
-      <Node Id="bda1f902-172e-4bf7-a03a-c5cb2e3c32c2">
-        <Caption><![CDATA[remaining opcodes]]></Caption>
-      </Node>
       <Node Id="da3117c3-81ed-4bd4-840d-16ec443d243e">
         <Caption><![CDATA[packaging]]></Caption>
         <Node Id="4d84b300-952f-4f87-8400-74faba82c3b9">

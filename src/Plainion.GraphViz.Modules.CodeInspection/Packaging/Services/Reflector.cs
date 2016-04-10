@@ -142,6 +142,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 .ToList();
         }
 
+        // https://msdn.microsoft.com/de-de/library/system.reflection.emit.opcodes(v=vs.110).aspx
         private IEnumerable<Edge> GetCalledTypes(MethodDefinition method)
         {
             foreach (var instr in method.Body.Instructions)
@@ -154,15 +155,39 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         yield return new Edge { Target = TryGetSystemType(typeRef) };
                     }
                 }
-                else if (instr.OpCode == OpCodes.Newobj)
+                else if( instr.OpCode == OpCodes.Newobj )
                 {
                     var methodRef = instr.Operand as MethodReference;
-                    if (methodRef != null)
+                    if( methodRef != null )
                     {
-                        yield return new Edge { Target = TryGetSystemType(methodRef.DeclaringType) };
+                        yield return new Edge { Target = TryGetSystemType( methodRef.DeclaringType ) };
                     }
                 }
-                else if (instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli)
+                else if( instr.OpCode == OpCodes.Newarr )
+                {
+                    var typeRef = instr.Operand as TypeReference;
+                    if( typeRef != null )
+                    {
+                        yield return new Edge { Target = TryGetSystemType( typeRef ) };
+                    }
+                }
+                else if( instr.OpCode == OpCodes.Castclass )
+                {
+                    var typeRef = instr.Operand as TypeReference;
+                    if( typeRef != null )
+                    {
+                        yield return new Edge { Target = TryGetSystemType( typeRef ) };
+                    }
+                }
+                else if( instr.OpCode == OpCodes.Isinst )
+                {
+                    var typeRef = instr.Operand as TypeReference;
+                    if( typeRef != null )
+                    {
+                        yield return new Edge { Target = TryGetSystemType( typeRef ) };
+                    }
+                }
+                else if( instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli )
                 {
                     var callee = ((MethodReference)instr.Operand);
 
