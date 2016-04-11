@@ -49,8 +49,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             ShowCyclesCommand = new DelegateCommand( () => new ShowCycles( Presentation ).Execute(), () => Presentation != null );
             HideNodesWithoutEdgesCommand = new DelegateCommand( () => new HideNodesWithoutEdges( Presentation ).Execute(), () => Presentation != null );
-            ShowNodesOutsideClustersCommand = new DelegateCommand( () => new ShowNodesOutsideClusters( Presentation ).Execute(), () => Presentation != null );
-            FoldUnfoldAllClustersCommand = new DelegateCommand( () => new ChangeClusterFolding( Presentation ).FoldUnfoldAllClusters(), () => Presentation != null );
+            ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
+            ShowNodesWithSingleIncomingCommand = new DelegateCommand(() => new ShowNodesWithSingleIncoming(Presentation).Execute(), () => Presentation != null);
+            FoldUnfoldAllClustersCommand = new DelegateCommand(() => new ChangeClusterFolding(Presentation).FoldUnfoldAllClusters(), () => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand( () => Presentation.InvalidateLayout(), () => Presentation != null );
 
             AddToClusterCommand = new DelegateCommand<string>( c => new ChangeClusterAssignment( Presentation ).Execute( t => t.AddToCluster( GraphItemForContextMenu.Id, c ) ) );
@@ -94,6 +95,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand ShowNodesOutsideClustersCommand { get; private set; }
 
+        public DelegateCommand ShowNodesWithSingleIncomingCommand { get; private set; }
+
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
         public ICommand HideNodeCommand { get; private set; }
@@ -127,6 +130,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 ShowCyclesCommand.RaiseCanExecuteChanged();
                 HideNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
                 ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
+                ShowNodesWithSingleIncomingCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
 
