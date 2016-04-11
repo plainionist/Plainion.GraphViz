@@ -8,6 +8,10 @@
     <RootNamespace>Plainion.GraphViz.Modules.CodeInspection.Tests</RootNamespace>
     <AssemblyName>Plainion.GraphViz.Modules.CodeInspection.Tests</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <!-- do not optimize otherwise the reflector tests will fail because the compiler optimizes dead code away -->
+    <Optimize>false</Optimize>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.2.0\lib\net45\nunit.framework.dll</HintPath>
