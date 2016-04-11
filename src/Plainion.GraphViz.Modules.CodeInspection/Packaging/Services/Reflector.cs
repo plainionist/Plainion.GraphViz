@@ -189,6 +189,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 }
                 else if( instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli )
                 {
+                    var site = instr.Operand as CallSite;
+                    if (site != null)
+                    {
+                        // C++/CLI ?
+                        continue;
+                    }
+
                     var callee = ((MethodReference)instr.Operand);
 
                     yield return new Edge { Target = TryGetSystemType(callee.DeclaringType), EdgeType = EdgeType.Calls };
