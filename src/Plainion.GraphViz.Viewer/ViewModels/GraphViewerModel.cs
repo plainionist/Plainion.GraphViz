@@ -50,7 +50,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             ShowCyclesCommand = new DelegateCommand( () => new ShowCycles( Presentation ).Execute(), () => Presentation != null );
             HideNodesWithoutEdgesCommand = new DelegateCommand( () => new HideNodesWithoutEdges( Presentation ).Execute(), () => Presentation != null );
             ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
-            ShowNodesWithSingleIncomingCommand = new DelegateCommand(() => new ShowNodesWithSingleIncoming(Presentation).Execute(), () => Presentation != null);
+            HideNodesReachableFromMultipleClustersCommand = new DelegateCommand(() => new HideNodesReachableFromMultipleClusters(Presentation).Execute(), () => Presentation != null);
             FoldUnfoldAllClustersCommand = new DelegateCommand(() => new ChangeClusterFolding(Presentation).FoldUnfoldAllClusters(), () => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand( () => Presentation.InvalidateLayout(), () => Presentation != null );
 
@@ -95,7 +95,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand ShowNodesOutsideClustersCommand { get; private set; }
 
-        public DelegateCommand ShowNodesWithSingleIncomingCommand { get; private set; }
+        public DelegateCommand HideNodesReachableFromMultipleClustersCommand { get; private set; }
 
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
@@ -130,7 +130,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 ShowCyclesCommand.RaiseCanExecuteChanged();
                 HideNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
                 ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
-                ShowNodesWithSingleIncomingCommand.RaiseCanExecuteChanged();
+                HideNodesReachableFromMultipleClustersCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
 

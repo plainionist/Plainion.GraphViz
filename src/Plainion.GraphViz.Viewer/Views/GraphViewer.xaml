@@ -56,8 +56,8 @@
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
                 <MenuItem Header="Hide nodes without edges" Command="{Binding HideNodesWithoutEdgesCommand}"/>
+                <MenuItem Header="Hide nodes reachable from multiple clusters" Command="{Binding HideNodesReachableFromMultipleClustersCommand}"/>
                 <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
-                <MenuItem Header="Show nodes with single incomming" Command="{Binding ShowNodesWithSingleIncomingCommand}"/>
                 <Separator/>
                 <MenuItem Header="Fold/Unfold all clusters" Command="{Binding FoldUnfoldAllClustersCommand}"/>
                 <Separator/>

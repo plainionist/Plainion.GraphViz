@@ -88,7 +88,7 @@
   <ItemGroup>
     <Compile Include="Algorithms\ChangeClusterFolding.cs" />
     <Compile Include="Algorithms\ChangeClusterAssignment.cs" />
-    <Compile Include="Algorithms\ShowNodesWithSingleIncoming.cs" />
+    <Compile Include="Algorithms\HideNodesReachableFromMultipleClusters.cs" />
     <Compile Include="Algorithms\ShowNodesOutsideClusters.cs" />
     <Compile Include="Algorithms\HideNodesWithoutEdges.cs" />
     <Compile Include="Algorithms\HideSingleNode.cs" />
