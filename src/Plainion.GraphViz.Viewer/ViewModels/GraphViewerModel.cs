@@ -25,7 +25,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         [ImportingConstructor]
         public GraphViewerModel( IEventAggregator eventAggregator )
         {
-            HideNodeCommand = new DelegateCommand<Node>( n => new HideSingleNode( Presentation ).Execute( n ) );
+            HideNodeCommand = new DelegateCommand<Node>(n => new HideSingleNode(Presentation).Execute(n));
+
+            RemoveIncomingCommand = new DelegateCommand<Node>(n => new RemoveIncomings(Presentation).Execute(n));
+            RemoveOutgoingCommand = new DelegateCommand<Node>(n => new RemoveOutgoings(Presentation).Execute(n));
+            RemoveNotConnectedNodesCommand = new DelegateCommand<Node>(n => new RemoveNotConnectedNodes(Presentation).Execute(n));
+
             ShowNodeWithSiblingsCommand = new DelegateCommand<Node>( n => new ShowNodeWithSiblings( Presentation ).Execute( n ) );
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>( n => new ShowNodeWithIncomings( Presentation ).Execute( n ) );
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>( n => new ShowNodeWithOutgoings( Presentation ).Execute( n ) );
@@ -100,6 +105,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
         public ICommand HideNodeCommand { get; private set; }
+
+        public ICommand RemoveIncomingCommand { get; private set; }
+
+        public ICommand RemoveOutgoingCommand { get; private set; }
+
+        public ICommand RemoveNotConnectedNodesCommand { get; private set; }
 
         public ICommand CaptionToClipboardCommand { get; private set; }
 

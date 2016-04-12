@@ -1,13 +1,12 @@
 ﻿using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
-using Plainion;
 
 namespace Plainion.GraphViz.Algorithms
 {
     public class ShowNodeWithOutgoings
     {
-        private IGraphPresentation myPresentation;
+        private readonly IGraphPresentation myPresentation;
 
         public ShowNodeWithOutgoings( IGraphPresentation presentation )
         {
