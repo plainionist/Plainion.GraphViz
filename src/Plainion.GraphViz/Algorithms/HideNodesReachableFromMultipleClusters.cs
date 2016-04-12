@@ -42,52 +42,36 @@ namespace Plainion.GraphViz.Algorithms
                 }
             }
 
-            var newNodes = new HashSet<Node>(cache.Keys);
-
-            while (newNodes.Count > 0)
+            foreach (var edge in Traverse.BreathFirst(cache.Keys, source => source.Out))
             {
-                var nodes = newNodes.ToList();
-                newNodes.Clear();
-
-                foreach (var parent in nodes)
+                // do not hide cluster nodes
+                if (clusterNodes.Contains(edge.Target.Id))
                 {
-                    var parentClusterId = cache[parent];
-
-                    foreach (var target in parent.Out.Select(e => e.Target))
-                    {
-                        if (clusterNodes.Contains(target.Id))
-                        {
-                            // do not hide cluster nodes
-                            continue;
-                        }
-
-                        newNodes.Add(target);
-
-                        if (parentClusterId == null)
-                        {
-                            // on multiple path
-                            mask.Set(target);
-                            cache[target] = null;
-                            continue;
-                        }
-
-                        string existingClusterId;
-                        if (cache.TryGetValue(target, out existingClusterId)
-                            && (existingClusterId != parentClusterId || existingClusterId == null))
-                        {
-                            // multiple path detected
-                            mask.Set(target);
-                            cache[target] = null;
-                        }
-                        else
-                        {
-                            // first path found
-                            cache[target] = parentClusterId;
-                        }
-                    }
+                    continue;
                 }
 
-                newNodes.ExceptWith(cache.Keys);
+                var sourceClusterId = cache[edge.Source];
+
+                if (sourceClusterId == null)
+                {
+                    // on multiple path
+                    mask.Set(edge.Target);
+                    cache[edge.Target] = null;
+                    continue;
+                }
+
+                string existingClusterId;
+                if (cache.TryGetValue(edge.Target, out existingClusterId) && existingClusterId != sourceClusterId)
+                {
+                    // multiple path detected
+                    mask.Set(edge.Target);
+                    cache[edge.Target] = null;
+                }
+                else
+                {
+                    // first path found
+                    cache[edge.Target] = sourceClusterId;
+                }
             }
 
             var module = myPresentation.GetModule<INodeMaskModule>();

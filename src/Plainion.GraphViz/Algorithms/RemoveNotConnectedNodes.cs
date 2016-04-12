@@ -40,29 +40,14 @@ namespace Plainion.GraphViz.Algorithms
             var connectedNodes = new HashSet<Node>();
             connectedNodes.Add(node);
 
-            var newNodes = new HashSet<Node>(connectedNodes);
+            var recursiveSiblings = Traverse.BreathFirst(new[] { node },
+                    n => n.Out.Where(e => myPresentation.Picking.Pick(e.Target))
+                        .Concat(n.In.Where(e => myPresentation.Picking.Pick(e.Source))))
+                .SelectMany(e => new[] { e.Source, e.Target });
 
-            while (newNodes.Count > 0)
+            foreach (var n in recursiveSiblings)
             {
-                var nodes = newNodes.ToList();
-                newNodes.Clear();
-
-                foreach (var newNode in nodes)
-                {
-                    var siblings = newNode.In
-                        .Select(e => e.Source)
-                        .Concat(node.Out
-                            .Select(e => e.Target))
-                        .Where(n => myPresentation.Picking.Pick(n));
-
-                    foreach (var sibling in siblings)
-                    {
-                        connectedNodes.Add(sibling);
-                        newNodes.Add(sibling);
-                    }
-                }
-
-                newNodes.ExceptWith(connectedNodes);
+                connectedNodes.Add(n);
             }
 
             return connectedNodes;

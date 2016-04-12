@@ -94,11 +94,12 @@
     <Compile Include="Algorithms\HideNodesWithoutEdges.cs" />
     <Compile Include="Algorithms\HideSingleNode.cs" />
     <Compile Include="Algorithms\ShowCycles.cs" />
-    <Compile Include="Algorithms\RemoveIncomings.cs" />
+    <Compile Include="Algorithms\AddRemoveIncomings.cs" />
     <Compile Include="Algorithms\ShowNodeWithIncomings.cs" />
-    <Compile Include="Algorithms\RemoveOutgoings.cs" />
+    <Compile Include="Algorithms\AddRemoveOutgoings.cs" />
     <Compile Include="Algorithms\ShowNodeWithOutgoings.cs" />
     <Compile Include="Algorithms\ShowNodeWithSiblings.cs" />
+    <Compile Include="Algorithms\Traverse.cs" />
     <Compile Include="Algorithms\UnfoldAndHidePrivateNodes.cs" />
     <Compile Include="Dot\DotGraphHeader.cs" />
     <Compile Include="Dot\DotPlainParser.cs" />

@@ -30,6 +30,11 @@
                     <MenuItem Header="With incoming" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="With outgoing" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
+                <Separator/>
+                <MenuItem Header="Add">
+                    <MenuItem Header="Incomings" Command="{Binding AddIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Outgoings" Command="{Binding AddOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                </MenuItem>
                 <MenuItem Header="Remove">
                     <MenuItem Header="Incomings" Command="{Binding RemoveIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Outgoings" Command="{Binding RemoveOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
