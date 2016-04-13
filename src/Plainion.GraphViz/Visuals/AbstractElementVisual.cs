@@ -5,7 +5,7 @@ using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Visuals
 {
-    internal class AbstractElementVisual
+    internal abstract class AbstractElementVisual
     {
         public DrawingVisual Visual { get; protected set; }
 
@@ -49,11 +49,14 @@ namespace Plainion.GraphViz.Visuals
             }
             else
             {
-                drawing.Brush = Brushes.Black;
-                drawing.Pen.Brush = Brushes.Black;
+                var brush = GetBorderBrush();
+                drawing.Brush = brush;
+                drawing.Pen.Brush = brush;
                 drawing.Pen.Thickness /= 2;
             }
         }
+
+        protected abstract Brush GetBorderBrush();
 
         public static IGraphItem GetGraphItem( DependencyObject obj )
         {

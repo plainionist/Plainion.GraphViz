@@ -98,5 +98,10 @@ namespace Plainion.GraphViz.Visuals
 
             return box;
         }
+
+        protected override Brush GetBorderBrush()
+        {
+            return Brushes.Blue;
+        }
     }
 }

@@ -86,5 +86,11 @@ namespace Plainion.GraphViz.Visuals
 
             Visual.SetValue( GraphItemProperty, Owner );
         }
+
+        protected override Brush GetBorderBrush()
+        {
+            var style = myPresentation.GetPropertySetFor<EdgeStyle>().Get(Owner.Id);
+            return style.Color;
+        }
     }
 }

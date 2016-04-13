@@ -253,13 +253,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             var nodeStyles = presentation.GetPropertySetFor<NodeStyle>();
             foreach (var style in response.NodeStyles)
             {
-                nodeStyles.Add(new NodeStyle(style.Key) { FillColor = (Brush)converter.ConvertFromString(style.Value) });
+                var brush = (Brush)converter.ConvertFromString(style.Value);
+                brush.Freeze();
+                nodeStyles.Add(new NodeStyle(style.Key) { FillColor = brush });
             }
 
             var edgeStyles = presentation.GetPropertySetFor<EdgeStyle>();
             foreach (var style in response.EdgeStyles)
             {
-                edgeStyles.Add(new EdgeStyle(style.Key) { Color = (Brush)converter.ConvertFromString(style.Value) });
+                var brush = (Brush)converter.ConvertFromString(style.Value);
+                brush.Freeze();
+                edgeStyles.Add(new EdgeStyle(style.Key) { Color = brush });
             }
 
             Model.Presentation = presentation;
