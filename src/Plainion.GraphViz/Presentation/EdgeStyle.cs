@@ -6,16 +6,17 @@ namespace Plainion.GraphViz.Presentation
     {
         private Brush myColor;
 
-        public EdgeStyle( string ownerId )
-            : base( ownerId )
+        public EdgeStyle(string ownerId)
+            : base(ownerId)
         {
             Color = Brushes.Black;
+            Style = "solid";
         }
 
         public Brush Color
         {
             get { return myColor; }
-            set { SetProperty( ref myColor, value, "Color" ); }
+            set { SetProperty(ref myColor, value); }
         }
     }
 }

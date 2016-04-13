@@ -12,6 +12,7 @@ namespace Plainion.GraphViz.Presentation
             : base(ownerId)
         {
             Shape = "ellipse";
+            Style = "solid";
             BorderColor = Brushes.Black;
             FillColor = Brushes.LightGray;
         }

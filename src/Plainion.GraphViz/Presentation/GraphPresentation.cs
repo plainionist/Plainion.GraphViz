@@ -21,18 +21,18 @@ namespace Plainion.GraphViz.Presentation
         {
             myModules = new List<object>();
 
-            myModules.Add( new PropertySetModule<ToolTipContent>( id => new ToolTipContent( id, null ) ) );
-            myModules.Add( new PropertySetModule<Selection>( id => new Selection( id ) { IsSelected = false } ) );
+            myModules.Add(new PropertySetModule<ToolTipContent>(id => new ToolTipContent(id, null)));
+            myModules.Add(new PropertySetModule<Selection>(id => new Selection(id) { IsSelected = false }));
             // TODO: move translation from string to WPF entities to parser
-            myModules.Add( new PropertySetModule<NodeStyle>( id => new NodeStyle( id ) { BorderColor = Brushes.Black, FillColor = Brushes.LightGray, Shape = "ellipse", Style = "solid" } ) );
-            myModules.Add( new PropertySetModule<EdgeStyle>( id => new EdgeStyle( id ) { Color = Brushes.Black, Style = "solid" } ) );
-            myModules.Add( new CaptionModule( id => new Caption( id, null ) ) );
-            myModules.Add( new GraphLayoutModule() );
-            myModules.Add( new NodeMaskModule() );
-            myModules.Add( new EdgeMaskModule() );
-            myModules.Add( new TransformationModule( this ) );
+            myModules.Add(new PropertySetModule<NodeStyle>(id => new NodeStyle(id)));
+            myModules.Add(new PropertySetModule<EdgeStyle>(id => new EdgeStyle(id)));
+            myModules.Add(new CaptionModule(id => new Caption(id, null)));
+            myModules.Add(new GraphLayoutModule());
+            myModules.Add(new NodeMaskModule());
+            myModules.Add(new EdgeMaskModule());
+            myModules.Add(new TransformationModule(this));
 
-            Picking = new PickingCache( this, new GraphPicking( this ) );
+            Picking = new PickingCache(this, new GraphPicking(this));
 
             myNodeMaskModuleObserver = GetModule<INodeMaskModule>().CreateObserver();
             myNodeMaskModuleObserver.ModuleChanged += OnModuleChanged;
@@ -44,11 +44,11 @@ namespace Plainion.GraphViz.Presentation
             myTransformationModuleObserver.ModuleChanged += OnModuleChanged;
         }
 
-        private void OnModuleChanged( object sender, EventArgs e )
+        private void OnModuleChanged(object sender, EventArgs e)
         {
-            if( GraphVisibilityChanged != null )
+            if (GraphVisibilityChanged != null)
             {
-                GraphVisibilityChanged( this, EventArgs.Empty );
+                GraphVisibilityChanged(this, EventArgs.Empty);
             }
         }
 
@@ -70,13 +70,13 @@ namespace Plainion.GraphViz.Presentation
             }
             set
             {
-                if( myGraph != null )
+                if (myGraph != null)
                 {
-                    throw new InvalidOperationException( "Graph already set to presentation. Changing Graph is not allowed!" );
+                    throw new InvalidOperationException("Graph already set to presentation. Changing Graph is not allowed!");
                 }
 
                 // graph is mutable in order to support easy graph building -> protect against graph changes
-                myGraph = Objects.Clone( value );
+                myGraph = Objects.Clone(value);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Plainion.GraphViz.Presentation
 
         public void Dispose()
         {
-            if( myModules != null )
+            if (myModules != null)
             {
                 myNodeMaskModuleObserver.ModuleChanged -= OnModuleChanged;
                 myNodeMaskModuleObserver.Dispose();
@@ -109,57 +109,57 @@ namespace Plainion.GraphViz.Presentation
             }
         }
 
-        public IGraphPresentation UnionWith( IGraphPresentation other, Func<IGraphPresentation> presentationCreator )
+        public IGraphPresentation UnionWith(IGraphPresentation other, Func<IGraphPresentation> presentationCreator)
         {
             var result = presentationCreator();
 
             var builder = new RelaxedGraphBuilder();
 
-            foreach( var node in GetNodes( this, other ) )
+            foreach (var node in GetNodes(this, other))
             {
-                builder.TryAddNode( node.Id );
+                builder.TryAddNode(node.Id);
             }
 
-            foreach( var edge in GetEdges( this, other ) )
+            foreach (var edge in GetEdges(this, other))
             {
-                builder.TryAddEdge( edge.Source.Id, edge.Target.Id );
+                builder.TryAddEdge(edge.Source.Id, edge.Target.Id);
             }
 
-            foreach( var cluster in GetClusters( this, other ) )
+            foreach (var cluster in GetClusters(this, other))
             {
-                builder.TryAddCluster( cluster.Id, cluster.Nodes.Select( n => n.Id ) );
+                builder.TryAddCluster(cluster.Id, cluster.Nodes.Select(n => n.Id));
             }
 
             result.Graph = builder.Graph;
 
-            UnionWith<ToolTipContent>( this, other, result );
-            UnionWith<Selection>( this, other, result );
-            UnionWith<NodeStyle>( this, other, result );
-            UnionWith<EdgeStyle>( this, other, result );
-            UnionWith<Caption>( this, other, result );
+            UnionWith<ToolTipContent>(this, other, result);
+            UnionWith<Selection>(this, other, result);
+            UnionWith<NodeStyle>(this, other, result);
+            UnionWith<EdgeStyle>(this, other, result);
+            UnionWith<Caption>(this, other, result);
 
             {
                 var resultModule = result.GetModule<INodeMaskModule>();
 
-                foreach( var item in GetModule<INodeMaskModule>().Items.Concat( other.GetModule<INodeMaskModule>().Items ) )
+                foreach (var item in GetModule<INodeMaskModule>().Items.Concat(other.GetModule<INodeMaskModule>().Items))
                 {
-                    resultModule.Push( item );
+                    resultModule.Push(item);
                 }
             }
 
             {
                 var resultModule = result.GetModule<IEdgeMaskModule>();
 
-                foreach( var item in GetModule<IEdgeMaskModule>().Items )
+                foreach (var item in GetModule<IEdgeMaskModule>().Items)
                 {
-                    resultModule.Add( item );
+                    resultModule.Add(item);
                 }
 
-                foreach( var item in other.GetModule<IEdgeMaskModule>().Items )
+                foreach (var item in other.GetModule<IEdgeMaskModule>().Items)
                 {
-                    if( !resultModule.Items.Any( i => i.Id == item.Id ) )
+                    if (!resultModule.Items.Any(i => i.Id == item.Id))
                     {
-                        resultModule.Add( item );
+                        resultModule.Add(item);
                     }
                 }
             }
@@ -167,44 +167,44 @@ namespace Plainion.GraphViz.Presentation
             return result;
         }
 
-        private IEnumerable<Node> GetNodes( GraphPresentation lhs, IGraphPresentation rhs )
+        private IEnumerable<Node> GetNodes(GraphPresentation lhs, IGraphPresentation rhs)
         {
-            if( lhs.Graph == null ) return rhs.Graph.Nodes;
-            if( rhs.Graph == null ) return lhs.Graph.Nodes;
+            if (lhs.Graph == null) return rhs.Graph.Nodes;
+            if (rhs.Graph == null) return lhs.Graph.Nodes;
 
-            return lhs.Graph.Nodes.Concat( rhs.Graph.Nodes );
+            return lhs.Graph.Nodes.Concat(rhs.Graph.Nodes);
         }
 
-        private IEnumerable<Edge> GetEdges( GraphPresentation lhs, IGraphPresentation rhs )
+        private IEnumerable<Edge> GetEdges(GraphPresentation lhs, IGraphPresentation rhs)
         {
-            if( lhs.Graph == null ) return rhs.Graph.Edges;
-            if( rhs.Graph == null ) return lhs.Graph.Edges;
+            if (lhs.Graph == null) return rhs.Graph.Edges;
+            if (rhs.Graph == null) return lhs.Graph.Edges;
 
-            return lhs.Graph.Edges.Concat( rhs.Graph.Edges );
+            return lhs.Graph.Edges.Concat(rhs.Graph.Edges);
         }
 
-        private IEnumerable<Cluster> GetClusters( GraphPresentation lhs, IGraphPresentation rhs )
+        private IEnumerable<Cluster> GetClusters(GraphPresentation lhs, IGraphPresentation rhs)
         {
-            if( lhs.Graph == null ) return rhs.Graph.Clusters;
-            if( rhs.Graph == null ) return lhs.Graph.Clusters;
+            if (lhs.Graph == null) return rhs.Graph.Clusters;
+            if (rhs.Graph == null) return lhs.Graph.Clusters;
 
-            return lhs.Graph.Clusters.Concat( rhs.Graph.Clusters );
+            return lhs.Graph.Clusters.Concat(rhs.Graph.Clusters);
         }
 
-        private static void UnionWith<T1>( IGraphPresentation lhs, IGraphPresentation rhs, IGraphPresentation result ) where T1 : AbstractPropertySet
+        private static void UnionWith<T1>(IGraphPresentation lhs, IGraphPresentation rhs, IGraphPresentation result) where T1 : AbstractPropertySet
         {
             var resultModule = result.GetPropertySetFor<T1>();
 
-            foreach( var item in lhs.GetPropertySetFor<T1>().Items )
+            foreach (var item in lhs.GetPropertySetFor<T1>().Items)
             {
-                resultModule.Add( item );
+                resultModule.Add(item);
             }
 
-            foreach( var item in rhs.GetPropertySetFor<T1>().Items )
+            foreach (var item in rhs.GetPropertySetFor<T1>().Items)
             {
-                if( !resultModule.Items.Any( i => i.OwnerId == item.OwnerId ) )
+                if (!resultModule.Items.Any(i => i.OwnerId == item.OwnerId))
                 {
-                    resultModule.Add( item );
+                    resultModule.Add(item);
                 }
             }
         }
