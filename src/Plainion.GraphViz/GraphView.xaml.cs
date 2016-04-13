@@ -116,8 +116,8 @@ namespace Plainion.GraphViz
         {
             ((GraphView)d).myGraphVisual.LayoutEngine = (ILayoutEngine)e.NewValue;
         }
-        
-        private void OnLoaded( object sender, RoutedEventArgs e )
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             SetValue(NavigationProperty, this);
 
@@ -234,8 +234,8 @@ namespace Plainion.GraphViz
         // relative to rendertarget
         private bool ZoomTo(Point start, Point end)
         {
-            var x = Math.Min(start.X, end.X);
-            var y = Math.Min(start.Y, end.Y);
+            var left = Math.Min(start.X, end.X);
+            var top = Math.Min(start.Y, end.Y);
             var width = Math.Abs(start.X - end.X);
             var height = Math.Abs(start.Y - end.Y);
 
@@ -245,39 +245,22 @@ namespace Plainion.GraphViz
                 return false;
             }
 
-            double zoom;
-            if (width > height)
-            {
-                zoom = ScrollViewer.ViewportWidth / width;
-            }
-            else
-            {
-                zoom = ScrollViewer.ViewportHeight / height;
-            }
+            var zoomX = ScrollViewer.ViewportWidth / width;
+            var zoomY = ScrollViewer.ViewportHeight / height;
+            var zoom = Math.Min(zoomX, zoomY);
 
             // uses same zoom for x and y to preserve aspect ratio
             myScaleTransform.ScaleX = zoom;
             myScaleTransform.ScaleY = zoom;
 
-            var newXY = myScaleTransform.Transform(new Point(x, y));
-            if (double.IsNaN(newXY.X) || double.IsNaN(newXY.Y))
+            var topLeft = myScaleTransform.Transform(new Point(left, top));
+            if (double.IsNaN(topLeft.X) || double.IsNaN(topLeft.Y))
             {
                 return true;
             }
 
-            if (width > height)
-            {
-                // keep x but center y
-                newXY.Y -= ((ScrollViewer.ViewportHeight - height * zoom) / 2);
-            }
-            else
-            {
-                // keep y but center x
-                newXY.X -= ((ScrollViewer.ViewportWidth - width * zoom) / 2);
-            }
-
-            ScrollViewer.ScrollToHorizontalOffset(newXY.X);
-            ScrollViewer.ScrollToVerticalOffset(newXY.Y);
+            ScrollViewer.ScrollToHorizontalOffset(topLeft.X);
+            ScrollViewer.ScrollToVerticalOffset(topLeft.Y);
 
             return true;
         }
@@ -334,10 +317,6 @@ namespace Plainion.GraphViz
         /// <summary>
         /// Key: name of the type of the element under cursor - "Default" for none
         /// </summary>
-        public Dictionary<string, ContextMenu> ContextMenus
-        {
-            get;
-            set;
-        }
+        public Dictionary<string, ContextMenu> ContextMenus { get; set; }
     }
 }
