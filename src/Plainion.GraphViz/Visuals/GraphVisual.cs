@@ -97,6 +97,8 @@ namespace Plainion.GraphViz.Visuals
                 myDrawingElements.Clear();
             }
 
+            this.SnapsToDevicePixels = true;
+
             if (myDrawingElements.Count == 0)
             {
                 Debug.WriteLine("Re-Rendering");
