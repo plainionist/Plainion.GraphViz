@@ -24,16 +24,18 @@
 
         <r:GraphView.ContextMenus>
             <ContextMenu x:Key="Node">
-                <MenuItem Header="Hide" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                <MenuItem Header="Remove">
-                    <MenuItem Header="Incomings" Command="{Binding RemoveIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Outgoings" Command="{Binding RemoveOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Non connected" Command="{Binding RemoveNotConnectedNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Hide">
+                    <MenuItem Header="This" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Incomings" Command="{Binding HideIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Outgoings" Command="{Binding HideOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
-                <MenuItem Header="Show/Add">
+                <MenuItem Header="Show (add)">
                     <MenuItem Header="Incomings" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Outgoings" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                </MenuItem>
+                <MenuItem Header="Remove (from visible)">
+                    <MenuItem Header="Unreachables" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Clusters">
@@ -60,9 +62,10 @@
             </ContextMenu>
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
-                <MenuItem Header="Hide nodes without edges" Command="{Binding HideNodesWithoutEdgesCommand}"/>
-                <MenuItem Header="Hide nodes reachable from multiple clusters" Command="{Binding HideNodesReachableFromMultipleClustersCommand}"/>
                 <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
+                <Separator/>
+                <MenuItem Header="Remove nodes without edges" Command="{Binding RemoveNodesWithoutEdgesCommand}"/>
+                <MenuItem Header="Remove nodes reachable from multiple clusters" Command="{Binding RemoveNodesReachableFromMultipleClustersCommand}"/>
                 <Separator/>
                 <MenuItem Header="Fold/Unfold all clusters" Command="{Binding FoldUnfoldAllClustersCommand}"/>
                 <Separator/>

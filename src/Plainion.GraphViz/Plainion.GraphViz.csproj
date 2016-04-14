@@ -88,10 +88,10 @@
   <ItemGroup>
     <Compile Include="Algorithms\ChangeClusterFolding.cs" />
     <Compile Include="Algorithms\ChangeClusterAssignment.cs" />
-    <Compile Include="Algorithms\HideNodesReachableFromMultipleClusters.cs" />
-    <Compile Include="Algorithms\RemoveNotConnectedNodes.cs" />
+    <Compile Include="Algorithms\RemoveNodesReachableFromMultipleClusters.cs" />
+    <Compile Include="Algorithms\RemoveUnreachableNodes.cs" />
     <Compile Include="Algorithms\ShowNodesOutsideClusters.cs" />
-    <Compile Include="Algorithms\HideNodesWithoutEdges.cs" />
+    <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
     <Compile Include="Algorithms\HideSingleNode.cs" />
     <Compile Include="Algorithms\ShowCycles.cs" />
     <Compile Include="Algorithms\ShowHideIncomings.cs" />
@@ -182,6 +182,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Algorithms\ReadMe.md" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -5,11 +5,11 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    public class RemoveNotConnectedNodes
+    public class RemoveUnreachableNodes
     {
         private readonly IGraphPresentation myPresentation;
 
-        public RemoveNotConnectedNodes(IGraphPresentation presentation)
+        public RemoveUnreachableNodes(IGraphPresentation presentation)
         {
             Contract.RequiresNotNull(presentation, "presentation");
 
@@ -18,7 +18,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public void Execute(Node node)
         {
-            var connectedNodes = GetConnectedNodes(node);
+            var connectedNodes = GetReachableNodes(node);
 
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
             var nodesToHide = transformationModule.Graph.Nodes
@@ -29,20 +29,19 @@ namespace Plainion.GraphViz.Algorithms
             mask.Set(nodesToHide);
 
             var caption = myPresentation.GetPropertySetFor<Caption>().Get(node.Id);
-            mask.Label = "(-) non-connected's of " + caption.DisplayText;
+            mask.Label = "Nodes unreachables from " + caption.DisplayText;
 
             var module = myPresentation.GetModule<INodeMaskModule>();
             module.Push(mask);
         }
 
-        private IEnumerable<Node> GetConnectedNodes(Node node)
+        private IEnumerable<Node> GetReachableNodes(Node node)
         {
             var connectedNodes = new HashSet<Node>();
             connectedNodes.Add(node);
 
             var recursiveSiblings = Traverse.BreathFirst(new[] { node },
-                    n => n.Out.Where(e => myPresentation.Picking.Pick(e.Target))
-                        .Concat(n.In.Where(e => myPresentation.Picking.Pick(e.Source))))
+                    n => n.Out.Where(e => myPresentation.Picking.Pick(e.Target)))
                 .SelectMany(e => new[] { e.Source, e.Target });
 
             foreach (var n in recursiveSiblings)

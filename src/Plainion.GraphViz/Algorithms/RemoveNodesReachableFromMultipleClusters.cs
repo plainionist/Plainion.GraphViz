@@ -9,11 +9,11 @@ namespace Plainion.GraphViz.Algorithms
     /// <summary>
     /// Shows all nodes which are only reachable from a single cluster
     /// </summary>
-    public class HideNodesReachableFromMultipleClusters
+    public class RemoveNodesReachableFromMultipleClusters
     {
         private readonly IGraphPresentation myPresentation;
 
-        public HideNodesReachableFromMultipleClusters(IGraphPresentation presentation)
+        public RemoveNodesReachableFromMultipleClusters(IGraphPresentation presentation)
         {
             Contract.RequiresNotNull(presentation, "presentation");
 
@@ -42,7 +42,7 @@ namespace Plainion.GraphViz.Algorithms
                 }
             }
 
-            foreach (var edge in Traverse.BreathFirst(cache.Keys, source => source.Out))
+            foreach (var edge in Traverse.BreathFirst(cache.Keys, source => source.Out.Where(e => myPresentation.Picking.Pick(e.Target))))
             {
                 // do not hide cluster nodes
                 if (clusterNodes.Contains(edge.Target.Id))

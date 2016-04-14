@@ -4,11 +4,11 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    public class HideNodesWithoutEdges
+    public class RemoveNodesWithoutEdges
     {
         private readonly IGraphPresentation myPresentation;
 
-        public HideNodesWithoutEdges(IGraphPresentation presentation)
+        public RemoveNodesWithoutEdges(IGraphPresentation presentation)
         {
             Contract.RequiresNotNull(presentation, "presentation");
 

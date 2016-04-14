@@ -31,9 +31,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: true));
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
 
-            RemoveIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: false));
-            RemoveOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
-            RemoveNotConnectedNodesCommand = new DelegateCommand<Node>(n => new RemoveNotConnectedNodes(Presentation).Execute(n));
+            HideIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: false));
+            HideOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
+            RemoveUnreachableNodesCommand = new DelegateCommand<Node>(n => new RemoveUnreachableNodes(Presentation).Execute(n));
 
             CaptionToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(Presentation.GetModule<CaptionModule>().Get(n.Id).DisplayText));
             IdToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(n.Id));
@@ -53,9 +53,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 });
 
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
-            HideNodesWithoutEdgesCommand = new DelegateCommand(() => new HideNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
             ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
-            HideNodesReachableFromMultipleClustersCommand = new DelegateCommand(() => new HideNodesReachableFromMultipleClusters(Presentation).Execute(), () => Presentation != null);
+
+            RemoveNodesWithoutEdgesCommand = new DelegateCommand(() => new RemoveNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
+            RemoveNodesReachableFromMultipleClustersCommand = new DelegateCommand(() => new RemoveNodesReachableFromMultipleClusters(Presentation).Execute(), () => Presentation != null);
+            
             FoldUnfoldAllClustersCommand = new DelegateCommand(() => new ChangeClusterFolding(Presentation).FoldUnfoldAllClusters(), () => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
@@ -96,21 +98,21 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
-        public DelegateCommand HideNodesWithoutEdgesCommand { get; private set; }
+        public DelegateCommand RemoveNodesWithoutEdgesCommand { get; private set; }
 
         public DelegateCommand ShowNodesOutsideClustersCommand { get; private set; }
 
-        public DelegateCommand HideNodesReachableFromMultipleClustersCommand { get; private set; }
+        public DelegateCommand RemoveNodesReachableFromMultipleClustersCommand { get; private set; }
 
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
         public ICommand HideNodeCommand { get; private set; }
 
-        public ICommand RemoveIncomingCommand { get; private set; }
+        public ICommand HideIncomingCommand { get; private set; }
 
-        public ICommand RemoveOutgoingCommand { get; private set; }
+        public ICommand HideOutgoingCommand { get; private set; }
 
-        public ICommand RemoveNotConnectedNodesCommand { get; private set; }
+        public ICommand RemoveUnreachableNodesCommand { get; private set; }
 
         public ICommand CaptionToClipboardCommand { get; private set; }
 
@@ -139,9 +141,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             if (propertyName == "Presentation")
             {
                 ShowCyclesCommand.RaiseCanExecuteChanged();
-                HideNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
+                RemoveNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
                 ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
-                HideNodesReachableFromMultipleClustersCommand.RaiseCanExecuteChanged();
+                RemoveNodesReachableFromMultipleClustersCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
 
