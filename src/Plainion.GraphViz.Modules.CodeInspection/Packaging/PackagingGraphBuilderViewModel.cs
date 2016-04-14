@@ -267,6 +267,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             }
 
             Model.Presentation = presentation;
+
+            // only register for our own presentation
+            var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
+            myTransformationsObserver = transformationModule.CreateObserver();
+            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
         private void OnCancel()
@@ -308,11 +313,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 {
                     myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
                     myTransformationsObserver.Dispose();
+                    myTransformationsObserver = null;
                 }
-
-                var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-                myTransformationsObserver = transformationModule.CreateObserver();
-                myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
             }
         }
 

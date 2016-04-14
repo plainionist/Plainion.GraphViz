@@ -158,6 +158,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 {
                     myTransformationsModuleObserver.ModuleChanged -= OnTransformationsModuleChanged;
                     myTransformationsModuleObserver.Dispose();
+                    myTransformationsModuleObserver = null;
                 }
 
                 if (Presentation != null)
