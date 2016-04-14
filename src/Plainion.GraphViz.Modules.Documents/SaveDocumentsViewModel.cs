@@ -12,6 +12,7 @@ using Microsoft.Practices.Prism.Mvvm;
 using Plainion.GraphViz.Presentation;
 using System;
 using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Dot;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
@@ -41,9 +42,9 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             var notification = new SaveFileDialogNotification();
             notification.RestoreDirectory = true;
-            notification.Filter = "DGML files (*.dgml)|*.dgml";
+            notification.Filter = "DOT files (*.dot)|*.dot|DGML files (*.dgml)|*.dgml";
             notification.FilterIndex = 0;
-            notification.DefaultExt = ".dgml";
+            notification.DefaultExt = ".dot";
 
             SaveFileRequest.Raise(notification,
                 n =>
@@ -58,6 +59,18 @@ namespace Plainion.GraphViz.Modules.Documents
         public InteractionRequest<SaveFileDialogNotification> SaveFileRequest { get; private set; }
 
         private void Save(string path)
+        {
+            if (Path.GetExtension(path).Equals(".dgml", StringComparison.OrdinalIgnoreCase))
+            {
+                SaveAsDgml(path);
+            }
+            else
+            {
+                SaveAsDot(path);
+            }
+        }
+
+        private void SaveAsDgml(string path)
         {
             var captionModule = Model.Presentation.GetModule<CaptionModule>();
             Func<Node, string> GetNodeCaption = node =>
@@ -74,6 +87,12 @@ namespace Plainion.GraphViz.Modules.Documents
             {
                 DgmlExporter.Export(Model.Presentation.Graph, GetNodeCaption, writer);
             }
+        }
+
+        private void SaveAsDot(string path)
+        {
+            var writer = new DotWriter(path);
+            writer.Write(Model.Presentation);
         }
 
         protected override void OnModelPropertyChanged(string propertyName)
