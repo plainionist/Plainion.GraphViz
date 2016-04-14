@@ -193,7 +193,7 @@ namespace Plainion.GraphViz
 
         private void myRubberBand_Closed(object sender, EventArgs e)
         {
-            bool handled = ZoomTo(myZoomStartPoint, Mouse.GetPosition(myGraphVisual));
+            bool handled = ZoomTo(myZoomStartPoint, Mouse.GetPosition(myGraphVisual), false);
 
             if (handled)
             {
@@ -216,7 +216,8 @@ namespace Plainion.GraphViz
         }
 
         // relative to rendertarget
-        private bool ZoomTo(Point start, Point end)
+        // TODO: unfort. still unclear why navigteto requires scroll to center
+        private bool ZoomTo(Point start, Point end, bool scrollToCenter)
         {
             var left = Math.Min(start.X, end.X);
             var top = Math.Min(start.Y, end.Y);
@@ -237,15 +238,17 @@ namespace Plainion.GraphViz
             myScaleTransform.ScaleX = zoom;
             myScaleTransform.ScaleY = zoom;
 
-            var center = myScaleTransform.Transform(new Point(left + width / 2, top + height / 2));
-            if (double.IsNaN(center.X) || double.IsNaN(center.Y))
+            var scrollTarget = scrollToCenter
+                ? new Point(left + width / 2, top + height / 2)
+                : new Point(left, top);
+            var topLeft = myScaleTransform.Transform(scrollTarget);
+            if (double.IsNaN(topLeft.X) || double.IsNaN(topLeft.Y))
             {
                 return true;
             }
 
-            // pass new center!
-            ScrollViewer.ScrollToHorizontalOffset(center.X);
-            ScrollViewer.ScrollToVerticalOffset(center.Y);
+            ScrollViewer.ScrollToHorizontalOffset(topLeft.X);
+            ScrollViewer.ScrollToVerticalOffset(topLeft.Y);
 
             return true;
         }
@@ -312,7 +315,7 @@ namespace Plainion.GraphViz
             // lets do some padding
             rect.Inflate(rect.Width, rect.Height);
 
-            ZoomTo(rect.TopLeft, rect.BottomRight);
+            ZoomTo(rect.TopLeft, rect.BottomRight, true);
         }
 
         /// <summary>
