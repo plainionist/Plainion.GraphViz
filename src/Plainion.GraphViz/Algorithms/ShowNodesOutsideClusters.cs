@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms

@@ -27,15 +27,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         {
             HideNodeCommand = new DelegateCommand<Node>(n => new HideSingleNode(Presentation).Execute(n));
 
-            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowNodeWithSiblings(Presentation).Execute(n));
-            ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowNodeWithIncomings(Presentation).Execute(n));
-            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowNodeWithOutgoings(Presentation).Execute(n));
+            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Execute(n));
+            ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: true));
+            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
 
-            AddIncomingCommand = new DelegateCommand<Node>(n => new AddRemoveIncomings(Presentation).Execute(n, add: true));
-            AddOutgoingCommand = new DelegateCommand<Node>(n => new AddRemoveOutgoings(Presentation).Execute(n, add: true));
-
-            RemoveIncomingCommand = new DelegateCommand<Node>(n => new AddRemoveIncomings(Presentation).Execute(n, add: false));
-            RemoveOutgoingCommand = new DelegateCommand<Node>(n => new AddRemoveOutgoings(Presentation).Execute(n, add: false));
+            RemoveIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: false));
+            RemoveOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
             RemoveNotConnectedNodesCommand = new DelegateCommand<Node>(n => new RemoveNotConnectedNodes(Presentation).Execute(n));
 
             CaptionToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(Presentation.GetModule<CaptionModule>().Get(n.Id).DisplayText));
@@ -108,10 +105,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
         public ICommand HideNodeCommand { get; private set; }
-
-        public ICommand AddIncomingCommand { get; private set; }
-
-        public ICommand AddOutgoingCommand { get; private set; }
 
         public ICommand RemoveIncomingCommand { get; private set; }
 

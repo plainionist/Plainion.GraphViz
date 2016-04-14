@@ -5,11 +5,11 @@ using Plainion;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    public class ShowNodeWithSiblings
+    public class ShowSiblings
     {
         private IGraphPresentation myPresentation;
 
-        public ShowNodeWithSiblings( IGraphPresentation presentation )
+        public ShowSiblings( IGraphPresentation presentation )
         {
             Contract.RequiresNotNull( presentation, "presentation" );
 
