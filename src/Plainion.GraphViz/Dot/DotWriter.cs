@@ -21,6 +21,8 @@ namespace Plainion.GraphViz.Dot
 
         internal bool IgnoreStyle { get; set; }
 
+        internal bool WriteVisibleOnly { get; set; }
+
         // http://www.graphviz.org/Gallery/directed/cluster.html
         // returns written nodes
         public int Write(IGraphPresentation presentation)
@@ -51,7 +53,9 @@ namespace Plainion.GraphViz.Dot
 
             public int Execute()
             {
-                var transformationModule = myPresentation.GetModule<ITransformationModule>();
+                var graph = myOwner.WriteVisibleOnly
+                    ? myPresentation.GetModule<ITransformationModule>().Graph
+                    : myPresentation.Graph;
 
                 using (myWriter = new StreamWriter(myOwner.myPath))
                 {
@@ -61,11 +65,12 @@ namespace Plainion.GraphViz.Dot
                     myWriter.WriteLine("  rankdir=BT");
                     myWriter.WriteLine("  ranksep=\"2.0 equally\"");
 
-                    var visibleNodes = transformationModule.Graph.Nodes
-                        .Where(n => myPresentation.Picking.Pick(n))
-                        .ToList();
+                    var relevantNodes = (myOwner.WriteVisibleOnly
+                                             ? graph.Nodes.Where(n => myPresentation.Picking.Pick(n))
+                                             : myPresentation.Graph.Nodes)
+                                        .ToList();
 
-                    if (myOwner.FastRenderingNodeCountLimit.HasValue && visibleNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
+                    if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
                     {
                         // http://www.graphviz.org/content/attrs#dnslimit
                         myWriter.WriteLine("  nslimit=0.2");
@@ -74,14 +79,15 @@ namespace Plainion.GraphViz.Dot
                         myWriter.WriteLine("  mclimit=0.5");
                     }
 
-                    foreach (var cluster in transformationModule.Graph.Clusters)
+                    foreach (var cluster in graph.Clusters)
                     {
-                        var visibleClusterNodes = cluster.Nodes
-                            .Where(visibleNodes.Contains)
+                        var relevantClusterNodes = cluster.Nodes
+                            .Where(relevantNodes.Contains)
                             .ToList();
 
-                        if (visibleClusterNodes.Count == 0)
+                        if (myOwner.WriteVisibleOnly && relevantClusterNodes.Count == 0)
                         {
+                            // only in case of rendering we skip empty clusters
                             continue;
                         }
 
@@ -90,7 +96,7 @@ namespace Plainion.GraphViz.Dot
 
                         myWriter.WriteLine("    label = \"{0}\"", myCaptions.Get(cluster.Id).DisplayText);
 
-                        foreach (var node in visibleClusterNodes)
+                        foreach (var node in relevantClusterNodes)
                         {
                             Write(node, "    ");
                         }
@@ -98,19 +104,23 @@ namespace Plainion.GraphViz.Dot
                         myWriter.WriteLine("  }");
                     }
 
-                    foreach (var node in visibleNodes)
+                    foreach (var node in relevantNodes)
                     {
                         Write(node, "  ");
                     }
 
-                    foreach (var edge in transformationModule.Graph.Edges.Where(e => myPresentation.Picking.Pick(e)))
+                    var relevantEdges = myOwner.WriteVisibleOnly
+                        ? graph.Edges.Where(e => myPresentation.Picking.Pick(e))
+                        : graph.Edges;
+
+                    foreach (var edge in relevantEdges)
                     {
                         Write(edge, "  ");
                     }
 
                     myWriter.WriteLine("}");
 
-                    return visibleNodes.Count;
+                    return relevantNodes.Count;
                 }
             }
 

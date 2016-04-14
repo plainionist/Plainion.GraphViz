@@ -29,6 +29,8 @@ namespace Plainion.GraphViz.Dot
             var writer = new DotWriter(myDotFile.FullName);
             writer.FastRenderingNodeCountLimit = FastRenderingNodeCountLimit;
             writer.IgnoreStyle = true;
+            writer.WriteVisibleOnly = true;
+
             var writtenNodesCount = writer.Write(presentation);
 
             myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Auto && writtenNodesCount > FastRenderingNodeCountLimit
