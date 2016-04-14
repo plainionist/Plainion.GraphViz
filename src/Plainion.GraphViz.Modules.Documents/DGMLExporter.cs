@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Modules.Documents
@@ -16,14 +17,14 @@ namespace Plainion.GraphViz.Modules.Documents
             writer.WriteLine("  <Nodes>");
             foreach (var node in graph.Nodes)
             {
-                writer.WriteLine("    <Node Id=\"{0}\" Label=\"{1}\" />", node.Id, GetNodeLabel(node));
+                writer.WriteLine("    <Node Id=\"{0}\" Label=\"{1}\" />", SecurityElement.Escape(node.Id), SecurityElement.Escape(GetNodeLabel(node)));
             }
             writer.WriteLine("  </Nodes>");
 
             writer.WriteLine("  <Links>");
             foreach (var edge in graph.Edges)
             {
-                writer.WriteLine("    <Link Source=\"{0}\" Target=\"{1}\" />", edge.Source.Id, edge.Target.Id);
+                writer.WriteLine("    <Link Source=\"{0}\" Target=\"{1}\" />", SecurityElement.Escape(edge.Source.Id), SecurityElement.Escape(edge.Target.Id));
             }
             writer.WriteLine("  </Links>");
 
