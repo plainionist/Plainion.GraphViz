@@ -126,6 +126,15 @@ namespace Plainion.GraphViz
             ComponentDispatcher.ThreadIdle += OnIdle;
         }
 
+        private void OnRenderingFinished(object sender, EventArgs e)
+        {
+            FitGraphToWindow();
+
+            FocusManager.SetIsFocusScope(this, true);
+            Focus();
+            Keyboard.Focus(this);
+        }
+
         // http://gaggerostechnicalnotes.blogspot.de/2012/01/onidle-event-in-wpf.html
         private void OnIdle(object sender, EventArgs e)
         {
@@ -155,31 +164,6 @@ namespace Plainion.GraphViz
         public IVisualPicking Picking
         {
             get { return myGraphVisual; }
-        }
-
-        private void OnRenderingFinished(object sender, EventArgs e)
-        {
-            FitGraphToWindow();
-
-            FocusManager.SetIsFocusScope(this, true);
-            Focus();
-            Keyboard.Focus(this);
-        }
-
-        private void FitGraphToWindow()
-        {
-            var padding = myGraphVisual.Margin.Left + myGraphVisual.Margin.Right;
-            var scaleX = (RenderSize.Width - padding) / myGraphVisual.ContentSize.Width;
-            var scaleY = (RenderSize.Height - padding) / myGraphVisual.ContentSize.Height;
-            var scale = Math.Min(1, Math.Min(scaleX, scaleY));
-
-            myScaleTransform.ScaleX = scale;
-            myScaleTransform.ScaleY = scale;
-
-            UpdateLayout();
-
-            ScrollViewer.ScrollToHorizontalOffset((myGraphVisual.RenderSize.Width - ScrollViewer.ViewportWidth) / 2);
-            ScrollViewer.ScrollToVerticalOffset((myGraphVisual.RenderSize.Height - ScrollViewer.ViewportHeight) / 2);
         }
 
         public DocumentPaginator GetPaginator(Size printSize)
@@ -253,16 +237,33 @@ namespace Plainion.GraphViz
             myScaleTransform.ScaleX = zoom;
             myScaleTransform.ScaleY = zoom;
 
-            var topLeft = myScaleTransform.Transform(new Point(left, top));
-            if (double.IsNaN(topLeft.X) || double.IsNaN(topLeft.Y))
+            var center = myScaleTransform.Transform(new Point(left + width / 2, top + height / 2));
+            if (double.IsNaN(center.X) || double.IsNaN(center.Y))
             {
                 return true;
             }
 
-            ScrollViewer.ScrollToHorizontalOffset(topLeft.X);
-            ScrollViewer.ScrollToVerticalOffset(topLeft.Y);
+            // pass new center!
+            ScrollViewer.ScrollToHorizontalOffset(center.X);
+            ScrollViewer.ScrollToVerticalOffset(center.Y);
 
             return true;
+        }
+
+        private void FitGraphToWindow()
+        {
+            var padding = myGraphVisual.Margin.Left + myGraphVisual.Margin.Right;
+            var scaleX = (RenderSize.Width - padding) / myGraphVisual.ContentSize.Width;
+            var scaleY = (RenderSize.Height - padding) / myGraphVisual.ContentSize.Height;
+            var scale = Math.Min(1, Math.Min(scaleX, scaleY));
+
+            myScaleTransform.ScaleX = scale;
+            myScaleTransform.ScaleY = scale;
+
+            UpdateLayout();
+
+            ScrollViewer.ScrollToHorizontalOffset((myGraphVisual.RenderSize.Width - ScrollViewer.ViewportWidth) / 2);
+            ScrollViewer.ScrollToVerticalOffset((myGraphVisual.RenderSize.Height - ScrollViewer.ViewportHeight) / 2);
         }
 
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
