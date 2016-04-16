@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         {
             var str = new StringBuilder();
 
-            while( !tokenizer.EndOfStream() && String.IsNullOrWhiteSpace( tokenizer.Current ) )
+            while( !tokenizer.EndOfStream && String.IsNullOrWhiteSpace( tokenizer.Current ) )
             {
                 str.Append( tokenizer.Current );
 

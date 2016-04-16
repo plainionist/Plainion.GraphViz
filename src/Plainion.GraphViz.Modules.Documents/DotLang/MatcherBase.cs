@@ -5,7 +5,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
     {
         public Token IsMatch( Tokenizer tokenizer )
         {
-            if( tokenizer.EndOfStream() )
+            if( tokenizer.EndOfStream )
             {
                 return new Token( TokenType.EndOfStream );
             }

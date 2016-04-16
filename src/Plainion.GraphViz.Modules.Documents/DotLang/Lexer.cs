@@ -81,7 +81,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
         private Token Next()
         {
-            if( myTokenizer.EndOfStream() )
+            if( myTokenizer.EndOfStream )
             {
                 return new Token( TokenType.EndOfStream );
             }

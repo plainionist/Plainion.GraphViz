@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         {
             var str = new StringBuilder();
 
-            while( !tokenizer.EndOfStream() && ( tokenizer.Current == "\r" || tokenizer.Current == "\n" ) )
+            while( !tokenizer.EndOfStream && ( tokenizer.Current == "\r" || tokenizer.Current == "\n" ) )
             {
                 str.Append( tokenizer.Current );
 

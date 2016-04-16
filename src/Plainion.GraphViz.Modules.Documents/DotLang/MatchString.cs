@@ -22,7 +22,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             {
                 tokenizer.Consume();
 
-                while( !tokenizer.EndOfStream() && tokenizer.Current != StringDelim )
+                while( !tokenizer.EndOfStream && tokenizer.Current != StringDelim )
                 {
                     str.Append( tokenizer.Current );
                     tokenizer.Consume();

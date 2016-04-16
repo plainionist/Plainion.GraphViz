@@ -17,7 +17,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         {
             String current = null;
 
-            while( !tokenizer.EndOfStream() && !String.IsNullOrWhiteSpace( tokenizer.Current ) && mySpecialCharacters.All( m => m.Match != tokenizer.Current ) )
+            while( !tokenizer.EndOfStream && !String.IsNullOrWhiteSpace( tokenizer.Current ) && mySpecialCharacters.All( m => m.Match != tokenizer.Current ) )
             {
                 current += tokenizer.Current;
                 tokenizer.Consume();

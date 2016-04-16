@@ -25,7 +25,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         {
             get
             {
-                if( EndOfStream( 0 ) )
+                if( IsEndOfStream( 0 ) )
                 {
                     return null;
                 }
@@ -39,7 +39,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             Index++;
         }
 
-        private bool EndOfStream( int lookahead )
+        private bool IsEndOfStream( int lookahead )
         {
             if( Index + lookahead >= myItems.Count )
             {
@@ -49,14 +49,14 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             return false;
         }
 
-        public Boolean EndOfStream()
+        public bool EndOfStream
         {
-            return EndOfStream( 0 );
+            get { return IsEndOfStream( 0 ); }
         }
 
         public virtual T Peek( int lookahead )
         {
-            if( EndOfStream( lookahead ) )
+            if( IsEndOfStream( lookahead ) )
             {
                 return null;
             }
