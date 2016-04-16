@@ -4,15 +4,6 @@
     <Caption><![CDATA[Planning]]></Caption>
     <Node Id="949fcebe-89de-4fcc-a65a-76889f666ebe">
       <Caption><![CDATA[Next Steps]]></Caption>
-      <Node Id="25cbfad4-59d5-4597-be37-1b493655c5f0">
-        <Caption><![CDATA[add nodespacing for cluster bounding box]]></Caption>
-      </Node>
-      <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
-        <Caption><![CDATA[Akka.Cluster]]></Caption>
-        <Node Id="d0a6277c-ac25-4a8e-ac3f-c16918818081">
-          <Caption><![CDATA[no TPL inside actor - use child actors]]></Caption>
-        </Node>
-      </Node>
       <Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902">
         <Caption><![CDATA[Akka]]></Caption>
         <Node Id="ee4861f0-1ce2-49dd-8d29-185b5c3c4875">
@@ -23,6 +14,12 @@
         </Node>
         <Node Id="33edd133-1842-4200-b9bb-290f7f3919d0">
           <Caption><![CDATA[productize]]></Caption>
+        </Node>
+      </Node>
+      <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
+        <Caption><![CDATA[Akka.Cluster]]></Caption>
+        <Node Id="d0a6277c-ac25-4a8e-ac3f-c16918818081">
+          <Caption><![CDATA[no TPL inside actor - use child actors]]></Caption>
         </Node>
       </Node>
     </Node>
