@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
@@ -70,10 +69,10 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         }
     }
 
-    public class Tokenizer : TokenizableStreamBase<String>
+    public class Tokenizer : TokenizableStreamBase<char>
     {
-        public Tokenizer( String source )
-            : base( () => source.ToCharArray().Select( i => i.ToString( CultureInfo.InvariantCulture ) ).ToArray() )
+        public Tokenizer( string source )
+            : base( () => source.ToCharArray() )
         {
         }
     }

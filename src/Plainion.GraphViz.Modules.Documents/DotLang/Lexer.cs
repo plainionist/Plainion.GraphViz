@@ -64,7 +64,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             {
                 var current = ( keyword as MatchKeyword );
                 current.AllowAsSubString = false;
-                current.SpecialCharacters = specialCharacters.Select( i => i as MatchKeyword ).ToList();
+                current.SpecialCharacters = specialCharacters.Cast<MatchKeyword>().ToList();
             } );
 
             var matchers = new List<IMatcher>();

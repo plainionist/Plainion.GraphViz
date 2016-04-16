@@ -30,7 +30,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         {
             foreach( var character in Match )
             {
-                if( tokenizer.Current == character.ToString( CultureInfo.InvariantCulture ) )
+                if( tokenizer.Current == character )
                 {
                     tokenizer.Consume();
                 }
@@ -46,7 +46,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             {
                 var next = tokenizer.Current;
 
-                found = string.IsNullOrWhiteSpace( next ) || SpecialCharacters.Any( character => character.Match == next );
+                found = char.IsWhiteSpace( next ) || SpecialCharacters.Any( character => character.Match.Length == 1 && character.Match[ 0 ] == next );
             }
             else
             {

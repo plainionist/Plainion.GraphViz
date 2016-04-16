@@ -5,15 +5,13 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
     class MatchNumber : MatcherBase
     {
-        private static Regex myRegex = new Regex( "[0-9]" );
-
         protected override Token IsMatchImpl( Tokenizer tokenizer )
         {
             var leftOperand = GetIntegers( tokenizer );
 
             if( leftOperand != null )
             {
-                if( tokenizer.Current == "." )
+                if( tokenizer.Current == '.' )
                 {
                     tokenizer.Consume();
 
@@ -36,7 +34,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         {
             string num = null;
 
-            while( tokenizer.Current != null && myRegex.IsMatch( tokenizer.Current ) )
+            while( char.IsDigit( tokenizer.Current ) )
             {
                 num += tokenizer.Current;
                 tokenizer.Consume();

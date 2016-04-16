@@ -10,14 +10,14 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
         public MatchWord( IEnumerable<IMatcher> specialCharacters )
         {
-            mySpecialCharacters = specialCharacters.Select( i => i as MatchKeyword ).Where( i => i != null ).ToList();
+            mySpecialCharacters = specialCharacters.OfType<MatchKeyword>().ToList();
         }
 
         protected override Token IsMatchImpl( Tokenizer tokenizer )
         {
-            String current = null;
+            string current = null;
 
-            while( !tokenizer.EndOfStream && !String.IsNullOrWhiteSpace( tokenizer.Current ) && mySpecialCharacters.All( m => m.Match != tokenizer.Current ) )
+            while( !tokenizer.EndOfStream && !char.IsWhiteSpace( tokenizer.Current ) && mySpecialCharacters.All( m => m.Match.Length > 1 || m.Match[ 0 ] != tokenizer.Current ) )
             {
                 current += tokenizer.Current;
                 tokenizer.Consume();

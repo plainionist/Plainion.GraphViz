@@ -5,30 +5,30 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
     class MatchString : MatcherBase
     {
-        public const string QUOTE = "\"";
+        public const char QUOTE = '"';
 
-        private String StringDelim { get; set; }
+        private char myStringDelim;
 
-        public MatchString( String delim )
+        public MatchString( char delim )
         {
-            StringDelim = delim;
+            myStringDelim = delim;
         }
 
         protected override Token IsMatchImpl( Tokenizer tokenizer )
         {
             var str = new StringBuilder();
 
-            if( tokenizer.Current == StringDelim )
+            if( tokenizer.Current == myStringDelim )
             {
                 tokenizer.Consume();
 
-                while( !tokenizer.EndOfStream && tokenizer.Current != StringDelim )
+                while( !tokenizer.EndOfStream && tokenizer.Current != myStringDelim )
                 {
                     str.Append( tokenizer.Current );
                     tokenizer.Consume();
                 }
 
-                if( tokenizer.Current == StringDelim )
+                if( tokenizer.Current == myStringDelim )
                 {
                     tokenizer.Consume();
                 }
