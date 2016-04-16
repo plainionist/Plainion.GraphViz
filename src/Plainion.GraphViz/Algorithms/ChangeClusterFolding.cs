@@ -8,31 +8,31 @@ namespace Plainion.GraphViz.Algorithms
     {
         private readonly IGraphPresentation myPresentation;
 
-        public ChangeClusterFolding(IGraphPresentation presentation)
+        public ChangeClusterFolding( IGraphPresentation presentation )
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull( presentation, "presentation" );
 
             myPresentation = presentation;
         }
 
-        public void Execute(Action<ClusterFoldingTransformation> action)
+        public void Execute( Action<ClusterFoldingTransformation> action )
         {
             var transformations = myPresentation.GetModule<ITransformationModule>();
             var transformation = transformations.Items
                 .OfType<ClusterFoldingTransformation>()
                 .SingleOrDefault();
 
-            if (transformation == null)
+            if( transformation == null )
             {
-                transformation = new ClusterFoldingTransformation(myPresentation);
+                transformation = new ClusterFoldingTransformation( myPresentation );
 
-                action(transformation);
+                action( transformation );
 
-                transformations.Add(transformation);
+                transformations.Add( transformation );
             }
             else
             {
-                action(transformation);
+                action( transformation );
             }
         }
 
@@ -43,32 +43,26 @@ namespace Plainion.GraphViz.Algorithms
                 .OfType<ClusterFoldingTransformation>()
                 .SingleOrDefault();
 
-            if (transformation == null)
+            if( transformation == null )
             {
-                transformation = new ClusterFoldingTransformation(myPresentation);
+                transformation = new ClusterFoldingTransformation( myPresentation );
 
-                foreach (var cluster in myPresentation.Graph.Clusters)
+                foreach( var cluster in myPresentation.Graph.Clusters )
                 {
-                    transformation.Add(cluster.Id);
+                    transformation.Add( cluster.Id );
                 }
 
-                transformations.Add(transformation);
+                transformations.Add( transformation );
             }
             else
             {
-                if (transformation.Clusters.Any())
+                if( transformation.Clusters.Any() )
                 {
-                    foreach (var cluster in transformation.Clusters.ToList())
-                    {
-                        transformation.Remove(cluster);
-                    }
+                    transformation.Remove( transformation.Clusters.ToList() );
                 }
                 else
                 {
-                    foreach (var cluster in myPresentation.Graph.Clusters)
-                    {
-                        transformation.Add(cluster.Id);
-                    }
+                    transformation.Add( myPresentation.Graph.Clusters.Select( c => c.Id ) );
                 }
             }
         }

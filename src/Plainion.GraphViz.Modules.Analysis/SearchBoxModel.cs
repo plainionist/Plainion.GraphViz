@@ -14,25 +14,28 @@ using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [Export(typeof(SearchBoxModel))]
+    [Export( typeof( SearchBoxModel ) )]
     public class SearchBoxModel : ViewModelBase
     {
         private IGraphPresentation myPresentation;
         private NodeWithCaption mySelectedItem;
 
         [ImportingConstructor]
-        public SearchBoxModel(IEventAggregator eventAggregator)
+        public SearchBoxModel( IEventAggregator eventAggregator )
         {
             VisibleNodes = new ObservableCollection<NodeWithCaption>();
             ItemFilter = OnFilterItem;
 
-            SearchCommittedCommand = new DelegateCommand(() => eventAggregator.GetEvent<NodeFocusedEvent>().Publish(SelectedItem.Node));
+            SearchCommittedCommand = new DelegateCommand( () => eventAggregator.GetEvent<NodeFocusedEvent>().Publish( SelectedItem.Node ) );
         }
 
-        private void OnGraphVisibilityChanged(object sender, EventArgs e)
+        private void OnGraphVisibilityChanged( object sender, EventArgs e )
         {
             VisibleNodes.Clear();
-            VisibleNodes.AddRange(GetVisibleNodes());
+
+            // AddRange produces tons of notifications -> too expensive
+            VisibleNodes = new ObservableCollection<NodeWithCaption>( GetVisibleNodes() );
+            OnPropertyChanged( () => VisibleNodes );
         }
 
         private IEnumerable<NodeWithCaption> GetVisibleNodes()
@@ -40,34 +43,34 @@ namespace Plainion.GraphViz.Modules.Analysis
             var captionModule = myPresentation.GetPropertySetFor<Caption>();
             var transformations = myPresentation.GetModule<ITransformationModule>();
             return transformations.Graph.Nodes
-                .Where(n => myPresentation.Picking.Pick(n))
-                .Select(n => new NodeWithCaption(n, captionModule.Get(n.Id).DisplayText));
+                .Where( n => myPresentation.Picking.Pick( n ) )
+                .Select( n => new NodeWithCaption( n, captionModule.Get( n.Id ).DisplayText ) );
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnModelPropertyChanged( string propertyName )
         {
-            if (propertyName == "Presentation")
+            if( propertyName == "Presentation" )
             {
-                if (myPresentation == Model.Presentation)
+                if( myPresentation == Model.Presentation )
                 {
                     return;
                 }
 
-                if (myPresentation != null)
+                if( myPresentation != null )
                 {
                     myPresentation.GraphVisibilityChanged -= OnGraphVisibilityChanged;
                 }
 
                 myPresentation = Model.Presentation;
 
-                if (myPresentation != null)
+                if( myPresentation != null )
                 {
                     myPresentation.GraphVisibilityChanged += OnGraphVisibilityChanged;
 
-                    OnGraphVisibilityChanged(null, EventArgs.Empty);
+                    OnGraphVisibilityChanged( null, EventArgs.Empty );
                 }
 
-                OnPropertyChanged("IsEnabled");
+                OnPropertyChanged( "IsEnabled" );
             }
         }
 
@@ -80,11 +83,16 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         public AutoCompleteFilterPredicate<object> ItemFilter { get; private set; }
 
-        private bool OnFilterItem(string search, object item)
+        private bool OnFilterItem( string search, object item )
         {
-            var node = (NodeWithCaption)item;
+            if( string.IsNullOrEmpty( search ) )
+            {
+                return true;
+            }
 
-            return node.DisplayText.Contains(search, StringComparison.OrdinalIgnoreCase);
+            var node = ( NodeWithCaption )item;
+
+            return node.DisplayText.Contains( search, StringComparison.OrdinalIgnoreCase );
         }
 
         public ICommand SearchCommittedCommand { get; private set; }
@@ -94,13 +102,13 @@ namespace Plainion.GraphViz.Modules.Analysis
             get { return mySelectedItem; }
             set
             {
-                if (mySelectedItem == value)
+                if( mySelectedItem == value )
                 {
                     return;
                 }
 
                 mySelectedItem = value;
-                OnPropertyChanged("SelectedItem");
+                OnPropertyChanged( "SelectedItem" );
             }
         }
     }

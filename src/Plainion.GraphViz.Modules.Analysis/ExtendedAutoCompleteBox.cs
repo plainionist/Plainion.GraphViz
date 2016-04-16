@@ -6,9 +6,6 @@ namespace Plainion.GraphViz.Modules.Analysis
 {
     public class ExtendedAutoCompleteBox : AutoCompleteBox
     {
-        public static DependencyProperty InputCommittedCommandProperty = DependencyProperty.Register( "InputCommittedCommand", typeof( ICommand ), typeof( ExtendedAutoCompleteBox ) );
-        public static DependencyProperty InputCommittedCommandParameterProperty = DependencyProperty.Register( "InputCommittedCommandParameter", typeof( object ), typeof( ExtendedAutoCompleteBox ) );
-
         protected override void OnKeyUp( KeyEventArgs e )
         {
             base.OnKeyUp( e );
@@ -26,31 +23,20 @@ namespace Plainion.GraphViz.Modules.Analysis
             }
         }
 
+        public static DependencyProperty InputCommittedCommandProperty = DependencyProperty.Register( "InputCommittedCommand", typeof( ICommand ), typeof( ExtendedAutoCompleteBox ) );
+      
         public ICommand InputCommittedCommand
         {
-            get
-            {
-                return ( ICommand )GetValue( InputCommittedCommandProperty );
-            }
-
-            set
-            {
-                SetValue( InputCommittedCommandProperty, value );
-            }
+            get { return ( ICommand )GetValue( InputCommittedCommandProperty ); }
+            set { SetValue( InputCommittedCommandProperty, value ); }
         }
 
+        public static DependencyProperty InputCommittedCommandParameterProperty = DependencyProperty.Register( "InputCommittedCommandParameter", typeof( object ), typeof( ExtendedAutoCompleteBox ) );
+        
         public object InputCommittedCommandParameter
         {
-            get
-            {
-                return GetValue( InputCommittedCommandParameterProperty );
-            }
-
-            set
-            {
-                SetValue( InputCommittedCommandParameterProperty, value );
-            }
+            get { return GetValue( InputCommittedCommandParameterProperty ); }
+            set { SetValue( InputCommittedCommandParameterProperty, value ); }
         }
-
     }
 }
