@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
-    public class TokenizableStreamBase<T> where T : class
+    public class TokenizableStreamBase<T>
     {
-        private List<T> myItems;
+        private T[] myItems;
         private Stack<int> mySnapshotIndexes;
 
-        public TokenizableStreamBase( Func<List<T>> extractor )
+        public TokenizableStreamBase( Func<T[]> extractor )
         {
             Index = 0;
 
@@ -25,9 +25,9 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         {
             get
             {
-                if( IsEndOfStream( 0 ) )
+                if( Index >= myItems.Length )
                 {
-                    return null;
+                    return default( T );
                 }
 
                 return myItems[ Index ];
@@ -39,26 +39,16 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             Index++;
         }
 
-        private bool IsEndOfStream( int lookahead )
-        {
-            if( Index + lookahead >= myItems.Count )
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         public bool EndOfStream
         {
-            get { return IsEndOfStream( 0 ); }
+            get { return Index >= myItems.Length; }
         }
 
         public virtual T Peek( int lookahead )
         {
-            if( IsEndOfStream( lookahead ) )
+            if( Index + lookahead >= myItems.Length )
             {
-                return null;
+                return default( T );
             }
 
             return myItems[ Index + lookahead ];
@@ -83,7 +73,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
     public class Tokenizer : TokenizableStreamBase<String>
     {
         public Tokenizer( String source )
-            : base( () => source.ToCharArray().Select( i => i.ToString( CultureInfo.InvariantCulture ) ).ToList() )
+            : base( () => source.ToCharArray().Select( i => i.ToString( CultureInfo.InvariantCulture ) ).ToArray() )
         {
         }
     }
