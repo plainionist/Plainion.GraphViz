@@ -57,8 +57,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             RemoveNodesWithoutEdgesCommand = new DelegateCommand(() => new RemoveNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
             RemoveNodesReachableFromMultipleClustersCommand = new DelegateCommand(() => new RemoveNodesReachableFromMultipleClusters(Presentation).Execute(), () => Presentation != null);
-            
+
             FoldUnfoldAllClustersCommand = new DelegateCommand(() => new ChangeClusterFolding(Presentation).FoldUnfoldAllClusters(), () => Presentation != null);
+            AddVisibleNodesOutsideClustersToClusterCommand = new DelegateCommand<string>(c => new AddVisibleNodesOutsideClustersToCluster(Presentation).Execute(c), c => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
             AddToClusterCommand = new DelegateCommand<string>(c => new ChangeClusterAssignment(Presentation).Execute(t => t.AddToCluster(GraphItemForContextMenu.Id, c)));
@@ -132,7 +133,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand<Cluster> UnfoldAndHidePrivateNodesCommand { get; private set; }
 
-        public ICommand FoldUnfoldAllClustersCommand { get; private set; }
+        public DelegateCommand FoldUnfoldAllClustersCommand { get; private set; }
+
+        public DelegateCommand<string> AddVisibleNodesOutsideClustersToClusterCommand { get; private set; }
 
         protected override void OnModelPropertyChanged(string propertyName)
         {
@@ -144,6 +147,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 RemoveNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
                 ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
                 RemoveNodesReachableFromMultipleClustersCommand.RaiseCanExecuteChanged();
+                FoldUnfoldAllClustersCommand.RaiseCanExecuteChanged();
+                AddVisibleNodesOutsideClustersToClusterCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
 

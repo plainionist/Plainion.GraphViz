@@ -56,7 +56,7 @@ namespace Plainion.GraphViz.Presentation
             OnPropertyChanged(() => NodeToClusterMapping);
         }
 
-        public void AddToCluster(IEnumerable<string> nodeIds, string clusterId)
+        public void AddToCluster(IReadOnlyCollection<string> nodeIds, string clusterId)
         {
             Contract.RequiresNotNullNotEmpty(nodeIds, "nodeIds");
 

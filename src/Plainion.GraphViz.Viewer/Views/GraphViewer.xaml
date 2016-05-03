@@ -68,6 +68,13 @@
                 <MenuItem Header="Remove nodes reachable from multiple clusters" Command="{Binding RemoveNodesReachableFromMultipleClustersCommand}"/>
                 <Separator/>
                 <MenuItem Header="Fold/Unfold all clusters" Command="{Binding FoldUnfoldAllClustersCommand}"/>
+                <MenuItem Header="Add visible nodes outside clusters to" ItemsSource="{Binding Clusters}">
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <MenuItem Header="{Binding Caption}" Command="{Binding Data.AddVisibleNodesOutsideClustersToClusterCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Id}"/>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>

@@ -90,6 +90,7 @@
     <Compile Include="Algorithms\ChangeClusterAssignment.cs" />
     <Compile Include="Algorithms\RemoveNodesReachableFromMultipleClusters.cs" />
     <Compile Include="Algorithms\RemoveUnreachableNodes.cs" />
+    <Compile Include="Algorithms\AddVisibleNodesOutsideClustersToCluster.cs" />
     <Compile Include="Algorithms\ShowNodesOutsideClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
     <Compile Include="Algorithms\HideSingleNode.cs" />
