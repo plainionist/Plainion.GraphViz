@@ -30,6 +30,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 settings.IndentChars = "    ";
                 settings.NewLineChars = Environment.NewLine;
                 settings.NewLineHandling = NewLineHandling.Replace;
+                settings.Encoding = Encoding.UTF8;
 
                 using (var xmlWriter = XmlWriter.Create(writer, settings))
                 {

@@ -6,9 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
+using System.Xml;
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
@@ -148,7 +150,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                     {
                         if (File.Exists(n.FileName))
                         {
-                            Document.Text = File.ReadAllText(n.FileName);
+                            using (var reader = new StreamReader(n.FileName, true))
+                            {
+                                Document.Text = reader.ReadToEnd();
+                            }
                         }
                         else
                         {
@@ -301,7 +306,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             if (Document.FileName != null)
             {
-                File.WriteAllText(Document.FileName, Document.Text);
+                using (var writer = new StreamWriter(Document.FileName, false, Encoding.UTF8))
+                {
+                    writer.WriteLine(Document.Text);
+                }
             }
         }
 
