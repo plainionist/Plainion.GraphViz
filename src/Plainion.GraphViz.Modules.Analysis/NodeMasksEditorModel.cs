@@ -1,4 +1,6 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -125,7 +127,8 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             var regex = new Regex(Filter.ToLower(), RegexOptions.IgnoreCase);
 
-            var matchedNodes = myPresentation.Graph.Nodes
+            var transformations = myPresentation.GetModule<ITransformationModule>();
+            var matchedNodes = transformations.Graph.Nodes
                 .Where(n => myFilterOnId ? regex.IsMatch(n.Id) : regex.IsMatch(myPresentation.GetPropertySetFor<Caption>().Get(n.Id).DisplayText));
 
             // TODO: should we have default "hide" really?
@@ -147,11 +150,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             set { SetProperty(ref mySelectedPreviewItem, value); }
         }
 
-        public ICommand AddCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand AddCommand { get; private set; }
 
         protected override void OnModelPropertyChanged(string propertyName)
         {
@@ -165,14 +164,19 @@ namespace Plainion.GraphViz.Modules.Analysis
                 if (myPresentation != null)
                 {
                     myPresentation.GetModule<INodeMaskModule>().CollectionChanged -= OnMasksChanged;
+                    myPresentation.GraphVisibilityChanged -= OnGraphVisibilityChanged;
                 }
 
                 myPresentation = Model.Presentation;
 
                 Filter = null;
 
+                if (myPresentation != null)
                 {
                     myPresentation.GetModule<INodeMaskModule>().CollectionChanged += OnMasksChanged;
+                    myPresentation.GraphVisibilityChanged += OnGraphVisibilityChanged;
+
+                    OnGraphVisibilityChanged(null, EventArgs.Empty);
                 }
 
                 myPreviewNodes = null;
@@ -183,6 +187,13 @@ namespace Plainion.GraphViz.Modules.Analysis
         private void OnMasksChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             PreviewNodes.Refresh();
+        }
+
+        private void OnGraphVisibilityChanged(object sender, EventArgs e)
+        {
+            // AddRange produces tons of notifications -> too expensive
+            myPreviewNodes = null;
+            OnPropertyChanged(() => PreviewNodes);
         }
 
         public string Filter
@@ -231,14 +242,15 @@ namespace Plainion.GraphViz.Modules.Analysis
                 {
                     var captionModule = myPresentation.GetPropertySetFor<Caption>();
 
-                    var nodes = myPresentation.Graph.Nodes
+                    var transformations = myPresentation.GetModule<ITransformationModule>();
+                    var nodes = transformations.Graph.Nodes
                         .Select(n => new NodeWithCaption(n, myFilterOnId ? n.Id : captionModule.Get(n.Id).DisplayText));
 
                     myPreviewNodes = CollectionViewSource.GetDefaultView(nodes);
                     myPreviewNodes.Filter = FilterPreview;
                     myPreviewNodes.SortDescriptions.Add(new SortDescription("DisplayText", ListSortDirection.Ascending));
 
-                    OnPropertyChanged("PreviewNodes");
+                    OnPropertyChanged(() => PreviewNodes);
                 }
                 return myPreviewNodes;
             }

@@ -29,15 +29,6 @@ namespace Plainion.GraphViz.Modules.Analysis
             SearchCommittedCommand = new DelegateCommand( () => eventAggregator.GetEvent<NodeFocusedEvent>().Publish( SelectedItem.Node ) );
         }
 
-        private void OnGraphVisibilityChanged( object sender, EventArgs e )
-        {
-            VisibleNodes.Clear();
-
-            // AddRange produces tons of notifications -> too expensive
-            VisibleNodes = new ObservableCollection<NodeWithCaption>( GetVisibleNodes() );
-            OnPropertyChanged( () => VisibleNodes );
-        }
-
         private IEnumerable<NodeWithCaption> GetVisibleNodes()
         {
             var captionModule = myPresentation.GetPropertySetFor<Caption>();
@@ -74,12 +65,19 @@ namespace Plainion.GraphViz.Modules.Analysis
             }
         }
 
+        private void OnGraphVisibilityChanged(object sender, EventArgs e)
+        {
+            // AddRange produces tons of notifications -> too expensive
+            VisibleNodes = new ObservableCollection<NodeWithCaption>(GetVisibleNodes());
+            OnPropertyChanged(() => VisibleNodes);
+        }
+
         public bool IsEnabled
         {
             get { return myPresentation != null; }
         }
 
-        public ObservableCollection<NodeWithCaption> VisibleNodes { get; private set; }
+        public IEnumerable<NodeWithCaption> VisibleNodes { get; private set; }
 
         public AutoCompleteFilterPredicate<object> ItemFilter { get; private set; }
 
