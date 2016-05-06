@@ -42,15 +42,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
 
             ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(c => new ChangeClusterFolding(Presentation).Execute(t => t.Toggle(c.Id)));
-            UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHidePrivateNodes(Presentation).Execute(c),
-                c =>
-                {
-                    var transformation = Presentation.GetModule<ITransformationModule>().Items
-                        .OfType<ClusterFoldingTransformation>()
-                        .SingleOrDefault();
-
-                    return transformation == null ? false : transformation.Clusters.Contains(GraphItemForContextMenu.Id);
-                });
+            UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.AllSiblings), CanUnfold);
+            UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
+            UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
 
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
             ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
@@ -71,6 +65,15 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe(OnEventFocused);
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
+        }
+
+        private bool CanUnfold(Cluster cluster)
+        {
+            var transformation = Presentation.GetModule<ITransformationModule>().Items
+                .OfType<ClusterFoldingTransformation>()
+                .SingleOrDefault();
+
+            return transformation != null && transformation.Clusters.Contains(GraphItemForContextMenu.Id);
         }
 
         private void OnEventFocused(Node node)
@@ -132,6 +135,10 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ICommand ToggleClusterFoldingCommand { get; private set; }
 
         public DelegateCommand<Cluster> UnfoldAndHidePrivateNodesCommand { get; private set; }
+
+        public DelegateCommand<Cluster> UnfoldAndHideAllButTargetsCommand { get; private set; }
+
+        public DelegateCommand<Cluster> UnfoldAndHideAllButSourcesCommand { get; private set; }
 
         public DelegateCommand FoldUnfoldAllClustersCommand { get; private set; }
 
@@ -222,6 +229,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 if (SetProperty(ref myGraphItemForContextMenu, value))
                 {
                     UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
+                    UnfoldAndHideAllButTargetsCommand.RaiseCanExecuteChanged();
+                    UnfoldAndHideAllButSourcesCommand.RaiseCanExecuteChanged();
                 }
             }
         }

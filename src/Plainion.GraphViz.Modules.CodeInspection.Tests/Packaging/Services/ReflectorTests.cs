@@ -72,7 +72,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests.Packaging.Services
         [Test]
         public void GetUsedTypes_AsCast_Found()
         {
-            Verify( typeof( CastClass ), typeof( UnfoldAndHidePrivateNodes ) );
+            Verify( typeof( CastClass ), typeof( UnfoldAndHide ) );
         }
 
         [Test]

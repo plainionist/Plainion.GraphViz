@@ -8,7 +8,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests.TestData
         public void Init(object arg)
         {
             var ignore = ( ShowCycles )arg;
-            var ignore2 =arg as UnfoldAndHidePrivateNodes;
+            var ignore2 =arg as UnfoldAndHide;
         }
     }
 }

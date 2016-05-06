@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Algorithms\ChangeClusterFolding.cs" />
     <Compile Include="Algorithms\ChangeClusterAssignment.cs" />
+    <Compile Include="Algorithms\NodeType.cs" />
     <Compile Include="Algorithms\RemoveNodesReachableFromMultipleClusters.cs" />
     <Compile Include="Algorithms\RemoveUnreachableNodes.cs" />
     <Compile Include="Algorithms\AddVisibleNodesOutsideClustersToCluster.cs" />
@@ -99,7 +100,7 @@
     <Compile Include="Algorithms\ShowHideOutgoings.cs" />
     <Compile Include="Algorithms\ShowSiblings.cs" />
     <Compile Include="Algorithms\Traverse.cs" />
-    <Compile Include="Algorithms\UnfoldAndHidePrivateNodes.cs" />
+    <Compile Include="Algorithms\UnfoldAndHide.cs" />
     <Compile Include="Dot\DotGraphHeader.cs" />
     <Compile Include="Dot\DotPlainParser.cs" />
     <Compile Include="Dot\DotWriter.cs" />
