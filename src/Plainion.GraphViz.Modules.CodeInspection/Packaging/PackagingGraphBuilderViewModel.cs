@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -10,7 +9,6 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
-using System.Xml;
 using ICSharpCode.AvalonEdit.Document;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
@@ -34,9 +32,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private TextDocument myDocument;
         private IEnumerable<ElementCompletionData> myCompletionData;
         private CancellationTokenSource myCTS;
-        private IModuleChangedObserver myTransformationsObserver;
         private bool myUsedTypesOnly;
         private bool myCreateClustersForNamespaces;
+        private readonly GraphToSpecSynchronizer myGraphToSpecSynchronizer;
 
         public PackagingGraphBuilderViewModel()
         {
@@ -61,6 +59,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 .ToList();
 
             UsedTypesOnly = true;
+
+            myGraphToSpecSynchronizer = new GraphToSpecSynchronizer(
+                () => SpecUtils.Deserialize(Document.Text),
+                spec =>
+                {
+                    Document.Text = SpecUtils.Serialize(spec);
+                    Save();
+                });
 
             IsReady = true;
         }
@@ -273,10 +279,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
             Model.Presentation = presentation;
 
-            // only register for our own presentation
-            var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-            myTransformationsObserver = transformationModule.CreateObserver();
-            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
+            // only synchronize our own presentation
+            myGraphToSpecSynchronizer.Presentation = presentation;
         }
 
         private void OnCancel()
@@ -315,99 +319,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         protected override void OnModelPropertyChanged(string propertyName)
         {
-            if (propertyName == "Presentation" && Model.Presentation != null)
+            if (propertyName == "Presentation")
             {
-                if (myTransformationsObserver != null)
-                {
-                    myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
-                    myTransformationsObserver.Dispose();
-                    myTransformationsObserver = null;
-                }
-            }
-        }
-
-        private void OnTransformationsChanged(object sender, EventArgs eventArgs)
-        {
-            using (new Profile("PackagingGraphBuilderViewModel:OnTransformationsChanged"))
-            {
-                var spec = SpecUtils.Deserialize(Document.Text);
-
-                var clusters = spec.Packages
-                    .SelectMany(p => p.Clusters)
-                    .ToList();
-
-                var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-                foreach (var transformation in transformationModule.Items.OfType<DynamicClusterTransformation>())
-                {
-                    foreach (var entry in transformation.NodeToClusterMapping)
-                    {
-                        var clustersMatchingNode = clusters
-                            .Where(c => c.Matches(entry.Key))
-                            .ToList();
-
-                        // remove from all (potentially old) clusters
-                        var clustersToRemoveFrom = clustersMatchingNode
-                            .Where(c => entry.Value == null || c.Name != entry.Value);
-                        foreach (var cluster in clustersToRemoveFrom)
-                        {
-                            var exactMatch = cluster.Includes.FirstOrDefault(p => p.Pattern == entry.Key);
-                            if (exactMatch != null)
-                            {
-                                cluster.Patterns.Remove(exactMatch);
-                            }
-                            else
-                            {
-                                cluster.Patterns.Add(new Exclude { Pattern = entry.Key });
-                            }
-                        }
-
-                        if (entry.Value == null)
-                        {
-                            continue;
-                        }
-
-                        // add to the cluster it should now belong to
-                        var clusterToAddTo = clusters
-                            .FirstOrDefault(c => c.Name == entry.Value);
-
-                        if (clusterToAddTo == null)
-                        {
-                            // --> new cluster added in UI
-                            clusterToAddTo = new Spec.Cluster { Name = entry.Value };
-                            clusters.Add(clusterToAddTo);
-                            spec.Packages.First().Clusters.Add(clusterToAddTo);
-                        }
-
-                        if (clusterToAddTo.Matches(entry.Key))
-                        {
-                            // node already or again matched
-                            // -> ignore
-                            continue;
-                        }
-                        else
-                        {
-                            clusterToAddTo.Patterns.Add(new Include { Pattern = entry.Key });
-                        }
-                    }
-
-                    foreach (var removedCluster in transformation.ClusterVisibility.Where(e => e.Value == false))
-                    {
-                        foreach (var package in spec.Packages)
-                        {
-                            var cluster = package.Clusters.FirstOrDefault(c => c.Name == removedCluster.Key);
-                            if (cluster != null)
-                            {
-                                package.Clusters.Remove(cluster);
-                                break;
-                            }
-                        }
-
-                    }
-                }
-
-                Document.Text = SpecUtils.Serialize(spec);
-
-                Save();
+                // reset only!
+                myGraphToSpecSynchronizer.Presentation = null;
             }
         }
 
