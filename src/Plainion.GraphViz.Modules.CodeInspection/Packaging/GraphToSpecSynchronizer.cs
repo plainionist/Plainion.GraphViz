@@ -85,6 +85,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             HandleClusterRenames(spec, transformationModule.Graph.Clusters);
         }
 
+        // this will also handle new clusters (but only if they have notes)
         private void HandleNodeToClusterAssignment(SystemPackaging spec)
         {
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
@@ -134,6 +135,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                     clusterToAddTo = new Spec.Cluster { Name = captions.Get(entry.Value).DisplayText };
                     clusters.Add(clusterToAddTo);
                     spec.Packages.First().Clusters.Add(clusterToAddTo);
+
+                    // also update the mapping
+                    myClusterIdToExternalNameMapping[entry.Value] = clusterToAddTo.Name;
                 }
 
                 if (clusterToAddTo.Matches(entry.Key))
@@ -183,10 +187,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 var externalClusterId = GetExternalClusterId(cluster.Id);
 
-                var specCluster = specClusters.First(c => c.Name == externalClusterId);
-                specCluster.Name = captions.Get(cluster.Id).DisplayText;
-
-                myClusterIdToExternalNameMapping[cluster.Id] = specCluster.Name;
+                var specCluster = specClusters.FirstOrDefault(c => c.Name == externalClusterId);
+                if (specCluster == null)
+                {
+                    // this is a new cluster EMPTY not yet there in spec
+                    // -> nothing to do - will be handled once nodes are added to this new cluster
+                }
+                else
+                {
+                    specCluster.Name = captions.Get(cluster.Id).DisplayText;
+                    myClusterIdToExternalNameMapping[cluster.Id] = specCluster.Name;
+                }
             }
         }
 
