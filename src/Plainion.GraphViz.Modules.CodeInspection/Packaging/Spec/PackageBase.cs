@@ -15,6 +15,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
 
         public string Name { get; set; }
 
+        [DefaultValue(null)]
+        public string Description { get; set; }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<Wildcard> Patterns { get; private set; }
 

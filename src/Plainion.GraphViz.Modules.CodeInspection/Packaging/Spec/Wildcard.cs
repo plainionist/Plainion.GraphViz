@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
@@ -51,5 +52,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
         {
             return myPattern.Value.IsMatch(file);
         }
+
+        [DefaultValue(null)]
+        public string Comment { get; set; }
     }
 }
