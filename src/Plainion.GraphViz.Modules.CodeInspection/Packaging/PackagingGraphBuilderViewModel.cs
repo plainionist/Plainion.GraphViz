@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.IO;
@@ -85,8 +86,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 var spec = SpecUtils.Deserialize(Document.Text);
                 Packages.AddRange(spec.Packages.Select(p => p.Name));
             }
-            catch
+            catch (Exception ex)
             {
+                StatusMessageService.Publish(new StatusMessage("ERROR:" + ex));
             }
 
             CreateGraphCommand.RaiseCanExecuteChanged();

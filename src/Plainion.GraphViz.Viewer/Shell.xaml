@@ -23,7 +23,8 @@
             <prism:PopupWindowAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.SettingsEditor}"/>
         </prism:InteractionRequestTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding ShowStatusMessagesRequest, Mode=OneWay}">
-            <prism:PopupWindowAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.StatusMessagesViewer}"/>
+            <pn:PopupViewAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.StatusMessagesViewer}"
+                                WindowWidth="600" WindowHeight="500"/>
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 
