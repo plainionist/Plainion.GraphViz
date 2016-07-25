@@ -81,11 +81,19 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
 
             var selectionModule = Presentation.GetPropertySetFor<Selection>();
-
-            return Presentation.GetModule<ITransformationModule>().Graph.Nodes
-                .Where(n => selectionModule.Get(n.Id).IsSelected)
-                .Concat(new[] { (Node)GraphItemForContextMenu })
-                .ToArray();
+            try
+            {
+                return Presentation.GetModule<ITransformationModule>().Graph.Nodes
+                    .Where(n => selectionModule.Get(n.Id).IsSelected)
+                    .Concat(new[] {(Node) GraphItemForContextMenu})
+                    .ToArray();
+            }
+            finally
+            {
+                // the selection is considered to be temporary for this operation only
+                // -> remove selection again because relevant nodes have been picked up
+                selectionModule.Clear();
+            }
         }
 
         private bool CanUnfold(Cluster cluster)
