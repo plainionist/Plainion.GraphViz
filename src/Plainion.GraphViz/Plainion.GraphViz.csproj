@@ -94,7 +94,7 @@
     <Compile Include="Algorithms\AddVisibleNodesOutsideClustersToCluster.cs" />
     <Compile Include="Algorithms\ShowNodesOutsideClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
-    <Compile Include="Algorithms\HideSingleNode.cs" />
+    <Compile Include="Algorithms\HideNodes.cs" />
     <Compile Include="Algorithms\ShowCycles.cs" />
     <Compile Include="Algorithms\ShowHideIncomings.cs" />
     <Compile Include="Algorithms\ShowHideOutgoings.cs" />

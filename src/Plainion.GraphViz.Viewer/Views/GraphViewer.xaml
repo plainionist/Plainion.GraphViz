@@ -26,6 +26,7 @@
             <ContextMenu x:Key="Node">
                 <MenuItem Header="Hide">
                     <MenuItem Header="This" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="This and all selected" Command="{Binding HideNodeCommand}"/>
                     <MenuItem Header="Incomings" Command="{Binding HideIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Outgoings" Command="{Binding HideOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
@@ -39,14 +40,26 @@
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Clusters">
-                    <MenuItem Header="Add to" ItemsSource="{Binding Clusters}">
-                        <MenuItem.ItemTemplate>
-                            <DataTemplate>
-                                <MenuItem Header="{Binding Caption}" Command="{Binding Data.AddToClusterCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Id}"/>
-                            </DataTemplate>
-                        </MenuItem.ItemTemplate>
+                    <MenuItem Header="Add">
+                        <MenuItem Header="This to" ItemsSource="{Binding Clusters}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <MenuItem Header="{Binding Caption}" Command="{Binding Data.AddToClusterCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Id}"/>
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
+                        <MenuItem Header="This and selected to" ItemsSource="{Binding Clusters}">
+                            <MenuItem.ItemTemplate>
+                                <DataTemplate>
+                                    <MenuItem Header="{Binding Caption}" Command="{Binding Data.AddWithSelectedToClusterCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Id}"/>
+                                </DataTemplate>
+                            </MenuItem.ItemTemplate>
+                        </MenuItem>
                     </MenuItem>
-                    <MenuItem Header="Remove" Command="{Binding RemoveFromClusterCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Remove">
+                        <MenuItem Header="This" Command="{Binding RemoveFromClusterCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                        <MenuItem Header="This and selected" Command="{Binding RemoveFromClusterCommand}"/>
+                    </MenuItem>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Copy caption to clipboard" Command="{Binding CaptionToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>

@@ -68,9 +68,13 @@ namespace Plainion.GraphViz.Presentation
             OnPropertyChanged(() => NodeToClusterMapping);
         }
 
-        public void RemoveFromClusters(string nodeId)
+        public void RemoveFromClusters(params string[] nodeIds)
         {
-            myNodeToClusterMapping[nodeId] = null;
+            foreach (var nodeId in nodeIds)
+            {
+                myNodeToClusterMapping[nodeId] = null;
+            }
+
             OnPropertyChanged(() => NodeToClusterMapping);
         }
 

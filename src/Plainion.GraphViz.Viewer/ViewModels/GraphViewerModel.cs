@@ -25,7 +25,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         [ImportingConstructor]
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
-            HideNodeCommand = new DelegateCommand<Node>(n => new HideSingleNode(Presentation).Execute(n));
+            HideNodeCommand = new DelegateCommand<Node>(n => new HideNodes(Presentation).Execute(GetRelevantNodes(n)));
 
             ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Execute(n));
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: true));
@@ -57,7 +57,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
             AddToClusterCommand = new DelegateCommand<string>(c => new ChangeClusterAssignment(Presentation).Execute(t => t.AddToCluster(GraphItemForContextMenu.Id, c)));
-            RemoveFromClusterCommand = new DelegateCommand<Node>(n => new ChangeClusterAssignment(Presentation).Execute(t => t.RemoveFromClusters(GraphItemForContextMenu.Id)));
+            AddWithSelectedToClusterCommand = new DelegateCommand<string>(c => new ChangeClusterAssignment(Presentation)
+                .Execute(t => t.AddToCluster(GetRelevantNodes(null)
+                    .Select(n => n.Id).ToArray(), c)));
+            RemoveFromClusterCommand = new DelegateCommand<Node>(node => new ChangeClusterAssignment(Presentation)
+                .Execute(t => t.RemoveFromClusters(GetRelevantNodes(node)
+                    .Select(n => n.Id).ToArray())));
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
             PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
@@ -65,6 +70,22 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe(OnEventFocused);
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
+        }
+
+        // by convention: if given commandParameter is null then "this and all selected" nodes are relevant
+        private Node[] GetRelevantNodes(Node commandParamter)
+        {
+            if (commandParamter != null)
+            {
+                return new[] { commandParamter };
+            }
+
+            var selectionModule = Presentation.GetPropertySetFor<Selection>();
+
+            return Presentation.GetModule<ITransformationModule>().Graph.Nodes
+                .Where(n => selectionModule.Get(n.Id).IsSelected)
+                .Concat(new[] { (Node)GraphItemForContextMenu })
+                .ToArray();
         }
 
         private bool CanUnfold(Cluster cluster)
@@ -238,6 +259,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ObservableCollection<ClusterWithCaption> Clusters { get; private set; }
 
         public ICommand AddToClusterCommand { get; private set; }
+
+        public ICommand AddWithSelectedToClusterCommand { get; private set; }
 
         public ICommand RemoveFromClusterCommand { get; private set; }
     }
