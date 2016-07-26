@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Grid Background="#FDFDF5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -33,7 +33,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Filter:" Padding="0,0,10,0" />
                 <TextBox Grid.Row="0"  Grid.Column="1" ToolTip="Enter regular expression filter" 
                           Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
@@ -43,12 +43,15 @@
                     </i:Interaction.Behaviors>
                 </TextBox>
                 <Button Grid.Row="0" Grid.Column="2" Content="{Binding AddButtonCaption}" Command="{Binding AddNodesToClusterCommand }" Margin="5,0,0,0"/>
-                
+
                 <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Content="Filter on identifier" IsChecked="{Binding FilterOnId}"/>
             </Grid>
             <ListView Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                       Margin="0,5,0,0" MinHeight="200" 
                       ItemsSource="{Binding PreviewNodes}" SelectedItem="{Binding SelectedPreviewItem}">
+                <i:Interaction.Behaviors>
+                    <pn:FrameworkElementDropBehavior/>
+                </i:Interaction.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding DisplayText}" Background="Transparent">
@@ -62,9 +65,9 @@
                 </ListView.ItemTemplate>
             </ListView>
         </DockPanel>
-        
+
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        
+
         <Grid Grid.Column="2" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -85,7 +88,7 @@
                     </Style>
                 </pn:TreeEditor.NodeStyle>
             </pn:TreeEditor>
-        
+
             <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0"
                       IsChecked="{Binding TreeShowId}"/>
         </Grid>
