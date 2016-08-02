@@ -86,5 +86,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests.Packaging.Services
         {
             Verify(typeof(InterfaceMethod), typeof(ILayoutEngine));
         }
+
+        [Test]
+        public void GetUsedTypes_ExtensionMethod_Found()
+        {
+            Verify(typeof(ExtensionMethodUser), typeof(ExtensionMethod));
+        }
     }
 }

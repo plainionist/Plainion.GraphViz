@@ -24,6 +24,7 @@
     <Compile Include="TestData\CastClass.cs" />
     <Compile Include="TestData\NewArray.cs" />
     <Compile Include="TestData\InterfaceMethod.cs" />
+    <Compile Include="TestData\ExtensionMethod.cs" />
     <Compile Include="TestData\VirtualMethodCall.cs" />
     <Compile Include="TestData\GenericMethod.cs" />
     <Compile Include="TestData\LinqAnonymousType.cs" />
