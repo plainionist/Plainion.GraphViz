@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -82,7 +83,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 myCancellationToken.ThrowIfCancellationRequested();
 
                 myPackageToTypesMap[package.Name] = Load(package)
-                    .SelectMany(asm => asm.GetTypes())
+                    .SelectMany(asm =>
+                    {
+                        try
+                        {
+                            return asm.GetTypes();
+                        }
+                        catch (ReflectionTypeLoadException ex)
+                        {
+                            Console.WriteLine("WARNING: not all types could be loaded from assembly {0}. Error: {1}{2}", asm.Location,
+                                Environment.NewLine, ex.Dump());
+                            return ex.Types.Where(t => t != null); 
+                        }
+                    })
                     .ToList();
             }
         }

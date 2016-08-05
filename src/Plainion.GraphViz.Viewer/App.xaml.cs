@@ -7,7 +7,7 @@ namespace Plainion.GraphViz.Viewer
     {
         private void OnUnhandledException( object sender, DispatcherUnhandledExceptionEventArgs e )
         {
-            MessageBox.Show( e.Exception.ToString(), "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error );
+            MessageBox.Show( e.Exception.Dump(), "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error );
             e.Handled = true;
         }
 

@@ -49,7 +49,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         // https://github.com/akkadotnet/akka.net/issues/1409
                         // -> exceptions are currently not serializable in raw version
                         //return x.Exception;
-                        return new Finished { Error = x.Exception.ToString() };
+                        return new Finished { Error = x.Exception.Dump() };
                     }
 
                     Console.WriteLine( "Writing response ..." );
