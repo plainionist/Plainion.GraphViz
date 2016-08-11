@@ -19,7 +19,7 @@
     <i:Interaction.Behaviors>
         <pn:PropagateInputBindingsToWindowBehavior/>
     </i:Interaction.Behaviors>
-    <Button Command="{Binding SaveDocumentCommand}" Padding="1" Margin="2">
+    <Button Command="{Binding SaveDocumentCommand}" Padding="1" Margin="2" ToolTip="Save visible graph">
         <Button.Content>
             <Image Source="/Plainion.GraphViz.Modules.Documents;Component/Resources/Save.png" Width="16" ToolTip="Save"/>
         </Button.Content>

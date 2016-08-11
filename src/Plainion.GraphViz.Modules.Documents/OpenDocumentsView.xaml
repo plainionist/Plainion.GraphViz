@@ -19,7 +19,7 @@
     <i:Interaction.Behaviors>
         <pn:PropagateInputBindingsToWindowBehavior/>
     </i:Interaction.Behaviors>
-    <Button Command="{Binding OpenDocumentCommand}" Padding="1" Margin="2">
+    <Button Command="{Binding OpenDocumentCommand}" Padding="1" Margin="2" ToolTip="Open graph document">
         <Button.Content>
             <Image Source="/Plainion.GraphViz.Modules.Documents;Component/Resources/Open.png" Width="16" ToolTip="Open"/>
         </Button.Content>
