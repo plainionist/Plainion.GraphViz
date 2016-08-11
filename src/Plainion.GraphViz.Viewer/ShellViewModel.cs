@@ -129,10 +129,7 @@ namespace Plainion.GraphViz.Viewer
 
         public bool IsEnabled
         {
-            get
-            {
-                return myPresentation != null;
-            }
+            get { return myPresentation != null; }
         }
 
         protected override void OnModelPropertyChanged( string propertyName )

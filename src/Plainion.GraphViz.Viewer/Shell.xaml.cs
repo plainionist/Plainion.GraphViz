@@ -1,5 +1,7 @@
 using System.ComponentModel.Composition;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace Plainion.GraphViz.Viewer
 {
@@ -12,6 +14,12 @@ namespace Plainion.GraphViz.Viewer
             InitializeComponent();
 
             DataContext = model;
+        }
+
+        private void OnTipsClick( object sender, RoutedEventArgs e )
+        {
+            var tooltip = ( ( ToolTip )( ( Hyperlink )sender ).ToolTip );
+            tooltip.IsOpen = !tooltip.IsOpen;
         }
     }
 }
