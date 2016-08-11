@@ -64,7 +64,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 .Execute(t => t.RemoveFromClusters(GetRelevantNodes(node)
                     .Select(n => n.Id).ToArray())));
 
-            PrintGraphRequest = new InteractionRequest<IConfirmation>(); ;
+            PrintGraphRequest = new InteractionRequest<IConfirmation>();
             PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
 
             eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe(OnEventFocused);

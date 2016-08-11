@@ -50,24 +50,25 @@
 
                 <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.SaveDocuments}"/>
                 
-                <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.PrintGraphCommand}" Padding="1" Margin="2">
-                    <Image Source="/Resources/Print.png" Width="16" ToolTip="Print"/>
+                <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.PrintGraphCommand}" Padding="1" Margin="2"
+                        ToolTip="Print visible graph">
+                    <Image Source="/Resources/Print.png" Width="16"/>
                 </Button>
                 <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.SearchBox}" Width="300"/>
                 <Button Command="{Binding OpenFilterEditor}" Padding="1" Margin="2" IsEnabled="{Binding Path=IsEnabled}"
-                        ToolTip="Filter">
-                    <Image Source="/Resources/Filter.png" Width="16" ToolTip="Filter"/>
+                        ToolTip="Filter nodes by caption or identifier">
+                    <Image Source="/Resources/Filter.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding OpenClusterEditor}" Padding="1" Margin="2" IsEnabled="{Binding Path=IsEnabled}"
-                        ToolTip="Clusters">
-                    <Image Source="/Resources/Clusters.png" Width="16" ToolTip="Clusters"/>
+                        ToolTip="Cluster nodes">
+                    <Image Source="/Resources/Clusters.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding OpenSettingsEditor}" Padding="1" Margin="2" ToolTip="Settings">
-                    <Image Source="/Resources/Settings.png" Width="16" ToolTip="Settings"/>
+                    <Image Source="/Resources/Settings.png" Width="16"/>
                 </Button>
                 <ToggleButton IsChecked="{Binding Content.GraphView.IsRenderingEnabled, ElementName=myGraphViewerContainer, Mode=TwoWay}" Padding="1" Margin="2" 
                               ToolTip="Enable/disable rendering">
-                    <Image Source="/Resources/Refresh.png" Width="16" ToolTip="Enable/disable rendering"/>
+                    <Image Source="/Resources/Refresh.png" Width="16"/>
                 </ToggleButton>
 
                 <ComboBox Margin="2" ItemsSource="{Binding Source={StaticResource LayoutAlgorithms}}"
@@ -81,7 +82,7 @@
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin ="6" Visibility="{Binding Path=StatusBarVisibility}">
             <Button Command="{Binding Path=ShowStatusMessagesCommand}" Padding="1" Margin="2" ToolTip="Show status messages">
                 <Button.Content>
-                    <Image Source="/Resources/StatusMessages.png" Width="16" ToolTip="Filter"/>
+                    <Image Source="/Resources/StatusMessages.png" Width="16"/>
                 </Button.Content>
             </Button>
         </StackPanel>
