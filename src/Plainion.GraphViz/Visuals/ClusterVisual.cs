@@ -14,7 +14,7 @@ namespace Plainion.GraphViz.Visuals
         private static Typeface myFont;
 
         private const double BorderThickness = 0.032;
-        private const double FontSize = BorderThickness * 10;
+        private const double FontSize = BorderThickness * 8;
 
         private IGraphPresentation myPresentation;
 
@@ -44,7 +44,7 @@ namespace Plainion.GraphViz.Visuals
                   myFont,
                   FontSize, Brushes.Black );
 
-            const double FontPadding = BorderThickness * 3;
+            const double FontPadding = BorderThickness * 2;
 
             var rect = GetBoundingBox( drawingElements );
 
@@ -56,7 +56,7 @@ namespace Plainion.GraphViz.Visuals
                 rect.Height + tx.Height + 3 * FontPadding );
 
             // add some extra padding
-            const double ExtraPadding = BorderThickness * 3;
+            const double ExtraPadding = BorderThickness * 2;
             rect.Inflate( ExtraPadding, ExtraPadding );
 
             dc.DrawRectangle( Brushes.Transparent, new Pen( Brushes.Blue, BorderThickness ), rect );

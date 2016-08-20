@@ -80,7 +80,7 @@
 
             </StackPanel>
         </StackPanel>
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin ="6">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin ="6,6,26,6">
             <Button Command="{Binding Path=ShowStatusMessagesCommand}" Padding="1" Margin="2" ToolTip="Show status messages" Visibility="{Binding Path=StatusBarVisibility}">
                 <Button.Content>
                     <Image Source="/Resources/StatusMessages.png" Width="16"/>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BuildDefinition xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://github.com/ronin4net/plainion/GatedCheckIn">
+  <CheckIn>false</CheckIn>
+  <Configuration>Debug</Configuration>
+  <DiffTool>"C:\Program Files\TortoiseHg\kdiff3.exe" %base %mine</DiffTool>
+  <Platform>Any CPU</Platform>
+  <RunTests>true</RunTests>
+  <Solution>Plainion.GraphViz.sln</Solution>
+  <TestAssemblyPattern>*Tests.dll</TestAssemblyPattern>
+  <TestRunnerExecutable>\bin\NUnit\bin\nunit-console.exe</TestRunnerExecutable>
+  <UserEMail>stanley751@gmx.net</UserEMail>
+  <UserName>ronin4net</UserName>
+</BuildDefinition>
