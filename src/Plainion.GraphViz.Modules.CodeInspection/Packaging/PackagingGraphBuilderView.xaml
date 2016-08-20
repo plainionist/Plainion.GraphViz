@@ -72,10 +72,39 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Open spec"  Command="{Binding Path=OpenCommand}"/>
+            <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Hyperlink Click="OnTipsClick">
+                    Tips
+                    <Hyperlink.ToolTip>
+                        <ToolTip>
+                            <TextBlock Padding="5">
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse Height="5" Width="5" Fill="Black"/>
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Text="Blue arrows show inheritance or interface implementation" Margin="10,0,0,0"/>
+                                </BulletDecorator>
+                                <LineBreak/>
+                                <BulletDecorator Margin="0,5,0,0">
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse Height="5" Width="5" Fill="Black"/>
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Text="Black arrows show method calls" Margin="10,0,0,0"/>
+                                </BulletDecorator>
+                                <LineBreak/>
+                                <BulletDecorator Margin="0,5,0,0">
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse Height="5" Width="5" Fill="Black"/>
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Text="Gray arrows show everything else (e.g. usage of cast operators)" Margin="10,0,0,0"/>
+                                </BulletDecorator>
+                            </TextBlock>
+                        </ToolTip>
+                    </Hyperlink.ToolTip>
+                </Hyperlink>
+            </TextBlock>
             <Button Grid.Column="2" Content="Create graph" Command="{Binding Path=CreateGraphCommand}" Margin="5,0,0,0"/>
             <Button Grid.Column="3" Content="Cancel" Command="{Binding Path=CancelCommand}" Margin="5,0,0,0"/>
         </Grid>
-
-        <ProgressBar Grid.Row="3" Minimum="0" Value="{Binding Path=ProgressValue, Mode=TwoWay}" Margin="0,5,0,5" Height="15" Maximum="100"/>
     </Grid>
 </UserControl>

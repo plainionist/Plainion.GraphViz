@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Controls;
 using System.Linq;
+using System.Windows;
+using System.Windows.Documents;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
@@ -22,6 +24,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             ( ( PackagingGraphBuilderViewModel )DataContext ).PackagesToAnalyze = myPackagesFilter.SelectedItems
                 .OfType<string>()
                 .ToList();
+        }
+
+        private void OnTipsClick( object sender, RoutedEventArgs e )
+        {
+            var tooltip = ( ( ToolTip )( ( Hyperlink )sender ).ToolTip );
+            tooltip.IsOpen = !tooltip.IsOpen;
         }
     }
 }

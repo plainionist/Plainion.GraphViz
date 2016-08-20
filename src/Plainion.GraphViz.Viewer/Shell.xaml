@@ -87,36 +87,36 @@
                 </Button.Content>
             </Button>
             <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
-                    <Hyperlink Click="OnTipsClick">
-                        Tips
-                        <Hyperlink.ToolTip>
-                            <ToolTip>
-                                <TextBlock Padding="5">
-                                    <BulletDecorator>
-                                        <BulletDecorator.Bullet>
-                                            <Ellipse Height="5" Width="5" Fill="Black"/>
-                                        </BulletDecorator.Bullet>
-                                        <TextBlock Text="Use the context menu on canvas and graph to work with the graph" Margin="10,0,0,0"/>
-                                    </BulletDecorator>
-                                    <LineBreak/>
-                                    <BulletDecorator Margin="0,5,0,0">
-                                        <BulletDecorator.Bullet>
-                                            <Ellipse Height="5" Width="5" Fill="Black"/>
-                                        </BulletDecorator.Bullet>
-                                        <TextBlock Text="Use right-mouse-button-drag and mouse wheel for zoom" Margin="10,0,0,0"/>
-                                    </BulletDecorator>
-                                    <LineBreak/>
-                                    <BulletDecorator Margin="0,5,0,0">
-                                        <BulletDecorator.Bullet>
-                                            <Ellipse Height="5" Width="5" Fill="Black"/>
-                                        </BulletDecorator.Bullet>
-                                        <TextBlock Text="Use Ctrl-click to select graph items" Margin="10,0,0,0"/>
-                                    </BulletDecorator>
-                                </TextBlock>
-                            </ToolTip>
-                        </Hyperlink.ToolTip>
-                    </Hyperlink>
-                </TextBlock>
+                <Hyperlink Click="OnTipsClick">
+                    Tips
+                    <Hyperlink.ToolTip>
+                        <ToolTip>
+                            <TextBlock Padding="5">
+                                <BulletDecorator>
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse Height="5" Width="5" Fill="Black"/>
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Text="Use the context menu on canvas and graph to work with the graph" Margin="10,0,0,0"/>
+                                </BulletDecorator>
+                                <LineBreak/>
+                                <BulletDecorator Margin="0,5,0,0">
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse Height="5" Width="5" Fill="Black"/>
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Text="Use right-mouse-button-drag and mouse wheel for zoom" Margin="10,0,0,0"/>
+                                </BulletDecorator>
+                                <LineBreak/>
+                                <BulletDecorator Margin="0,5,0,0">
+                                    <BulletDecorator.Bullet>
+                                        <Ellipse Height="5" Width="5" Fill="Black"/>
+                                    </BulletDecorator.Bullet>
+                                    <TextBlock Text="Use Ctrl-click to select graph items" Margin="10,0,0,0"/>
+                                </BulletDecorator>
+                            </TextBlock>
+                        </ToolTip>
+                    </Hyperlink.ToolTip>
+                </Hyperlink>
+            </TextBlock>
         </StackPanel>
     </Grid>
 </Window>
