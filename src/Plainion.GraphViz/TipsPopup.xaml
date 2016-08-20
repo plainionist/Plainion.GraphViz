@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="Plainion.GraphViz.TipsPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Name="_this">
+    <UserControl.Resources>
+        <pn:BindingProxy x:Key="This" Data="{Binding ., ElementName=_this}"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Hyperlink Click="OnTipsClick">Tips
+                <Hyperlink.ToolTip>
+                    <ToolTip DataContext="{Binding Data, Source={StaticResource This}}">
+                        <ItemsControl ItemsSource="{Binding Bullets}" Margin="5">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Margin="2">
+                                        <BulletDecorator>
+                                            <BulletDecorator.Bullet>
+                                                <Ellipse Height="5" Width="5" Fill="Black"/>
+                                            </BulletDecorator.Bullet>
+                                            <TextBlock Text="{Binding}" Margin="10,0,0,0"/>
+                                        </BulletDecorator>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ToolTip>
+                </Hyperlink.ToolTip>
+            </Hyperlink>
+        </TextBlock>
+    </Grid>
+</UserControl>

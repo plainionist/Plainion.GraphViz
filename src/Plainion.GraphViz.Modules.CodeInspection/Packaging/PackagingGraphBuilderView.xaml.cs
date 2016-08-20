@@ -25,11 +25,5 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 .OfType<string>()
                 .ToList();
         }
-
-        private void OnTipsClick( object sender, RoutedEventArgs e )
-        {
-            var tooltip = ( ( ToolTip )( ( Hyperlink )sender ).ToolTip );
-            tooltip.IsOpen = !tooltip.IsOpen;
-        }
     }
 }

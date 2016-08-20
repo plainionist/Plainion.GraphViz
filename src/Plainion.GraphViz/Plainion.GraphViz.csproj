@@ -84,6 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="TipsPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\ChangeClusterFolding.cs" />
@@ -150,6 +154,9 @@
     <Compile Include="Presentation\Selection.cs" />
     <Compile Include="Presentation\TransformationModule.cs" />
     <Compile Include="Profile.cs" />
+    <Compile Include="TipsPopup.xaml.cs">
+      <DependentUpon>TipsPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Visuals\AbstractElementVisual.cs" />
     <Compile Include="Presentation\GenericModuleChangedJournal.cs" />
     <Compile Include="Dot\DotToolLayoutEngine.cs" />
