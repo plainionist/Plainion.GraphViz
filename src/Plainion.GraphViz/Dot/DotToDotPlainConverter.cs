@@ -90,7 +90,7 @@ namespace Plainion.GraphViz.Dot
             var unflattenExe = Path.Combine( myDotToolsHome, "unflatten.exe" );
             var dotExe = Path.Combine( myDotToolsHome, "dot.exe" );
 
-            arguments = string.Format( "/C \"{0} -l5 -c8 {1} | {2} -Tplain -q -o{3}\"",
+            arguments = string.Format( "/C \"\"{0}\" -l5 -c8 {1} | \"{2}\" -Tplain -q -o{3}\"",
                 unflattenExe, dotFile.FullName,
                 dotExe, plainFile.FullName );
         }
@@ -99,7 +99,7 @@ namespace Plainion.GraphViz.Dot
         {
             var exe = Path.Combine( myDotToolsHome, "sfdp.exe" );
 
-            arguments = string.Format( "/C \"{0} -x -Goverlap=scale -Tplain -q -o{1} {2}\"",
+            arguments = string.Format( "/C \"\"{0}\" -x -Goverlap=scale -Tplain -q -o{1} {2}\"",
                 exe, plainFile.FullName, dotFile.FullName );
         }
     }
