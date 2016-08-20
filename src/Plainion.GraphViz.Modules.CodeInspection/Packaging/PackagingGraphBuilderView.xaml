@@ -44,7 +44,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <TextBlock Grid.Row="0" Text="Filter pacakges (optional, default: all packages):"/>
+                <TextBlock Grid.Row="0" Text="Filter packages (optional, default: all packages):"/>
                 <ListBox Grid.Row="1" ItemsSource="{Binding Packages}" Height="60" SelectionMode="Multiple" x:Name="myPackagesFilter" Margin="0,5,0,0">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
