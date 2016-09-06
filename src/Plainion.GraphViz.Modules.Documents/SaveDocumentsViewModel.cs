@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
@@ -16,7 +17,7 @@ using Plainion.GraphViz.Dot;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    [Export( typeof( SaveDocumentsViewModel ) )]
+    [Export(typeof(SaveDocumentsViewModel))]
     public class SaveDocumentsViewModel : ViewModelBase
     {
         [Import]
@@ -27,7 +28,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
         public SaveDocumentsViewModel()
         {
-            SaveDocumentCommand = new DelegateCommand( OnSave, CanSave );
+            SaveDocumentCommand = new DelegateCommand(OnSave, CanSave);
             SaveFileRequest = new InteractionRequest<SaveFileDialogNotification>();
         }
 
@@ -46,62 +47,82 @@ namespace Plainion.GraphViz.Modules.Documents
             notification.FilterIndex = 0;
             notification.DefaultExt = ".dot";
 
-            SaveFileRequest.Raise( notification,
+            SaveFileRequest.Raise(notification,
                 n =>
                 {
-                    if( n.Confirmed )
+                    if (n.Confirmed)
                     {
-                        Save( n.FileName );
+                        Save(n.FileName);
                     }
-                } );
+                });
         }
 
         public InteractionRequest<SaveFileDialogNotification> SaveFileRequest { get; private set; }
 
-        private void Save( string path )
+        private void Save(string path)
         {
-            if( Path.GetExtension( path ).Equals( ".dgml", StringComparison.OrdinalIgnoreCase ) )
+            if (Path.GetExtension(path).Equals(".dgml", StringComparison.OrdinalIgnoreCase))
             {
-                SaveAsDgml( path );
+                SaveAsDgml(path);
             }
             else
             {
-                SaveAsDot( path );
+                SaveAsDot(path);
             }
         }
 
-        private void SaveAsDgml( string path )
+        private void SaveAsDgml(string path)
         {
             var captionModule = Model.Presentation.GetModule<CaptionModule>();
-            Func<Node, string> GetNodeCaption = node =>
-                {
-                    var caption = captionModule.Get( node.Id );
-                    if( caption == null )
-                    {
-                        return node.Id;
-                    }
-                    return caption.Label != null ? caption.Label : node.Id;
-                };
 
             var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-            using( var writer = new StreamWriter( path ) )
+            using (var writer = new StreamWriter(path))
             {
-                DgmlExporter.Export( transformationModule.Graph, GetNodeCaption, writer );
+                writer.WriteLine("<DirectedGraph xmlns=\"http://schemas.microsoft.com/vs/2009/dgml\">");
+
+                writer.WriteLine("  <Nodes>");
+
+                var visibleNodes = transformationModule.Graph.Nodes
+                    .Where(n => Model.Presentation.Picking.Pick(n))
+                    .ToList();
+
+                foreach (var node in visibleNodes)
+                {
+                    var caption = captionModule.Get(node.Id);
+                    var label = caption == null ? node.Id : (caption.Label ?? node.Id);
+
+                    writer.WriteLine("    <Node Id=\"{0}\" Label=\"{1}\" />", SecurityElement.Escape(node.Id), SecurityElement.Escape(label));
+                }
+                writer.WriteLine("  </Nodes>");
+
+                writer.WriteLine("  <Links>");
+
+                var visibleEdges = transformationModule.Graph.Edges
+                    .Where(e => visibleNodes.Contains(e.Source) && visibleNodes.Contains(e.Target));
+
+                foreach (var edge in visibleEdges)
+                {
+                    writer.WriteLine("    <Link Source=\"{0}\" Target=\"{1}\" />", SecurityElement.Escape(edge.Source.Id), SecurityElement.Escape(edge.Target.Id));
+                }
+                writer.WriteLine("  </Links>");
+
+                writer.WriteLine("</DirectedGraph>");
             }
         }
 
-        private void SaveAsDot( string path )
+        private void SaveAsDot(string path)
         {
-            var writer = new DotWriter( path );
-            writer.Write( Model.Presentation );
+            var writer = new DotWriter(path);
+            writer.WriteVisibleOnly = true;
+            writer.Write(Model.Presentation);
         }
 
-        protected override void OnModelPropertyChanged( string propertyName )
+        protected override void OnModelPropertyChanged(string propertyName)
         {
-            PropertyChangedEventManager.AddHandler( Model, OnPresentationChanged, PropertySupport.ExtractPropertyName( () => Model.Presentation ) );
+            PropertyChangedEventManager.AddHandler(Model, OnPresentationChanged, PropertySupport.ExtractPropertyName(() => Model.Presentation));
         }
 
-        private void OnPresentationChanged( object sender, PropertyChangedEventArgs e )
+        private void OnPresentationChanged(object sender, PropertyChangedEventArgs e)
         {
             SaveDocumentCommand.RaiseCanExecuteChanged();
         }

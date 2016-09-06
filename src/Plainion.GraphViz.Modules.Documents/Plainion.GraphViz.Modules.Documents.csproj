@@ -79,7 +79,6 @@
     <Compile Include="AbstractGraphDocument.cs" />
     <Compile Include="BasicDocumentProcessor.cs" />
     <Compile Include="DgmlDocument.cs" />
-    <Compile Include="DgmlExporter.cs" />
     <Compile Include="DotLangDocument.cs" />
     <Compile Include="DotLangPureDocument.cs" />
     <Compile Include="DotLang\IMatcher.cs" />

@@ -21,7 +21,7 @@ namespace Plainion.GraphViz.Dot
 
         internal bool IgnoreStyle { get; set; }
 
-        internal bool WriteVisibleOnly { get; set; }
+        public bool WriteVisibleOnly { get; set; }
 
         // http://www.graphviz.org/Gallery/directed/cluster.html
         // returns written nodes
