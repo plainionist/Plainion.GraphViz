@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+
+using Plainion.Diagnostics;
 using Plainion.IO;
 
 namespace Plainion.GraphViz.Dot
