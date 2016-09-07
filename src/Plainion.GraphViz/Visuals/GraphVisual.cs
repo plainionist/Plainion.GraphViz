@@ -376,7 +376,7 @@ namespace Plainion.GraphViz.Visuals
         public Rect? GetBoundingBox( IGraphItem item )
         {
             AbstractElementVisual visual;
-            if( myDrawingElements.TryGetValue( item.Id, out visual ) || visual.Visual == null )
+            if( !myDrawingElements.TryGetValue( item.Id, out visual ) || visual.Visual == null )
             {
                 return null;
             }
