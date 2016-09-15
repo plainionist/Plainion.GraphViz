@@ -58,8 +58,10 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0">
                     <CheckBox Content="Used types only" IsChecked="{Binding UsedTypesOnly}"/>
+                    <CheckBox Content="All edges" IsChecked="{Binding AllEdges}"  Margin="10,0,0,0"
+                              ToolTip="When analysing more than one package show also inner package edges"/>
                     <CheckBox Content="Create clusters for namespaces" IsChecked="{Binding CreateClustersForNamespaces}" Margin="10,0,0,0"/>
                 </StackPanel>
             </Grid>

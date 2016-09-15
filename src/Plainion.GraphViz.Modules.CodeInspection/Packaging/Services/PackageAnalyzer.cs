@@ -33,6 +33,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         public bool UsedTypesOnly { get; set; }
 
+        public bool AllEdges { get; set; }
+
         /// <summary>
         /// If no matching cluster was found for a node it will be put in a cluster for its namespace
         /// </summary>
@@ -93,7 +95,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         {
                             Console.WriteLine("WARNING: not all types could be loaded from assembly {0}. Error: {1}{2}", asm.Location,
                                 Environment.NewLine, ex.Dump());
-                            return ex.Types.Where(t => t != null); 
+                            return ex.Types.Where(t => t != null);
                         }
                     })
                     .ToList();
@@ -141,7 +143,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
             return new Reflector(myAssemblyLoader, type).GetUsedTypes()
                 // if only one package is given we analyse the deps within the package - otherwise between the packages
-                .Where(edge => focusedPackageTypes != null ? focusedPackageTypes.Contains(edge.Target) : IsForeignPackage(package, edge.Target))
+                .Where(edge => (AllEdges && myPackageToTypesMap.Any(e => e.Value.Contains(edge.Target)))
+                    || (focusedPackageTypes != null ? focusedPackageTypes.Contains(edge.Target) : IsForeignPackage(package, edge.Target)))
                 .Select(edge => GraphUtils.Edge(edge))
                 .Where(edge => edge.Source != edge.Target);
         }

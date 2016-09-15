@@ -11,5 +11,7 @@
         public bool UsedTypesOnly { get; set; }
 
         public bool CreateClustersForNamespaces { get; set; }
+
+        public bool AllEdges { get; set; }
     }
 }
