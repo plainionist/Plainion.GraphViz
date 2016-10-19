@@ -12,23 +12,22 @@ namespace Plainion.GraphViz.Visuals
         private static Typeface myFont;
 
         private IGraphPresentation myPresentation;
+        private double myZoomFactor;
 
         static EdgeVisual()
         {
             myFont = new Typeface( "Verdana" );
         }
 
-        public EdgeVisual( Edge owner, IGraphPresentation presentation )
+        public EdgeVisual( Edge owner, IGraphPresentation presentation, double zoomFactor )
         {
             Owner = owner;
             myPresentation = presentation;
+
+            myZoomFactor = zoomFactor;
         }
 
-        public Edge Owner
-        {
-            get;
-            private set;
-        }
+        public Edge Owner { get; private set; }
 
         public void Draw( EdgeLayout layoutState )
         {
@@ -62,7 +61,8 @@ namespace Plainion.GraphViz.Visuals
                 context.Close();
             }
 
-            var pen = new Pen( styleState.Color, 0.016 );
+            var pen = new Pen( styleState.Color, 1 );
+            SetLineThickness( pen );
 
             // http://stackoverflow.com/questions/1755520/improve-drawingvisual-renders-speed
             Visual = new DrawingVisual();
@@ -89,8 +89,26 @@ namespace Plainion.GraphViz.Visuals
 
         protected override Brush GetBorderBrush()
         {
-            var style = myPresentation.GetPropertySetFor<EdgeStyle>().Get(Owner.Id);
+            var style = myPresentation.GetPropertySetFor<EdgeStyle>().Get( Owner.Id );
             return style.Color;
+        }
+
+        public void ApplyZoomFactor( double zoomFactor )
+        {
+            if( Visual == null )
+            {
+                return;
+            }
+
+            myZoomFactor = zoomFactor;
+
+            ApplyToGeometries( Visual.Drawing, g => SetLineThickness( g.Pen ) );
+        }
+
+        private void SetLineThickness( Pen pen )
+        {
+            // make lines thicker if we zoom out so that we can still see them
+            pen.Thickness = 0.010 * 1 / myZoomFactor;
         }
     }
 }

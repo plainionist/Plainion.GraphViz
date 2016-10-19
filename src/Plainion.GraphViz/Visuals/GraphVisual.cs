@@ -22,12 +22,17 @@ namespace Plainion.GraphViz.Visuals
         private IModuleChangedJournal<Edge> myEdgeMaskJournal;
         private IModuleChangedJournal<IGraphTransformation> myTransformationsJournal;
 
+        private double myOldScaling;
+        private double myCurrentScaling;
+
         public GraphVisual()
         {
             myDrawing = new DrawingVisual();
             myDrawingElements = new Dictionary<string, AbstractElementVisual>();
 
             ClipToBounds = true;
+            myOldScaling = 1;
+            myCurrentScaling = 1;
 
             HorizontalAlignment = HorizontalAlignment.Center;
             VerticalAlignment = VerticalAlignment.Center;
@@ -126,7 +131,7 @@ namespace Plainion.GraphViz.Visuals
                         continue;
                     }
 
-                    var visual = new EdgeVisual( edge, Presentation );
+                    var visual = new EdgeVisual( edge, Presentation, myOldScaling );
 
                     myDrawingElements.Add( edge.Id, visual );
 
@@ -283,6 +288,17 @@ namespace Plainion.GraphViz.Visuals
                     mySelectionJournal.Clear();
                     InvalidateVisual();
                 }
+
+                if( Math.Abs( myCurrentScaling - myOldScaling ) > 0.1d )
+                {
+                    myOldScaling = myCurrentScaling;
+
+                    foreach( var edge in myDrawingElements.Values.OfType<EdgeVisual>() )
+                    {
+                        edge.ApplyZoomFactor( myCurrentScaling );
+                    }
+                    InvalidateVisual();
+                }
             }
         }
 
@@ -407,6 +423,11 @@ namespace Plainion.GraphViz.Visuals
             }
 
             return ( IGraphItem )visual.ReadLocalValue( AbstractElementVisual.GraphItemProperty );
+        }
+
+        public void SetScaling( double scaleX, double scaleY )
+        {
+            myCurrentScaling = Math.Min( scaleX, scaleY );
         }
     }
 }

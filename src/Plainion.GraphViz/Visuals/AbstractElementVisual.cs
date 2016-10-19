@@ -19,7 +19,7 @@ namespace Plainion.GraphViz.Visuals
             ApplyToGeometries( Visual.Drawing, g => SelectDrawing( g, select ) );
         }
 
-        private void ApplyToGeometries( DrawingGroup drawingGroup, Action<GeometryDrawing> action )
+        protected void ApplyToGeometries( DrawingGroup drawingGroup, Action<GeometryDrawing> action )
         {
             foreach( var drawing in drawingGroup.Children )
             {
