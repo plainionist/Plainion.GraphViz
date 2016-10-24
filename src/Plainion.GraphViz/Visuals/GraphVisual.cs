@@ -289,7 +289,7 @@ namespace Plainion.GraphViz.Visuals
                     InvalidateVisual();
                 }
 
-                if (Math.Abs(myCurrentScaling - myOldScaling) / myOldScaling > 0.105d)
+                if (Math.Abs(myCurrentScaling - myOldScaling) / myOldScaling > 0.15d)
                 {
                     myOldScaling = myCurrentScaling;
 

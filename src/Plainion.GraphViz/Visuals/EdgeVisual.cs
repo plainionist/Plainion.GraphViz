@@ -108,7 +108,7 @@ namespace Plainion.GraphViz.Visuals
         private void SetLineThickness( Pen pen )
         {
             // make lines thicker if we zoom out so that we can still see them
-            pen.Thickness = 0.008 * 1 / myZoomFactor;
+            pen.Thickness = 0.016 * 0.5 / myZoomFactor;
         }
     }
 }
