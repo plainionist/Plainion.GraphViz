@@ -289,7 +289,7 @@ namespace Plainion.GraphViz.Visuals
                     InvalidateVisual();
                 }
 
-                if( Math.Abs( myCurrentScaling - myOldScaling ) > 0.1d )
+                if (Math.Abs(myCurrentScaling - myOldScaling) / myOldScaling > 0.105d)
                 {
                     myOldScaling = myCurrentScaling;
 
@@ -297,6 +297,7 @@ namespace Plainion.GraphViz.Visuals
                     {
                         edge.ApplyZoomFactor( myCurrentScaling );
                     }
+
                     InvalidateVisual();
                 }
             }
@@ -427,7 +428,7 @@ namespace Plainion.GraphViz.Visuals
 
         public void SetScaling( double scaleX, double scaleY )
         {
-            myCurrentScaling = Math.Min( scaleX, scaleY );
+            myCurrentScaling = Math.Min(scaleX, scaleY);
         }
     }
 }
