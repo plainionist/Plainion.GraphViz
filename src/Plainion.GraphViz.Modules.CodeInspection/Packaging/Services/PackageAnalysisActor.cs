@@ -25,6 +25,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             {
                 Console.WriteLine( "WORKING" );
 
+                //System.Diagnostics.Debugger.Launch();
+
                 var self = Self;
                 var sender = Sender;
 

@@ -22,6 +22,9 @@
           <Caption><![CDATA[no TPL inside actor - use child actors]]></Caption>
         </Node>
       </Node>
+      <Node Id="07121741-cea6-4c45-83de-f995c6f3e598">
+        <Caption><![CDATA[combine logging with status messages]]></Caption>
+      </Node>
     </Node>
   </Node>
 </Tree>

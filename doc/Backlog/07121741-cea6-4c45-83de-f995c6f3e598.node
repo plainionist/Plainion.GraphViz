@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="07121741-cea6-4c45-83de-f995c6f3e598" Created="636137015088502780" LastModified="636137015605512351">
+  <Caption><![CDATA[combine logging with status messages]]></Caption>
+  <Content><![CDATA[in actor (analyzer) we may ignore nodes - this info should be logged and then 
+put into the status bar
+
+how to implement logging from actor?
+send to different actor which then sends to status bar?]]></Content>
+</Node>

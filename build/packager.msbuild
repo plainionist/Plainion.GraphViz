@@ -1,78 +1,37 @@
 <Project DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
 
-  <PropertyGroup>
-    <ProjectName>Plainion.GraphViz</ProjectName>
+    <Target Name="CreatePackage">
+        <ItemGroup Label="TestFiles">
+            <TestFile Include="$(OutputPath)\*.*Tests.*"/>
+            <TestFile Include="$(OutputPath)\*Moq*"/>
+            <TestFile Include="$(OutputPath)\*Nunit*"/>
+            <TestFile Include="$(OutputPath)\*.nunit"/>
+            <TestFile Include="$(OutputPath)\TestResult.xml"/>
+        </ItemGroup>
 
-    <BuildMode>Release</BuildMode>
-    <BuildPlatform>Any CPU</BuildPlatform>
+        <ItemGroup Label="TestFolders">
+            <TestFolder Include="$(OutputPath)/TestData"/>
+        </ItemGroup>
 
-    <TestAssemblyPattern>*Tests.dll</TestAssemblyPattern>
 
-    <ProjectRoot>$([System.IO.Path]::GetFullPath('..'))</ProjectRoot>
-    <ExternRoot>$(ProjectRoot)\extern</ExternRoot>
-    <PackageRoot Condition="'$(ReleaseRoot)' == ''">$(ProjectRoot)\bin\$(ProjectName)-$(Version)</PackageRoot>
+        <Delete Files="@(TestFile)"/>
+        <RemoveDir Directories="@(TestFolder)"/>
+    </Target>
 
-    <Solution>$(ProjectRoot)/$(ProjectName).sln</Solution>
-  </PropertyGroup>
+    <Target Name="DeployPackage">
+        <PropertyGroup>
+            <ReleaseDirectory>\bin\Plainion.GraphViz</ReleaseDirectory>
+        </PropertyGroup>
 
-  <ItemGroup Label="TestFiles">
-    <TestFile Include="$(PackageRoot)\*.*Tests.*"/>
-    <TestFile Include="$(PackageRoot)\*Moq*"/>
-    <TestFile Include="$(PackageRoot)\*Nunit*"/>
-    <TestFile Include="$(PackageRoot)\*.nunit"/>
-    <TestFile Include="$(PackageRoot)\TestResult.xml"/>
-  </ItemGroup>
+        <RemoveDir Directories="$(ReleaseDirectory)"/>
 
-  <ItemGroup Label="TestFolders">
-    <TestFolder Include="$(PackageRoot)/TestData"/>
-  </ItemGroup>
+        <ItemGroup>
+            <OutputFiles Include="$(OutputPath)\**\*" />
+        </ItemGroup>
 
-  <ItemGroup Label="Redist">
-    <Redist Include="$(ExternRoot)\license.*"/>
-  </ItemGroup>
-
-  <Target Name="CheckEnvironment">
-    <Error Condition="'$(Version)' == ''"  Text="Verison not set" />
-  </Target>
-
-  <Target Name="Clean">
-    <RemoveDir Directories="$(PackageRoot)"/>
-    <MakeDir Directories="$(PackageRoot)"/>
-  </Target>
-
-  <Target Name="UpdatePackages">
-    <PropertyGroup>
-      <NuGet>/bin/NuGet.exe</NuGet>
-    </PropertyGroup>
-    
-    <Error Condition="!Exists('$(NuGet)')" Text="NuGet.exe not found at $(NuGet)" />
-    
-    <Exec Command="$(NuGet) restore $(Solution)" WorkingDirectory="$(PackageRoot)"/>
-  </Target>
-
-  <Target Name="Build" DependsOnTargets="UpdatePackages">
-    <MSBuild Projects="$(Solution)"
-             Properties="Configuration=$(BuildMode);Platform=$(BuildPlatform);OutputPath=$(PackageRoot)"
-             Targets="Rebuild"
-             BuildInParallel="true"/>
-  </Target>
-  
-  <Target Name="Tests">
-    <PropertyGroup>
-        <Starter>\bin\Plainion.Starter\Plainion.Starter.exe</Starter>
-        <ScriptsDir>\bin\Plainion.Bees</ScriptsDir>
-    </PropertyGroup>
-
-    <Exec Command="$(Starter) --Dir $(ScriptsDir) -TestIt -a $(TestAssemblyPattern)"
-          WorkingDirectory="$(PackageRoot)"
-          CustomErrorRegularExpression="^\s*\d+\) Test Failure : .*$"/>
-
-  </Target>
-
-  <Target Name="All" DependsOnTargets="CheckEnvironment;Clean;Build;Tests">
-    <Copy SourceFiles="@(Redist)" DestinationFolder="$(PackageRoot)"/>
-
-    <Delete Files="@(TestFile)"/>
-    <RemoveDir Directories="@(TestFolder)"/>
-  </Target>
+        <Copy
+            SourceFiles="@(OutputFiles)"
+            DestinationFolder="$(ReleaseDirectory)\%(RecursiveDir)"
+            SkipUnchangedFiles="false" />
+    </Target>
 </Project>

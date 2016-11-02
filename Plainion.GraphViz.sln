@@ -15,8 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Viewer", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CBE6C788-0BFF-476E-8C34-584844EA0837}"
 	ProjectSection(SolutionItems) = preProject
-		build\create-package.cmd = build\create-package.cmd
 		build\GlobalAssemblyInfo.cs = build\GlobalAssemblyInfo.cs
+		build\packager.msbuild = build\packager.msbuild
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.Documents.Tests", "src\Plainion.GraphViz.Modules.Documents.Tests\Plainion.GraphViz.Modules.Documents.Tests.csproj", "{D03FE809-E508-406F-B48A-EE9432DEC4B4}"

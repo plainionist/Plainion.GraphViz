@@ -134,6 +134,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             // sometimes there is '&' at the end??
             typeFullName = typeFullName.Replace("&", "");
 
+            if (string.IsNullOrEmpty(typeFullName))
+            {
+                // TODO: log ignorance of these types
+                return null;
+            }
+
             var type = asm.GetType(typeFullName);
 
             if (type != null)

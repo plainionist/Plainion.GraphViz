@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
@@ -89,7 +90,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                     {
                         try
                         {
-                            return asm.GetTypes();
+                            return asm.GetTypes()
+                                .Where(t => !IsCompilerGenerated(t));
                         }
                         catch (ReflectionTypeLoadException ex)
                         {
@@ -131,6 +133,24 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 .ToArray();
         }
 
+        private bool IsCompilerGenerated(Type type)
+        {
+            // do we want that?
+            //if (type.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) != null)
+            //{
+            //    return true;
+            //}
+
+            if (type.FullName.Contains("$", StringComparison.OrdinalIgnoreCase) || type.FullName.Contains("@", StringComparison.OrdinalIgnoreCase))
+            {
+                // TODO: log ignorance of these types
+                // here we ignore generated closures from FSharp
+                return true;
+            }
+
+            return false;
+        }
+
         private IEnumerable<Edge> Analyze(Package package, Type type)
         {
             Console.Write(".");
@@ -145,6 +165,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 // if only one package is given we analyse the deps within the package - otherwise between the packages
                 .Where(edge => (AllEdges && myPackageToTypesMap.Any(e => e.Value.Contains(edge.Target)))
                     || (focusedPackageTypes != null ? focusedPackageTypes.Contains(edge.Target) : IsForeignPackage(package, edge.Target)))
+                .Where(edge => !IsCompilerGenerated(edge.Target))
                 .Select(edge => GraphUtils.Edge(edge))
                 .Where(edge => edge.Source != edge.Target);
         }
