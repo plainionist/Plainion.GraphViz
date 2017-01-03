@@ -101,6 +101,7 @@
     <Compile Include="IGraphDocument.cs" />
     <Compile Include="ILayoutDocument.cs" />
     <Compile Include="IStyleDocument.cs" />
+    <Compile Include="Properties\AssemblyDefs.cs" />
     <Compile Include="SaveDocumentsView.xaml.cs">
       <DependentUpon>SaveDocumentsView.xaml</DependentUpon>
     </Compile>
