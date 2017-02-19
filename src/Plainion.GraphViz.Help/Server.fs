@@ -13,15 +13,17 @@ module internal Impl =
     open System.IO
     open Markdig
 
-    let addTemplate templateFile html =
-        let insertContent (template:string) = template.Replace("@@@content@@@", html)
+    let mutable myTemplate : string = null
 
-        if File.Exists templateFile then
-            templateFile 
-            |> File.ReadAllText
-            |> insertContent
-        else
-            html
+    let addTemplate templateFile html =
+        if myTemplate = null then
+            myTemplate <- 
+                if File.Exists templateFile then
+                    File.ReadAllText templateFile
+                else
+                    "@@@content@@@"
+
+        myTemplate.Replace("@@@content@@@", html)
 
     let homePage documentRoot =
         "# Welcome to the online help!"
@@ -66,7 +68,7 @@ module internal Impl =
                     let config = { defaultConfig with homeFolder = Some documentRoot 
                                                       cancellationToken = myCTS.Token 
                                                       bindings = [ local ]
-                                    }
+                                 }
                     let started, server = startWebServerAsync config app
 
                     async { 

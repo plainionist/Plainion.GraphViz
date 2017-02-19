@@ -84,6 +84,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="HelpLink.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TipsPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -155,6 +159,9 @@
     <Compile Include="Presentation\Selection.cs" />
     <Compile Include="Presentation\TransformationModule.cs" />
     <Compile Include="Profile.cs" />
+    <Compile Include="HelpLink.xaml.cs">
+      <DependentUpon>HelpLink.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TipsPopup.xaml.cs">
       <DependentUpon>TipsPopup.xaml</DependentUpon>
     </Compile>
