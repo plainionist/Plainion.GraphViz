@@ -13,6 +13,16 @@ module internal Impl =
     open System.IO
     open Markdig
 
+    let addTemplate templateFile html =
+        let insertContent (template:string) = template.Replace("@@@content@@@", html)
+
+        if File.Exists templateFile then
+            templateFile 
+            |> File.ReadAllText
+            |> insertContent
+        else
+            html
+
     let homePage documentRoot =
         "# Welcome to the online help!"
         |> Markdown.ToHtml
@@ -31,8 +41,9 @@ module internal Impl =
     let start documentRoot =
         myCTS <- new CancellationTokenSource()
 
-        let page = page documentRoot
-        let home () = homePage documentRoot
+        let templateFile = Path.Combine(documentRoot, "Template.html")
+        let page = page documentRoot >> addTemplate templateFile
+        let home () = documentRoot |> (homePage >> addTemplate templateFile)
 
         let app : WebPart =
             choose [ 

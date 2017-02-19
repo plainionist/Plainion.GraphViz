@@ -116,6 +116,9 @@
       <DependentUpon>StatusMessagesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\StatusMessagesViewModel.cs" />
+    <Content Include="Help\Template.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Plainion.GraphViz.Viewer.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
