@@ -1,4 +1,8 @@
-﻿module Plainion.GraphViz.Help.Server
+﻿/// @@@content@@@ - placeholder for the actual help page content
+/// @@@navigation@@@ - placehodler for navigation (all help pages) ... all .md files
+/// In navigation "Overview.md" will always be first entry  
+
+module Plainion.GraphViz.Help.Server
 
 open System.Threading.Tasks
 
@@ -12,18 +16,49 @@ module internal Impl =
     open System.Net
     open System.IO
     open Markdig
+    open System
 
-    let mutable myTemplate : string = null
+    let getTemplate documentRoot =
+        let templateFile = Path.Combine(documentRoot, "Template.html")
+        if File.Exists templateFile then
+            File.ReadAllText templateFile
+        else
+            "@@@content@@@"
 
-    let addTemplate templateFile html =
-        if myTemplate = null then
-            myTemplate <- 
-                if File.Exists templateFile then
-                    File.ReadAllText templateFile
-                else
-                    "@@@content@@@"
+    let getNavigation documentRoot (template:string) =
+        let getSectionName (folder:string) =
+            sprintf "### %s" (folder.Replace("/", " / "))
 
-        myTemplate.Replace("@@@content@@@", html)
+        let getPageLink (file:string) =
+            let path = file.Replace('\\','/')
+            let name = Path.GetFileNameWithoutExtension file
+            sprintf " - [%s](/%s)" name path
+
+        let pageSorter (file:string) =
+            if file.EndsWith("Overview.md", StringComparison.OrdinalIgnoreCase) then
+                "0"
+            else
+                file
+
+        if template.Contains("@@@navigation@@@") then
+            Directory.GetFiles(documentRoot, "*.md", SearchOption.AllDirectories)
+            |> Seq.map(fun p -> p.Substring(documentRoot.Length))
+            |> Seq.map(fun p -> p.TrimStart('\\'))
+            |> Seq.groupBy(fun p -> Path.GetDirectoryName(p).Replace('\\','/'))
+            |> Seq.sortBy(fun (k,v) -> k)
+            |> Seq.map(fun (folder, files) -> seq { yield getSectionName folder
+                                                    yield Environment.NewLine
+                                                    yield! files 
+                                                            |> Seq.sortBy pageSorter
+                                                            |> Seq.map getPageLink } )
+            |> Seq.concat
+            |> String.concat Environment.NewLine
+            |> Markdown.ToHtml
+        else
+            ""
+
+    let applyTemplate (template:string) navigationHtml contentHtml =
+        template.Replace("@@@navigation@@@", navigationHtml).Replace("@@@content@@@", contentHtml)
 
     let homePage documentRoot =
         "# Welcome to the online help!"
@@ -43,9 +78,13 @@ module internal Impl =
     let start documentRoot =
         myCTS <- new CancellationTokenSource()
 
-        let templateFile = Path.Combine(documentRoot, "Template.html")
-        let page = page documentRoot >> addTemplate templateFile
-        let home () = documentRoot |> (homePage >> addTemplate templateFile)
+        let documentRoot = Path.GetFullPath(documentRoot)
+
+        let template = getTemplate documentRoot
+        let navigation = getNavigation documentRoot template
+        let applyTemplate = applyTemplate template navigation
+        let page = page documentRoot >> applyTemplate
+        let home () = documentRoot |> (homePage >> applyTemplate)
 
         let app : WebPart =
             choose [ 

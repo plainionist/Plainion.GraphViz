@@ -75,7 +75,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Open spec"  Command="{Binding Path=OpenCommand}"/>
-            <g:HelpLink Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Page="/Packaging/Overview.md"/>
+            <g:HelpLink Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Page="/CodeInspection/Packaging/Overview.md"/>
             <Button Grid.Column="2" Content="Create graph" Command="{Binding Path=CreateGraphCommand}" Margin="5,0,0,0"/>
             <Button Grid.Column="3" Content="Cancel" Command="{Binding Path=CancelCommand}" Margin="5,0,0,0"/>
         </Grid>
