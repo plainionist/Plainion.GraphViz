@@ -12,6 +12,11 @@
         <Include Pattern="Plainion.Prism.dll" />
     </Package>
     <Package Name="Prism">
+        <Package.Clusters>
+            <Cluster Name="Prism">
+                <Include Pattern="*"/>
+            </Cluster>
+        </Package.Clusters>
         <Include Pattern="Microsoft.Practices.Prism.*.dll" />
     </Package>
     <Package Name="Akka">
@@ -30,3 +35,4 @@
         <Include Pattern="Plainion.GraphViz.*dll" />
     </Package>
 </SystemPackaging>
+

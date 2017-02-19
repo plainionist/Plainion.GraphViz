@@ -24,6 +24,8 @@ namespace Plainion.GraphViz
         {
             var tooltip = ( ( ToolTip )( ( Hyperlink )sender ).ToolTip );
             tooltip.IsOpen = !tooltip.IsOpen;
+
+            //HelpClient.OpenPage( "/" );
         }
     }
 }
