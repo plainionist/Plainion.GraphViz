@@ -11,7 +11,7 @@ namespace Plainion.GraphViz
 
         public static void OpenPage( string relativePath )
         {
-            Process.Start( string.Format( "http://localhost:{0}/{1}", Port, relativePath ) );
+            Process.Start( string.Format( "http://localhost:{0}{1}", Port, relativePath ) );
         }
     }
 }

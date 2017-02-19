@@ -26,6 +26,7 @@ namespace Plainion.GraphViz
             tooltip.IsOpen = !tooltip.IsOpen;
 
             //HelpClient.OpenPage( "/" );
+            //HelpClient.OpenPage( "/Packaging/Overview.md" );
         }
     }
 }

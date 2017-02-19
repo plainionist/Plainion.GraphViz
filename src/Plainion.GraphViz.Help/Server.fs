@@ -10,23 +10,38 @@ module internal Impl =
     open Suave.Filters
     open System.Threading
     open System.Net
+    open System.IO
+    open Markdig
 
-    let page (req:HttpRequest) =
-        sprintf "Page: %s" req.path
+    let homePage documentRoot =
+        "# Welcome to the online help!"
+        |> Markdown.ToHtml
 
-    let myApp : WebPart =
-        choose [ 
-            GET >=> request (fun req -> OK (page req)) 
-            Files.browseHome
-        ]
+    let page documentRoot path =
+        let localFile = Path.Combine(documentRoot, path)
+        if File.Exists localFile then 
+            localFile
+            |> File.ReadAllText 
+            |> Markdown.ToHtml
+        else
+            sprintf "No such page: %s" path
 
     let mutable myCTS : CancellationTokenSource = null
 
     let start documentRoot =
         myCTS <- new CancellationTokenSource()
 
-        // http://www.fssnip.net/7Po/title/Start-Suave-server-on-first-free-port
+        let page = page documentRoot
+        let home () = homePage documentRoot
 
+        let app : WebPart =
+            choose [ 
+                path "/" >=> OK (home ()) 
+                pathScan "/%s.md" (fun p -> OK (page (p + ".md")))
+                Files.browseHome
+            ]
+
+        // http://www.fssnip.net/7Po/title/Start-Suave-server-on-first-free-port
         Async.FromContinuations(fun (cont, _, _) ->
             let startedEvent = Event<_>()
             startedEvent.Publish.Add(cont)
@@ -41,7 +56,7 @@ module internal Impl =
                                                       cancellationToken = myCTS.Token 
                                                       bindings = [ local ]
                                     }
-                    let started, server = startWebServerAsync config myApp
+                    let started, server = startWebServerAsync config app
 
                     async { 
                         let! running = started   
