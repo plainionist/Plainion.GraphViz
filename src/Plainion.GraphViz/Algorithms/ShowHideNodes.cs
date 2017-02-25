@@ -1,19 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    public class HideNodes
+    public class ShowHideNodes
     {
         private readonly IGraphPresentation myPresentation;
+        private bool myShow;
 
-        public HideNodes(IGraphPresentation presentation)
+        public ShowHideNodes(IGraphPresentation presentation, bool show)
         {
             Contract.RequiresNotNull(presentation, "presentation");
 
             myPresentation = presentation;
+            myShow = show;
         }
 
         public void Execute(params Node[] nodes)
@@ -24,7 +27,7 @@ namespace Plainion.GraphViz.Algorithms
         public void Execute(IEnumerable<Node> nodes)
         {
             var mask = new NodeMask();
-            mask.IsShowMask = false;
+            mask.IsShowMask = myShow;
             mask.Set(nodes);
 
             if (nodes.Count() == 1)
@@ -34,7 +37,7 @@ namespace Plainion.GraphViz.Algorithms
             }
             else
             {
-                var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
+                var caption = myPresentation.GetPropertySetFor<Caption>().Get( nodes.First().Id );
                 mask.Label = caption.DisplayText + "...";
             }
 
