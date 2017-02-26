@@ -4,9 +4,6 @@ using System.Linq;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 
-using Cluster = Plainion.GraphViz.Model.Cluster;
-
-
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
     class GraphToSpecSynchronizer
@@ -16,15 +13,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private IGraphPresentation myPresentation;
         private IModuleChangedObserver myTransformationsObserver;
         private IModuleChangedJournal<Caption> myCaptionsJournal;
-        // used to remember original cluster id mapping to renamed cluster name when playing back the rename into the spec file
-        private readonly Dictionary<string, string> myClusterIdToExternalNameMapping;
 
         public GraphToSpecSynchronizer(Func<SystemPackaging> GetSpec, Action<SystemPackaging> SetSpec)
         {
             myGetSpec = GetSpec;
             mySetSpec = SetSpec;
-
-            myClusterIdToExternalNameMapping = new Dictionary<string, string>();
         }
 
         public IGraphPresentation Presentation
@@ -32,8 +25,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             get { return myPresentation; }
             set
             {
-                myClusterIdToExternalNameMapping.Clear();
-
                 if (myTransformationsObserver != null)
                 {
                     myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
@@ -98,15 +89,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
             foreach (var entry in transformation.NodeToClusterMapping)
             {
-                var externalClusterId = GetExternalClusterId(entry.Value);
-
                 var clustersMatchingNode = clusters
                     .Where(c => c.Matches(entry.Key))
                     .ToList();
 
                 // remove from all (potentially old) clusters
                 var clustersToRemoveFrom = clustersMatchingNode
-                    .Where(c => entry.Value == null || c.Name != externalClusterId);
+                    .Where(c => entry.Value == null || c.Id != entry.Value);
                 foreach (var cluster in clustersToRemoveFrom)
                 {
                     var exactMatch = cluster.Includes.FirstOrDefault(p => p.Pattern == entry.Key);
@@ -127,17 +116,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
                 // add to the cluster it should now belong to
                 var clusterToAddTo = clusters
-                    .FirstOrDefault(c => c.Name == externalClusterId);
+                    .FirstOrDefault(c => c.Id == entry.Value);
 
                 if (clusterToAddTo == null)
                 {
                     // --> new cluster added in UI
-                    clusterToAddTo = new Spec.Cluster { Name = captions.Get(entry.Value).DisplayText };
+                    clusterToAddTo = new Spec.Cluster { Name = captions.Get(entry.Value).DisplayText, Id = entry.Value };
                     clusters.Add(clusterToAddTo);
                     spec.Packages.First().Clusters.Add(clusterToAddTo);
-
-                    // also update the mapping
-                    myClusterIdToExternalNameMapping[entry.Value] = clusterToAddTo.Name;
                 }
 
                 if (clusterToAddTo.Matches(entry.Key))
@@ -160,13 +146,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
             var removedExternalClusterIds = transformation.ClusterVisibility
                 .Where(e => e.Value == false)
-                .Select(e => GetExternalClusterId(e.Key));
+                .Select(e => e.Key);
 
-            foreach (var externalClusterId in removedExternalClusterIds)
+            foreach (var clusterId in removedExternalClusterIds)
             {
                 foreach (var package in spec.Packages)
                 {
-                    var cluster = package.Clusters.FirstOrDefault(c => c.Name == externalClusterId);
+                    var cluster = package.Clusters.FirstOrDefault( c => c.Id == clusterId );
                     if (cluster != null)
                     {
                         package.Clusters.Remove(cluster);
@@ -185,9 +171,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             var captions = myPresentation.GetModule<ICaptionModule>();
             foreach (var cluster in potentiallyRenamedClusters)
             {
-                var externalClusterId = GetExternalClusterId(cluster.Id);
-
-                var specCluster = specClusters.FirstOrDefault(c => c.Name == externalClusterId);
+                var specCluster = specClusters.FirstOrDefault(c => c.Id == cluster.Id);
                 if (specCluster == null)
                 {
                     // this is a new cluster EMPTY not yet there in spec
@@ -196,24 +180,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 else
                 {
                     specCluster.Name = captions.Get(cluster.Id).DisplayText;
-                    myClusterIdToExternalNameMapping[cluster.Id] = specCluster.Name;
                 }
             }
-        }
-
-        private string GetExternalClusterId(string clusterId)
-        {
-            if (clusterId == null)
-            {
-                return null;
-            }
-
-            string externalClusterId;
-            if (!myClusterIdToExternalNameMapping.TryGetValue(clusterId, out externalClusterId))
-            {
-                externalClusterId = clusterId;
-            }
-            return externalClusterId;
         }
 
         private void OnCaptionsChanged(object sender, EventArgs eventArgs)

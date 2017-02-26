@@ -15,7 +15,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests.Packaging.Services
             var spec = new SystemPackaging();
 
             var package = new Package { Name = "P1" };
-            var cluster1 = new Cluster { Name = "C1" };
+            var cluster1 = new Cluster { Name = "C1", Id = "42" };
             cluster1.Patterns.Add( new Include { Pattern = "*tests*" } );
             package.Clusters.Add( cluster1 );
 

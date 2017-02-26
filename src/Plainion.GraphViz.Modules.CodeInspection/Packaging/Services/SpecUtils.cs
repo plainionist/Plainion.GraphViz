@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Windows.Markup;
 using System.Xml;
@@ -12,11 +13,26 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
     {
         public static SystemPackaging Deserialize(string text)
         {
-            using (var reader = new StringReader(text))
+            var doc =  DeserializeCore( text );
+
+            foreach( var cluster in doc.Packages.SelectMany( p => p.Clusters ) )
             {
-                using (var xmlReader = XmlReader.Create(reader))
+                if( cluster.Id == null )
                 {
-                    return (SystemPackaging)XamlReader.Load(xmlReader);
+                    cluster.Id = Guid.NewGuid().ToString();
+                }
+            }
+
+            return doc;
+        }
+
+        private static SystemPackaging DeserializeCore( string text )
+        {
+            using( var reader = new StringReader( text ) )
+            {
+                using( var xmlReader = XmlReader.Create( reader ) )
+                {
+                    return ( SystemPackaging )XamlReader.Load( xmlReader );
                 }
             }
         }

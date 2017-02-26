@@ -2,7 +2,7 @@
 <SystemPackaging AssemblyRoot="." xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
     <Package Name="Plainion.Foundations">
         <Package.Clusters>
-            <Cluster Name="UI">
+            <Cluster Id="6b1a6098-e2c8-43a0-ae35-750ea4d82f7d" Name="UI">
                 <Include Pattern="Plainion.Windows.*" />
                 <Include Pattern="Plainion.Prism.*" />
             </Cluster>
@@ -13,7 +13,7 @@
     </Package>
     <Package Name="Prism">
         <Package.Clusters>
-            <Cluster Name="Prism">
+            <Cluster Id="44a30c21-20d2-4e23-b070-d077c341550f" Name="Prism">
                 <Include Pattern="*" />
             </Cluster>
         </Package.Clusters>
@@ -25,10 +25,10 @@
     </Package>
     <Package Name="Plaionion.GraphViz">
         <Package.Clusters>
-            <Cluster Name="CodeInspection">
+            <Cluster Id="03b66cda-2bc2-405c-9b9e-6ae316c8bbfa" Name="nod">
                 <Include Pattern="*CodeInspection*" />
             </Cluster>
-            <Cluster Name="Documents">
+            <Cluster Id="dd04b5ef-7faa-4045-9c47-10c5af6580e5" Name="Documents">
                 <Include Pattern="*.Documents.*" />
             </Cluster>
         </Package.Clusters>

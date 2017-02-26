@@ -6,7 +6,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
     [ContentProperty( "Patterns" )]
     public class Cluster : PackageBase
     {
-        internal bool Matches(string str)
+        public string Id { get; set; }
+
+        internal bool Matches( string str )
         {
             return Includes.Any(i => i.Matches(str)) && !Excludes.Any(e => e.Matches(str));
         }

@@ -246,7 +246,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 var emptyClusters = spec.Packages
                     .Where(p => PackagesToAnalyze == null || PackagesToAnalyze.Contains(p.Name))
                     .SelectMany(p => p.Clusters)
-                    .Select(c => c.Name)
+                    .Select(c => c.Id)
                     .Except(response.Clusters.Select(c => c.Key));
 
                 foreach (var cluster in emptyClusters)
