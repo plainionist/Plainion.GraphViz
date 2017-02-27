@@ -13,26 +13,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
     {
         public static SystemPackaging Deserialize(string text)
         {
-            var doc =  DeserializeCore( text );
-
-            foreach( var cluster in doc.Packages.SelectMany( p => p.Clusters ) )
-            {
-                if( cluster.Id == null )
-                {
-                    cluster.Id = Guid.NewGuid().ToString();
-                }
-            }
-
-            return doc;
+            return DeserializeCore(text);
         }
 
-        private static SystemPackaging DeserializeCore( string text )
+        private static SystemPackaging DeserializeCore(string text)
         {
-            using( var reader = new StringReader( text ) )
+            using (var reader = new StringReader(text))
             {
-                using( var xmlReader = XmlReader.Create( reader ) )
+                using (var xmlReader = XmlReader.Create(reader))
                 {
-                    return ( SystemPackaging )XamlReader.Load( xmlReader );
+                    return (SystemPackaging)XamlReader.Load(xmlReader);
                 }
             }
         }

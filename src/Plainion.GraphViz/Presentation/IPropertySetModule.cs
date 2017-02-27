@@ -10,8 +10,9 @@ namespace Plainion.GraphViz.Presentation
 
         T Get( string id );
 
-        void Add( T item );
-        void Remove( string id );
+        bool Contains(string id);
+        void Add(T item);
+        void Remove(string id);
         void Clear();
     }
 }

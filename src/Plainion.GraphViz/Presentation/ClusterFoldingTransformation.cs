@@ -10,22 +10,16 @@ namespace Plainion.GraphViz.Presentation
     {
         private readonly IGraphPresentation myPresentation;
 
-        // always keep node id of once folded clusters because we would generate new IDs when refolding
-        // but that would destroy masks with folded clusters included ...
-        // key: cluster.Id, value: cluster-node-id
-        private readonly Dictionary<string, string> myClusterToClusterNodeMapping;
-
         private readonly HashSet<string> myFoldedClusters;
 
         // we remember the most recent input graph so that we can figure out
         // later which nodes where in which cluster BEFORE folding
         private IGraph myGraph;
 
-        public ClusterFoldingTransformation( IGraphPresentation presentation )
+        public ClusterFoldingTransformation(IGraphPresentation presentation)
         {
             myPresentation = presentation;
 
-            myClusterToClusterNodeMapping = new Dictionary<string, string>();
             myFoldedClusters = new HashSet<string>();
         }
 
@@ -34,111 +28,109 @@ namespace Plainion.GraphViz.Presentation
             get { return myFoldedClusters; }
         }
 
-        public string GetClusterNodeId( string clusterId )
+        public string GetClusterNodeId(string clusterId)
         {
-            return myClusterToClusterNodeMapping[ clusterId ];
+            return "[" + clusterId + "]";
         }
 
-        public IEnumerable<Node> GetNodes( string clusterId )
+        public IEnumerable<Node> GetNodes(string clusterId)
         {
             var graph = myGraph ?? myPresentation.Graph;
 
-            return graph.Clusters.Single( c => c.Id == clusterId ).Nodes;
+            return graph.Clusters.Single(c => c.Id == clusterId).Nodes;
         }
 
-        public void Add( string clusterId )
+        public void Add(string clusterId)
         {
-            if( myFoldedClusters.Contains( clusterId ) )
+            if (myFoldedClusters.Contains(clusterId))
             {
                 return;
             }
 
-            AddInternal( clusterId );
+            AddInternal(clusterId);
 
-            OnPropertyChanged( () => Clusters );
+            OnPropertyChanged(() => Clusters);
         }
 
-        private void AddInternal( string clusterId )
+        private void AddInternal(string clusterId)
         {
-            string clusterNodeId;
-            if( !myClusterToClusterNodeMapping.TryGetValue( clusterId, out clusterNodeId ) )
-            {
-                clusterNodeId = Guid.NewGuid().ToString();
-                myClusterToClusterNodeMapping.Add( clusterId, clusterNodeId );
+            var clusterNodeId = GetClusterNodeId(clusterId);
 
-                // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
-                var captions = myPresentation.GetPropertySetFor<Caption>();
-                captions.Add( new Caption( clusterNodeId, "[" + captions.Get( clusterId ).DisplayText + "]" ) );
+            // encode cluster id again in caption to ensure that cluster is rendered big enough to include cluster caption
+            var captions = myPresentation.GetPropertySetFor<Caption>();
+            if (!captions.Contains(clusterNodeId))
+            {
+                captions.Add(new Caption(clusterNodeId, "[" + captions.Get(clusterId).DisplayText + "]"));
             }
 
-            myFoldedClusters.Add( clusterId );
+            myFoldedClusters.Add(clusterId);
         }
 
-        public void Add( IEnumerable<string> clusterIds )
+        public void Add(IEnumerable<string> clusterIds)
         {
             var clustersToAdd = clusterIds
-                .Except( myFoldedClusters )
+                .Except(myFoldedClusters)
                 .ToList();
 
-            if( clustersToAdd.Count == 0 )
+            if (clustersToAdd.Count == 0)
             {
                 return;
             }
 
-            foreach( var cluster in clustersToAdd )
+            foreach (var cluster in clustersToAdd)
             {
-                AddInternal( cluster );
+                AddInternal(cluster);
             }
 
-            OnPropertyChanged( () => Clusters );
+            OnPropertyChanged(() => Clusters);
         }
 
-        public void Remove( string clusterId )
+        public void Remove(string clusterId)
         {
-            var removed = myFoldedClusters.Remove( clusterId );
+            var removed = myFoldedClusters.Remove(clusterId);
 
-            if( removed )
+            if (removed)
             {
-                OnPropertyChanged( () => Clusters );
+                OnPropertyChanged(() => Clusters);
             }
         }
 
-        public void Remove( IEnumerable<string> clusterIds )
+        public void Remove(IEnumerable<string> clusterIds)
         {
             var clustersToRemove = clusterIds
-                .Intersect( myFoldedClusters )
+                .Intersect(myFoldedClusters)
                 .ToList();
 
-            if( clustersToRemove.Count == 0 )
+            if (clustersToRemove.Count == 0)
             {
                 return;
             }
 
-            foreach( var cluster in clustersToRemove )
+            foreach (var cluster in clustersToRemove)
             {
-                myFoldedClusters.Remove( cluster );
+                myFoldedClusters.Remove(cluster);
             }
 
-            OnPropertyChanged( () => Clusters );
+            OnPropertyChanged(() => Clusters);
         }
 
-        public void Toggle( string clusterId )
+        public void Toggle(string clusterId)
         {
-            if( myFoldedClusters.Contains( clusterId ) )
+            if (myFoldedClusters.Contains(clusterId))
             {
-                Remove( clusterId );
+                Remove(clusterId);
             }
             else
             {
-                Add( clusterId );
+                Add(clusterId);
             }
         }
 
-        public IGraph Transform( IGraph graph )
+        public IGraph Transform(IGraph graph)
         {
             myGraph = graph;
 
-            if( myFoldedClusters.Count == 0 )
+            if (myFoldedClusters.Count == 0)
             {
                 return graph;
             }
@@ -148,72 +140,72 @@ namespace Plainion.GraphViz.Presentation
             var nodesToClusterMap = new Dictionary<string, string>();
 
             // add unfolded clusters
-            foreach( var cluster in graph.Clusters.Where( c => !myFoldedClusters.Contains( c.Id ) ) )
+            foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusters.Contains(c.Id)))
             {
                 var nodes = cluster.Nodes
-                    .Select( n => n.Id )
+                    .Select(n => n.Id)
                     .ToList();
-                builder.TryAddCluster( cluster.Id, nodes );
+                builder.TryAddCluster(cluster.Id, nodes);
 
-                foreach( var n in nodes )
+                foreach (var n in nodes)
                 {
-                    nodesToClusterMap[ n ] = cluster.Id;
+                    nodesToClusterMap[n] = cluster.Id;
                 }
             }
 
             // add folded clusters
-            foreach( var clusterId in myFoldedClusters.ToList() )
+            foreach (var clusterId in myFoldedClusters.ToList())
             {
-                var clusterNodeId = myClusterToClusterNodeMapping[ clusterId ];
+                var clusterNodeId = GetClusterNodeId(clusterId);
 
-                builder.TryAddNode( clusterNodeId );
-                builder.TryAddCluster( clusterId, new[] { clusterNodeId } );
+                builder.TryAddNode(clusterNodeId);
+                builder.TryAddCluster(clusterId, new[] { clusterNodeId });
 
-                var foldedCluster = graph.Clusters.SingleOrDefault( c => c.Id == clusterId );
-                if( foldedCluster == null )
+                var foldedCluster = graph.Clusters.SingleOrDefault(c => c.Id == clusterId);
+                if (foldedCluster == null)
                 {
                     // this cluster was deleted
-                    myFoldedClusters.Remove( clusterId );
+                    myFoldedClusters.Remove(clusterId);
                     continue;
                 }
 
                 var foldedNodes = foldedCluster.Nodes
-                    .Select( n => n.Id )
+                    .Select(n => n.Id)
                     .ToList();
 
-                foreach( var n in foldedNodes )
+                foreach (var n in foldedNodes)
                 {
-                    nodesToClusterMap[ n ] = foldedCluster.Id;
+                    nodesToClusterMap[n] = foldedCluster.Id;
                 }
             }
 
             // add non-clustered nodes
-            foreach( var node in graph.Nodes.Select( n => n.Id ).Except( nodesToClusterMap.Keys ) )
+            foreach (var node in graph.Nodes.Select(n => n.Id).Except(nodesToClusterMap.Keys))
             {
-                builder.TryAddNode( node );
+                builder.TryAddNode(node);
             }
 
             // add edges 
-            foreach( var edge in graph.Edges )
+            foreach (var edge in graph.Edges)
             {
                 var source = edge.Source.Id;
                 var target = edge.Target.Id;
 
                 string foldedClusterId;
-                if( nodesToClusterMap.TryGetValue( source, out foldedClusterId ) && myFoldedClusters.Contains( foldedClusterId ) )
+                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && myFoldedClusters.Contains(foldedClusterId))
                 {
-                    source = myClusterToClusterNodeMapping[ foldedClusterId ];
+                    source = GetClusterNodeId(foldedClusterId);
                 }
 
-                if( nodesToClusterMap.TryGetValue( target, out foldedClusterId ) && myFoldedClusters.Contains( foldedClusterId ) )
+                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && myFoldedClusters.Contains(foldedClusterId))
                 {
-                    target = myClusterToClusterNodeMapping[ foldedClusterId ];
+                    target = GetClusterNodeId(foldedClusterId);
                 }
 
                 // ignore self-edges
-                if( source != target )
+                if (source != target)
                 {
-                    builder.TryAddEdge( source, target );
+                    builder.TryAddEdge(source, target);
                 }
             }
 

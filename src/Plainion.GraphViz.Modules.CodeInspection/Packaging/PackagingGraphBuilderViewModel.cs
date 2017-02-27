@@ -85,6 +85,28 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             try
             {
                 var spec = SpecUtils.Deserialize(Document.Text);
+
+                // initially specs do not have Ids - generate them once and keep them
+                bool idsGenerated = false;
+                foreach (var cluster in spec.Packages.SelectMany(p => p.Clusters))
+                {
+                    if (cluster.Id == null)
+                    {
+                        cluster.Id = Guid.NewGuid().ToString();
+                        idsGenerated = true;
+                    }
+                }
+
+                if (idsGenerated)
+                {
+                    // we cannot change the doc while handling a doc change
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        Document.Text = SpecUtils.Serialize(spec);
+                        Save();
+                    }));
+                }
+
                 Packages.AddRange(spec.Packages.Select(p => p.Name));
             }
             catch (Exception ex)
