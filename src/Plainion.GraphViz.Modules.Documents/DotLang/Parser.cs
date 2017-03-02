@@ -18,10 +18,10 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         }
 
         private Iterator myIterator;
-        private DotLangPureDocument myDocument;
+        private DotLangDocument myDocument;
         private Subgraph myCurrentSubGraph;
 
-        public Parser(Lexer lexer, DotLangPureDocument document)
+        public Parser(Lexer lexer, DotLangDocument document)
         {
             myIterator = new Iterator(lexer);
             myDocument = document;

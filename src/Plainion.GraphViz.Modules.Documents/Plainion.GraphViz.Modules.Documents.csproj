@@ -80,7 +80,6 @@
     <Compile Include="BasicDocumentProcessor.cs" />
     <Compile Include="DgmlDocument.cs" />
     <Compile Include="DotLangDocument.cs" />
-    <Compile Include="DotLangPureDocument.cs" />
     <Compile Include="DotLang\IMatcher.cs" />
     <Compile Include="DotLang\Iterator.cs" />
     <Compile Include="DotLang\Lexer.cs" />
@@ -96,6 +95,7 @@
     <Compile Include="DotLang\Tokenizer.cs" />
     <Compile Include="DotPlainDocument.cs" />
     <Compile Include="GraphMLDocument.cs" />
+    <Compile Include="GraphToDotLangSynchronizer.cs" />
     <Compile Include="ICaptionDocument.cs" />
     <Compile Include="IDocument.cs" />
     <Compile Include="IGraphDocument.cs" />

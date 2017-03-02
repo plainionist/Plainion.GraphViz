@@ -1,67 +1,65 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using Plainion.GraphViz.Dot;
-using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.Documents.DotLang;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
     // http://www.graphviz.org/doc/info/lang.html
-    // keep it as wrapper around plaindoc for now instead of inheritance as later on it should be independent anyway
-    public class DotLangDocument : AbstractGraphDocument, IStyleDocument, ICaptionDocument, ILayoutDocument
+    // inspired by: https://github.com/devshorts/LanguageCreator
+    public class DotLangDocument : AbstractGraphDocument, ICaptionDocument, IStyleDocument
     {
-        private DotPlainDocument myPlainDocument;
-        private DotToDotPlainConverter myConverter;
-
-        public DotLangDocument( DotToDotPlainConverter converter )
-        {
-            myConverter = converter;
-
-            myPlainDocument = new DotPlainDocument();
-        }
+        private List<Caption> myCaptions;
+        private List<NodeStyle> myNodeStyles;
+        private List<EdgeStyle> myEdgeStyles;
 
         public IEnumerable<Caption> Captions
         {
-            get { return myPlainDocument.Captions; }
-        }
-
-        public IEnumerable<NodeLayout> NodeLayouts
-        {
-            get { return myPlainDocument.NodeLayouts; }
-        }
-
-        public IEnumerable<EdgeLayout> EdgeLayouts
-        {
-            get { return myPlainDocument.EdgeLayouts; }
+            get { return myCaptions; }
         }
 
         public IEnumerable<NodeStyle> NodeStyles
         {
-            get { return myPlainDocument.NodeStyles; }
+            get { return myNodeStyles; }
         }
 
         public IEnumerable<EdgeStyle> EdgeStyles
         {
-            get { return myPlainDocument.EdgeStyles; }
-        }
-
-        public override IGraph Graph
-        {
-            get { return myPlainDocument.Graph; }
+            get { return myEdgeStyles; }
         }
 
         protected override void Load()
         {
-            var dotFile = new FileInfo( Filename );
-            var plainFile = new FileInfo( Path.ChangeExtension( Filename, ".plain" ) );
-
-            if( dotFile.LastWriteTime > plainFile.LastWriteTime )
+            using (var reader = new StreamReader(Filename))
             {
-                myConverter.Convert( dotFile, plainFile );
+                Read(reader);
             }
+        }
 
-            myPlainDocument = new DotPlainDocument();
-            myPlainDocument.Load( plainFile.FullName );
+        protected internal void Add(Caption caption)
+        {
+            myCaptions.Add(caption);
+        }
+
+        protected internal void Add(NodeStyle style)
+        {
+            myNodeStyles.Add(style);
+        }
+
+        protected internal void Add(EdgeStyle style)
+        {
+            myEdgeStyles.Add(style);
+        }
+
+        internal void Read(TextReader reader)
+        {
+            myCaptions = new List<Caption>();
+            myNodeStyles = new List<NodeStyle>();
+            myEdgeStyles = new List<EdgeStyle>();
+
+            var lexer = new Lexer(reader.ReadToEnd());
+            var parser = new Parser(lexer, this);
+            parser.Parse();
         }
     }
 }

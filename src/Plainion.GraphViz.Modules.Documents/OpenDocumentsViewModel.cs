@@ -10,6 +10,8 @@ using Microsoft.Practices.Prism.Mvvm;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
+using Plainion.GraphViz.Dot;
+using System.Threading.Tasks;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
@@ -18,6 +20,7 @@ namespace Plainion.GraphViz.Modules.Documents
     public class OpenDocumentsViewModel : ViewModelBase, IDocumentLoader
     {
         private FileSystemWatcher myFileWatcher;
+        private readonly GraphToDotLangSynchronizer myGraphToDotSynchronizer;
 
         [Import]
         internal IPresentationCreationService PresentationCreationService { get; set; }
@@ -29,6 +32,8 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             OpenDocumentCommand = new DelegateCommand(OpenDocument);
             OpenFileRequest = new InteractionRequest<OpenFileDialogNotification>();
+
+            myGraphToDotSynchronizer = new GraphToDotLangSynchronizer();
         }
 
         public DelegateCommand OpenDocumentCommand { get; private set; }
@@ -58,8 +63,6 @@ namespace Plainion.GraphViz.Modules.Documents
             var presentation = PresentationCreationService.CreatePresentation(Path.GetDirectoryName(path));
 
             var processor = new BasicDocumentProcessor(presentation);
-            //processor.DocumentCreators[ ".dot" ] = () => new DotLangDocument( new DotToDotPlainConverter( myConfig.DotToolsHome ) );
-            processor.DocumentCreators[".dot"] = () => new DotLangPureDocument();
 
             processor.Process(path);
 
@@ -89,6 +92,21 @@ namespace Plainion.GraphViz.Modules.Documents
             myFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
             myFileWatcher.Changed += OnCurrentFileChanged;
             myFileWatcher.EnableRaisingEvents = true;
+
+            // only synchronize presentations where we know the doc type and which were created from this module
+            if (Path.GetExtension(path).Equals(".dot", StringComparison.OrdinalIgnoreCase))
+            {
+                myGraphToDotSynchronizer.Attach(presentation, p => Task.Run(() =>
+                {
+
+                    myFileWatcher.EnableRaisingEvents = false;
+
+                    var writer = new DotWriter(path);
+                    writer.Write(p);
+
+                    myFileWatcher.EnableRaisingEvents = true;
+                }));
+            }
         }
 
         private void OnCurrentFileChanged(object sender, FileSystemEventArgs e)
@@ -105,6 +123,9 @@ namespace Plainion.GraphViz.Modules.Documents
                     myFileWatcher.Dispose();
                     myFileWatcher = null;
                 }
+
+                // reset only!
+                myGraphToDotSynchronizer.Detach();
             }
         }
 

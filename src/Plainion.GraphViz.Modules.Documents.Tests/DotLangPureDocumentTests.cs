@@ -12,7 +12,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_SimpleGraphWithTwoNodesAndNewLines_NotesDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( @"graph { 
     n1
@@ -28,7 +28,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_SimpleDirectedGraphWithTwoNodesAndSemiColon_NotesDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( @"digraph { n1; n2; }" ) )
             {
@@ -41,7 +41,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_NodeIdWithQotes_NotesDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( "digraph { \"Node 1\"; \"Node 2\"; }" ) )
             {
@@ -54,7 +54,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_CPlusPlusStyleComment_Ignored()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( @"graph { 
     n1
@@ -71,7 +71,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_CSharpStyleComment_Ignored()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( @"graph { 
     n1
@@ -88,7 +88,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_SimpleGraphWithTwoEdgesAndNewLines_NotesDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( @"graph { 
     n1 -> n2
@@ -105,7 +105,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_SimpleDirectedGraphWithTwoEdgesAndSemiColon_NotesDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( @"digraph { n1 -> n2; n2 -> n3; }" ) )
             {
@@ -119,7 +119,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_EdgesWithQuotes_NotesDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( "digraph { \"Node 1\" -> \"Node 2\"; }" ) )
             {
@@ -133,7 +133,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_NodeWithLabel_NodeAndLabelDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( "graph { n1 [ label= \"Another text\" ]; n2; n3 }" ) )
             {
@@ -147,7 +147,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_EdgeWithLabel_EdgeAndLabelDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( "digraph { n1 -> n2 [ label= \"Implemented by\" ]; n2 -> n3 [ label=\"called by\"] }" ) )
             {
@@ -164,7 +164,7 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         [Test]
         public void Read_WithSubgraphs_ClustersDetected()
         {
-            var document = new DotLangPureDocument();
+            var document = new DotLangDocument();
 
             using( var reader = new StringReader( "digraph {   subgraph cluster_C1 { label=\"C1\"; a0; a1; }    subgraph cluster_C2 { label=\"C2\"; b0 -> b1; } a0 -> b0; }" ) )
             {

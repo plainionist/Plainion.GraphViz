@@ -21,8 +21,6 @@ namespace Plainion.GraphViz.Dot
 
         internal bool IgnoreStyle { get; set; }
 
-        public bool WriteVisibleOnly { get; set; }
-
         // http://www.graphviz.org/Gallery/directed/cluster.html
         // returns written nodes
         public int Write(IGraphPresentation presentation)
@@ -53,9 +51,7 @@ namespace Plainion.GraphViz.Dot
 
             public int Execute()
             {
-                var graph = myOwner.WriteVisibleOnly
-                    ? myPresentation.GetModule<ITransformationModule>().Graph
-                    : myPresentation.Graph;
+                var graph = myPresentation.GetModule<ITransformationModule>().Graph;
 
                 using (myWriter = new StreamWriter(myOwner.myPath))
                 {
@@ -65,10 +61,9 @@ namespace Plainion.GraphViz.Dot
                     myWriter.WriteLine("  rankdir=BT");
                     myWriter.WriteLine("  ranksep=\"2.0 equally\"");
 
-                    var relevantNodes = (myOwner.WriteVisibleOnly
-                                             ? graph.Nodes.Where(n => myPresentation.Picking.Pick(n))
-                                             : myPresentation.Graph.Nodes)
-                                        .ToList();
+                    var relevantNodes = graph.Nodes
+                        .Where(n => myPresentation.Picking.Pick(n))
+                        .ToList();
 
                     if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
                     {
@@ -85,9 +80,8 @@ namespace Plainion.GraphViz.Dot
                             .Where(relevantNodes.Contains)
                             .ToList();
 
-                        if (myOwner.WriteVisibleOnly && relevantClusterNodes.Count == 0)
+                        if (relevantClusterNodes.Count == 0)
                         {
-                            // only in case of rendering we skip empty clusters
                             continue;
                         }
 
@@ -109,9 +103,7 @@ namespace Plainion.GraphViz.Dot
                         Write(node, "  ");
                     }
 
-                    var relevantEdges = myOwner.WriteVisibleOnly
-                        ? graph.Edges.Where(e => myPresentation.Picking.Pick(e))
-                        : graph.Edges;
+                    var relevantEdges = graph.Edges.Where(e => myPresentation.Picking.Pick(e));
 
                     foreach (var edge in relevantEdges)
                     {

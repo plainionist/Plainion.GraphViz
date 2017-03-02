@@ -113,7 +113,6 @@ namespace Plainion.GraphViz.Modules.Documents
         private void SaveAsDot(string path)
         {
             var writer = new DotWriter(path);
-            writer.WriteVisibleOnly = true;
             writer.Write(Model.Presentation);
         }
 
