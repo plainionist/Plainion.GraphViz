@@ -86,7 +86,8 @@ namespace Plainion.GraphViz.Modules.Documents
             myFileWatcher = new FileSystemWatcher();
             myFileWatcher.Path = Path.GetDirectoryName(path);
             myFileWatcher.Filter = Path.GetFileName(path);
-            myFileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            // http://stackoverflow.com/questions/19905151/system-io-filesystemwatcher-does-not-watch-file-changed-by-visual-studio-2013
+            myFileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime;
             myFileWatcher.Changed += OnCurrentFileChanged;
             myFileWatcher.Error += OnFileWatcherError;
             myFileWatcher.EnableRaisingEvents = true;
