@@ -1,10 +1,11 @@
-## 1.18.0 - unreleased
+## 1.19.0 - 2017-03-02
 
 - dynamic edge thickness handling improved
 - help system improved
 - "show this" and "show this and selected" algorithms added
 - cluster changes synced back to .dot files
 - fixed saving of masks with folded clusters
+- fixed docments filewatcher for changing files in visual studio
 
 ## 1.18.0 - 2016-08-13
 
