@@ -23,36 +23,38 @@ namespace Plainion.GraphViz.Dot
 
         // http://www.graphviz.org/Gallery/directed/cluster.html
         // returns written nodes
-        public int Write(IGraphPresentation presentation)
+        public int Write(IGraph graph, IGraphPicking picking, IModuleRepository modules)
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull(graph, "graph");
+            Contract.RequiresNotNull(picking, "picking");
+            Contract.RequiresNotNull(modules, "modules");
 
-            return new WriteAction(this, presentation).Execute();
+            return new WriteAction(this, graph, picking, modules).Execute();
         }
 
         private class WriteAction
         {
             private readonly DotWriter myOwner;
-            private readonly IGraphPresentation myPresentation;
+            private readonly IGraph myGraph;
+            private readonly IGraphPicking myPicking;
             private readonly IPropertySetModule<Caption> myCaptions;
             private readonly IPropertySetModule<NodeStyle> myNodeStyles;
             private readonly IPropertySetModule<EdgeStyle> myEdgeStyles;
             private TextWriter myWriter;
 
-            public WriteAction(DotWriter owner, IGraphPresentation presentation)
+            public WriteAction(DotWriter owner, IGraph graph, IGraphPicking picking, IModuleRepository modules)
             {
                 myOwner = owner;
-                myPresentation = presentation;
+                myGraph = graph;
+                myPicking = picking;
 
-                myCaptions = presentation.GetPropertySetFor<Caption>();
-                myNodeStyles = presentation.GetPropertySetFor<NodeStyle>();
-                myEdgeStyles = presentation.GetPropertySetFor<EdgeStyle>();
+                myCaptions = modules.GetPropertySetFor<Caption>();
+                myNodeStyles = modules.GetPropertySetFor<NodeStyle>();
+                myEdgeStyles = modules.GetPropertySetFor<EdgeStyle>();
             }
 
             public int Execute()
             {
-                var graph = myPresentation.GetModule<ITransformationModule>().Graph;
-
                 using (myWriter = new StreamWriter(myOwner.myPath))
                 {
                     myWriter.WriteLine("digraph {");
@@ -61,8 +63,8 @@ namespace Plainion.GraphViz.Dot
                     myWriter.WriteLine("  rankdir=BT");
                     myWriter.WriteLine("  ranksep=\"2.0 equally\"");
 
-                    var relevantNodes = graph.Nodes
-                        .Where(n => myPresentation.Picking.Pick(n))
+                    var relevantNodes = myGraph.Nodes
+                        .Where(n => myPicking.Pick(n))
                         .ToList();
 
                     if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
@@ -74,7 +76,7 @@ namespace Plainion.GraphViz.Dot
                         myWriter.WriteLine("  mclimit=0.5");
                     }
 
-                    foreach (var cluster in graph.Clusters)
+                    foreach (var cluster in myGraph.Clusters)
                     {
                         var relevantClusterNodes = cluster.Nodes
                             .Where(relevantNodes.Contains)
@@ -103,7 +105,7 @@ namespace Plainion.GraphViz.Dot
                         Write(node, "  ");
                     }
 
-                    var relevantEdges = graph.Edges.Where(e => myPresentation.Picking.Pick(e));
+                    var relevantEdges = myGraph.Edges.Where(e => myPicking.Pick(e));
 
                     foreach (var edge in relevantEdges)
                     {

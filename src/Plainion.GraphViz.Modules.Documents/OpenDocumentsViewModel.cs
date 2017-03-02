@@ -12,6 +12,8 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Dot;
 using System.Threading.Tasks;
+using Plainion.GraphViz.Presentation;
+using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
@@ -96,17 +98,48 @@ namespace Plainion.GraphViz.Modules.Documents
             // only synchronize presentations where we know the doc type and which were created from this module
             if (Path.GetExtension(path).Equals(".dot", StringComparison.OrdinalIgnoreCase))
             {
-                myGraphToDotSynchronizer.Attach(presentation, p => Task.Run(() =>
-                {
+                myGraphToDotSynchronizer.Attach(presentation, p => SyncToDocument(p, path));
+            }
+        }
 
-                    myFileWatcher.EnableRaisingEvents = false;
+        private async void SyncToDocument(IGraphPresentation p, string path)
+        {
+            myFileWatcher.EnableRaisingEvents = false;
+
+            await Task.Run(() =>
+            {
+                using (new Profile("GraphToDotSynchronizer:OnTransformationsChanged"))
+                {
+                    var transformationModule = p.GetModule<ITransformationModule>();
+                    var dynamicClusters = transformationModule.Items.OfType<DynamicClusterTransformation>().Single();
+
+                    var graph = new Graph();
+                    foreach (var n in p.Graph.Nodes)
+                    {
+                        graph.TryAdd(n);
+                    }
+                    foreach (var e in p.Graph.Edges)
+                    {
+                        graph.TryAdd(e);
+                    }
+                    foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
+                    {
+                        // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
+                        var folding = transformationModule.Items
+                            .OfType<ClusterFoldingTransformation>()
+                            .SingleOrDefault(f => f.Clusters.Contains(cluster.Id));
+
+                        var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
+
+                        graph.TryAdd(new Cluster(cluster.Id, nodes));
+                    }
 
                     var writer = new DotWriter(path);
-                    writer.Write(p);
+                    writer.Write(graph, new NullGraphPicking(), p);
+                }
+            });
 
-                    myFileWatcher.EnableRaisingEvents = true;
-                }));
-            }
+            myFileWatcher.EnableRaisingEvents = true;
         }
 
         private void OnCurrentFileChanged(object sender, FileSystemEventArgs e)

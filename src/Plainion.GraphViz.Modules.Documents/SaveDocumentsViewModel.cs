@@ -113,7 +113,7 @@ namespace Plainion.GraphViz.Modules.Documents
         private void SaveAsDot(string path)
         {
             var writer = new DotWriter(path);
-            writer.Write(Model.Presentation);
+            writer.Write(Model.Presentation.GetModule<ITransformationModule>().Graph, Model.Presentation.Picking, Model.Presentation);
         }
 
         protected override void OnModelPropertyChanged(string propertyName)

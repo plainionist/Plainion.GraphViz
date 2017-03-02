@@ -122,6 +122,7 @@
     <Compile Include="Presentation\ClusterFoldingTransformation.cs" />
     <Compile Include="Presentation\DynamicClusterTransformation.cs" />
     <Compile Include="Presentation\IGraphTransformation.cs" />
+    <Compile Include="Presentation\IModuleRepository.cs" />
     <Compile Include="Presentation\ITransformationModule.cs" />
     <Compile Include="Presentation\ILabelConversionStep.cs" />
     <Compile Include="Presentation\ILabelConverter.cs" />
@@ -152,6 +153,7 @@
     <Compile Include="Presentation\NodeStyle.cs" />
     <Compile Include="Presentation\AbstractStyle.cs" />
     <Compile Include="Presentation\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Presentation\NullGraphPicking.cs" />
     <Compile Include="Presentation\PickingCache.cs" />
     <Compile Include="Presentation\PropertySetComparer.cs" />
     <Compile Include="Presentation\EdgeLayout.cs" />

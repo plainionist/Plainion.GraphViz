@@ -4,12 +4,8 @@ using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
-    public interface IGraphPresentation : IDisposable
+    public interface IGraphPresentation : IModuleRepository, IDisposable
     {
-        T GetModule<T>();
-
-        IPropertySetModule<T> GetPropertySetFor<T>() where T : AbstractPropertySet;
-
         IGraph Graph { get; set; }
 
         IGraphPicking Picking { get; }

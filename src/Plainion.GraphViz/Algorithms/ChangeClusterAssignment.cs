@@ -20,20 +20,9 @@ namespace Plainion.GraphViz.Algorithms
             var transformations = myPresentation.GetModule<ITransformationModule>();
             var transformation = transformations.Items
                 .OfType<DynamicClusterTransformation>()
-                .SingleOrDefault();
+                .Single();
 
-            if (transformation == null)
-            {
-                transformation = new DynamicClusterTransformation();
-
-                action(transformation);
-
-                transformations.Add(transformation);
-            }
-            else
-            {
-                action(transformation);
-            }
+            action(transformation);
         }
     }
 }

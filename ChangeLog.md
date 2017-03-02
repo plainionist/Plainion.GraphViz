@@ -1,3 +1,11 @@
+## 1.18.0 - unreleased
+
+- dynamic edge thickness handling improved
+- help system improved
+- "show this" and "show this and selected" algorithms added
+- cluster changes synced back to .dot files
+- fixed saving of masks with folded clusters
+
 ## 1.18.0 - 2016-08-13
 
 - several bug fixes

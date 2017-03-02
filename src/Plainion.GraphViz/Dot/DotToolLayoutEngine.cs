@@ -30,7 +30,7 @@ namespace Plainion.GraphViz.Dot
             writer.FastRenderingNodeCountLimit = FastRenderingNodeCountLimit;
             writer.IgnoreStyle = true;
 
-            var writtenNodesCount = writer.Write(presentation);
+            var writtenNodesCount = writer.Write(presentation.GetModule<ITransformationModule>().Graph, presentation.Picking, presentation);
 
             myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Auto && writtenNodesCount > FastRenderingNodeCountLimit
                 ? LayoutAlgorithm.Sfdp
