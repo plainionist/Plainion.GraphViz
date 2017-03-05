@@ -28,13 +28,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             HideNodeCommand = new DelegateCommand<Node>( n => new ShowHideNodes( Presentation, false ).Execute( GetRelevantNodes( n ) ) );
             ShowNodeCommand = new DelegateCommand<Node>( n => new ShowHideNodes( Presentation, true ).Execute( GetRelevantNodes( n ) ) );
 
-            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>( n => new ShowSiblings( Presentation ).Execute( n ) );
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>( n => new ShowHideIncomings( Presentation ).Execute( n, show: true ) );
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>( n => new ShowHideOutgoings( Presentation ).Execute( n, show: true ) );
+            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>( n => new ShowSiblings( Presentation ).Execute( n ) );
+            ShowNodeWithReachablesCommand = new DelegateCommand<Node>( n => new TransitiveHull( Presentation, true ).Execute( n ) );
 
             HideIncomingCommand = new DelegateCommand<Node>( n => new ShowHideIncomings( Presentation ).Execute( n, show: false ) );
             HideOutgoingCommand = new DelegateCommand<Node>( n => new ShowHideOutgoings( Presentation ).Execute( n, show: false ) );
-            RemoveUnreachableNodesCommand = new DelegateCommand<Node>( n => new RemoveUnreachableNodes( Presentation ).Execute( n ) );
+            RemoveUnreachableNodesCommand = new DelegateCommand<Node>( n => new TransitiveHull( Presentation, false ).Execute( n ) );
 
             CaptionToClipboardCommand = new DelegateCommand<Node>( n => Clipboard.SetText( Presentation.GetModule<CaptionModule>().Get( n.Id ).DisplayText ) );
             IdToClipboardCommand = new DelegateCommand<Node>( n => Clipboard.SetText( n.Id ) );
@@ -156,6 +157,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ICommand ShowNodeWithSiblingsCommand { get; private set; }
 
+        public ICommand ShowNodeWithReachablesCommand { get; private set; }
+        
         public ICommand ShowNodeWithIncomingCommand { get; private set; }
 
         public ICommand ShowNodeWithOutgoingCommand { get; private set; }

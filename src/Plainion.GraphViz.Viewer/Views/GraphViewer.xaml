@@ -36,9 +36,12 @@
                     <MenuItem Header="Incomings" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Outgoings" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Reachables" Command="{Binding ShowNodeWithReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                              ToolTip="Selects the transitive hull of the node"/>
                 </MenuItem>
                 <MenuItem Header="Remove (from visible)">
-                    <MenuItem Header="Unreachables" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Unreachables" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Removes all but the transitive hull of the node"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Clusters">
