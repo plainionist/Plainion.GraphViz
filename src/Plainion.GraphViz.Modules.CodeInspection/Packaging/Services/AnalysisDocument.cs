@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
+using System.Diagnostics;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {

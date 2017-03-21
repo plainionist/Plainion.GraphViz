@@ -262,24 +262,25 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 builder.TryAddCluster(cluster.Key, cluster.Value);
             }
 
+            var captionModule = presentation.GetPropertySetFor<Caption>();
+
             // add potentially empty clusters
             {
                 var spec = SpecUtils.Deserialize(Document.Text);
                 var emptyClusters = spec.Packages
                     .Where(p => PackagesToAnalyze == null || PackagesToAnalyze.Contains(p.Name))
                     .SelectMany(p => p.Clusters)
-                    .Select(c => c.Id)
-                    .Except(response.Clusters.Select(c => c.Key));
+                    .Where(cluster => !response.Clusters.Any(c => c.Key == cluster.Id));
 
                 foreach (var cluster in emptyClusters)
                 {
-                    builder.TryAddCluster(cluster, Enumerable.Empty<string>());
+                    builder.TryAddCluster(cluster.Id, Enumerable.Empty<string>());
+                    captionModule.Add(new Caption(cluster.Id, cluster.Name));
                 }
             }
 
             presentation.Graph = builder.Graph;
 
-            var captionModule = presentation.GetPropertySetFor<Caption>();
             foreach (var caption in response.Captions)
             {
                 captionModule.Add(new Caption(caption.Key, caption.Value));
