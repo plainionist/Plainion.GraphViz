@@ -96,6 +96,7 @@
                     </MenuItem.ItemTemplate>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Home" Command="{Binding HomeCommand}"/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>
         </r:GraphView.ContextMenus>

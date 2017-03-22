@@ -56,7 +56,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             FoldUnfoldAllClustersCommand = new DelegateCommand( () => new ChangeClusterFolding( Presentation ).FoldUnfoldAllClusters(), () => Presentation != null );
             AddVisibleNodesOutsideClustersToClusterCommand = new DelegateCommand<string>( c => new AddVisibleNodesOutsideClustersToCluster( Presentation ).Execute( c ), c => Presentation != null );
-            InvalidateLayoutCommand = new DelegateCommand( () => Presentation.InvalidateLayout(), () => Presentation != null );
+            HomeCommand = new DelegateCommand(() => Navigation.HomeZoomPan(), () => Presentation != null);
+            InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
             AddToClusterCommand = new DelegateCommand<string>( c => new ChangeClusterAssignment( Presentation ).Execute( t => t.AddToCluster( GraphItemForContextMenu.Id, c ) ) );
             AddWithSelectedToClusterCommand = new DelegateCommand<string>( c => new ChangeClusterAssignment( Presentation )
@@ -139,6 +140,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand RemoveNodesReachableFromMultipleClustersCommand { get; private set; }
 
+        public DelegateCommand HomeCommand { get; private set; }
+
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
         public ICommand HideNodeCommand { get; private set; }
@@ -191,6 +194,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 RemoveNodesReachableFromMultipleClustersCommand.RaiseCanExecuteChanged();
                 FoldUnfoldAllClustersCommand.RaiseCanExecuteChanged();
                 AddVisibleNodesOutsideClustersToClusterCommand.RaiseCanExecuteChanged();
+                HomeCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();
 
