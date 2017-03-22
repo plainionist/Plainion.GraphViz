@@ -1,3 +1,9 @@
+## 1.20.0 - 2017-03-22
+
+- CodeInspection: fixed handling of empty clusters
+- show "transitive hull"
+- "home zoom/pan" implemented
+
 ## 1.19.0 - 2017-03-02
 
 - dynamic edge thickness handling improved
