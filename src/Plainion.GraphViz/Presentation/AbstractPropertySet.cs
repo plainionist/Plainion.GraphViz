@@ -6,7 +6,7 @@ namespace Plainion.GraphViz.Presentation
 {
     public abstract class AbstractPropertySet : INotifyPropertyChanged
     {
-        protected AbstractPropertySet( string ownerId )
+        protected AbstractPropertySet(string ownerId)
         {
             OwnerId = ownerId;
         }
@@ -15,23 +15,23 @@ namespace Plainion.GraphViz.Presentation
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void SetProperty<T>( ref T member, T value, [CallerMemberName] string propertyName = null )
+        protected void SetProperty<T>(ref T member, T value, [CallerMemberName] string propertyName = null)
         {
-            if( object.ReferenceEquals( member, default( T ) ) && object.ReferenceEquals( value, default( T ) ) )
+            if (object.ReferenceEquals(member, default(T)) && object.ReferenceEquals(value, default(T)))
             {
                 return;
             }
 
-            if( !object.ReferenceEquals( member, default( T ) ) && member.Equals( value ) )
+            if (!object.ReferenceEquals(member, default(T)) && member.Equals(value))
             {
                 return;
             }
 
             member = value;
 
-            if( PropertyChanged != null )
+            if (PropertyChanged != null)
             {
-                PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

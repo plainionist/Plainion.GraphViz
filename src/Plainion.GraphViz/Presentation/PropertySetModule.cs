@@ -52,6 +52,10 @@ namespace Plainion.GraphViz.Presentation
         {
             OnAdding(item);
 
+            // we need to support override as we pre-fill the captions module for performance reasons
+            // see setter of the graph to GraphPresentation
+            myItems.Remove(item.OwnerId);
+
             myItems.Add(item.OwnerId, item);
 
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));

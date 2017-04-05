@@ -77,6 +77,23 @@ namespace Plainion.GraphViz.Presentation
 
                 // graph is mutable in order to support easy graph building -> protect against graph changes
                 myGraph = Objects.Clone(value);
+
+                // fill up the Captions module here directly to avoid performance issues by
+                // "on demand" adding which then fires "changed" events
+                var captions = GetPropertySetFor<Caption>();
+
+                foreach (var x in myGraph.Nodes)
+                {
+                    captions.Get(x.Id);
+                }
+                foreach (var x in myGraph.Edges)
+                {
+                    captions.Get(x.Id);
+                }
+                foreach (var x in myGraph.Clusters)
+                {
+                    captions.Get(x.Id);
+                }
             }
         }
 

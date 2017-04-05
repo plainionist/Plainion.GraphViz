@@ -52,12 +52,10 @@ namespace Plainion.GraphViz.Modules.Documents
         private void OnCaptionsChanged(object sender, EventArgs eventArgs)
         {
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            var renamedClusterIds = myCaptionsJournal.Entries
-                .Where(c => transformationModule.Graph.Clusters.Any(owner => owner.Id == c.OwnerId))
-                .Select(c => c.OwnerId)
-                .ToList();
+            var renamedClusters = myCaptionsJournal.Entries
+                .Where(c => transformationModule.Graph.Clusters.Any(owner => owner.Id == c.OwnerId));
 
-            if (renamedClusterIds.Count == 0)
+            if (!renamedClusters.Any())
             {
                 return;
             }
