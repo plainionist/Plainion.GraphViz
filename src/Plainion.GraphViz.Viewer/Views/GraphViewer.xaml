@@ -82,6 +82,7 @@
             </ContextMenu>
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
+                <MenuItem Header="Show top 5 most incomings" Command="{Binding ShowMostIncomingsCommand}"/>
                 <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
                 <Separator/>
                 <MenuItem Header="Remove nodes without edges" Command="{Binding RemoveNodesWithoutEdgesCommand}"/>

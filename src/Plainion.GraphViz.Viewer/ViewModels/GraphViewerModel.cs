@@ -48,8 +48,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>( c => new UnfoldAndHide( Presentation ).Execute( c, NodeType.Targets ), CanUnfold );
             UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>( c => new UnfoldAndHide( Presentation ).Execute( c, NodeType.Sources ), CanUnfold );
 
-            ShowCyclesCommand = new DelegateCommand( () => new ShowCycles( Presentation ).Execute(), () => Presentation != null );
-            ShowNodesOutsideClustersCommand = new DelegateCommand( () => new ShowNodesOutsideClusters( Presentation ).Execute(), () => Presentation != null );
+            ShowMostIncomingsCommand = new DelegateCommand(() => new ShowMostIncomings(Presentation).Execute(5), () => Presentation != null);
+            ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
+            ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
 
             RemoveNodesWithoutEdgesCommand = new DelegateCommand( () => new RemoveNodesWithoutEdges( Presentation ).Execute(), () => Presentation != null );
             RemoveNodesReachableFromMultipleClustersCommand = new DelegateCommand( () => new RemoveNodesReachableFromMultipleClusters( Presentation ).Execute(), () => Presentation != null );
@@ -131,6 +132,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         }
 
         public IGraphViewNavigation Navigation { get; set; }
+
+        public DelegateCommand ShowMostIncomingsCommand { get; private set; }
 
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
