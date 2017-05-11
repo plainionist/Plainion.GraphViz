@@ -132,6 +132,7 @@ namespace Plainion.GraphViz.Modules.Documents
                 }
 
                 var writer = new DotWriter(path);
+                writer.PrettyPrint = true;
                 writer.Write(graph, new NullGraphPicking(), p);
             }
 

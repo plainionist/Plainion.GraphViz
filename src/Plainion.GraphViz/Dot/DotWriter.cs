@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
@@ -20,6 +22,8 @@ namespace Plainion.GraphViz.Dot
         internal int? FastRenderingNodeCountLimit { get; set; }
 
         internal bool IgnoreStyle { get; set; }
+
+        public bool PrettyPrint { get; set; }
 
         // http://www.graphviz.org/Gallery/directed/cluster.html
         // returns written nodes
@@ -65,6 +69,7 @@ namespace Plainion.GraphViz.Dot
 
                     var relevantNodes = myGraph.Nodes
                         .Where(n => myPicking.Pick(n))
+                        .OrderByIf(n => n.Id, myOwner.PrettyPrint)
                         .ToList();
 
                     if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
@@ -80,6 +85,7 @@ namespace Plainion.GraphViz.Dot
                     {
                         var relevantClusterNodes = cluster.Nodes
                             .Where(relevantNodes.Contains)
+                            .OrderByIf(n => n.Id, myOwner.PrettyPrint)
                             .ToList();
 
                         if (relevantClusterNodes.Count == 0)
@@ -105,7 +111,9 @@ namespace Plainion.GraphViz.Dot
                         Write(node, "  ");
                     }
 
-                    var relevantEdges = myGraph.Edges.Where(e => myPicking.Pick(e));
+                    var relevantEdges = myGraph.Edges
+                        .Where(e => myPicking.Pick(e))
+                        .OrderByIf(e => e.Id, myOwner.PrettyPrint);
 
                     foreach (var edge in relevantEdges)
                     {
@@ -154,6 +162,14 @@ namespace Plainion.GraphViz.Dot
 
                 myWriter.WriteLine("]");
             }
+        }
+    }
+
+    internal static class OrderExtensions
+    {
+        public static IEnumerable<TSource> OrderByIf<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, bool doIt)
+        {
+            return doIt ? source.OrderBy(keySelector) : source;
         }
     }
 }

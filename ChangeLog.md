@@ -1,3 +1,8 @@
+## 1.21.0 - Unreleased
+
+- DotWriter sorts nodes and edges on demand for better diffing
+- fixed performance issue with syncing back to dot file
+
 ## 1.20.0 - 2017-03-22
 
 - CodeInspection: fixed handling of empty clusters
