@@ -1,4 +1,4 @@
-## 1.21.0 - Unreleased
+## 1.21.0 - 2017-05-15
 
 - DotWriter sorts nodes and edges on demand for better diffing
 - fixed performance issue with syncing back to dot file
