@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -34,6 +36,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 .Concat(GetConstructorTypes())
                 .Concat(GetCalledTypes())
                 .Distinct()
+                .Where(e => e != null)
                 .ToList();
 
             var elementTypes = edges
@@ -78,13 +81,35 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         private IEnumerable<Edge> GetFieldTypes()
         {
             return myType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                .Select(field => new Edge { Target = field.FieldType });
+                .Select(field => SafeCreateEdge(() => field.FieldType));
+        }
+
+        private Edge SafeCreateEdge(Func<Type> extractor)
+        {
+            try
+            {
+                return new Edge { Target = extractor() };
+            }
+            catch (FileNotFoundException ex)
+            {
+                FileNotFound(ex);
+                return null;
+            }
+        }
+
+        private void FileNotFound(FileNotFoundException ex)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("ERROR: failed to extract type from member.");
+            sb.AppendLine("  Type: " + myType.FullName);
+            sb.AppendLine("  Exception: " + ex.Message);
+            Console.WriteLine(sb.ToString());
         }
 
         private IEnumerable<Edge> GetPropertyTypes()
         {
             return myType.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-                .Select(property => new Edge { Target = property.PropertyType });
+                .Select(property => SafeCreateEdge(() => property.PropertyType));
         }
 
         private IEnumerable<Edge> GetMethodTypes()
@@ -95,7 +120,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         private IEnumerable<Edge> GetMethodTypes(MethodInfo method)
         {
-            IEnumerable<Edge> types = new[] { new Edge { Target = method.ReturnType } };
+            IEnumerable<Edge> types = new[] { SafeCreateEdge(() => method.ReturnType) };
 
             if (method.IsGenericMethod)
             {
@@ -107,8 +132,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         private IEnumerable<Edge> GetParameterTypes(MethodBase method)
         {
-            return method.GetParameters()
-                .Select(p => new Edge { Target = p.ParameterType });
+            try
+            {
+                return method.GetParameters()
+                    .Select(p => SafeCreateEdge(() => p.ParameterType));
+            }
+            catch (FileNotFoundException ex)
+            {
+                FileNotFound(ex);
+                return Enumerable.Empty<Edge>();
+            }
         }
 
         private IEnumerable<Edge> GetConstructorTypes()
@@ -120,8 +153,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
         //http://stackoverflow.com/questions/4184384/mono-cecil-typereference-to-type
         private IEnumerable<Edge> GetCalledTypes()
         {
-            if (myType.IsInterface || myType.IsNested || !myType.IsClass)
+            try
             {
+                if (myType.IsInterface || myType.IsNested || !myType.IsClass)
+                {
+                    return Enumerable.Empty<Edge>();
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                FileNotFound(ex);
                 return Enumerable.Empty<Edge>();
             }
 
@@ -155,39 +196,39 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                         yield return new Edge { Target = TryGetSystemType(typeRef) };
                     }
                 }
-                else if( instr.OpCode == OpCodes.Newobj )
+                else if (instr.OpCode == OpCodes.Newobj)
                 {
                     var methodRef = instr.Operand as MethodReference;
-                    if( methodRef != null )
+                    if (methodRef != null)
                     {
-                        yield return new Edge { Target = TryGetSystemType( methodRef.DeclaringType ) };
+                        yield return new Edge { Target = TryGetSystemType(methodRef.DeclaringType) };
                     }
                 }
-                else if( instr.OpCode == OpCodes.Newarr )
+                else if (instr.OpCode == OpCodes.Newarr)
                 {
                     var typeRef = instr.Operand as TypeReference;
-                    if( typeRef != null )
+                    if (typeRef != null)
                     {
-                        yield return new Edge { Target = TryGetSystemType( typeRef ) };
+                        yield return new Edge { Target = TryGetSystemType(typeRef) };
                     }
                 }
-                else if( instr.OpCode == OpCodes.Castclass )
+                else if (instr.OpCode == OpCodes.Castclass)
                 {
                     var typeRef = instr.Operand as TypeReference;
-                    if( typeRef != null )
+                    if (typeRef != null)
                     {
-                        yield return new Edge { Target = TryGetSystemType( typeRef ) };
+                        yield return new Edge { Target = TryGetSystemType(typeRef) };
                     }
                 }
-                else if( instr.OpCode == OpCodes.Isinst )
+                else if (instr.OpCode == OpCodes.Isinst)
                 {
                     var typeRef = instr.Operand as TypeReference;
-                    if( typeRef != null )
+                    if (typeRef != null)
                     {
-                        yield return new Edge { Target = TryGetSystemType( typeRef ) };
+                        yield return new Edge { Target = TryGetSystemType(typeRef) };
                     }
                 }
-                else if( instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli )
+                else if (instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli)
                 {
                     var site = instr.Operand as CallSite;
                     if (site != null)
