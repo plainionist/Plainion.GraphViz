@@ -1,3 +1,7 @@
+## 1.22.0 - 2017-07-22
+
+- show/hide transitive hull of selected nodes
+
 ## 1.21.0 - 2017-05-15
 
 - DotWriter sorts nodes and edges on demand for better diffing

@@ -22,27 +22,36 @@ namespace Plainion.GraphViz.Algorithms
             myShow = show;
         }
 
-        public void Execute( Node node )
+        public void Execute( IReadOnlyCollection<Node> nodes )
         {
-            var connectedNodes = GetReachableNodes( node );
+            var connectedNodes = nodes
+                .SelectMany(n => GetReachableNodes(n))
+                .Distinct();
 
             var mask = new NodeMask();
             mask.IsShowMask = myShow;
-            if( myShow )
+            if (myShow)
             {
-                mask.Set( connectedNodes );
+                mask.Set(connectedNodes);
             }
             else
             {
                 var transformationModule = myPresentation.GetModule<ITransformationModule>();
-                mask.Set( transformationModule.Graph.Nodes.Except( connectedNodes ) );
+                mask.Set(transformationModule.Graph.Nodes.Except(connectedNodes));
             }
 
-            var caption = myPresentation.GetPropertySetFor<Caption>().Get( node.Id );
-            mask.Label = "Transitive hull of " + caption.DisplayText;
+            if (nodes.Count == 1)
+            {
+                var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
+                mask.Label = "Transitive hull of " + caption.DisplayText;
+            }
+            else
+            {
+                mask.Label = "Transitive hull of multiple nodes";
+            }
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push( mask );
+            module.Push(mask);
         }
 
         private IEnumerable<Node> GetReachableNodes( Node node )
