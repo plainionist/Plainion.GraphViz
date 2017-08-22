@@ -19,7 +19,7 @@
             <i:InvokeCommandAction Command="{Binding ClosedCommand}"/>
         </i:EventTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
-            <pn:PopupFileDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
+            <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <DockPanel Background="#FDFDF5">

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Practices.Prism.Mvvm;
+using Prism.Mvvm;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
@@ -49,7 +49,7 @@ namespace Plainion.GraphViz.Presentation
 
             AddInternal(clusterId);
 
-            OnPropertyChanged(() => Clusters);
+            RaisePropertyChanged(nameof(Clusters));
         }
 
         private void AddInternal(string clusterId)
@@ -82,7 +82,7 @@ namespace Plainion.GraphViz.Presentation
                 AddInternal(cluster);
             }
 
-            OnPropertyChanged(() => Clusters);
+            RaisePropertyChanged(nameof(Clusters));
         }
 
         public void Remove(string clusterId)
@@ -91,7 +91,7 @@ namespace Plainion.GraphViz.Presentation
 
             if (removed)
             {
-                OnPropertyChanged(() => Clusters);
+                RaisePropertyChanged(nameof(Clusters));
             }
         }
 
@@ -111,7 +111,7 @@ namespace Plainion.GraphViz.Presentation
                 myFoldedClusters.Remove(cluster);
             }
 
-            OnPropertyChanged(() => Clusters);
+            RaisePropertyChanged(nameof(Clusters));
         }
 
         public void Toggle(string clusterId)

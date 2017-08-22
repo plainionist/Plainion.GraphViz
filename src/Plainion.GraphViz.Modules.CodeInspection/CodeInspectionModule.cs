@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Composition;
-using Microsoft.Practices.Prism.MefExtensions.Modularity;
-using Microsoft.Practices.Prism.Modularity;
-using Microsoft.Practices.Prism.Regions;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging;
+using Prism.Mef.Modularity;
+using Prism.Modularity;
+using Prism.Regions;
 
 namespace Plainion.GraphViz.Modules.CodeInspection
 {

@@ -8,8 +8,8 @@ using System.Windows.Input;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.PubSubEvents;
+using Prism.Commands;
+using Prism.Events;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
@@ -66,7 +66,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                     OnGraphVisibilityChanged(null, EventArgs.Empty);
                 }
 
-                OnPropertyChanged("IsEnabled");
+                RaisePropertyChanged(nameof(IsEnabled));
             }
         }
 
@@ -74,7 +74,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             // AddRange produces tons of notifications -> too expensive
             VisibleNodes = new ObservableCollection<NodeWithCaption>(GetVisibleNodes());
-            OnPropertyChanged(() => VisibleNodes);
+            RaisePropertyChanged(nameof(VisibleNodes));
         }
 
         public bool IsEnabled
@@ -111,7 +111,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                 }
 
                 mySelectedItem = value;
-                OnPropertyChanged("SelectedItem");
+                RaisePropertyChanged(nameof(SelectedItem));
             }
         }
     }

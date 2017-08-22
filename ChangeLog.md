@@ -1,6 +1,8 @@
 ## 2.0.0 - 2017-08-22
 
 - http://www.graphviz.org/ is bundled together with the release package of Plainion.GraphViz
+- updated to .NET 4.6.1
+- updated all dependencies to latest
 
 ## 1.22.0 - 2017-07-22
 

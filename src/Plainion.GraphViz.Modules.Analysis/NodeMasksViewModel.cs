@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
 

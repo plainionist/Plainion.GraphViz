@@ -1,5 +1,5 @@
 ﻿using Plainion.GraphViz.Model;
-using Microsoft.Practices.Prism.PubSubEvents;
+using Prism.Events;
 
 namespace Plainion.GraphViz.Infrastructure
 {

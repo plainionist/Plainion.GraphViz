@@ -38,22 +38,17 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Server.fs" />
-    <Content Include="packages.config" />
     <Content Include="app.config" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\..\packages\FSharp.Core.4.0.0.1\lib\net40\FSharp.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Markdig">
-      <HintPath>..\..\packages\Markdig.0.10.5\lib\net40\Markdig.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\Markdig.0.13.1\lib\net40\Markdig.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="mscorlib" />
     <Reference Include="Suave">
-      <HintPath>..\..\packages\Suave.2.0.3\lib\net40\Suave.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\Suave.2.2.1\lib\net40\Suave.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

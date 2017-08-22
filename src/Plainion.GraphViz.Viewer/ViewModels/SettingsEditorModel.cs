@@ -9,13 +9,13 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Configuration;
 using Plainion.GraphViz.Viewer.Services;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
-    [Export( typeof( SettingsEditorModel ) )]
+    [Export(typeof(SettingsEditorModel))]
     public class SettingsEditorModel : ViewModelBase, IInteractionRequestAware
     {
         private ConfigurationService myConfigService;
@@ -25,22 +25,22 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private ILabelConversionStep mySelectedConversionStep;
 
         [ImportingConstructor]
-        public SettingsEditorModel( ConfigurationService configService )
+        public SettingsEditorModel(ConfigurationService configService)
         {
             myConfigService = configService;
             myConfigService.ConfigChanged += myConfigService_ConfigChanged;
 
             // make a copy here in order to support cancel
-            ConversionSteps = new ObservableCollection<ILabelConversionStep>( Config.LabelConversion );
+            ConversionSteps = new ObservableCollection<ILabelConversionStep>(Config.LabelConversion);
             Labels = new ObservableCollection<LabelViewModel>();
 
             myAddConversionEnabled = false;
 
-            CancelCommand = new DelegateCommand( OnCancel );
-            OkCommand = new DelegateCommand( OnOk );
-            AddConversionCommand = new DelegateCommand( OnAddConversion, () => myAddConversionEnabled );
-            RemoveConversionStepCommand = new DelegateCommand( OnRemoveConversionStep );
-            MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>( OnMouseDown );
+            CancelCommand = new DelegateCommand(OnCancel);
+            OkCommand = new DelegateCommand(OnOk);
+            AddConversionCommand = new DelegateCommand(OnAddConversion, () => myAddConversionEnabled);
+            RemoveConversionStepCommand = new DelegateCommand(OnRemoveConversionStep);
+            MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
         }
 
         public ICommand MouseDownCommand
@@ -49,11 +49,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             private set;
         }
 
-        private void OnMouseDown( MouseButtonEventArgs args )
+        private void OnMouseDown(MouseButtonEventArgs args)
         {
-            if( args.ClickCount == 2 && SelectedConversionStep != null )
+            if (args.ClickCount == 2 && SelectedConversionStep != null)
             {
-                var selectedItem = ( RegexConversion )SelectedConversionStep;
+                var selectedItem = (RegexConversion)SelectedConversionStep;
 
                 MatchingText = selectedItem.Matching;
                 ReplacementText = selectedItem.Replacement;
@@ -77,10 +77,10 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             CommitTemporalLabels();
 
             MatchingText = null;
-            ClearErrors( "MatchingText" );
+            ClearErrors("MatchingText");
 
             ReplacementText = null;
-            ClearErrors( "ReplacementText" );
+            ClearErrors("ReplacementText");
         }
 
         public string MatchingText
@@ -88,7 +88,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             get { return myMatchingText; }
             set
             {
-                if( myMatchingText == value )
+                if (myMatchingText == value)
                 {
                     return;
                 }
@@ -99,21 +99,21 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 AddConversionCommand.RaiseCanExecuteChanged();
 
                 ClearErrors();
-                
+
                 try
                 {
-                    if( MatchingText.Length == 0 )
+                    if (MatchingText.Length == 0)
                     {
                         ResetTemporalLabels();
 
                         return;
                     }
 
-                    var regex = new Regex( myMatchingText, RegexOptions.IgnoreCase );
+                    var regex = new Regex(myMatchingText, RegexOptions.IgnoreCase);
 
-                    if( !Labels.Any( label => regex.IsMatch( label.Commited ) ) )
+                    if (!Labels.Any(label => regex.IsMatch(label.Commited)))
                     {
-                        SetError( ValidationFailure.Warning );
+                        SetError(ValidationFailure.Warning);
                         return;
                     }
 
@@ -121,11 +121,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 }
                 catch
                 {
-                    SetError( ValidationFailure.Error );
+                    SetError(ValidationFailure.Error);
                 }
                 finally
                 {
-                    OnPropertyChanged( "MatchingText" );
+                    RaisePropertyChanged(nameof(MatchingText));
                 }
             }
         }
@@ -135,7 +135,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             get { return myReplacementText ?? string.Empty; }
             set
             {
-                if( myReplacementText == value )
+                if (myReplacementText == value)
                 {
                     return;
                 }
@@ -152,10 +152,10 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 }
                 catch
                 {
-                    SetError( ValidationFailure.Error );
+                    SetError(ValidationFailure.Error);
                 }
 
-                OnPropertyChanged( "ReplacementText" );
+                RaisePropertyChanged(nameof(ReplacementText));
             }
         }
 
@@ -165,7 +165,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             convertion.Matching = MatchingText;
             convertion.Replacement = ReplacementText;
 
-            if( !convertion.IsInitialized )
+            if (!convertion.IsInitialized)
             {
                 return;
             }
@@ -173,18 +173,18 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             myAddConversionEnabled = true;
             AddConversionCommand.RaiseCanExecuteChanged();
 
-            ConvertTemporarily( convertion );
+            ConvertTemporarily(convertion);
         }
 
         public ILabelConversionStep SelectedConversionStep
         {
             get { return mySelectedConversionStep; }
-            set { SetProperty( ref mySelectedConversionStep, value ); }
+            set { SetProperty(ref mySelectedConversionStep, value); }
         }
 
         private void OnRemoveConversionStep()
         {
-            RemoveConversionStep( SelectedConversionStep );
+            RemoveConversionStep(SelectedConversionStep);
         }
 
         public ICommand CancelCommand
@@ -201,36 +201,36 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         private void OnCancel()
         {
-            ( ( IConfirmation )Notification ).Confirmed = false;
+            ((IConfirmation)Notification).Confirmed = false;
             FinishInteraction();
         }
 
         private void OnOk()
         {
             Config.LabelConversion.Clear();
-            Config.LabelConversion.AddRange( ConversionSteps );
+            Config.LabelConversion.AddRange(ConversionSteps);
             Config.Save();
 
-            if( Presentation != null )
+            if (Presentation != null)
             {
-                var converter = new GenericLabelConverter( Config.LabelConversion );
+                var converter = new GenericLabelConverter(Config.LabelConversion);
                 var captionModule = Presentation.GetPropertySetFor<Caption>();
-                foreach( var node in Presentation.Graph.Nodes )
+                foreach (var node in Presentation.Graph.Nodes)
                 {
-                    var caption = captionModule.Get( node.Id );
-                    caption.DisplayText = converter.Convert( caption.Label );
+                    var caption = captionModule.Get(node.Id);
+                    caption.DisplayText = converter.Convert(caption.Label);
                 }
             }
 
-            ( ( IConfirmation )Notification ).Confirmed = true;
+            ((IConfirmation)Notification).Confirmed = true;
             FinishInteraction();
         }
 
-        void myConfigService_ConfigChanged( object sender, EventArgs e )
+        void myConfigService_ConfigChanged(object sender, EventArgs e)
         {
-            OnPropertyChanged( "Config" );
-            ConversionSteps = new ObservableCollection<ILabelConversionStep>( Config.LabelConversion );
-            OnPropertyChanged( "ConversionSteps" );
+            RaisePropertyChanged(nameof(Config));
+            ConversionSteps = new ObservableCollection<ILabelConversionStep>(Config.LabelConversion);
+            RaisePropertyChanged(nameof(ConversionSteps));
         }
 
         public Config Config
@@ -265,9 +265,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             private set;
         }
 
-        public void RemoveConversionStep( ILabelConversionStep step )
+        public void RemoveConversionStep(ILabelConversionStep step)
         {
-            ConversionSteps.Remove( step );
+            ConversionSteps.Remove(step);
 
             ConvertAllLabels();
 
@@ -276,32 +276,32 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         private void ConvertAllLabels()
         {
-            var converter = new GenericLabelConverter( ConversionSteps );
+            var converter = new GenericLabelConverter(ConversionSteps);
 
-            foreach( var label in Labels )
+            foreach (var label in Labels)
             {
-                label.Commited = converter.Convert( label.Original );
+                label.Commited = converter.Convert(label.Original);
             }
         }
 
-        internal void ConvertTemporarily( ILabelConversionStep convertion )
+        internal void ConvertTemporarily(ILabelConversionStep convertion)
         {
             TemporalConversionStep = convertion;
 
             var steps = new Queue<ILabelConversionStep>();
-            steps.Enqueue( TemporalConversionStep );
+            steps.Enqueue(TemporalConversionStep);
 
-            var converter = new GenericLabelConverter( steps );
+            var converter = new GenericLabelConverter(steps);
 
-            foreach( var label in Labels )
+            foreach (var label in Labels)
             {
-                label.Temporal = converter.Convert( label.Commited );
+                label.Temporal = converter.Convert(label.Commited);
             }
         }
 
         internal void ResetTemporalLabels()
         {
-            foreach( var label in Labels )
+            foreach (var label in Labels)
             {
                 label.Temporal = label.Commited;
             }
@@ -309,19 +309,19 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         internal void CommitTemporalLabels()
         {
-            ConversionSteps.Add( TemporalConversionStep );
+            ConversionSteps.Add(TemporalConversionStep);
 
-            foreach( var label in Labels )
+            foreach (var label in Labels)
             {
                 label.Commited = label.Temporal;
             }
         }
 
-        protected override void OnModelPropertyChanged( string propertyName )
+        protected override void OnModelPropertyChanged(string propertyName)
         {
-            if( propertyName == "Presentation" )
+            if (propertyName == "Presentation")
             {
-                if( Presentation == Model.Presentation )
+                if (Presentation == Model.Presentation)
                 {
                     return;
                 }
@@ -330,17 +330,17 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
                 Labels.Clear();
 
-                var converter = new GenericLabelConverter( ConversionSteps );
+                var converter = new GenericLabelConverter(ConversionSteps);
                 var captionModule = Presentation.GetPropertySetFor<Caption>();
-                foreach( var node in Presentation.Graph.Nodes )
+                foreach (var node in Presentation.Graph.Nodes)
                 {
-                    var label = new LabelViewModel( captionModule.Get( node.Id ).Label );
-                    label.Commited = converter.Convert( label.Original );
+                    var label = new LabelViewModel(captionModule.Get(node.Id).Label);
+                    label.Commited = converter.Convert(label.Original);
 
-                    Labels.Add( label );
+                    Labels.Add(label);
                 }
 
-                OnPropertyChanged( "Labels" );
+                RaisePropertyChanged(nameof(Labels));
             }
         }
 

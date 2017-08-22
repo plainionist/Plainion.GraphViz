@@ -6,8 +6,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Infrastructure.Services;
@@ -129,7 +129,7 @@ namespace Plainion.GraphViz.Viewer
 
         private void OnStatusMessagesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged("StatusBarVisibility");
+            RaisePropertyChanged(nameof(StatusBarVisibility));
         }
 
         public bool IsEnabled
@@ -163,7 +163,7 @@ namespace Plainion.GraphViz.Viewer
                 var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();
                 PropertyBinding.Bind(() => LayoutAlgorithm, () => graphLayoutModule.Algorithm);
 
-                OnPropertyChanged(() => IsEnabled);
+                RaisePropertyChanged(nameof(IsEnabled));
             }
         }
 

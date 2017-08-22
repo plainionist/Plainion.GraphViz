@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Microsoft.Practices.Prism.Mvvm;
+using Prism.Mvvm;
 using Plainion.GraphViz.Presentation;
 using Plainion.Windows.Controls.Tree;
 
@@ -36,7 +36,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                 if (SetProperty(ref myCaption, value))
                 {
                     myPresentation.GetPropertySetFor<Caption>().Get(Id).DisplayText = myCaption;
-                    OnPropertyChanged(() => DisplayText);
+                    RaisePropertyChanged(nameof(DisplayText));
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             {
                 if (SetProperty(ref myShowId, value))
                 {
-                    OnPropertyChanged(() => DisplayText);
+                    RaisePropertyChanged(nameof(DisplayText));
                 }
             }
         }

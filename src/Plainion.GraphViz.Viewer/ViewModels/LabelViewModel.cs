@@ -1,4 +1,4 @@
-﻿using Microsoft.Practices.Prism.Mvvm;
+﻿using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
@@ -7,7 +7,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private string myCommited;
         private string myTemporal;
 
-        public LabelViewModel( string original )
+        public LabelViewModel(string original)
         {
             Original = original;
 
@@ -25,11 +25,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
             set
             {
-                if( myCommited != value )
+                if (myCommited != value)
                 {
                     myCommited = value;
 
-                    OnPropertyChanged( "Commited" );
+                    RaisePropertyChanged(nameof(Commited));
                 }
 
                 Temporal = value;
@@ -44,14 +44,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
             set
             {
-                if( myTemporal == value )
+                if (myTemporal == value)
                 {
                     return;
                 }
 
                 myTemporal = value;
 
-                OnPropertyChanged( "Temporal" );
+                RaisePropertyChanged(nameof(Temporal));
             }
         }
     }

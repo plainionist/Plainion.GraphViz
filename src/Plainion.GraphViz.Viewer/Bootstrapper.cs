@@ -2,10 +2,10 @@
 using System.IO;
 using System.Windows;
 using Plainion.GraphViz.Infrastructure.ViewModel;
-using Microsoft.Practices.Prism.Interactivity;
-using Microsoft.Practices.Prism.MefExtensions;
-using Microsoft.Practices.Prism.Regions;
+using Prism.Interactivity;
+using Prism.Regions;
 using Plainion.Prism.Interactivity;
+using Prism.Mef;
 
 namespace Plainion.GraphViz.Viewer
 {
@@ -43,7 +43,7 @@ namespace Plainion.GraphViz.Viewer
             }
         }
 
-        protected override Microsoft.Practices.Prism.Regions.RegionAdapterMappings ConfigureRegionAdapterMappings()
+        protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
         {
             var mappings = base.ConfigureRegionAdapterMappings();
             mappings.RegisterMapping( typeof( PopupWindowAction ), Container.GetExportedValue<PopupWindowActionRegionAdapter>() );

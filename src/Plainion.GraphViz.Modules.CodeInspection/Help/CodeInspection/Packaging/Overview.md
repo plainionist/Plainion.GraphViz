@@ -40,7 +40,7 @@ entire package use:
             <Include Pattern="*"/>
         </Cluster>
     </Package.Clusters>
-    <Include Pattern="Microsoft.Practices.Prism.*.dll" />
+    <Include Pattern="Prism.*.dll" />
 </Package>
 ```
 

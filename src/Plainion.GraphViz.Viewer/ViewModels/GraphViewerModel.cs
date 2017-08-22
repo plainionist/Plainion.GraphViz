@@ -5,14 +5,14 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Microsoft.Practices.Prism.PubSubEvents;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
+using Prism.Events;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
@@ -187,7 +187,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         protected override void OnModelPropertyChanged(string propertyName)
         {
-            OnPropertyChanged(propertyName);
+            RaisePropertyChanged(propertyName);
 
             if (propertyName == "Presentation")
             {

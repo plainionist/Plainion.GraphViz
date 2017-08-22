@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Input;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Mvvm;
+using Prism.Commands;
+using Prism.Mvvm;
 using Plainion.Collections;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Infrastructure.ViewModel;
@@ -405,7 +405,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                     myPreviewNodes.Filter = FilterPreview;
                     myPreviewNodes.SortDescriptions.Add(new SortDescription("DisplayText", ListSortDirection.Ascending));
 
-                    OnPropertyChanged("PreviewNodes");
+                    RaisePropertyChanged(nameof(PreviewNodes));
                 }
                 return myPreviewNodes;
             }
