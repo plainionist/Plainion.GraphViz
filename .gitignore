@@ -40,3 +40,4 @@
 /packages/FSharp.Core.4.0.0.1
 /packages/Markdig.0.10.5
 /packages/Suave.2.0.3
+*.suo

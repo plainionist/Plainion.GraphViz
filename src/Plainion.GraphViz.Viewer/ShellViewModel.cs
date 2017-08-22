@@ -19,7 +19,7 @@ using Plainion.Windows.Interactivity.DragDrop;
 
 namespace Plainion.GraphViz.Viewer
 {
-    [Export( typeof( ShellViewModel ) )]
+    [Export(typeof(ShellViewModel))]
     public class ShellViewModel : ViewModelBase, IDropable
     {
         private IGraphPresentation myPresentation;
@@ -28,7 +28,7 @@ namespace Plainion.GraphViz.Viewer
         private LayoutAlgorithm myLayoutAlgorithm;
 
         [ImportingConstructor]
-        public ShellViewModel( IStatusMessageService statusMessageService, ConfigurationService configService )
+        public ShellViewModel(IStatusMessageService statusMessageService, ConfigurationService configService)
         {
             myStatusMessageService = statusMessageService;
             myStatusMessageService.Messages.CollectionChanged += OnStatusMessagesChanged;
@@ -36,37 +36,42 @@ namespace Plainion.GraphViz.Viewer
             myConfigurationService = configService;
 
             NodeMasksEditorRequest = new InteractionRequest<INotification>();
-            OpenFilterEditor = new DelegateCommand( OnOpenFilterEditor );
+            OpenFilterEditor = new DelegateCommand(OnOpenFilterEditor);
 
             ClusterEditorRequest = new InteractionRequest<INotification>();
-            OpenClusterEditor = new DelegateCommand( OnOpenClusterEditor );
+            OpenClusterEditor = new DelegateCommand(OnOpenClusterEditor);
 
             SettingsEditorRequest = new InteractionRequest<IConfirmation>();
-            OpenSettingsEditor = new DelegateCommand( OnOpenSettingsEditor );
+            OpenSettingsEditor = new DelegateCommand(OnOpenSettingsEditor);
 
             ShowStatusMessagesRequest = new InteractionRequest<INotification>();
-            ShowStatusMessagesCommand = new DelegateCommand( ShowStatusMessages );
+            ShowStatusMessagesCommand = new DelegateCommand(ShowStatusMessages);
 
             myConfigurationService.ConfigChanged += OnConfigChanged;
         }
 
-        [Import( AllowDefault = true )]
+        [Import(AllowDefault = true)]
         public IDocumentLoader DocumentLoader { get; set; }
 
-        void OnConfigChanged( object sender, EventArgs e )
+        private void OnConfigChanged(object sender, EventArgs e)
         {
-            if( Directory.Exists( myConfigurationService.Config.DotToolsHome ) )
+            if (string.IsNullOrEmpty(myConfigurationService.Config.DotToolsHome) || !File.Exists(Path.Combine(myConfigurationService.Config.DotToolsHome, "dot.exe")))
             {
-                Model.LayoutEngine = new DotToolLayoutEngine( new DotToDotPlainConverter( myConfigurationService.Config.DotToolsHome ) );
+                myConfigurationService.Config.DotToolsHome = Path.GetDirectoryName(GetType().Assembly.Location);
+            }
+
+            if (File.Exists(Path.Combine(myConfigurationService.Config.DotToolsHome, "dot.exe")))
+            {
+                Model.LayoutEngine = new DotToolLayoutEngine(new DotToDotPlainConverter(myConfigurationService.Config.DotToolsHome));
             }
             else
             {
                 // http://stackoverflow.com/questions/13026826/execute-command-after-view-is-loaded-wpf-mvvm
-                Application.Current.Dispatcher.BeginInvoke( DispatcherPriority.ApplicationIdle, new Action( () =>
-                {
-                    // DotToolHome not set -> open settings editor
-                    OpenSettingsEditor.Execute( null );
-                } ) );
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
+              {
+                  // DotToolHome not set -> open settings editor
+                  OpenSettingsEditor.Execute(null);
+              }));
             }
         }
 
@@ -75,13 +80,13 @@ namespace Plainion.GraphViz.Viewer
             var notification = new Confirmation();
             notification.Title = "Settings";
 
-            SettingsEditorRequest.Raise( notification, c =>
-                {
-                    if( c.Confirmed && myPresentation != null )
-                    {
-                        myPresentation.InvalidateLayout();
-                    }
-                } );
+            SettingsEditorRequest.Raise(notification, c =>
+               {
+                   if (c.Confirmed && myPresentation != null)
+                   {
+                       myPresentation.InvalidateLayout();
+                   }
+               });
         }
 
         public ICommand OpenFilterEditor { get; private set; }
@@ -91,7 +96,7 @@ namespace Plainion.GraphViz.Viewer
             var notification = new Notification();
             notification.Title = "Filters";
 
-            NodeMasksEditorRequest.Raise( notification, c => { } );
+            NodeMasksEditorRequest.Raise(notification, c => { });
         }
 
         public InteractionRequest<INotification> NodeMasksEditorRequest { get; private set; }
@@ -103,7 +108,7 @@ namespace Plainion.GraphViz.Viewer
             var notification = new Notification();
             notification.Title = "Clusters";
 
-            ClusterEditorRequest.Raise( notification, c => { } );
+            ClusterEditorRequest.Raise(notification, c => { });
         }
 
         public InteractionRequest<INotification> ClusterEditorRequest { get; private set; }
@@ -119,12 +124,12 @@ namespace Plainion.GraphViz.Viewer
             var notification = new Notification();
             notification.Title = "Status messages";
 
-            ShowStatusMessagesRequest.Raise( notification, n => { } );
+            ShowStatusMessagesRequest.Raise(notification, n => { });
         }
 
-        private void OnStatusMessagesChanged( object sender, NotifyCollectionChangedEventArgs e )
+        private void OnStatusMessagesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged( "StatusBarVisibility" );
+            OnPropertyChanged("StatusBarVisibility");
         }
 
         public bool IsEnabled
@@ -132,15 +137,15 @@ namespace Plainion.GraphViz.Viewer
             get { return myPresentation != null; }
         }
 
-        protected override void OnModelPropertyChanged( string propertyName )
+        protected override void OnModelPropertyChanged(string propertyName)
         {
-            if( propertyName == "Model" )
+            if (propertyName == "Model")
             {
-                OnConfigChanged( this, EventArgs.Empty );
+                OnConfigChanged(this, EventArgs.Empty);
             }
-            else if( propertyName == "Presentation" )
+            else if (propertyName == "Presentation")
             {
-                if( myPresentation == Model.Presentation )
+                if (myPresentation == Model.Presentation)
                 {
                     return;
                 }
@@ -149,16 +154,16 @@ namespace Plainion.GraphViz.Viewer
 
                 myPresentation.GetModule<INodeMaskModule>().AutoHideAllNodesForShowMasks = true;
 
-                if( myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit )
+                if (myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit)
                 {
-                    new ChangeClusterFolding( myPresentation )
+                    new ChangeClusterFolding(myPresentation)
                         .FoldUnfoldAllClusters();
                 }
 
                 var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();
-                PropertyBinding.Bind( () => LayoutAlgorithm, () => graphLayoutModule.Algorithm );
+                PropertyBinding.Bind(() => LayoutAlgorithm, () => graphLayoutModule.Algorithm);
 
-                OnPropertyChanged( () => IsEnabled );
+                OnPropertyChanged(() => IsEnabled);
             }
         }
 
@@ -174,14 +179,14 @@ namespace Plainion.GraphViz.Viewer
             get { return DataFormats.FileDrop; }
         }
 
-        bool IDropable.IsDropAllowed( object data, DropLocation location )
+        bool IDropable.IsDropAllowed(object data, DropLocation location)
         {
-            return DocumentLoader != null && DocumentLoader.CanLoad( ( ( string[] )data ).First() );
+            return DocumentLoader != null && DocumentLoader.CanLoad(((string[])data).First());
         }
 
-        void IDropable.Drop( object data, DropLocation location )
+        void IDropable.Drop(object data, DropLocation location)
         {
-            DocumentLoader.Load( ( ( string[] )data ).First() );
+            DocumentLoader.Load(((string[])data).First());
         }
 
         public LayoutAlgorithm LayoutAlgorithm
@@ -189,7 +194,7 @@ namespace Plainion.GraphViz.Viewer
             get { return myLayoutAlgorithm; }
             set
             {
-                if( SetProperty( ref myLayoutAlgorithm, value ) )
+                if (SetProperty(ref myLayoutAlgorithm, value))
                 {
                     myPresentation.InvalidateLayout();
                 }

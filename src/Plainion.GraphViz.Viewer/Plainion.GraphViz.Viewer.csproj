@@ -187,4 +187,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+        <GraphViz Include="..\..\Extern\GraphViz\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(GraphViz)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

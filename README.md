@@ -8,10 +8,8 @@ allowing to show, hide and fold any part of the graph.
 
 ## Installation
 
-- download [latest release](https://github.com/plainionist/Plainion.GraphViz/releases) and unpack it anywhere
-- download [GraphViz rendering tools](http://www.graphviz.org/) and unpack anywhere
-- on first startup of Plainion.GraphViz.Viewer the settings dialog will open, asking for the 
-  home of the "GraphViz rendering tools" from previous step
+- download [latest release](https://github.com/plainionist/Plainion.GraphViz/releases) and unpack it somewhere
+- start the Plainion.GraphViz.Viewer.exe
 
 ## Usage
 
