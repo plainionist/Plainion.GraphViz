@@ -42,6 +42,9 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Core">
+      <HintPath>..\..\packages\FSharp.Core.4.0.0.1\lib\net40\FSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Markdig">
       <HintPath>..\..\packages\Markdig.0.13.1\lib\net40\Markdig.dll</HintPath>
     </Reference>

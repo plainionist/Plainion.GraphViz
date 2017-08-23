@@ -10,7 +10,7 @@ using System.Windows.Interop;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Visuals;
-using Plainion.Prism.Interactivity.InteractionRequest;
+using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz
 {
