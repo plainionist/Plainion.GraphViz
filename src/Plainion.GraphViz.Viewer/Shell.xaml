@@ -13,7 +13,7 @@
         Title="Plainion GraphViz Viewer" MinWidth="640" MinHeight="480" Height="768" Width="1024" WindowStartupLocation="CenterScreen" Background="#FDFDF5">
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding NodeMasksEditorRequest, Mode=OneWay}">
-            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.NodeMasksEditor}">
+            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.NodeMasksEditor}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
                         <Setter Property="Width" Value="400"/>
@@ -23,7 +23,7 @@
             </pn:PopupViewAction>
         </prism:InteractionRequestTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding ClusterEditorRequest, Mode=OneWay}">
-            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.ClusterEditor}">
+            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.ClusterEditor}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
                         <Setter Property="Width" Value="1000"/>

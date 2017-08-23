@@ -12,7 +12,7 @@
              Command="{Binding OpenPackagingGraphBuilderCommand}">
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding PackagingGraphBuilderRequest, Mode=OneWay}">
-            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.PackagingGraphBuilder}">
+            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.PackagingGraphBuilder}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
                         <Setter Property="Width" Value="800"/>
