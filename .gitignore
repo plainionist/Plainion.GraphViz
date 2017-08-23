@@ -12,7 +12,7 @@
 /packages/AvalonEdit.*
 /packages/Akka.*
 /packages/Newtonsoft.Json.*
-/packages/Google.ProtocolBuffers.*
+/packages/Google.*
 /packages/Helios.*
 /TestResult.xml
 /Plainion.GraphViz.gc.ssmosett
@@ -21,4 +21,7 @@
 /packages/Markdig.*
 /packages/Suave.*
 *.suo
-/packages/System.Collections.Immutable.*
+/packages/System.*
+/packages/Microsoft.*
+/packages/DotNetty.*
+/packages/NETStandard.Library.*
