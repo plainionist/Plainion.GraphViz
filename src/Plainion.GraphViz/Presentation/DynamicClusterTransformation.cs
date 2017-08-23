@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Prism.Mvvm;
 using Plainion.GraphViz.Model;
+using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Presentation
 {
@@ -33,27 +33,27 @@ namespace Plainion.GraphViz.Presentation
         {
             myClusterVisibility[clusterId] = true;
 
-            RaisePropertyChanged(nameof(ClusterVisibility));
+            OnPropertyChanged(nameof(ClusterVisibility));
         }
 
         public void HideCluster(string clusterId)
         {
             myClusterVisibility[clusterId] = false;
 
-            RaisePropertyChanged(nameof(ClusterVisibility));
+            OnPropertyChanged(nameof(ClusterVisibility));
         }
 
         public void ResetClusterVisibility(string clusterId)
         {
             myClusterVisibility.Remove(clusterId);
 
-            RaisePropertyChanged(nameof(ClusterVisibility));
+            OnPropertyChanged(nameof(ClusterVisibility));
         }
 
         public void AddToCluster(string nodeId, string clusterId)
         {
             myNodeToClusterMapping[nodeId] = clusterId;
-            RaisePropertyChanged(nameof(NodeToClusterMapping));
+            OnPropertyChanged(nameof(NodeToClusterMapping));
         }
 
         public void AddToCluster(IReadOnlyCollection<string> nodeIds, string clusterId)
@@ -65,7 +65,7 @@ namespace Plainion.GraphViz.Presentation
                 myNodeToClusterMapping[nodeId] = clusterId;
             }
 
-            RaisePropertyChanged(nameof(NodeToClusterMapping));
+            OnPropertyChanged(nameof(NodeToClusterMapping));
         }
 
         public void RemoveFromClusters(params string[] nodeIds)
@@ -75,7 +75,7 @@ namespace Plainion.GraphViz.Presentation
                 myNodeToClusterMapping[nodeId] = null;
             }
 
-            RaisePropertyChanged(nameof(NodeToClusterMapping));
+            OnPropertyChanged(nameof(NodeToClusterMapping));
         }
 
         public IGraph Transform(IGraph graph)
