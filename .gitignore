@@ -21,3 +21,4 @@
 /packages/Markdig.*
 /packages/Suave.*
 *.suo
+/packages/System.Collections.Immutable.*

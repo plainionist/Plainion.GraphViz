@@ -1,3 +1,9 @@
+## 2.1.0 - 2017-08-23
+
+- downgreaded to .NET 4.5.1 to avoid downloading full .net FW due to Fsharp.Core
+- updated all dependencies to latest
+- removed signing of assemblies
+
 ## 2.0.0 - 2017-08-22
 
 - http://www.graphviz.org/ is bundled together with the release package of Plainion.GraphViz
