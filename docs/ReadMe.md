@@ -4,7 +4,7 @@ Plainion.GraphViz is a browser for complex and huge graphs.
 It makes it easy to dive into any kind of graph from all different kind of sources by interactively 
 allowing to show, hide and fold any part of the graph.
 
-![](docs/Screenshots/Overview.png)
+![](Screenshots/Overview.png)
 
 ## Installation
 
@@ -19,8 +19,8 @@ Once a graph was imported (see below)
 - use mouse wheel and right mouse button drag for zoom 
 - use left mouse button for pan 
 - use context menu on nodes, edges and clusters to morph the graph into any shape 
-- use ![](docs/Screenshots/Filter.png) to filter the graph based on regex
-- use ![](docs/Screenshots/Clusters.png) to define clusters with Drag&Drop
+- use ![](Screenshots/Filter.png) to filter the graph based on regex
+- use ![](Screenshots/Clusters.png) to define clusters with Drag&Drop
 
 ### Importing graphs from documents
 
@@ -31,7 +31,7 @@ The following formats are supported:
 - DGML
 - DOT
 
-Try out the [samples](docs/Viewer.Samples/).
+Try out the [samples](Viewer.Samples/).
 
 If the document gets modified while loaded into Plainion.GraphViz the graph will automatically updated.
 
@@ -42,11 +42,11 @@ The following tools are supported:
 
 - Generate graphs from inheritance hierarchies (.Net only)
 - Generate graphs from software packages or sub-systems (.Net only)
-  (see [Packaging Sample](docs/Viewer.Samples/Packaging.xaml))
+  (see [Packaging Sample](Viewer.Samples/Packaging.xaml))
 
 Which kind of galaxy does your code form?
 
-![](docs/Screenshots/Galaxy.1.png)
+![](Screenshots/Galaxy.1.png)
 
-![](docs/Screenshots/Galaxy.2.png)
+![](Screenshots/Galaxy.2.png)
 
