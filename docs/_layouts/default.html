@@ -38,7 +38,7 @@
                 {% for p in navigation_pages %}
                 {% if p.navigation_weight %}
                 <div>
-                    <a href="{{ site.url }}{{ p.url }}" {% if p.url == page.url %} class="active" {% endif %}>
+                    <a href="{{ '/' | absolute_url }}{{ p.url }}" {% if p.url == page.url %} class="active" {% endif %}>
                         {{ p.title }}
                     </a>
                 </div>
