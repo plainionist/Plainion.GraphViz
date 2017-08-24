@@ -1,4 +1,5 @@
 ---
+title: Contributing &amp; Extending
 navigation_weight: 1
 ---
 
