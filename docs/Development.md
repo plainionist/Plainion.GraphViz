@@ -20,5 +20,6 @@ to see how to integrate plugins into Plainion.GraphViz. Inside the custom plugin
 As some dependencies of this project already reference .NET Core 2.0 assemblies you need latest version of VS 2017 and .Net Core 2.0 SDK installed 
 if you want to work with the code of this project.
 
-(see also https://blogs.msdn.microsoft.com/dotnet/2017/08/14/announcing-net-core-2-0/)
+See also [Announcing .Net Core 2.0](https://blogs.msdn.microsoft.com/dotnet/2017/08/14/announcing-net-core-2-0/)
+
 

@@ -15,7 +15,7 @@
 /packages/Google.*
 /packages/Helios.*
 /TestResult.xml
-/Plainion.GraphViz.gc.ssmosett
+/Plainion.GraphViz.gc.*
 /build/.fake
 /packages/FSharp.Core.*
 /packages/Markdig.*
