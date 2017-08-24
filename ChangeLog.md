@@ -1,7 +1,8 @@
-## 2.1.0 - 2017-08-23
+## 2.1.0 - 2017-08-24
 
 - updated all dependencies to latest
 - removed signing of assemblies
+- removed prism dependency from graphviz lib
 
 ## 2.0.0 - 2017-08-22
 
