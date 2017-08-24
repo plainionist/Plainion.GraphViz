@@ -1,8 +1,7 @@
 
 Plainion.GraphViz is a browser for complex and huge graphs. 
 
-It makes it easy to dive into any kind of graph from all different kind of sources by interactively 
-allowing to show, hide and fold any part of the graph.
+It makes it easy to dive into any kind of graph from various sources by interactively allowing to show, hide and fold any part of the graph.
 
 ![](Screenshots/Overview.png)
 
