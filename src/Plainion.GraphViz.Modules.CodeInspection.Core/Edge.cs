@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
-    class Edge
+    public class Edge
     {
         public Type Source { get; set; }
 

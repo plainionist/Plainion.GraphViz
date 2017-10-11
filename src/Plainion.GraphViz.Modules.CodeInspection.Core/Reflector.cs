@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,10 +7,10 @@ using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
     // http://stackoverflow.com/questions/24680054/how-to-get-the-list-of-methods-called-from-a-method-using-reflection-in-c-sharp
-    class Reflector
+    public class Reflector
     {
         private readonly AssemblyLoader myLoader;
         private readonly Type myType;
@@ -26,7 +25,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             myFullName = myType.FullName.Replace("\\,", ",");
         }
 
-        internal IEnumerable<Edge> GetUsedTypes()
+        public IEnumerable<Edge> GetUsedTypes()
         {
             IEnumerable<Edge> edges = GetBaseTypes()
                 .Concat(GetInterfaces())

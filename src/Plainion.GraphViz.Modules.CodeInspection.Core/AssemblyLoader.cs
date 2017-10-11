@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using Mono.Cecil;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
-    class AssemblyLoader
+    public class AssemblyLoader
     {
         private readonly List<Assembly> myAssemblies = new List<Assembly>();
         private Dictionary<string, AssemblyDefinition> myMonoCache = new Dictionary<string, AssemblyDefinition>();
@@ -17,7 +17,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             get { return mySkippedAssemblies; }
         }
 
-        internal Assembly Load(string path)
+        public Assembly Load(string path)
         {
             try
             {

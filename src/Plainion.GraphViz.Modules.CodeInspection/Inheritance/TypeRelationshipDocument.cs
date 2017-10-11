@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework;
 using Plainion.GraphViz.Presentation;
 

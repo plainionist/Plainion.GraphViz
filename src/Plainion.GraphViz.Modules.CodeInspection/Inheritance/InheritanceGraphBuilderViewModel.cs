@@ -17,6 +17,7 @@ using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
+using Plainion.GraphViz.Modules.CodeInspection.Core;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {

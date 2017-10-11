@@ -30,13 +30,17 @@
     <Compile Include="TestData\Contructor.cs" />
     <Compile Include="TestData\TypeOf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Packaging\Services\ReflectorTests.cs" />
+    <Compile Include="ReflectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj">
+      <Project>{eb61222b-b3d5-4901-a42d-7386e4ae08d6}</Project>
+      <Name>Plainion.GraphViz.Modules.CodeInspection.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj">
       <Project>{21cc39c6-6535-4f17-aba3-82af9f49fe0c}</Project>
       <Name>Plainion.GraphViz.Modules.CodeInspection</Name>
