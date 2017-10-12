@@ -43,14 +43,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         public IReadOnlyDictionary<string, string> EdgeStyles { get { return myEdgeStyles; } }
 
-        internal void Add( Edge edge )
+        internal void Add( Reference edge )
         {
-            myEdges.Add( Tuple.Create( edge.Source.FullName, edge.Target.FullName ) );
+            myEdges.Add( Tuple.Create( edge.From.FullName, edge.To.FullName ) );
         }
 
-        internal void AddEdgeColor( Edge edge, string color )
+        internal void AddEdgeColor( Reference edge, string color )
         {
-            var edgeId = Model.Edge.CreateId( edge.Source.FullName, edge.Target.FullName );
+            var edgeId = Model.Edge.CreateId( edge.From.FullName, edge.To.FullName );
             if( !myEdgeStyles.ContainsKey( edgeId ) )
             {
                 myEdgeStyles.Add( edgeId, color );

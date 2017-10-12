@@ -19,7 +19,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             myGraphBuilder = new RelaxedGraphBuilder();
             myDescriptors = new Dictionary<string, TypeDescriptor>();
             FailedItems = new List<FailedItem>();
-            EdgeTypes = new Dictionary<string, EdgeType>();
+            EdgeTypes = new Dictionary<string, ReferenceType>();
         }
 
         public IList<FailedItem> FailedItems { get; private set; }
@@ -59,6 +59,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             myGraphBuilder.TryAddNode(node.Id);
         }
 
-        public IDictionary<string, EdgeType> EdgeTypes { get; private set; }
+        public IDictionary<string, ReferenceType> EdgeTypes { get; private set; }
     }
 }

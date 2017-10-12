@@ -12,13 +12,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
     {
         private readonly RelaxedGraphBuilder myBuilder;
         private readonly IDictionary<string, TypeDescriptor> myIdToTypeMap;
-        private readonly IDictionary<string, EdgeType> myEdgeTypes;
+        private readonly IDictionary<string, ReferenceType> myEdgeTypes;
 
         public InheritanceGraphBuilder()
         {
             myBuilder = new RelaxedGraphBuilder();
             myIdToTypeMap = new Dictionary<string, TypeDescriptor>();
-            myEdgeTypes = new Dictionary<string, EdgeType>();
+            myEdgeTypes = new Dictionary<string, ReferenceType>();
         }
 
         public bool IgnoreDotNetTypes { get; set; }
@@ -54,7 +54,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
                 var edge = myBuilder.TryAddEdge(typeDesc.Id, baseDesc.Id);
                 myIdToTypeMap[baseDesc.Id] = baseDesc;
-                myEdgeTypes.Add(edge.Id, EdgeType.DerivesFrom);
+                myEdgeTypes.Add(edge.Id, ReferenceType.DerivesFrom);
             }
 
             var interfaces = type.GetInterfaces();
@@ -75,7 +75,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
                 if (edge != null)
                 {
                     myIdToTypeMap[ifaceDesc.Id] = ifaceDesc;
-                    myEdgeTypes.Add(edge.Id, EdgeType.Implements);
+                    myEdgeTypes.Add(edge.Id, ReferenceType.Implements);
                 }
                 else
                 {

@@ -245,7 +245,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
                 {
                     edgeStyleModule.Add( new EdgeStyle( entry.Key )
                     {
-                        Color = entry.Value == EdgeType.DerivesFrom ? Brushes.Black : Brushes.Blue
+                        Color = entry.Value == ReferenceType.DerivesFrom ? Brushes.Black : Brushes.Blue
                     } );
                 }
 

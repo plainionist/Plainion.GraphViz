@@ -18,13 +18,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 
         private SystemPackaging myConfig;
         private CancellationToken myCancellationToken;
-        private readonly AssemblyLoader myAssemblyLoader;
+        private readonly MonoLoader myAssemblyLoader;
         private Dictionary<string, List<Type>> myPackageToTypesMap;
         private List<Package> myRelevantPackages;
 
         public PackageAnalyzer()
         {
-            myAssemblyLoader = new AssemblyLoader();
+            myAssemblyLoader = new MonoLoader();
             PackagesToAnalyze = new List<string>();
         }
 
@@ -113,12 +113,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             return package.Includes
                 .SelectMany( i => Directory.GetFiles( myConfig.AssemblyRoot, i.Pattern ) )
                 .Where( file => !package.Excludes.Any( e => e.Matches( file ) ) )
-                .Select( myAssemblyLoader.Load )
+                .Select( Load )
                 .Where( asm => asm != null )
                 .ToList();
         }
 
-        private Edge[] Analyze()
+        private static Assembly Load(string path)
+        {
+            try
+            {
+                Console.WriteLine("Loading {0}", path);
+
+                return Assembly.LoadFrom(path);
+            }
+            catch
+            {
+                Console.WriteLine("ERROR: failed to load assembly {0}", path);
+                return null;
+            }
+        }
+
+        private Reference[] Analyze()
         {
             return myRelevantPackages
                 .SelectMany( p => myPackageToTypesMap[ p.Name ]
@@ -152,7 +167,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             return false;
         }
 
-        private IEnumerable<Edge> Analyze( Package package, Type type )
+        private IEnumerable<Reference> Analyze( Package package, Type type )
         {
             Console.Write( "." );
 
@@ -162,13 +177,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
                 ? null
                 : myPackageToTypesMap.Single().Value;
 
-            return new Reflector( myAssemblyLoader, type ).GetUsedTypes()
+            return new Inspector( myAssemblyLoader, type ).GetUsedTypes()
                 // if only one package is given we analyse the deps within the package - otherwise between the packages
-                .Where( edge => ( AllEdges && myPackageToTypesMap.Any( e => e.Value.Contains( edge.Target ) ) )
-                    || ( focusedPackageTypes != null ? focusedPackageTypes.Contains( edge.Target ) : IsForeignPackage( package, edge.Target ) ) )
-                .Where( edge => !IsCompilerGenerated( edge.Target ) )
+                .Where( edge => ( AllEdges && myPackageToTypesMap.Any( e => e.Value.Contains( edge.To ) ) )
+                    || ( focusedPackageTypes != null ? focusedPackageTypes.Contains( edge.To ) : IsForeignPackage( package, edge.To ) ) )
+                .Where( edge => !IsCompilerGenerated( edge.To ) )
                 .Select( edge => GraphUtils.Edge( edge ) )
-                .Where( edge => edge.Source != edge.Target );
+                .Where( edge => edge.From != edge.To );
         }
 
         private bool IsForeignPackage( Package package, Type dep )
@@ -176,7 +191,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             return myPackageToTypesMap.Where( e => e.Key != package.Name ).Any( entry => entry.Value.Contains( dep ) );
         }
 
-        private AnalysisDocument GenerateDocument( IReadOnlyCollection<Edge> edges )
+        private AnalysisDocument GenerateDocument( IReadOnlyCollection<Reference> edges )
         {
             var doc = new AnalysisDocument();
 
@@ -185,8 +200,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             {
                 foreach( var edge in edges )
                 {
-                    nodesWithEdgesIndex.Add( edge.Source );
-                    nodesWithEdgesIndex.Add( edge.Target );
+                    nodesWithEdgesIndex.Add( edge.From );
+                    nodesWithEdgesIndex.Add( edge.To );
                 }
             }
 
@@ -258,13 +273,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
             return null;
         }
 
-        private static string GetEdgeColor( Edge edge )
+        private static string GetEdgeColor( Reference edge )
         {
-            if( edge.EdgeType == EdgeType.DerivesFrom || edge.EdgeType == EdgeType.Implements )
+            if( edge.ReferenceType == ReferenceType.DerivesFrom || edge.ReferenceType == ReferenceType.Implements )
             {
                 return "Blue";
             }
-            else if( edge.EdgeType != EdgeType.Calls )
+            else if( edge.ReferenceType != ReferenceType.Calls )
             {
                 return "Gray";
             }

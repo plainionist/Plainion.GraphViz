@@ -1,7 +1,7 @@
 ﻿
 namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
-    public enum EdgeType
+    public enum ReferenceType
     {
         Undefined,
         DerivesFrom,

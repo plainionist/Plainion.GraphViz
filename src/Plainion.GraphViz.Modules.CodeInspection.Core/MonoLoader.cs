@@ -6,9 +6,8 @@ using Mono.Cecil;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
-    public class AssemblyLoader
+    public class MonoLoader
     {
-        private readonly List<Assembly> myAssemblies = new List<Assembly>();
         private Dictionary<string, AssemblyDefinition> myMonoCache = new Dictionary<string, AssemblyDefinition>();
         private List<string> mySkippedAssemblies = new List<string>();
 
@@ -16,24 +15,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
         {
             get { return mySkippedAssemblies; }
         }
-
-        public Assembly Load(string path)
-        {
-            try
-            {
-                Console.WriteLine("Loading {0}", path);
-
-                var asm = Assembly.LoadFrom(path);
-                myAssemblies.Add(asm);
-                return asm;
-            }
-            catch
-            {
-                Console.WriteLine("ERROR: failed to load assembly {0}", path);
-                return null;
-            }
-        }
-
 
         internal AssemblyDefinition MonoLoad(Assembly assembly)
         {

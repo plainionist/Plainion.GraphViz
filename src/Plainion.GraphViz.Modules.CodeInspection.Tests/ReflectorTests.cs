@@ -23,18 +23,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type code, Type usedType)
         {
-            Verify(code, usedType, EdgeType.Undefined);
+            Verify(code, usedType, ReferenceType.Undefined);
         }
 
-        private void Verify(Type code, Type usedType, EdgeType edgeType)
+        private void Verify(Type code, Type usedType, ReferenceType edgeType)
         {
-            var reflector = new Reflector(new AssemblyLoader(), code);
+            var reflector = new Inspector(new MonoLoader(), code);
 
             var edges = reflector.GetUsedTypes();
 
             var types = edges
-                .Where(e => edgeType == EdgeType.Undefined || e.EdgeType == edgeType)
-                .Select(e => e.Target)
+                .Where(e => edgeType == ReferenceType.Undefined || e.ReferenceType == edgeType)
+                .Select(e => e.To)
                 .Distinct();
 
             Assert.That(types, Contains.Item(usedType));

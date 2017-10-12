@@ -35,10 +35,10 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyLoader.cs" />
-    <Compile Include="EdgeType.cs" />
-    <Compile Include="Edge.cs" />
-    <Compile Include="Reflector.cs" />
+    <Compile Include="MonoLoader.cs" />
+    <Compile Include="ReferenceType.cs" />
+    <Compile Include="Reference.cs" />
+    <Compile Include="Inspector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
