@@ -75,6 +75,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 
             if (asm == null)
             {
+                asm = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies()
+                    .SingleOrDefault(x => x.FullName.Equals(assemblyFullName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (asm == null)
+            {
                 // assuming the assembly does not belong to any package
                 // -> skip it
                 lock (mySkippedAssemblies)
@@ -84,7 +90,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                         mySkippedAssemblies.Add(assemblyFullName);
                     }
                 }
-
                 return null;
             }
 

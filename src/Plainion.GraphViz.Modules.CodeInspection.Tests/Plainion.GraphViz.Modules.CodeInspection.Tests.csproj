@@ -19,6 +19,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ReferenceTests.cs" />
     <Compile Include="Packaging\Services\SpecUtilsTests.cs" />
     <Compile Include="TestData\CastClass.cs" />
     <Compile Include="TestData\NewArray.cs" />
