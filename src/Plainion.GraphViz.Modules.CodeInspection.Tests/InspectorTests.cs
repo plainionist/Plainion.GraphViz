@@ -13,7 +13,7 @@ using Plainion.GraphViz.Modules.CodeInspection.Tests.TestData;
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {
     [TestFixture]
-    class ReflectorTests
+    class InspectorTests
     {
         [Test]
         public void GetUsedTypes_typeof_Found()

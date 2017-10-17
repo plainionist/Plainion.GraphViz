@@ -13,19 +13,21 @@ namespace Plainion.GraphViz.Algorithms
     {
         private readonly IGraphPresentation myPresentation;
         private bool myShow;
+        private bool myReverse;
 
-        public TransitiveHull(IGraphPresentation presentation, bool show)
+        public TransitiveHull(IGraphPresentation presentation, bool show,bool reverse = false)
         {
             Contract.RequiresNotNull(presentation, "presentation");
 
             myPresentation = presentation;
             myShow = show;
+            myReverse = reverse;
         }
 
-        public void Execute(IReadOnlyCollection<Node> nodes, bool reverse = false)
+        public void Execute(IReadOnlyCollection<Node> nodes)
         {
             var connectedNodes = nodes
-                .SelectMany(n => GetReachableNodes(n, reverse))
+                .SelectMany(n => GetReachableNodes(n))
                 .Distinct();
 
             var mask = new NodeMask();
@@ -43,23 +45,23 @@ namespace Plainion.GraphViz.Algorithms
             if (nodes.Count == 1)
             {
                 var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-                mask.Label = (reverse ? "Reverse t" : "T") + "ransitive hull of " + caption.DisplayText;
+                mask.Label = (myReverse ? "Reverse t" : "T") + "ransitive hull of " + caption.DisplayText;
             }
             else
             {
-                mask.Label = (reverse ? "Reverse t" : "T") + "ransitive hull of multiple nodes";
+                mask.Label = (myReverse ? "Reverse t" : "T") + "ransitive hull of multiple nodes";
             }
 
             var module = myPresentation.GetModule<INodeMaskModule>();
             module.Push(mask);
         }
 
-        private IEnumerable<Node> GetReachableNodes(Node node, bool reverse)
+        private IEnumerable<Node> GetReachableNodes(Node node)
         {
             var connectedNodes = new HashSet<Node>();
             connectedNodes.Add(node);
 
-            var recursiveSiblings = Traverse.BreathFirst(new[] { node }, n => SelectSiblings(n, reverse))
+            var recursiveSiblings = Traverse.BreathFirst(new[] { node }, n => SelectSiblings(n))
                 .SelectMany(e => new[] { e.Source, e.Target });
 
             foreach (var n in recursiveSiblings)
@@ -70,15 +72,15 @@ namespace Plainion.GraphViz.Algorithms
             return connectedNodes;
         }
 
-        private IEnumerable<Edge> SelectSiblings(Node n, bool reverse)
+        private IEnumerable<Edge> SelectSiblings(Node n)
         {
             if (myShow)
             {
-                return reverse ? n.In : n.Out;
+                return myReverse ? n.In : n.Out;
             }
             else
             {
-                return reverse ? n.In.Where(e => myPresentation.Picking.Pick(e.Source)) : n.Out.Where(e => myPresentation.Picking.Pick(e.Target));
+                return myReverse ? n.In.Where(e => myPresentation.Picking.Pick(e.Source)) : n.Out.Where(e => myPresentation.Picking.Pick(e.Target));
             }
         }
     }
