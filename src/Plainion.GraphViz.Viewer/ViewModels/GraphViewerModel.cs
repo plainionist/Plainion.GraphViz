@@ -102,6 +102,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         private bool CanUnfold(Cluster cluster)
         {
+            if (GraphItemForContextMenu == null)
+            {
+                // context menu was open and then right click somewhere else
+                return false;
+            }
+
             var transformation = Presentation.GetModule<ITransformationModule>().Items
                 .OfType<ClusterFoldingTransformation>()
                 .SingleOrDefault();
@@ -270,9 +276,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             {
                 if (SetProperty(ref myGraphItemForContextMenu, value))
                 {
-                    UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
-                    UnfoldAndHideAllButTargetsCommand.RaiseCanExecuteChanged();
-                    UnfoldAndHideAllButSourcesCommand.RaiseCanExecuteChanged();
+                    // otherwise we get exception when we open context menu on cluster and without choosing any menu
+                    // just open context menu on e.g. node
+                    if (myGraphItemForContextMenu is Cluster)
+                    {
+                        UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
+                        UnfoldAndHideAllButTargetsCommand.RaiseCanExecuteChanged();
+                        UnfoldAndHideAllButSourcesCommand.RaiseCanExecuteChanged();
+                    }
                 }
             }
         }

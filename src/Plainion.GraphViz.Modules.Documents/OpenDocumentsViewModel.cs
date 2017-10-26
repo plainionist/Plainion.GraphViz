@@ -108,7 +108,6 @@ namespace Plainion.GraphViz.Modules.Documents
             using (new Profile("GraphToDotSynchronizer:OnTransformationsChanged"))
             {
                 var transformationModule = p.GetModule<ITransformationModule>();
-                var dynamicClusters = transformationModule.Items.OfType<DynamicClusterTransformation>().Single();
 
                 var graph = new Graph();
                 foreach (var n in p.Graph.Nodes)
