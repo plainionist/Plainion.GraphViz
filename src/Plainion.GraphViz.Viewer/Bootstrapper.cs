@@ -6,6 +6,7 @@ using Prism.Interactivity;
 using Prism.Regions;
 using Plainion.Prism.Interactivity;
 using Prism.Mef;
+using System;
 
 namespace Plainion.GraphViz.Viewer
 {
@@ -20,7 +21,7 @@ namespace Plainion.GraphViz.Viewer
         {
             base.InitializeShell();
 
-            App.Current.MainWindow = ( Window )Shell;
+            App.Current.MainWindow = (Window)Shell;
             App.Current.MainWindow.Show();
         }
 
@@ -29,34 +30,36 @@ namespace Plainion.GraphViz.Viewer
             base.ConfigureAggregateCatalog();
 
             // Prism automatically loads the module with that line
-            AggregateCatalog.Catalogs.Add( new AssemblyCatalog( GetType().Assembly ) );
+            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(GetType().Assembly));
 
             // add all the assemblies which are no modules
-            AggregateCatalog.Catalogs.Add( new AssemblyCatalog( typeof( PopupWindowActionRegionAdapter ).Assembly ) );
-            AggregateCatalog.Catalogs.Add( new AssemblyCatalog( typeof( GraphView ).Assembly ) );
-            AggregateCatalog.Catalogs.Add( new AssemblyCatalog( typeof( IDomainModel ).Assembly ) );
+            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(PopupWindowActionRegionAdapter).Assembly));
+            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(GraphView).Assembly));
+            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(IDomainModel).Assembly));
 
-            var moduleRoot = Path.GetDirectoryName( GetType().Assembly.Location );
-            foreach( var moduleFile in Directory.GetFiles( moduleRoot, "Plainion.GraphViz.Modules.*.dll" ) )
+            // with ".Location" property we sometimes got strange error message that loading from
+            // remote location is not allows
+            var moduleRoot = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
+            foreach (var moduleFile in Directory.GetFiles(moduleRoot, "Plainion.GraphViz.Modules.*.dll"))
             {
-                AggregateCatalog.Catalogs.Add( new AssemblyCatalog( moduleFile ) );
+                AggregateCatalog.Catalogs.Add(new AssemblyCatalog(moduleFile));
             }
         }
 
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
         {
             var mappings = base.ConfigureRegionAdapterMappings();
-            mappings.RegisterMapping( typeof( PopupWindowAction ), Container.GetExportedValue<PopupWindowActionRegionAdapter>() );
+            mappings.RegisterMapping(typeof(PopupWindowAction), Container.GetExportedValue<PopupWindowActionRegionAdapter>());
             return mappings;
         }
 
-        public override void Run( bool runWithDefaultConfiguration )
+        public override void Run(bool runWithDefaultConfiguration)
         {
-            var helpRoot = Path.Combine( Path.GetDirectoryName( GetType().Assembly.Location ), "Help" );
-            Help.Server.Start( helpRoot )
-                .ContinueWith( t => HelpClient.Port = t.Result );
+            var helpRoot = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Help");
+            Help.Server.Start(helpRoot)
+                .ContinueWith(t => HelpClient.Port = t.Result);
 
-            base.Run( runWithDefaultConfiguration );
+            base.Run(runWithDefaultConfiguration);
 
             Application.Current.Exit += OnShutdown;
 
@@ -64,7 +67,7 @@ namespace Plainion.GraphViz.Viewer
             RegionManager.UpdateRegions();
         }
 
-        protected virtual void OnShutdown( object sender, ExitEventArgs e )
+        protected virtual void OnShutdown(object sender, ExitEventArgs e)
         {
             Help.Server.Stop();
             Container.Dispose();
