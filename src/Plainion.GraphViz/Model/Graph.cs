@@ -88,15 +88,22 @@ namespace Plainion.GraphViz.Model
             }
         }
 
-        public Node FindNode( string nodeId )
+        public Node FindNode(string nodeId)
         {
             Node node;
-            if( myNodes.TryGetValue( nodeId, out node ) )
+            if (myNodes.TryGetValue(nodeId, out node))
             {
                 return node;
             }
 
             return null;
+        }
+
+        public Node GetNode(string nodeId)
+        {
+            var node = FindNode(nodeId);
+            Contract.Requires(node != null, "Node not found: " + nodeId);
+            return node;
         }
     }
 }

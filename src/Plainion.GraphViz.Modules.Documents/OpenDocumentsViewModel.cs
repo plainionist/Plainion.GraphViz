@@ -107,8 +107,6 @@ namespace Plainion.GraphViz.Modules.Documents
 
             using (new Profile("GraphToDotSynchronizer:OnTransformationsChanged"))
             {
-                var transformationModule = p.GetModule<ITransformationModule>();
-
                 var graph = new Graph();
                 foreach (var n in p.Graph.Nodes)
                 {
@@ -118,6 +116,8 @@ namespace Plainion.GraphViz.Modules.Documents
                 {
                     graph.TryAdd(e);
                 }
+
+                var transformationModule = p.GetModule<ITransformationModule>();
                 foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
                     // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
@@ -125,7 +125,12 @@ namespace Plainion.GraphViz.Modules.Documents
                         .OfType<ClusterFoldingTransformation>()
                         .SingleOrDefault(f => f.Clusters.Contains(cluster.Id));
 
-                    var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
+                    // the nodes we get through ITransformationModule might be new instances!
+                    // -> get the right node instances based on the returned ids
+                    //    (otherwiese the writer below will remove them from the output)
+                    var nodes = (folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id))
+                        .Select(n => graph.GetNode(n.Id))
+                        .ToList();
 
                     graph.TryAdd(new Cluster(cluster.Id, nodes));
                 }

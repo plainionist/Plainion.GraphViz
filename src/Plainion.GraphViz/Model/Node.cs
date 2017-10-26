@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Plainion.GraphViz.Model
 {
     [Serializable]
+    [DebuggerDisplay("{Id}")]
     public class Node : IGraphItem
     {
         public Node( string id )
