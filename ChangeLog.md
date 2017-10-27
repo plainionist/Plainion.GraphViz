@@ -1,6 +1,7 @@
 ## 2.2.0 - 2017-10-27
 
 - fixed exceptions when opening context menu and then clicking on other node elements
+- fixed writing back DOT files when clusters got modified
 - fixed loading plugins
 
 ## 2.1.0 - 2017-08-24
