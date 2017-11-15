@@ -25,3 +25,7 @@
 /packages/Microsoft.*
 /packages/DotNetty.*
 /packages/NETStandard.Library.*
+/packages/Argu.3.2.0
+/packages/DotLiquid.2.0.174
+/packages/Expecto.4.0.3
+/packages/RazorEngine.3.9.3
