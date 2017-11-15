@@ -1,3 +1,7 @@
+## 2.1.0 - 2017-11-15
+
+- Plainion.Prism updated to get windows activated which are already open
+
 ## 2.2.0 - 2017-10-27
 
 - fixed exceptions when opening context menu and then clicking on other node elements
