@@ -1,4 +1,4 @@
-## 2.1.0 - 2017-11-15
+## 2.3.0 - 2017-11-15
 
 - Plainion.Prism updated to get windows activated which are already open
 
