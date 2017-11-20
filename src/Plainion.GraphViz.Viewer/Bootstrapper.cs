@@ -40,9 +40,16 @@ namespace Plainion.GraphViz.Viewer
             // with ".Location" property we sometimes got strange error message that loading from
             // remote location is not allows
             var moduleRoot = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
-            foreach (var moduleFile in Directory.GetFiles(moduleRoot, "Plainion.GraphViz.Modules.*.dll"))
+            try
             {
-                AggregateCatalog.Catalogs.Add(new AssemblyCatalog(moduleFile));
+                foreach (var moduleFile in Directory.GetFiles(moduleRoot, "Plainion.GraphViz.Modules.*.dll"))
+                {
+                    AggregateCatalog.Catalogs.Add(new AssemblyCatalog(moduleFile));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Loding from '{0}' failed", moduleRoot), ex);
             }
         }
 
