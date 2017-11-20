@@ -1,3 +1,8 @@
+## 2.4.0 - unreleased
+
+- Context menu entries added to select incomings, outgoings and siblings
+- Context menu added to deselect all
+
 ## 2.3.0 - 2017-11-15
 
 - Plainion.Prism updated to get windows activated which are already open

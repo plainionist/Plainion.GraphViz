@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
@@ -8,21 +9,16 @@ namespace Plainion.GraphViz.Algorithms
     {
         private readonly IGraphPresentation myPresentation;
 
-        public ShowHideIncomings( IGraphPresentation presentation )
+        public ShowHideIncomings(IGraphPresentation presentation)
         {
-            Contract.RequiresNotNull( presentation, "presentation" );
+            Contract.RequiresNotNull(presentation, "presentation");
 
             myPresentation = presentation;
         }
 
-        public void Execute( Node node, bool show )
+        public void Execute(Node node, bool show)
         {
-            var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            var nodesToShow = transformationModule.Graph.Edges
-                .Where( e => e.Target.Id == node.Id )
-                .Select( e => e.Source )
-                .ToList();
-
+            var nodesToShow = GetIncomings(node);
             if (show)
             {
                 nodesToShow.Add(node);
@@ -33,11 +29,36 @@ namespace Plainion.GraphViz.Algorithms
 
             mask.Set(nodesToShow);
 
-            var caption = myPresentation.GetPropertySetFor<Caption>().Get( node.Id );
+            var caption = myPresentation.GetPropertySetFor<Caption>().Get(node.Id);
             mask.Label = "Incoming of " + caption.DisplayText;
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push( mask );
+            module.Push(mask);
+        }
+
+        private IList<Node> GetIncomings(Node node)
+        {
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            return transformationModule.Graph.Edges
+                .Where(e => e.Target.Id == node.Id)
+                .Select(e => e.Source)
+                .ToList();
+        }
+
+        public void Select(Node node)
+        {
+            var nodes = GetIncomings(node);
+            nodes.Add(node);
+
+            var selection = myPresentation.GetPropertySetFor<Selection>();
+            foreach (var e in node.In)
+            {
+                selection.Get(e.Id).IsSelected = true;
+            }
+            foreach (var n in nodes)
+            {
+                selection.Get(n.Id).IsSelected = true;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
@@ -17,12 +18,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public void Execute( Node node, bool show)
         {
-            var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            var nodesToShow = transformationModule.Graph.Edges
-                .Where( e => e.Source.Id == node.Id )
-                .Select( e => e.Target )
-                .ToList();
-
+            var nodesToShow = GetOutgoings(node);
             if (show)
             {
                 nodesToShow.Add(node);
@@ -38,6 +34,31 @@ namespace Plainion.GraphViz.Algorithms
 
             var module = myPresentation.GetModule<INodeMaskModule>();
             module.Push( mask );
+        }
+
+        private IList<Node> GetOutgoings(Node node)
+        {
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            return transformationModule.Graph.Edges
+                .Where(e => e.Source.Id == node.Id)
+                .Select(e => e.Target)
+                .ToList();
+        }
+
+        public void Select(Node node)
+        {
+            var nodes = GetOutgoings(node);
+            nodes.Add(node);
+
+            var selection = myPresentation.GetPropertySetFor<Selection>();
+            foreach (var e in node.Out)
+            {
+                selection.Get(e.Id).IsSelected = true;
+            }
+            foreach (var n in nodes)
+            {
+                selection.Get(n.Id).IsSelected = true;
+            }
         }
     }
 }

@@ -37,6 +37,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             HideOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation, false).Execute(GetRelevantNodes(n)));
 
+            SelectNodeCommand = new DelegateCommand<Node>(n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
+            SelectNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Select(n));
+            SelectNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Select(n));
+            SelectNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Select(n));
+
             CaptionToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(Presentation.GetModule<CaptionModule>().Get(n.Id).DisplayText));
             IdToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(n.Id));
 
@@ -57,6 +62,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             FoldUnfoldAllClustersCommand = new DelegateCommand(() => new ChangeClusterFolding(Presentation).FoldUnfoldAllClusters(), () => Presentation != null);
             AddVisibleNodesOutsideClustersToClusterCommand = new DelegateCommand<string>(c => new AddVisibleNodesOutsideClustersToCluster(Presentation).Execute(c), c => Presentation != null);
+            DeselectAllCommand = new DelegateCommand(() => new SelectAll(Presentation).Execute(false), () => Presentation != null);
             HomeCommand = new DelegateCommand(() => Navigation.HomeZoomPan(), () => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
@@ -149,6 +155,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand RemoveNodesReachableFromMultipleClustersCommand { get; private set; }
 
+        public DelegateCommand DeselectAllCommand { get; private set; }
+
         public DelegateCommand HomeCommand { get; private set; }
 
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
@@ -160,6 +168,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ICommand HideOutgoingCommand { get; private set; }
 
         public ICommand RemoveUnreachableNodesCommand { get; private set; }
+
+        public ICommand SelectNodeCommand { get; private set; }
+
+        public ICommand SelectNodeWithIncomingCommand { get; private set; }
+
+        public ICommand SelectNodeWithOutgoingCommand { get; private set; }
+
+        public ICommand SelectNodeWithSiblingsCommand { get; private set; }
 
         public ICommand CaptionToClipboardCommand { get; private set; }
 
@@ -203,6 +219,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 RemoveNodesReachableFromMultipleClustersCommand.RaiseCanExecuteChanged();
                 FoldUnfoldAllClustersCommand.RaiseCanExecuteChanged();
                 AddVisibleNodesOutsideClustersToClusterCommand.RaiseCanExecuteChanged();
+                DeselectAllCommand.RaiseCanExecuteChanged();
                 HomeCommand.RaiseCanExecuteChanged();
                 InvalidateLayoutCommand.RaiseCanExecuteChanged();
                 PrintGraphCommand.RaiseCanExecuteChanged();

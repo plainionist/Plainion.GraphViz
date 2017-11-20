@@ -43,6 +43,12 @@
                     <MenuItem Header="Unreachables" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" ToolTip="Removes all but the transitive hull of the node"/>
                     <MenuItem Header="Unreachables of selection" Command="{Binding RemoveUnreachableNodesCommand}" ToolTip="Removes all but the transitive hull of selected nodes"/>
                 </MenuItem>
+                <MenuItem Header="Select">
+                    <MenuItem Header="This" Command="{Binding SelectNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Incomings" Command="{Binding SelectNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Outgoings" Command="{Binding SelectNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Siblings" Command="{Binding SelectNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Clusters">
                     <MenuItem Header="Add">
@@ -97,6 +103,7 @@
                     </MenuItem.ItemTemplate>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Deselect all" Command="{Binding DeselectAllCommand}"/>
                 <MenuItem Header="Home" Command="{Binding HomeCommand}"/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>

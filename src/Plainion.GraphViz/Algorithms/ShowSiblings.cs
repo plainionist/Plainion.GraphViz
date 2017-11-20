@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
-using Plainion;
 
 namespace Plainion.GraphViz.Algorithms
 {
@@ -9,37 +9,57 @@ namespace Plainion.GraphViz.Algorithms
     {
         private IGraphPresentation myPresentation;
 
-        public ShowSiblings( IGraphPresentation presentation )
+        public ShowSiblings(IGraphPresentation presentation)
         {
-            Contract.RequiresNotNull( presentation, "presentation" );
+            Contract.RequiresNotNull(presentation, "presentation");
 
             myPresentation = presentation;
         }
 
-        public void Execute( Node node )
+        public void Execute(Node node)
         {
-            var nodesToShow = GetNodeWithSiblings( node.Id );
+            var nodesToShow = GetNodeWithSiblings(node);
 
             var mask = new NodeMask();
-            mask.Set( nodesToShow );
+            mask.Set(nodesToShow);
 
-            var caption = myPresentation.GetPropertySetFor<Caption>().Get( node.Id );
+            var caption = myPresentation.GetPropertySetFor<Caption>().Get(node.Id);
             mask.Label = "Siblings of " + caption.DisplayText;
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push( mask );
+            module.Push(mask);
         }
 
-        private IEnumerable<Node> GetNodeWithSiblings( string nodeId )
+        private IEnumerable<Node> GetNodeWithSiblings(Node node)
         {
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            foreach( var edge in transformationModule.Graph.Edges )
+            foreach (var edge in transformationModule.Graph.Edges)
             {
-                if( edge.Source.Id == nodeId || edge.Target.Id == nodeId )
+                if (edge.Source.Id == node.Id || edge.Target.Id == node.Id)
                 {
                     yield return edge.Source;
                     yield return edge.Target;
                 }
+            }
+        }
+
+        public void Select(Node node)
+        {
+            var nodes = GetNodeWithSiblings(node).ToList();
+            nodes.Add(node);
+
+            var selection = myPresentation.GetPropertySetFor<Selection>();
+            foreach (var e in node.In)
+            {
+                selection.Get(e.Id).IsSelected = true;
+            }
+            foreach (var e in node.Out)
+            {
+                selection.Get(e.Id).IsSelected = true;
+            }
+            foreach (var n in nodes)
+            {
+                selection.Get(n.Id).IsSelected = true;
             }
         }
     }
