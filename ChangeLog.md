@@ -1,4 +1,4 @@
-## 2.4.0 - unreleased
+## 2.4.0 - 2017-11-20
 
 - Context menu entries added to select incomings, outgoings and siblings
 - Context menu added to deselect all
