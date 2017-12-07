@@ -1,3 +1,7 @@
+## 2.5.0 - 2017-12
+
+- tracing between nodes added
+
 ## 2.4.0 - 2017-11-20
 
 - Context menu entries added to select incomings, outgoings and siblings

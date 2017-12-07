@@ -20,7 +20,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
     class GraphViewerModel : ViewModelBase
     {
         private IModuleChangedObserver myTransformationsModuleObserver;
+        private IModuleChangedObserver mySelectionObserver;
         private IGraphItem myGraphItemForContextMenu;
+        private bool mySelectionMenuUpdatePending;
 
         [ImportingConstructor]
         public GraphViewerModel(IEventAggregator eventAggregator)
@@ -74,12 +76,15 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 .Execute(t => t.RemoveFromClusters(GetRelevantNodes(node)
                     .Select(n => n.Id).ToArray())));
 
+            TraceToCommand = new DelegateCommand<Node>(n => new TracePath(Presentation).Execute((Node)GraphItemForContextMenu, n));
+
             PrintGraphRequest = new InteractionRequest<IConfirmation>();
             PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
 
             eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe(OnEventFocused);
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
+            SelectedNodes = new ObservableCollection<NodeWithCaption>();
         }
 
         // by convention: if given commandParameter is null then "this and all selected" nodes are relevant
@@ -225,9 +230,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 PrintGraphCommand.RaiseCanExecuteChanged();
 
                 BuildClustersMenu();
+                BuildSelectedNodesMenu();
 
                 if (myTransformationsModuleObserver != null)
                 {
+                    mySelectionObserver.ModuleChanged -= OnSelectionChanged;
+                    mySelectionObserver.Dispose();
+                    mySelectionObserver = null;
+
                     myTransformationsModuleObserver.ModuleChanged -= OnTransformationsModuleChanged;
                     myTransformationsModuleObserver.Dispose();
                     myTransformationsModuleObserver = null;
@@ -238,6 +248,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                     var transformations = Presentation.GetModule<ITransformationModule>();
                     myTransformationsModuleObserver = transformations.CreateObserver();
                     myTransformationsModuleObserver.ModuleChanged += OnTransformationsModuleChanged;
+
+                    mySelectionObserver = Presentation.GetPropertySetFor<Selection>().CreateObserver();
+                    mySelectionObserver.ModuleChanged += OnSelectionChanged;
                 }
             }
         }
@@ -271,9 +284,50 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
         }
 
+        private void BuildSelectedNodesMenu()
+        {
+            SelectedNodes.Clear();
+
+            if (Presentation == null)
+            {
+                return;
+            }
+
+            var transformations = Presentation.GetModule<ITransformationModule>();
+            var captions = Presentation.GetModule<ICaptionModule>();
+            var selections = Presentation.GetPropertySetFor<Selection>();
+
+            var nodes = transformations.Graph.Nodes
+                .Union(Presentation.Graph.Nodes)
+                .Where(n => selections.Get(n.Id).IsSelected)
+                .Distinct()
+                .Select(n => new NodeWithCaption(n, captions.Get(n.Id).DisplayText))
+                .OrderBy(n => n.DisplayText);
+
+            foreach (var n in nodes)
+            {
+                SelectedNodes.Add(n);
+            }
+
+            mySelectionMenuUpdatePending = false;
+        }
+
         private void OnTransformationsModuleChanged(object sender, EventArgs e)
         {
             BuildClustersMenu();
+        }
+
+        private void OnSelectionChanged(object sender, EventArgs e)
+        {
+            if (!mySelectionMenuUpdatePending)
+            {
+                mySelectionMenuUpdatePending = true;
+                
+                // there could come many notifications in a row due to the "on demand create" Get() behavior
+                // -> lets queue into message pump so that we skip many or all notifactions and just collect
+                //    later the final state
+                Application.Current.Dispatcher.BeginInvoke(new Action(BuildSelectedNodesMenu));
+            }
         }
 
         public IGraphPresentation Presentation
@@ -307,10 +361,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ObservableCollection<ClusterWithCaption> Clusters { get; private set; }
 
+        public ObservableCollection<NodeWithCaption> SelectedNodes { get; private set; }
+
         public ICommand AddToClusterCommand { get; private set; }
 
         public ICommand AddWithSelectedToClusterCommand { get; private set; }
 
         public ICommand RemoveFromClusterCommand { get; private set; }
+
+        public ICommand TraceToCommand { get; private set; }
     }
 }

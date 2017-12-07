@@ -93,10 +93,7 @@ namespace Plainion.GraphViz.Presentation
 
         public override IEnumerable<T> Items
         {
-            get
-            {
-                return myItems.Values;
-            }
+            get { return myItems.Values; }
         }
     }
 }

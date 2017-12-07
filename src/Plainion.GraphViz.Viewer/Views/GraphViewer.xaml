@@ -49,6 +49,15 @@
                     <MenuItem Header="Outgoings" Command="{Binding SelectNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding SelectNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
+                <MenuItem Header="Trace">
+                    <MenuItem Header="This to" ItemsSource="{Binding SelectedNodes}">
+                        <MenuItem.ItemTemplate>
+                            <DataTemplate>
+                                <MenuItem Header="{Binding DisplayText}" Command="{Binding Data.TraceToCommand, Source={StaticResource RootDataContext}}" CommandParameter="{Binding Node}"/>
+                            </DataTemplate>
+                        </MenuItem.ItemTemplate>
+                    </MenuItem>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Clusters">
                     <MenuItem Header="Add">

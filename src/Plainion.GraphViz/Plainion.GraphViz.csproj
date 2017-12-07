@@ -66,6 +66,7 @@
     <Compile Include="Algorithms\NodeType.cs" />
     <Compile Include="Algorithms\RemoveNodesReachableFromMultipleClusters.cs" />
     <Compile Include="Algorithms\SelectAll.cs" />
+    <Compile Include="Algorithms\TracePath.cs" />
     <Compile Include="Algorithms\ShowMostIncomings.cs" />
     <Compile Include="Algorithms\TransitiveHull.cs" />
     <Compile Include="Algorithms\AddVisibleNodesOutsideClustersToCluster.cs" />
