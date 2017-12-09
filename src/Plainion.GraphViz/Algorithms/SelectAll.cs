@@ -16,13 +16,9 @@ namespace Plainion.GraphViz.Algorithms
         public void Execute(bool select)
         {
             var selection = myPresentation.GetPropertySetFor<Selection>();
-            foreach (var n in myPresentation.Graph.Nodes)
+            foreach (var item in selection.Items)
             {
-                selection.Get(n.Id).IsSelected = select;
-            }
-            foreach (var e in myPresentation.Graph.Edges)
-            {
-                selection.Get(e.Id).IsSelected = select;
+                item.IsSelected = select;
             }
         }
     }

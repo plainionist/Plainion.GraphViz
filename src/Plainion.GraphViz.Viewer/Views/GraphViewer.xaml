@@ -27,15 +27,19 @@
                 <MenuItem Header="Hide">
                     <MenuItem Header="This" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Selection" Command="{Binding HideNodeCommand}"/>
+                    <MenuItem Header="All but selection" Command="{Binding HideAllButCommand}"/>
+                    <Separator/>
                     <MenuItem Header="Incomings" Command="{Binding HideIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Outgoings" Command="{Binding HideOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
                 <MenuItem Header="Show (add)">
                     <MenuItem Header="This" Command="{Binding ShowNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Selection" Command="{Binding ShowNodeCommand}"/>
+                    <Separator/>
                     <MenuItem Header="Incomings" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Outgoings" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <Separator/>
                     <MenuItem Header="Reachables" Command="{Binding ShowNodeWithReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" ToolTip="Selects the transitive hull of the node"/>
                     <MenuItem Header="Reachables of selection" Command="{Binding ShowNodeWithReachablesCommand}" ToolTip="Selects the transitive hull of selected nodes"/>
                 </MenuItem>

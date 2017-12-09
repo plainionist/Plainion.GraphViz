@@ -2,6 +2,8 @@
 
 - tracing between nodes added
 - fold/unfold selection
+- "hide all but selection" added
+- "Deselect all" fixed
 
 ## 2.4.0 - 2017-11-20
 

@@ -29,6 +29,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         {
             HideNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false).Execute(GetRelevantNodes(n)));
             ShowNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, true).Execute(GetRelevantNodes(n)));
+            HideAllButCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false, true).Execute(GetRelevantNodes(n)));
 
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: true));
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
@@ -203,6 +204,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ICommand HideNodeCommand { get; private set; }
 
+        public ICommand HideAllButCommand { get; private set; }
+
         public ICommand HideIncomingCommand { get; private set; }
 
         public ICommand HideOutgoingCommand { get; private set; }
@@ -357,7 +360,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             if (!mySelectionMenuUpdatePending)
             {
                 mySelectionMenuUpdatePending = true;
-                
+
                 // there could come many notifications in a row due to the "on demand create" Get() behavior
                 // -> lets queue into message pump so that we skip many or all notifactions and just collect
                 //    later the final state

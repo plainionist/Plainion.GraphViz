@@ -10,13 +10,20 @@ namespace Plainion.GraphViz.Algorithms
     {
         private readonly IGraphPresentation myPresentation;
         private bool myShow;
+        private bool myNegate;
 
         public ShowHideNodes(IGraphPresentation presentation, bool show)
+            : this(presentation, show, false)
+        {
+        }
+
+        public ShowHideNodes(IGraphPresentation presentation, bool show, bool negate)
         {
             Contract.RequiresNotNull(presentation, "presentation");
 
             myPresentation = presentation;
             myShow = show;
+            myNegate = negate;
         }
 
         public void Execute(params Node[] nodes)
@@ -28,17 +35,30 @@ namespace Plainion.GraphViz.Algorithms
         {
             var mask = new NodeMask();
             mask.IsShowMask = myShow;
-            mask.Set(nodes);
+
+            if (myNegate)
+            {
+                var transformationModule = myPresentation.GetModule<ITransformationModule>();
+                mask.Set(transformationModule.Graph.Nodes.Except(nodes));
+            }
+            else
+            {
+                mask.Set(nodes);
+            }
 
             if (nodes.Count() == 1)
             {
                 var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-                mask.Label = caption.DisplayText;
+                mask.Label = (myNegate ? "Not " : "") + caption.DisplayText;
             }
             else
             {
-                var caption = myPresentation.GetPropertySetFor<Caption>().Get( nodes.First().Id );
+                var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
                 mask.Label = caption.DisplayText + "...";
+            }
+            if (myNegate)
+            {
+                mask.Label = "Not " + mask.Label;
             }
 
             var module = myPresentation.GetModule<INodeMaskModule>();
