@@ -50,7 +50,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             GoToEdgeSourceCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Source));
             GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
 
-            ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(c => new ChangeClusterFolding(Presentation).Execute(t => t.Toggle(c.Id)));
+            ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(c => new ChangeClusterFolding(Presentation).Execute(ToggleClusterFolding(c)));
             UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.AllSiblings), CanUnfold);
             UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
             UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
@@ -87,6 +87,17 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
         }
 
+        private Action<ClusterFoldingTransformation> ToggleClusterFolding(Cluster commandParamter)
+        {
+            return t =>
+            {
+                foreach (var c in GetRelevantClusters(commandParamter))
+                {
+                    t.Toggle(c.Id);
+                }
+            };
+        }
+
         // by convention: if given commandParameter is null then "this and all selected" nodes are relevant
         private Node[] GetRelevantNodes(Node commandParamter)
         {
@@ -101,6 +112,30 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 return Presentation.GetModule<ITransformationModule>().Graph.Nodes
                     .Where(n => selectionModule.Get(n.Id).IsSelected)
                     .Concat(new[] { (Node)GraphItemForContextMenu })
+                    .ToArray();
+            }
+            finally
+            {
+                // the selection is considered to be temporary for this operation only
+                // -> remove selection again because relevant nodes have been picked up
+                selectionModule.Clear();
+            }
+        }
+
+        // by convention: if given commandParameter is null then "this and all selected" cluser are relevant
+        private Cluster[] GetRelevantClusters(Cluster commandParamter)
+        {
+            if (commandParamter != null)
+            {
+                return new[] { commandParamter };
+            }
+
+            var selectionModule = Presentation.GetPropertySetFor<Selection>();
+            try
+            {
+                return Presentation.GetModule<ITransformationModule>().Graph.Clusters
+                    .Where(n => selectionModule.Get(n.Id).IsSelected)
+                    .Concat(new[] { (Cluster)GraphItemForContextMenu })
                     .ToArray();
             }
             finally

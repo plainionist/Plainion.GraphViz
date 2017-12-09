@@ -49,6 +49,7 @@
                     <MenuItem Header="Outgoings" Command="{Binding SelectNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding SelectNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
+                <Separator/>
                 <MenuItem Header="Trace">
                     <MenuItem Header="This to" ItemsSource="{Binding SelectedNodes}">
                         <MenuItem.ItemTemplate>
@@ -90,7 +91,9 @@
                 <MenuItem Header="Go to target" Command="{Binding GoToEdgeTargetCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
             </ContextMenu>
             <ContextMenu x:Key="Cluster">
-                <MenuItem Header="Fold/Unfold" Command="{Binding ToggleClusterFoldingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Fold/Unfold this" Command="{Binding ToggleClusterFoldingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Fold/Unfold selection" Command="{Binding ToggleClusterFoldingCommand}"/>
+                <Separator/>
                 <MenuItem Header="Unfold and hide private nodes" Command="{Binding UnfoldAndHidePrivateNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <MenuItem Header="Unfold and hide all but targets" Command="{Binding UnfoldAndHideAllButTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <MenuItem Header="Unfold and hide all but sources" Command="{Binding UnfoldAndHideAllButSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>

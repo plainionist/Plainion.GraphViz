@@ -1,6 +1,7 @@
-## 2.5.0 - 2017-12
+## 2.5.0 - 2017-12-09
 
 - tracing between nodes added
+- fold/unfold selection
 
 ## 2.4.0 - 2017-11-20
 
