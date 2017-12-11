@@ -22,7 +22,7 @@ namespace Plainion.GraphViz.Algorithms
             var captions = myPresentation.GetModule<ICaptionModule>();
 
             var mask = new NodeMask();
-            mask.Label = string.Format("Path from {0} to {1}", captions.Get(from.Id), captions.Get(to.Id));
+            mask.Label = string.Format("Path from {0} to {1}", captions.Get(from.Id).DisplayText, captions.Get(to.Id).DisplayText);
             mask.IsShowMask = true;
             mask.Set(GetPaths(from, to));
 
