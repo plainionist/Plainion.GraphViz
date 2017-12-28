@@ -105,11 +105,9 @@
     <Compile Include="Presentation\AbstractNodeMask.cs" />
     <Compile Include="Presentation\CaptionModule.cs" />
     <Compile Include="Presentation\GenericModuleChangedObserver.cs" />
-    <Compile Include="Presentation\EdgeMaskModule.cs" />
     <Compile Include="Presentation\GraphLayoutModule.cs" />
     <Compile Include="Presentation\Caption.cs" />
     <Compile Include="Presentation\ICaptionModule.cs" />
-    <Compile Include="Presentation\IEdgeMaskModule.cs" />
     <Compile Include="Presentation\IGraphLayoutModule.cs" />
     <Compile Include="Presentation\IModule.cs" />
     <Compile Include="Presentation\IModuleChangedJournal.cs" />

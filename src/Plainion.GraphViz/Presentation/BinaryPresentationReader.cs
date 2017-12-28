@@ -42,7 +42,6 @@ namespace Plainion.GraphViz.Presentation
             presentation.Graph = ReadGraph();
 
             ReadNodeMasks(presentation.GetModule<NodeMaskModule>());
-            ReadEdgeMasks(presentation.GetModule<EdgeMaskModule>());
             ReadTansformations(presentation.GetModule<TransformationModule>());
             ReadCaptions(presentation.GetModule<CaptionModule>());
             ReadNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
@@ -132,10 +131,6 @@ namespace Plainion.GraphViz.Presentation
             {
                 throw new NotSupportedException("Unknown mask type: " + maskType);
             }
-        }
-
-        private void ReadEdgeMasks(EdgeMaskModule module)
-        {
         }
 
         private void ReadTansformations(TransformationModule module)

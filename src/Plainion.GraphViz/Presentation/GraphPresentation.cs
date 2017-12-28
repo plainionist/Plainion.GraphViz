@@ -10,7 +10,6 @@ namespace Plainion.GraphViz.Presentation
         private List<object> myModules;
         private IGraph myGraph;
         private IModuleChangedObserver myNodeMaskModuleObserver;
-        private IModuleChangedObserver myEdgeMaskModuleObserver;
         private IModuleChangedObserver myTransformationModuleObserver;
 
         public GraphPresentation()
@@ -25,16 +24,12 @@ namespace Plainion.GraphViz.Presentation
             myModules.Add(new CaptionModule(id => new Caption(id, null)));
             myModules.Add(new GraphLayoutModule());
             myModules.Add(new NodeMaskModule());
-            myModules.Add(new EdgeMaskModule());
             myModules.Add(new TransformationModule(this));
 
             Picking = new PickingCache(this, new GraphPicking(this));
 
             myNodeMaskModuleObserver = GetModule<INodeMaskModule>().CreateObserver();
             myNodeMaskModuleObserver.ModuleChanged += OnModuleChanged;
-
-            myEdgeMaskModuleObserver = GetModule<IEdgeMaskModule>().CreateObserver();
-            myEdgeMaskModuleObserver.ModuleChanged += OnModuleChanged;
 
             myTransformationModuleObserver = GetModule<ITransformationModule>().CreateObserver();
             myTransformationModuleObserver.ModuleChanged += OnModuleChanged;
@@ -106,9 +101,6 @@ namespace Plainion.GraphViz.Presentation
                 myNodeMaskModuleObserver.ModuleChanged -= OnModuleChanged;
                 myNodeMaskModuleObserver.Dispose();
 
-                myEdgeMaskModuleObserver.ModuleChanged -= OnModuleChanged;
-                myEdgeMaskModuleObserver.Dispose();
-
                 myTransformationModuleObserver.ModuleChanged -= OnModuleChanged;
                 myTransformationModuleObserver.Dispose();
 
@@ -154,23 +146,6 @@ namespace Plainion.GraphViz.Presentation
                 foreach (var item in GetModule<INodeMaskModule>().Items.Concat(other.GetModule<INodeMaskModule>().Items))
                 {
                     resultModule.Push(item);
-                }
-            }
-
-            {
-                var resultModule = result.GetModule<IEdgeMaskModule>();
-
-                foreach (var item in GetModule<IEdgeMaskModule>().Items)
-                {
-                    resultModule.Add(item);
-                }
-
-                foreach (var item in other.GetModule<IEdgeMaskModule>().Items)
-                {
-                    if (!resultModule.Items.Any(i => i.Id == item.Id))
-                    {
-                        resultModule.Add(item);
-                    }
                 }
             }
 

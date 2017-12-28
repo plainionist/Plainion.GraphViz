@@ -19,7 +19,6 @@ namespace Plainion.GraphViz.Visuals
 
         private IModuleChangedJournal<Selection> mySelectionJournal;
         private IModuleChangedJournal<INodeMask> myNodeMaskJournal;
-        private IModuleChangedJournal<Edge> myEdgeMaskJournal;
         private IModuleChangedJournal<IGraphTransformation> myTransformationsJournal;
 
         private double myOldScaling;
@@ -52,7 +51,6 @@ namespace Plainion.GraphViz.Visuals
                 {
                     mySelectionJournal.Dispose();
                     myNodeMaskJournal.Dispose();
-                    myEdgeMaskJournal.Dispose();
                     myTransformationsJournal.Dispose();
 
                     myDrawingElements.Clear();
@@ -64,7 +62,6 @@ namespace Plainion.GraphViz.Visuals
                 {
                     mySelectionJournal = myPresentation.GetPropertySetFor<Selection>().CreateJournal();
                     myNodeMaskJournal = myPresentation.GetModule<INodeMaskModule>().CreateJournal();
-                    myEdgeMaskJournal = myPresentation.GetModule<IEdgeMaskModule>().CreateJournal();
                     myTransformationsJournal = myPresentation.GetModule<ITransformationModule>().CreateJournal();
                 }
             }
@@ -188,7 +185,6 @@ namespace Plainion.GraphViz.Visuals
 
                 // clear journals - to avoid considering out-dated infos on next refresh
                 myTransformationsJournal.Clear();
-                myEdgeMaskJournal.Clear();
                 myNodeMaskJournal.Clear();
                 mySelectionJournal.Clear();
 
@@ -201,23 +197,6 @@ namespace Plainion.GraphViz.Visuals
             }
             else
             {
-                // first draw edges so that in case of overlap with nodes nodes are on top
-                if( !myEdgeMaskJournal.IsEmpty )
-                {
-                    // EdgeMask module can only hide additional edges so no picking required here
-                    foreach( var edge in myEdgeMaskJournal.Entries )
-                    {
-                        AbstractElementVisual visual;
-                        if( myDrawingElements.TryGetValue( edge.Id, out visual ) )
-                        {
-                            SetVisibility( ( EdgeVisual )visual, false, null );
-                        }
-                    }
-
-                    myEdgeMaskJournal.Clear();
-                    InvalidateVisual();
-                }
-
                 if( !myNodeMaskJournal.IsEmpty )
                 {
                     foreach( var node in transformationModule.Graph.Nodes )

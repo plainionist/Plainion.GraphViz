@@ -33,11 +33,9 @@ namespace Plainion.GraphViz.Presentation
             return true;
         }
 
-        // TODO: this api might create performance issues
         public bool Pick( Edge edge )
         {
-            return !myPresentation.GetModule<IEdgeMaskModule>().Items.Contains( edge )
-                && Pick( edge.Source ) && Pick( edge.Target );
+            return Pick( edge.Source ) && Pick( edge.Target );
         }
     }
 }

@@ -42,7 +42,6 @@ namespace Plainion.GraphViz.Presentation
             WriteGraph(presentation.Graph);
 
             WriteNodeMasks(presentation.GetModule<NodeMaskModule>());
-            WriteEdgeMasks(presentation.GetModule<EdgeMaskModule>());
             WriteTansformations(presentation.GetModule<TransformationModule>());
             WriteCaptions(presentation.GetModule<CaptionModule>());
             WriteNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
@@ -125,10 +124,6 @@ namespace Plainion.GraphViz.Presentation
             {
                 throw new NotSupportedException("Unknown mask type: " + mask.GetType());
             }
-        }
-
-        private void WriteEdgeMasks(EdgeMaskModule module)
-        {
         }
 
         private void WriteTansformations(TransformationModule module)
