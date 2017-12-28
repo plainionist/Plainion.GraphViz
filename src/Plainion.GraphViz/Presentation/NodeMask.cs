@@ -17,6 +17,13 @@ namespace Plainion.GraphViz.Presentation
             IsShowMask = true;
         }
 
+        public NodeMask(IEnumerable<string> nodes)
+        {
+            myValues = new HashSet<string>(nodes);
+            IsApplied = true;
+            IsShowMask = true;
+        }
+
         public NodeMask( SerializationInfo info, StreamingContext context )
             : base( info, context )
         {

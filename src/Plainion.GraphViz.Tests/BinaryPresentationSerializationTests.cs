@@ -19,7 +19,7 @@ namespace Plainion.GraphViz.Tests
             builder.TryAddEdge("a", "b");
             builder.TryAddEdge("a", "c");
             builder.TryAddNode("d");
-            builder.TryAddCluster("X17", new[] {"b","c" });
+            builder.TryAddCluster("X17", new[] { "b", "c" });
 
             myPresentation = new GraphPresentation();
             myPresentation.Graph = builder.Graph;
@@ -50,7 +50,44 @@ namespace Plainion.GraphViz.Tests
 
             Assert.That(presentation, Is.Not.SameAs(myPresentation));
             Assert.That(presentation.Graph.Clusters.Ids(), Is.EquivalentTo(new string[] { "X17" }));
-            Assert.That(presentation.Graph.Clusters.Single().Nodes.Ids(), Is.EquivalentTo(new string[] { "b","c" }));
+            Assert.That(presentation.Graph.Clusters.Single().Nodes.Ids(), Is.EquivalentTo(new string[] { "b", "c" }));
+        }
+
+        [Test]
+        public void WHEN_NodeMasksExist_THEN_MasksGetSerialized()
+        {
+            var module = myPresentation.GetModule<NodeMaskModule>();
+            module.Push(new NodeMask(new[] { "b", "c" }));
+            module.Push(new NodeMask(new[] { "a" }) { IsShowMask = false });
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetModule<NodeMaskModule>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetModule<NodeMaskModule>()));
+
+            Assert.That(module.Items.ElementAt(0).IsShowMask, Is.False);
+            Assert.That(((NodeMask)module.Items.ElementAt(0)).Values, Is.EqualTo(new[] { "a" }));
+
+            Assert.That(module.Items.ElementAt(1).IsShowMask, Is.True);
+            Assert.That(((NodeMask)module.Items.ElementAt(1)).Values, Is.EqualTo(new[] { "b", "c" }));
+        }
+
+        [Test]
+        public void WHEN_AllNodesMasksExist_THEN_MasksGetSerialized()
+        {
+            var module = myPresentation.GetModule<NodeMaskModule>();
+            var mask = new AllNodesMask();
+            mask.IsShowMask = false;
+            module.Push(mask);
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetModule<NodeMaskModule>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetModule<NodeMaskModule>()));
+            Assert.That(module.Items.Single().IsShowMask, Is.False);
+            Assert.That(module.Items.Single(), Is.InstanceOf<AllNodesMask>());
         }
 
         private static IGraphPresentation SerializeDeserialize(IGraphPresentation presentation)

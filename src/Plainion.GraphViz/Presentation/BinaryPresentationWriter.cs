@@ -40,6 +40,18 @@ namespace Plainion.GraphViz.Presentation
             myWriter.Write(Version);
 
             WriteGraph(presentation.Graph);
+
+            WriteNodeMasks(presentation.GetModule<NodeMaskModule>());
+            WriteEdgeMasks(presentation.GetModule<EdgeMaskModule>());
+            WriteTansformations(presentation.GetModule<TransformationModule>());
+            WriteCaptions(presentation.GetModule<CaptionModule>());
+            WriteNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
+            WriteEdgeStyles(presentation.GetPropertySetFor<EdgeStyle>());
+            WriteToolTips(presentation.GetPropertySetFor<ToolTipContent>());
+
+            // intentionally left out
+            // - GraphLayoutModule
+            // - PropertySetModule<Selection>
         }
 
         private void WriteGraph(IGraph graph)
@@ -78,6 +90,65 @@ namespace Plainion.GraphViz.Presentation
             {
                 writeNode(node);
             }
+        }
+
+        private void WriteNodeMasks(NodeMaskModule module)
+        {
+            myWriter.Write(module.Items.Count());
+            foreach (var mask in module.Items.Reverse())
+            {
+                WriteNodeMask(mask);
+            }
+        }
+
+        private void WriteNodeMask(INodeMask mask)
+        {
+            myWriter.Write(mask.Label ?? string.Empty);
+            myWriter.Write(mask.IsApplied);
+            myWriter.Write(mask.IsShowMask);
+
+            var nodeMask = mask as NodeMask;
+            if (nodeMask != null)
+            {
+                myWriter.Write("NodeMask");
+                myWriter.Write(nodeMask.Values.Count());
+                foreach (var value in nodeMask.Values)
+                {
+                    myWriter.Write(value);
+                }
+            }
+            else if (mask is AllNodesMask)
+            {
+                myWriter.Write("AllNodesMask");
+            }
+            else
+            {
+                throw new NotSupportedException("Unknown mask type: " + mask.GetType());
+            }
+        }
+
+        private void WriteEdgeMasks(EdgeMaskModule module)
+        {
+        }
+
+        private void WriteTansformations(TransformationModule module)
+        {
+        }
+
+        private void WriteCaptions(CaptionModule module)
+        {
+        }
+
+        private void WriteNodeStyles(IPropertySetModule<NodeStyle> module)
+        {
+        }
+
+        private void WriteEdgeStyles(IPropertySetModule<EdgeStyle> module)
+        {
+        }
+
+        private void WriteToolTips(IPropertySetModule<ToolTipContent> module)
+        {
         }
     }
 }

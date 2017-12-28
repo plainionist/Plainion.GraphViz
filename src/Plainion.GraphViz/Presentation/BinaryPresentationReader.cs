@@ -41,6 +41,18 @@ namespace Plainion.GraphViz.Presentation
 
             presentation.Graph = ReadGraph();
 
+            ReadNodeMasks(presentation.GetModule<NodeMaskModule>());
+            ReadEdgeMasks(presentation.GetModule<EdgeMaskModule>());
+            ReadTansformations(presentation.GetModule<TransformationModule>());
+            ReadCaptions(presentation.GetModule<CaptionModule>());
+            ReadNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
+            ReadEdgeStyles(presentation.GetPropertySetFor<EdgeStyle>());
+            ReadToolTips(presentation.GetPropertySetFor<ToolTipContent>());
+
+            // intentionally left out
+            // - GraphLayoutModule
+            // - PropertySetModule<Selection>
+
             return presentation;
         }
 
@@ -74,6 +86,76 @@ namespace Plainion.GraphViz.Presentation
             }
 
             return builder.Graph;
+        }
+
+        private void ReadNodeMasks(NodeMaskModule module)
+        {
+            var count = myReader.ReadInt32();
+            for (int i = 0; i < count; ++i)
+            {
+                module.Push(ReadNodeMask());
+            }
+        }
+
+        private INodeMask ReadNodeMask()
+        {
+            var label = myReader.ReadString();
+            var isApplied = myReader.ReadBoolean();
+            var isShowMask = myReader.ReadBoolean();
+
+            var maskType = myReader.ReadString();
+
+            if (maskType == "NodeMask")
+            {
+                var count = myReader.ReadInt32();
+                var nodes = new List<string>(count);
+                for (int i = 0; i < count; ++i)
+                {
+                    nodes.Add(myReader.ReadString());
+                }
+
+                var mask = new NodeMask(nodes);
+                mask.Label = label;
+                mask.IsApplied = isApplied;
+                mask.IsShowMask = isShowMask;
+                return mask;
+            }
+            else if (maskType == "AllNodesMask")
+            {
+                var mask = new AllNodesMask();
+                mask.Label = label;
+                mask.IsApplied = isApplied;
+                mask.IsShowMask = isShowMask;
+                return mask;
+            }
+            else
+            {
+                throw new NotSupportedException("Unknown mask type: " + maskType);
+            }
+        }
+
+        private void ReadEdgeMasks(EdgeMaskModule module)
+        {
+        }
+
+        private void ReadTansformations(TransformationModule module)
+        {
+        }
+
+        private void ReadCaptions(CaptionModule module)
+        {
+        }
+
+        private void ReadNodeStyles(IPropertySetModule<NodeStyle> module)
+        {
+        }
+
+        private void ReadEdgeStyles(IPropertySetModule<EdgeStyle> module)
+        {
+        }
+
+        private void ReadToolTips(IPropertySetModule<ToolTipContent> module)
+        {
         }
     }
 }
