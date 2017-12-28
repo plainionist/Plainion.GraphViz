@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Media;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
@@ -12,6 +13,7 @@ namespace Plainion.GraphViz.Presentation
         internal static int Version = 1;
 
         private BinaryWriter myWriter;
+        private BrushConverter myBrushConverter;
 
         /// <summary>
         /// The stream is left open.
@@ -22,6 +24,7 @@ namespace Plainion.GraphViz.Presentation
             Contract.Requires(stream.CanWrite, "Cannot write to stream");
 
             myWriter = new BinaryWriter(stream, Encoding.UTF8, true);
+            myBrushConverter = new BrushConverter();
         }
 
         public void Dispose()
@@ -46,11 +49,11 @@ namespace Plainion.GraphViz.Presentation
             WriteCaptions(presentation.GetModule<CaptionModule>());
             WriteNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
             WriteEdgeStyles(presentation.GetPropertySetFor<EdgeStyle>());
-            WriteToolTips(presentation.GetPropertySetFor<ToolTipContent>());
 
             // intentionally left out
             // - GraphLayoutModule
             // - PropertySetModule<Selection>
+            // - PropertySetModule<ToolTipContent>
         }
 
         private void WriteGraph(IGraph graph)
@@ -128,7 +131,7 @@ namespace Plainion.GraphViz.Presentation
         private void WriteTansformations(TransformationModule module)
         {
             myWriter.Write(module.Items.Count());
-            foreach (var transformation in module.Items.Reverse())
+            foreach (var transformation in module.Items)
             {
                 WriteTransformation(transformation);
             }
@@ -172,18 +175,37 @@ namespace Plainion.GraphViz.Presentation
 
         private void WriteCaptions(CaptionModule module)
         {
+            myWriter.Write(module.Items.Count());
+            foreach (var caption in module.Items)
+            {
+                myWriter.Write(caption.OwnerId);
+                myWriter.Write(caption.Label);
+                myWriter.Write(caption.DisplayText);
+            }
         }
 
         private void WriteNodeStyles(IPropertySetModule<NodeStyle> module)
         {
+            myWriter.Write(module.Items.Count());
+            foreach (var style in module.Items)
+            {
+                myWriter.Write(style.OwnerId);
+                myWriter.Write(myBrushConverter.ConvertToString(style.BorderColor));
+                myWriter.Write(myBrushConverter.ConvertToString(style.FillColor));
+                myWriter.Write(style.Shape);
+                myWriter.Write(style.Style);
+            }
         }
 
         private void WriteEdgeStyles(IPropertySetModule<EdgeStyle> module)
         {
-        }
-
-        private void WriteToolTips(IPropertySetModule<ToolTipContent> module)
-        {
+            myWriter.Write(module.Items.Count());
+            foreach (var style in module.Items)
+            {
+                myWriter.Write(style.OwnerId);
+                myWriter.Write(myBrushConverter.ConvertToString(style.Color));
+                myWriter.Write(style.Style);
+            }
         }
     }
 }

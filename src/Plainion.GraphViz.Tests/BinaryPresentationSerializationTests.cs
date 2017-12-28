@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Media;
 using NUnit.Framework;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
@@ -124,7 +125,6 @@ namespace Plainion.GraphViz.Tests
             Assert.That(t.NodeToClusterMapping["d"], Is.EqualTo("X17"));
         }
 
-
         [Test]
         public void WHEN_ClusterFolded_THEN_ClusterFoldingSerialized()
         {
@@ -141,6 +141,50 @@ namespace Plainion.GraphViz.Tests
 
             t = module.Items.OfType<ClusterFoldingTransformation>().Single();
             Assert.That(t.Clusters, Is.EquivalentTo(new[] { "X17" }));
+        }
+
+        [Test]
+        public void WHEN_CaptionsDefined_THEN_CaptionsAreSerialized()
+        {
+            var module = myPresentation.GetModule<CaptionModule>();
+            module.Add(new Caption("a", "this is an A"));
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetModule<CaptionModule>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetModule<TransformationModule>()));
+            Assert.That(module.Get("a").Label, Is.EqualTo("this is an A"));
+        }
+
+        [Test]
+        public void WHEN_NodeStylesDefined_THEN_NodeStylesAreSerialized()
+        {
+            var module = myPresentation.GetPropertySetFor<NodeStyle>();
+            module.Add(new NodeStyle("a") { FillColor = Brushes.Red });
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetPropertySetFor<NodeStyle>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetPropertySetFor<NodeStyle>()));
+            var converter = new BrushConverter();
+            Assert.That(converter.ConvertToString(module.Get("a").FillColor), Is.EqualTo(converter.ConvertToString(Brushes.Red)));
+        }
+
+        [Test]
+        public void WHEN_EdgeStylesDefined_THEN_EdgeStylesAreSerialized()
+        {
+            var module = myPresentation.GetPropertySetFor<EdgeStyle>();
+            module.Add(new EdgeStyle("a") { Color = Brushes.Red });
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetPropertySetFor<EdgeStyle>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetPropertySetFor<EdgeStyle>()));
+            var converter = new BrushConverter();
+            Assert.That(converter.ConvertToString(module.Get("a").Color), Is.EqualTo(converter.ConvertToString(Brushes.Red)));
         }
 
         private static IGraphPresentation SerializeDeserialize(IGraphPresentation presentation)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using Plainion.GraphViz.Model;
+using System.Windows.Media;
 
 namespace Plainion.GraphViz.Presentation
 {
@@ -12,6 +13,7 @@ namespace Plainion.GraphViz.Presentation
         internal static int Version = 1;
 
         private BinaryReader myReader;
+        private BrushConverter myBrushConverter;
 
         /// <summary>
         /// The stream is left open.
@@ -22,6 +24,7 @@ namespace Plainion.GraphViz.Presentation
             Contract.Requires(stream.CanRead, "Cannot read from stream");
 
             myReader = new BinaryReader(stream, Encoding.UTF8, true);
+            myBrushConverter = new BrushConverter();
         }
 
         public void Dispose()
@@ -47,11 +50,11 @@ namespace Plainion.GraphViz.Presentation
             ReadCaptions(presentation.GetModule<CaptionModule>());
             ReadNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
             ReadEdgeStyles(presentation.GetPropertySetFor<EdgeStyle>());
-            ReadToolTips(presentation.GetPropertySetFor<ToolTipContent>());
 
             // intentionally left out
             // - GraphLayoutModule
             // - PropertySetModule<Selection>
+            // - PropertySetModule<ToolTipContent>
 
             return presentation;
         }
@@ -210,18 +213,39 @@ namespace Plainion.GraphViz.Presentation
 
         private void ReadCaptions(CaptionModule module)
         {
+            var count = myReader.ReadInt32();
+            for (int i = 0; i < count; ++i)
+            {
+                var caption = new Caption(myReader.ReadString(), myReader.ReadString());
+                caption.DisplayText = myReader.ReadString();
+                module.Add(caption);
+            }
         }
 
         private void ReadNodeStyles(IPropertySetModule<NodeStyle> module)
         {
+            var count = myReader.ReadInt32();
+            for (int i = 0; i < count; ++i)
+            {
+                var style = new NodeStyle(myReader.ReadString());
+                style.BorderColor = (Brush)myBrushConverter.ConvertFromString(myReader.ReadString());
+                style.FillColor = (Brush)myBrushConverter.ConvertFromString(myReader.ReadString());
+                style.Shape = myReader.ReadString();
+                style.Style = myReader.ReadString();
+                module.Add(style);
+            }
         }
 
         private void ReadEdgeStyles(IPropertySetModule<EdgeStyle> module)
         {
-        }
-
-        private void ReadToolTips(IPropertySetModule<ToolTipContent> module)
-        {
+            var count = myReader.ReadInt32();
+            for (int i = 0; i < count; ++i)
+            {
+                var style = new EdgeStyle(myReader.ReadString());
+                style.Color = (Brush)myBrushConverter.ConvertFromString(myReader.ReadString());
+                style.Style = myReader.ReadString();
+                module.Add(style);
+            }
         }
     }
 }
