@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.Presentation
 
         protected bool SetProperty<T>( ref T storage, T value, [CallerMemberName] string propertyName = null )
         {
-            if( object.Equals( storage, value ) )
+            if(Equals( storage, value ) )
             {
                 return false;
             }
@@ -23,10 +23,7 @@ namespace Plainion.GraphViz.Presentation
 
         protected virtual void OnPropertyChanged( string propertyName )
         {
-            if( PropertyChanged != null )
-            {
-                PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

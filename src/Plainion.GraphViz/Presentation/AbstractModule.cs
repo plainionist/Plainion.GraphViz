@@ -33,10 +33,7 @@ namespace Plainion.GraphViz.Presentation
 
         protected void OnCollectionChanged( NotifyCollectionChangedEventArgs args )
         {
-            if( CollectionChanged != null )
-            {
-                CollectionChanged( this, args );
-            }
+            CollectionChanged?.Invoke(this, args);
         }
     }
 }

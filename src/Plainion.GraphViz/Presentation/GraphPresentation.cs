@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using Plainion.GraphViz.Model;
-using Plainion;
 
 namespace Plainion.GraphViz.Presentation
 {
-    // TODO: we should add later support for dynamic add of modules in order to support "plugins"
-    // e.g. loaded via MEF from directly
     public class GraphPresentation : IGraphPresentation
     {
         private List<object> myModules;
@@ -46,10 +42,7 @@ namespace Plainion.GraphViz.Presentation
 
         private void OnModuleChanged(object sender, EventArgs e)
         {
-            if (GraphVisibilityChanged != null)
-            {
-                GraphVisibilityChanged(this, EventArgs.Empty);
-            }
+            GraphVisibilityChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public IPropertySetModule<T> GetPropertySetFor<T>() where T : AbstractPropertySet
