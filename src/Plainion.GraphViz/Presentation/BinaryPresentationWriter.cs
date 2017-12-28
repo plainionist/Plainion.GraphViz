@@ -106,8 +106,7 @@ namespace Plainion.GraphViz.Presentation
             myWriter.Write(mask.IsApplied);
             myWriter.Write(mask.IsShowMask);
 
-            var nodeMask = mask as NodeMask;
-            if (nodeMask != null)
+            if (mask is NodeMask nodeMask)
             {
                 myWriter.Write("NodeMask");
                 myWriter.Write(nodeMask.Values.Count());
@@ -128,6 +127,47 @@ namespace Plainion.GraphViz.Presentation
 
         private void WriteTansformations(TransformationModule module)
         {
+            myWriter.Write(module.Items.Count());
+            foreach (var transformation in module.Items.Reverse())
+            {
+                WriteTransformation(transformation);
+            }
+        }
+
+        private void WriteTransformation(IGraphTransformation transformation)
+        {
+            if (transformation is DynamicClusterTransformation dct)
+            {
+                myWriter.Write("DynamicClusterTransformation");
+
+                myWriter.Write(dct.ClusterVisibility.Count());
+                foreach (var entry in dct.ClusterVisibility)
+                {
+                    myWriter.Write(entry.Key);
+                    myWriter.Write(entry.Value);
+                }
+
+                myWriter.Write(dct.NodeToClusterMapping.Count());
+                foreach (var entry in dct.NodeToClusterMapping)
+                {
+                    myWriter.Write(entry.Key);
+                    myWriter.Write(entry.Value ?? string.Empty);
+                }
+            }
+            else if (transformation is ClusterFoldingTransformation cft)
+            {
+                myWriter.Write("ClusterFoldingTransformation");
+
+                myWriter.Write(cft.Clusters.Count());
+                foreach (var cluster in cft.Clusters)
+                {
+                    myWriter.Write(cluster);
+                }
+            }
+            else
+            {
+                throw new NotSupportedException("Unknown transformation type: " + transformation.GetType());
+            }
         }
 
         private void WriteCaptions(CaptionModule module)

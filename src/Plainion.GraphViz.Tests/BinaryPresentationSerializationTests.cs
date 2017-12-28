@@ -90,6 +90,59 @@ namespace Plainion.GraphViz.Tests
             Assert.That(module.Items.Single(), Is.InstanceOf<AllNodesMask>());
         }
 
+        [Test]
+        public void WHEN_ClusterVisibilityIsDefined_THEN_ClusterVisibilityIsSerialized()
+        {
+            var module = myPresentation.GetModule<TransformationModule>();
+            var t = module.Items.OfType<DynamicClusterTransformation>().Single();
+            t.HideCluster("X17");
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetModule<TransformationModule>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetModule<TransformationModule>()));
+
+            t = module.Items.OfType<DynamicClusterTransformation>().Single();
+            Assert.That(t.ClusterVisibility["X17"], Is.False);
+        }
+
+        [Test]
+        public void WHEN_NodeAddedToCluster_THEN_ClusterAssignmentIsSerialized()
+        {
+            var module = myPresentation.GetModule<TransformationModule>();
+            var t = module.Items.OfType<DynamicClusterTransformation>().Single();
+            t.AddToCluster("d", "X17");
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetModule<TransformationModule>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetModule<TransformationModule>()));
+
+            t = module.Items.OfType<DynamicClusterTransformation>().Single();
+            Assert.That(t.NodeToClusterMapping["d"], Is.EqualTo("X17"));
+        }
+
+
+        [Test]
+        public void WHEN_ClusterFolded_THEN_ClusterFoldingSerialized()
+        {
+            var module = myPresentation.GetModule<TransformationModule>();
+            var t = new ClusterFoldingTransformation(myPresentation);
+            t.Add("X17");
+            module.Add(t);
+
+            var presentation = SerializeDeserialize(myPresentation);
+
+            module = presentation.GetModule<TransformationModule>();
+
+            Assert.That(module, Is.Not.SameAs(myPresentation.GetModule<TransformationModule>()));
+
+            t = module.Items.OfType<ClusterFoldingTransformation>().Single();
+            Assert.That(t.Clusters, Is.EquivalentTo(new[] { "X17" }));
+        }
+
         private static IGraphPresentation SerializeDeserialize(IGraphPresentation presentation)
         {
             using (var stream = new MemoryStream())

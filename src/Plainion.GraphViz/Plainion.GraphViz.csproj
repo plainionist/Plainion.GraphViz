@@ -17,11 +17,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Plainion.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Core.3.3.0\lib\NET45\Plainion.Core.dll</HintPath>
+    <Reference Include="Plainion.Core, Version=3.4.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plainion.Core.3.4.0\lib\NET45\Plainion.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Plainion.Windows, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Windows.2.2.0\lib\NET45\Plainion.Windows.dll</HintPath>
+    <Reference Include="Plainion.Windows, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plainion.Windows.2.5.0\lib\NET45\Plainion.Windows.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

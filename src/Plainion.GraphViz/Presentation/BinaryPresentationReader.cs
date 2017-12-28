@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Text;
 using Plainion.GraphViz.Model;
@@ -42,7 +43,7 @@ namespace Plainion.GraphViz.Presentation
             presentation.Graph = ReadGraph();
 
             ReadNodeMasks(presentation.GetModule<NodeMaskModule>());
-            ReadTansformations(presentation.GetModule<TransformationModule>());
+            ReadTansformations(presentation.GetModule<TransformationModule>(), presentation);
             ReadCaptions(presentation.GetModule<CaptionModule>());
             ReadNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
             ReadEdgeStyles(presentation.GetPropertySetFor<EdgeStyle>());
@@ -133,8 +134,78 @@ namespace Plainion.GraphViz.Presentation
             }
         }
 
-        private void ReadTansformations(TransformationModule module)
+        private void ReadTansformations(TransformationModule module, IGraphPresentation presentation)
         {
+            // TransformationModule adds default transformations
+            // -> remove those
+            foreach (var t in module.Items.ToList())
+            {
+                module.Remove(t);
+            }
+
+            var count = myReader.ReadInt32();
+            for (int i = 0; i < count; ++i)
+            {
+                module.Add(ReadTransformation(presentation));
+            }
+        }
+
+        private IGraphTransformation ReadTransformation(IGraphPresentation presentation)
+        {
+            var transformationType = myReader.ReadString();
+
+            if (transformationType == "DynamicClusterTransformation")
+            {
+                var t = new DynamicClusterTransformation();
+
+                var count = myReader.ReadInt32();
+                for (int i = 0; i < count; ++i)
+                {
+                    var id = myReader.ReadString();
+                    if (myReader.ReadBoolean())
+                    {
+                        t.AddCluster(id);
+                    }
+                    else
+                    {
+                        t.HideCluster(id);
+                    }
+                }
+
+                count = myReader.ReadInt32();
+                for (int i = 0; i < count; ++i)
+                {
+                    var nodeId = myReader.ReadString();
+                    var clusterId = myReader.ReadString();
+
+                    if (clusterId == string.Empty)
+                    {
+                        t.RemoveFromClusters(nodeId);
+                    }
+                    else
+                    {
+                        t.AddToCluster(nodeId, clusterId);
+                    }
+                }
+
+                return t;
+            }
+            else if (transformationType == "ClusterFoldingTransformation")
+            {
+                var t = new ClusterFoldingTransformation(presentation);
+
+                var count = myReader.ReadInt32();
+                for (int i = 0; i < count; ++i)
+                {
+                    t.Add(myReader.ReadString());
+                }
+
+                return t;
+            }
+            else
+            {
+                throw new NotSupportedException("Unknown transformation type: " + transformationType);
+            }
         }
 
         private void ReadCaptions(CaptionModule module)
