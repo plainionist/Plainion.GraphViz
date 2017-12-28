@@ -1,3 +1,7 @@
+## 2.5.0 - 2017-12
+
+- added support saving and loading complete graphs including presentation information (".pgv")
+
 ## 2.5.0 - 2017-12-09
 
 - tracing between nodes added

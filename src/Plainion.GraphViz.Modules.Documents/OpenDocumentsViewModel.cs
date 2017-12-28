@@ -1,20 +1,19 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using Plainion.GraphViz.Dot;
+using Plainion.GraphViz.Infrastructure.Services;
+using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Presentation;
+using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
-using Plainion.GraphViz.Infrastructure.Services;
-using Plainion.GraphViz.Infrastructure.ViewModel;
-using Plainion.Prism.Interactivity.InteractionRequest;
-using Plainion.GraphViz.Dot;
-using System.Threading.Tasks;
-using Plainion.GraphViz.Presentation;
-using Plainion.GraphViz.Model;
-using System.Diagnostics;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
@@ -47,7 +46,7 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             var notification = new OpenFileDialogNotification();
             notification.RestoreDirectory = true;
-            notification.Filter = "DOT files (*.dot)|*.dot|DGML files (*.dgml)|*.dgml|GraphML files (*.graphml)|*.graphml|DOT plain files (*.plain)|*.plain";
+            notification.Filter = "DOT files (*.dot)|*.dot|DGML files (*.dgml)|*.dgml|GraphML files (*.graphml)|*.graphml|DOT plain files (*.plain)|*.plain|Plainion.GraphViz files (*.pgv)|*.pgv";
             notification.FilterIndex = 0;
             notification.DefaultExt = ".dot";
 
@@ -62,6 +61,29 @@ namespace Plainion.GraphViz.Modules.Documents
         }
 
         private void Open(string path)
+        {
+            if (Path.GetExtension(path).Equals(".pgv", StringComparison.OrdinalIgnoreCase))
+            {
+                OpenPresentation(path);
+            }
+            else
+            {
+                OpenDocument(path);
+            }
+        }
+
+        private void OpenPresentation(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryPresentationReader(stream))
+                {
+                    Model.Presentation = reader.Read();
+                }
+            }
+        }
+
+        private void OpenDocument(string path)
         {
             var presentation = PresentationCreationService.CreatePresentation(Path.GetDirectoryName(path));
 
@@ -174,7 +196,8 @@ namespace Plainion.GraphViz.Modules.Documents
             return ext.Equals(".dot", StringComparison.OrdinalIgnoreCase)
                 || ext.Equals(".dgml", StringComparison.OrdinalIgnoreCase)
                 || ext.Equals(".graphml", StringComparison.OrdinalIgnoreCase)
-                || ext.Equals(".plain", StringComparison.OrdinalIgnoreCase);
+                || ext.Equals(".plain", StringComparison.OrdinalIgnoreCase)
+                || ext.Equals(".pgv", StringComparison.OrdinalIgnoreCase);
         }
 
         public void Load(string filename)

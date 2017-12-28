@@ -18,7 +18,7 @@ namespace Plainion.GraphViz.Presentation
         public BinaryPresentationReader(Stream stream)
         {
             Contract.RequiresNotNull(stream, nameof(stream));
-            Contract.Requires(stream.CanWrite, "Cannot read from stream");
+            Contract.Requires(stream.CanRead, "Cannot read from stream");
 
             myReader = new BinaryReader(stream, Encoding.UTF8, true);
         }

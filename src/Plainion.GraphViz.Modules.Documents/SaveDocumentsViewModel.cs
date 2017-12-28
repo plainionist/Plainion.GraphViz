@@ -43,7 +43,7 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             var notification = new SaveFileDialogNotification();
             notification.RestoreDirectory = true;
-            notification.Filter = "DOT files (*.dot)|*.dot|DGML files (*.dgml)|*.dgml";
+            notification.Filter = "DOT files (*.dot)|*.dot|DGML files (*.dgml)|*.dgml|Plainion.GraphViz files (*.pgv)|*.pgv";
             notification.FilterIndex = 0;
             notification.DefaultExt = ".dot";
 
@@ -65,9 +65,13 @@ namespace Plainion.GraphViz.Modules.Documents
             {
                 SaveAsDgml(path);
             }
-            else
+            else if (Path.GetExtension(path).Equals(".dot", StringComparison.OrdinalIgnoreCase))
             {
                 SaveAsDot(path);
+            }
+            else
+            {
+                SavePresentation(path);
             }
         }
 
@@ -114,6 +118,17 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             var writer = new DotWriter(path);
             writer.Write(Model.Presentation.GetModule<ITransformationModule>().Graph, Model.Presentation.Picking, Model.Presentation);
+        }
+
+        private void SavePresentation(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new BinaryPresentationWriter(stream))
+                {
+                    writer.Write(Model.Presentation);
+                }
+            }
         }
 
         protected override void OnModelPropertyChanged(string propertyName)

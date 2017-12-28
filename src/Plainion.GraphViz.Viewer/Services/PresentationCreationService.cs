@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using System.IO;
 using System.Windows.Controls;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Presentation;
