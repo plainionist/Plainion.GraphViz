@@ -91,8 +91,6 @@
       <DependentUpon>SearchBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="SearchBoxModel.cs" />
-    <Compile Include="Services\INodeMasksPersistanceService.cs" />
-    <Compile Include="Services\NodeMasksPersistanceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ClusterEditor.xaml">

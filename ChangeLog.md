@@ -1,6 +1,7 @@
 ## 2.5.0 - 2017-12
 
 - added support saving and loading complete graphs including presentation information (".pgv")
+- Load/Save of NodeMasks removed (use PVG files instead)
 
 ## 2.5.0 - 2017-12-09
 

@@ -11,15 +11,6 @@
              x:Name="_this" mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="400">
 
-    <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
-            <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
-        </prism:InteractionRequestTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest, Mode=OneWay}">
-            <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:SaveFileDialog}"/>
-        </prism:InteractionRequestTrigger>
-    </i:Interaction.Triggers>
-
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -89,10 +80,6 @@
 
             <StackPanel Grid.Row="2" Orientation="Vertical" DockPanel.Dock="Bottom" >
                 <CheckBox Margin="5,5,5,5" Content="Show visible nodes only" IsChecked="{Binding PreviewVisibleNodesOnly}"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Load" Command="{Binding LoadMasksCommand}" Margin="3"/>
-                    <Button Content="Save" Command="{Binding SaveMasksCommand}" Margin="3"/>
-                </StackPanel>
             </StackPanel>
         </Grid>
     </Grid>

@@ -6,13 +6,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Input;
-using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Infrastructure.ViewModel;
-using Plainion.GraphViz.Modules.Analysis.Services;
 using Plainion.GraphViz.Presentation;
-using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
+using Prism.Commands;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
@@ -25,87 +22,13 @@ namespace Plainion.GraphViz.Modules.Analysis
         private ICollectionView myPreviewNodes;
         private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
-        private INodeMasksPersistanceService myPersistanceService;
 
-        [ImportingConstructor]
-        public NodeMasksEditorModel(INodeMasksPersistanceService persistancyService)
+        public NodeMasksEditorModel()
         {
-            myPersistanceService = persistancyService;
-
             myPreviewVisibleNodesOnly = true;
 
             AddCommand = new DelegateCommand(OnAdd);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
-
-            LoadMasksCommand = new DelegateCommand(LoadMasks);
-            OpenFileRequest = new InteractionRequest<OpenFileDialogNotification>();
-
-            SaveMasksCommand = new DelegateCommand(SaveMasks);
-            SaveFileRequest = new InteractionRequest<SaveFileDialogNotification>();
-        }
-
-        public DelegateCommand LoadMasksCommand { get; private set; }
-
-        public InteractionRequest<OpenFileDialogNotification> OpenFileRequest { get; private set; }
-
-        private void LoadMasks()
-        {
-            var notification = new OpenFileDialogNotification();
-            notification.RestoreDirectory = true;
-            notification.Filter = "GraphViz filter files (*.bgf)|*.bgf";
-            notification.FilterIndex = 0;
-            notification.DefaultExt = ".bgf";
-
-            OpenFileRequest.Raise(notification,
-                n =>
-                {
-                    if (n.Confirmed)
-                    {
-                        var masks = myPersistanceService.Load(n.FileName);
-
-                        var module = myPresentation.GetModule<INodeMaskModule>();
-                        var masksToRemove = module.Items.ToList();
-
-                        // unfort. we have to add masks first and then remove the old ones because the system reacts on
-                        // removal and in case of very huge graphs this causes performance issues because then the whole
-                        // graph is picked instead of subset
-
-                        // do reverse as we use push (stack)
-                        foreach (var mask in masks.Reverse())
-                        {
-                            module.Push(mask);
-                        }
-
-                        foreach (var mask in masksToRemove)
-                        {
-                            module.Remove(mask);
-                        }
-
-                    }
-                });
-        }
-
-        public DelegateCommand SaveMasksCommand { get; private set; }
-
-        public InteractionRequest<SaveFileDialogNotification> SaveFileRequest { get; private set; }
-
-        private void SaveMasks()
-        {
-            var notification = new SaveFileDialogNotification();
-            notification.RestoreDirectory = true;
-            notification.Filter = "GraphViz filter files (*.bgf)|*.bgf";
-            notification.FilterIndex = 0;
-            notification.DefaultExt = ".bgf";
-
-            SaveFileRequest.Raise(notification,
-                n =>
-                {
-                    if (n.Confirmed)
-                    {
-                        var module = myPresentation.GetModule<INodeMaskModule>();
-                        myPersistanceService.Save(n.FileName, module.Items);
-                    }
-                });
         }
 
         public ICommand MouseDownCommand { get; private set; }
