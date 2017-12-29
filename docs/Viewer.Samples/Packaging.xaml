@@ -6,6 +6,11 @@
                 <Include Pattern="Plainion.Windows.*" />
                 <Include Pattern="Plainion.Prism.*" />
             </Cluster>
+            <Cluster Id="7eff6647-cf1d-448d-83f5-c52b61a29754" Name="Core">
+                <Include Pattern="*" />
+                <Exclude Pattern="Plainion.Windows.*" />
+                <Exclude Pattern="Plainion.Prism.*" />
+            </Cluster>
         </Package.Clusters>
         <Include Pattern="Plainion.Core.dll" />
         <Include Pattern="Plainion.Windows.dll" />
@@ -20,6 +25,11 @@
         <Include Pattern="Prism.*.dll" />
     </Package>
     <Package Name="Akka">
+        <Package.Clusters>
+            <Cluster Id="aba9bb78-3278-4f78-b5fd-38a9674052b9" Name="Akka">
+                <Include Pattern="*" />
+            </Cluster>
+        </Package.Clusters>
         <Include Pattern="Akka.dll" />
         <Include Pattern="Akka.*.dll" />
     </Package>
