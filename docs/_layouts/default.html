@@ -37,7 +37,7 @@
                 {% assign navigation_pages = site.pages | sort: 'navigation_weight' %}
                 {% for p in navigation_pages %}
                 {% if p.navigation_weight %}
-                <div>
+                <div style="margin-bottom:5px">
                     <a href="{{ '/' | absolute_url }}{{ p.url }}" {% if p.url == page.url %} style="font-weight:bold" {% endif %}>
                         {{ p.title }}
                     </a>
