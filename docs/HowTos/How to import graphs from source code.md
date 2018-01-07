@@ -8,7 +8,7 @@ The following tools are supported:
 
 - Generate graphs from inheritance hierarchies (.Net only)
 - Generate graphs from software packages or sub-systems (.Net only)
-  (see [Packaging Sample](Viewer.Samples/Packaging.xaml))
+  (see [Packaging Sample](../Viewer.Samples/Packaging.xaml))
 
 Which kind of galaxy does your code form?
 
