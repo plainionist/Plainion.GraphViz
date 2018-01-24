@@ -44,6 +44,26 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             Verify(typeof(Caller), nameof(Caller.Main), typeof(CalleeExtensions), nameof(CalleeExtensions.ExtensionMethod));
         }
 
+        [Test]
+        public void CallOfProperty()
+        {
+            Verify(typeof(Caller), nameof(Caller.SpecialMethods), typeof(Callee), "get_Property");
+            Verify(typeof(Caller), nameof(Caller.SpecialMethods), typeof(Callee), "set_Property");
+        }
+
+        [Test]
+        public void CallOfIndexer()
+        {
+            Verify(typeof(Caller), nameof(Caller.SpecialMethods), typeof(Callee), "get_Item");
+            Verify(typeof(Caller), nameof(Caller.SpecialMethods), typeof(Callee), "set_Item");
+        }
+
+        [Test]
+        public void CallOfEvent()
+        {
+            Verify(typeof(Caller), nameof(Caller.Main), typeof(CalleeExtensions), nameof(CalleeExtensions.ExtensionMethod));
+        }
+
         private void Verify(Type callerType, string callerMethod, Type callingType, string callingMethod)
         {
             var reflector = new Inspector(new MonoLoader(), callerType);
@@ -74,6 +94,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         public void Action(ICallee callee)
         {
             callee.InterfaceMethod();
+        }
+
+        public void SpecialMethods()
+        {
+            var callee = new Callee();
+            if (callee.Property == 42)
+            {
+                callee.Property = 42 * 2;
+            }
+
+            callee["a"] = callee["b"];
+            callee.Event += (s, e) => { };
         }
     }
 
@@ -106,6 +138,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         public virtual void VirtualMethod()
         {
         }
+
+        public int Property { get; set; }
+
+        public string this[string key]
+        {
+            get { return null; }
+            set { Event(this, EventArgs.Empty); }
+        }
+
+        public event EventHandler Event;
     }
 
     static class CalleeExtensions
