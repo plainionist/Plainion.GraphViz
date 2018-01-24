@@ -1,36 +1,31 @@
 ﻿using System;
+using Plainion;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
-    public class Reference : IEquatable<Reference>
+    public class MethodCall : IEquatable<MethodCall>
     {
-        public Reference(Type from, Type to, ReferenceType type)
+        public MethodCall(Method from, Method to)
         {
             Contract.RequiresNotNull(from, "from");
             Contract.RequiresNotNull(to, "to");
-            Contract.RequiresNotNull(type, "type");
 
             From = from;
             To = to;
-            ReferenceType = type;
         }
 
-        public Type From { get; private set; }
+        public Method From { get; internal set; }
 
-        public Type To { get; private set; }
+        public Method To { get; private set; }
 
-        public ReferenceType ReferenceType { get; private set; }
-
-        public bool Equals(Reference other)
+        public bool Equals(MethodCall other)
         {
-            return From.Equals(other.From) &&
-                To.Equals(other.To) &&
-                ReferenceType == other.ReferenceType;
+            return From.Equals(other.From) && To.Equals(other.To);
         }
 
         public override bool Equals(object obj)
         {
-            var other = obj as Reference;
+            var other = obj as MethodCall;
             if (other == null)
             {
                 return false;
@@ -46,7 +41,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                 int hash = 17;
                 hash = hash * 23 + From.GetHashCode();
                 hash = hash * 23 + To.GetHashCode();
-                hash = hash * 23 + ReferenceType.GetHashCode();
                 return hash;
             }
         }

@@ -23,6 +23,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 
         public Inspector(MonoLoader loader, Type type)
         {
+            Contract.RequiresNotNull(loader, "loader");
+            Contract.RequiresNotNull(type, "type");
+
             myLoader = loader;
             myType = type;
 
@@ -49,24 +52,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 
             var elementTypes = edges
                 .Where(e => e.To.HasElementType)
-                .Select(e => new Reference(e.To.GetElementType(), e.ReferenceType));
+                .Select(e => new Reference(myType, e.To.GetElementType(), e.ReferenceType));
 
             edges = edges.Concat(elementTypes)
                 .ToList();
 
             var genericTypes = edges
                 .Where(e => e.To.IsGenericType)
-                .SelectMany(e => e.To.GetGenericArguments().Select(t => new Reference(t, e.ReferenceType)));
+                .SelectMany(e => e.To.GetGenericArguments().Select(t => new Reference(myType, t, e.ReferenceType)));
 
-            edges = edges.Concat(genericTypes)
+            return edges.Concat(genericTypes)
                 .ToList();
-
-            foreach (var edge in edges)
-            {
-                edge.From = myType;
-            }
-
-            return edges;
         }
 
         private IEnumerable<Reference> GetBaseTypes()
@@ -74,7 +70,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             var baseType = myType.BaseType;
             while (baseType != null && baseType != typeof(object))
             {
-                yield return new Reference(baseType, ReferenceType.DerivesFrom);
+                yield return new Reference(myType, baseType, ReferenceType.DerivesFrom);
 
                 baseType = baseType.BaseType;
             }
@@ -83,7 +79,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
         private IEnumerable<Reference> GetInterfaces()
         {
             return myType.GetInterfaces()
-                .Select(t => new Reference(t, ReferenceType.Implements));
+                .Select(t => new Reference(myType, t, ReferenceType.Implements));
         }
 
         private IEnumerable<Reference> GetFieldTypes()
@@ -96,7 +92,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
         {
             try
             {
-                return new Reference(extractor());
+                return new Reference(myType, extractor(), ReferenceType.Undefined);
             }
             catch (FileNotFoundException ex)
             {
@@ -132,7 +128,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 
             if (method.IsGenericMethod)
             {
-                types = types.Concat(method.GetGenericArguments().Select(t => new Reference(t)));
+                types = types.Concat(method.GetGenericArguments().Select(t => new Reference(myType, t, ReferenceType.Undefined)));
             }
 
             return types.Concat(GetParameterTypes(method));
@@ -161,17 +157,26 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
         //http://stackoverflow.com/questions/4184384/mono-cecil-typereference-to-type
         private IEnumerable<Reference> GetCalledTypes()
         {
+            return GetMethods()
+                .SelectMany(GetCalledTypes)
+                .Where(r => r != null)
+                .ToList();
+        }
+
+        //http://stackoverflow.com/questions/4184384/mono-cecil-typereference-to-type
+        private IEnumerable<MethodDefinition> GetMethods()
+        {
             try
             {
-                if (myType.IsInterface || myType.IsNested || !myType.IsClass)
+                if (myType.IsInterface || !myType.IsClass)
                 {
-                    return Enumerable.Empty<Reference>();
+                    return Enumerable.Empty<MethodDefinition>();
                 }
             }
             catch (FileNotFoundException ex)
             {
                 FileNotFound(ex);
-                return Enumerable.Empty<Reference>();
+                return Enumerable.Empty<MethodDefinition>();
             }
 
             var cecilType = myLoader.MonoLoad(myType.Assembly).MainModule.Types
@@ -181,14 +186,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             {
                 Console.Write("!{0}!", myFullName);
 
-                return Enumerable.Empty<Reference>();
+                return Enumerable.Empty<MethodDefinition>();
             }
 
             return cecilType.Methods
-                .Where(m => m.HasBody)
-                .SelectMany(GetCalledTypes)
-                .Where(edge => edge.To != null)
-                .ToList();
+                .Where(m => m.HasBody);
         }
 
         // https://msdn.microsoft.com/de-de/library/system.reflection.emit.opcodes(v=vs.110).aspx
@@ -201,7 +203,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     var typeRef = instr.Operand as TypeReference;
                     if (typeRef != null)
                     {
-                        yield return new Reference(TryGetSystemType(typeRef));
+                        yield return TryCreateReference(typeRef);
                     }
                 }
                 else if (instr.OpCode == OpCodes.Newobj)
@@ -209,7 +211,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     var methodRef = instr.Operand as MethodReference;
                     if (methodRef != null)
                     {
-                        yield return new Reference(TryGetSystemType(methodRef.DeclaringType));
+                        yield return TryCreateReference(methodRef.DeclaringType);
                     }
                 }
                 else if (instr.OpCode == OpCodes.Newarr)
@@ -217,7 +219,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     var typeRef = instr.Operand as TypeReference;
                     if (typeRef != null)
                     {
-                        yield return new Reference(TryGetSystemType(typeRef));
+                        yield return TryCreateReference(typeRef);
                     }
                 }
                 else if (instr.OpCode == OpCodes.Castclass)
@@ -225,7 +227,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     var typeRef = instr.Operand as TypeReference;
                     if (typeRef != null)
                     {
-                        yield return new Reference(TryGetSystemType(typeRef));
+                        yield return TryCreateReference(typeRef);
                     }
                 }
                 else if (instr.OpCode == OpCodes.Isinst)
@@ -233,7 +235,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     var typeRef = instr.Operand as TypeReference;
                     if (typeRef != null)
                     {
-                        yield return new Reference(TryGetSystemType(typeRef));
+                        yield return TryCreateReference(typeRef);
                     }
                 }
                 else if (instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli)
@@ -247,15 +249,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 
                     var callee = ((MethodReference)instr.Operand);
 
-                    yield return new Reference(TryGetSystemType(callee.DeclaringType), ReferenceType.Calls);
+                    yield return TryCreateReference(callee.DeclaringType, ReferenceType.Calls);
 
-                    yield return new Reference(TryGetSystemType(callee.ReturnType));
+                    yield return TryCreateReference(callee.ReturnType);
 
                     if (callee.HasGenericParameters)
                     {
                         foreach (var parameter in callee.GenericParameters)
                         {
-                            yield return new Reference(TryGetSystemType(parameter));
+                            yield return TryCreateReference(parameter);
                         }
                     }
 
@@ -263,7 +265,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     {
                         foreach (var parameter in ((GenericInstanceMethod)callee).GenericArguments)
                         {
-                            yield return new Reference(TryGetSystemType(parameter));
+                            yield return TryCreateReference(parameter);
                         }
                     }
 
@@ -271,27 +273,67 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     {
                         foreach (var parameter in callee.Parameters)
                         {
-                            yield return new Reference(TryGetSystemType(parameter.ParameterType));
+                            yield return TryCreateReference(parameter.ParameterType);
                         }
                     }
                 }
             }
         }
 
-        private Type TryGetSystemType(TypeReference typeRef)
+        private Reference TryCreateReference(TypeReference to, ReferenceType refType = ReferenceType.Undefined)
         {
-            if (typeRef.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
+            var dotNetType = TryGetSystemType(to);
+            return dotNetType != null ? new Reference(myType, dotNetType, refType) : null;
+        }
+
+        private Type TryGetSystemType(TypeReference to, ReferenceType refType = ReferenceType.Undefined)
+        {
+            if (to.FullName.StartsWith("System.", StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
 
-            var dotNetType = myLoader.FindTypeByName(typeRef);
+            var dotNetType = myLoader.FindTypeByName(to);
             if (dotNetType != null)
             {
                 return dotNetType;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Does not cover constructor calls at the moment.
+        /// </summary>
+        public IEnumerable<MethodCall> GetCalledMethods()
+        {
+            return GetMethods()
+                .SelectMany(GetMethodCalls)
+                .ToList();
+        }
+
+        private IEnumerable<MethodCall> GetMethodCalls(MethodDefinition method)
+        {
+            var caller = new Method(myType, method.Name);
+            foreach (var instr in method.Body.Instructions)
+            {
+                if (instr.OpCode == OpCodes.Call || instr.OpCode == OpCodes.Callvirt || instr.OpCode == OpCodes.Calli)
+                {
+                    var site = instr.Operand as CallSite;
+                    if (site != null)
+                    {
+                        // C++/CLI ?
+                        continue;
+                    }
+
+                    var calledMethod = ((MethodReference)instr.Operand);
+                    var dotNetType = TryGetSystemType(calledMethod.DeclaringType);
+                    if (dotNetType != null)
+                    {
+                        yield return new MethodCall(caller, new Method(dotNetType, calledMethod.Name));
+                    }
+                }
+            }
         }
     }
 }

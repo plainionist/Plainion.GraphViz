@@ -19,6 +19,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MethodTests.cs" />
+    <Compile Include="MethodCallTests.cs" />
     <Compile Include="ReferenceTests.cs" />
     <Compile Include="Packaging\Services\SpecUtilsTests.cs" />
     <Compile Include="TestData\CastClass.cs" />

@@ -73,6 +73,9 @@
       <HintPath>..\..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="Plainion.Core">
+      <HintPath>..\..\packages\Plainion.Core.3.5.0\lib\NET45\Plainion.Core.dll</HintPath>
+    </Reference>
     <Reference Include="RazorEngine">
       <HintPath>..\..\packages\RazorEngine.3.9.3\lib\net45\RazorEngine.dll</HintPath>
     </Reference>

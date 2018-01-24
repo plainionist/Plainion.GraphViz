@@ -1,3 +1,7 @@
+## 2.7.0 - 2017-12-24
+
+- CodeInspection.Inspector.GetCalledMethods() added
+
 ## 2.6.0 - 2017-12-29
 
 - added support saving and loading complete graphs including presentation information (".pgv")
