@@ -43,5 +43,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                 return hash;
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("{0}.{1}", DeclaringType.FullName, Name);
+        }
     }
 }
