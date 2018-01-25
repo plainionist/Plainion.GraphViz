@@ -179,14 +179,26 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                 return Enumerable.Empty<MethodDefinition>();
             }
 
-            var cecilType = myLoader.MonoLoad(myType.Assembly).MainModule.Types
+            // dont use the ".Types" property - it does not return public nested types
+            var cecilTypes = myLoader.MonoLoad(myType.Assembly).MainModule.GetTypes();
+
+            var cecilType = cecilTypes
                 .SingleOrDefault(t => t.FullName == myFullName);
 
             if (cecilType == null)
             {
-                Console.Write("!{0}!", myFullName);
+                // Mono.Ceceil uses '/' as separator instead '+'
+                var nestedFullName = myFullName.Replace('+', '/');
 
-                return Enumerable.Empty<MethodDefinition>();
+                cecilType = cecilTypes
+                    .SingleOrDefault(t => t.FullName == nestedFullName);
+
+                if (cecilType == null)
+                {
+                    Console.Write("!{0}!", myFullName);
+
+                    return Enumerable.Empty<MethodDefinition>();
+                }
             }
 
             return cecilType.Methods

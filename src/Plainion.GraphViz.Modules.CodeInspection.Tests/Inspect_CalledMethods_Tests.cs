@@ -64,6 +64,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             Verify(typeof(Caller), nameof(Caller.Main), typeof(CalleeExtensions), nameof(CalleeExtensions.ExtensionMethod));
         }
 
+        [Test]
+        public void FromInnerClass()
+        {
+            Verify(typeof(Caller.Inner), nameof(Caller.Inner.Exec), typeof(Callee), nameof(Callee.InstanceMethod));
+        }
+
         private void Verify(Type callerType, string callerMethod, Type callingType, string callingMethod)
         {
             var reflector = new Inspector(new MonoLoader(), callerType);
@@ -82,6 +88,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
     class Caller
     {
+        public class Inner
+        {
+            public void Exec()
+            {
+                new Callee().InstanceMethod();
+            }
+        }
+
         public void Main()
         {
             new Callee().InstanceMethod();

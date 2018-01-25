@@ -1,6 +1,7 @@
-## 2.7.0 - 2017-12-24
+## 2.7.0 - 2017-12-
 
 - CodeInspection.Inspector.GetCalledMethods() added
+- CodeInspection.Inspector supports nested classes
 
 ## 2.6.0 - 2017-12-29
 
