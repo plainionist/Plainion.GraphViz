@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-
 using Plainion.Diagnostics;
-using Plainion.IO;
 
 namespace Plainion.GraphViz.Dot
 {
@@ -36,7 +34,7 @@ namespace Plainion.GraphViz.Dot
             {
                 string arguments;
 
-                if( Algorithm == LayoutAlgorithm.Dot || Algorithm == LayoutAlgorithm.Auto )
+                if(Algorithm == LayoutAlgorithm.Hierarchy || Algorithm == LayoutAlgorithm.Flow|| Algorithm == LayoutAlgorithm.Auto )
                 {
                     RunWithDot( out arguments, dotFile, plainFile );
                 }
@@ -73,7 +71,7 @@ namespace Plainion.GraphViz.Dot
             }
             catch
             {
-                if( Algorithm == LayoutAlgorithm.Dot || Algorithm == LayoutAlgorithm.Auto )
+                if(Algorithm == LayoutAlgorithm.Hierarchy || Algorithm == LayoutAlgorithm.Flow || Algorithm == LayoutAlgorithm.Auto )
                 {
                     // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
                     // -> try fallback with sfdp.exe

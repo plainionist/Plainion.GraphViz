@@ -17,6 +17,7 @@ namespace Plainion.GraphViz.Dot
             Contract.RequiresNotNull(path, "path");
 
             myPath = path;
+            Settings = DotPresets.Default;
         }
 
         internal int? FastRenderingNodeCountLimit { get; set; }
@@ -24,6 +25,8 @@ namespace Plainion.GraphViz.Dot
         internal bool IgnoreStyle { get; set; }
 
         public bool PrettyPrint { get; set; }
+
+        public DotSettings Settings { get; set; }
 
         // http://www.graphviz.org/Gallery/directed/cluster.html
         // returns written nodes
@@ -63,9 +66,7 @@ namespace Plainion.GraphViz.Dot
                 {
                     myWriter.WriteLine("digraph {");
 
-                    myWriter.WriteLine("  ratio=\"compress\"");
-                    myWriter.WriteLine("  rankdir=BT");
-                    myWriter.WriteLine("  ranksep=\"2.0 equally\"");
+                    ApplySettings();
 
                     var relevantNodes = myGraph.Nodes
                         .Where(n => myPicking.Pick(n))
@@ -123,6 +124,27 @@ namespace Plainion.GraphViz.Dot
                     myWriter.WriteLine("}");
 
                     return relevantNodes.Count;
+                }
+            }
+
+            private void ApplySettings()
+            {
+                if (myOwner.Settings == null)
+                {
+                    return;
+                }
+
+                if (myOwner.Settings.Ratio != null)
+                {
+                    myWriter.WriteLine("  ratio=\"{0}\"", myOwner.Settings.Ratio);
+                }
+                if (myOwner.Settings.RankDir != null)
+                {
+                    myWriter.WriteLine("  rankdir={0}", myOwner.Settings.RankDir);
+                }
+                if (myOwner.Settings.RankSep != null)
+                {
+                    myWriter.WriteLine("  ranksep=\"{0}\"", myOwner.Settings.RankSep);
                 }
             }
 

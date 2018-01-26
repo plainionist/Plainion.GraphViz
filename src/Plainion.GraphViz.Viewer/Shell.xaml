@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:inf="clr-namespace:Plainion.GraphViz.Infrastructure;assembly=Plainion.GraphViz.Infrastructure"
         xmlns:v="clr-namespace:Plainion.GraphViz.Viewer"
+        xmlns:views="clr-namespace:Plainion.GraphViz.Viewer.Views"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:pn="http://github.com/ronin4net/plainion"
         xmlns:prism="http://www.codeplex.com/prism"
@@ -51,6 +52,9 @@
         <pn:FrameworkElementDropBehavior DropAcceptedEffect="Copy"/>
     </i:Interaction.Behaviors>
 
+    <Window.Resources>
+        <views:LayoutAlgorithmsConverter x:Key="LayoutAlgorithmsConverter"/>
+    </Window.Resources>
     <Grid>
         <ContentControl prism:RegionManager.RegionName="{x:Static v:RegionNames.GraphViewer}" Name="myGraphViewerContainer"/>
 
@@ -91,7 +95,13 @@
                 </ToggleButton>
 
                 <ComboBox Margin="2" ItemsSource="{Binding Source={StaticResource LayoutAlgorithms}}"
-                          SelectedItem="{Binding LayoutAlgorithm}" IsEnabled="{Binding Path=IsEnabled}"/>
+                          SelectedItem="{Binding LayoutAlgorithm}" IsEnabled="{Binding Path=IsEnabled}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <ContentPresenter Content="{Binding Converter={StaticResource LayoutAlgorithmsConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <Menu VerticalAlignment="Stretch" Margin="2" Padding="1">
                     <MenuItem Header="Tools" prism:RegionManager.RegionName="{x:Static inf:RegionNames.AddIns}" VerticalAlignment="Center"/>

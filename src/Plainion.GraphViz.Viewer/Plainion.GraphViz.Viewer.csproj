@@ -86,6 +86,7 @@
     <Compile Include="Services\StatusMessageService.cs" />
     <Compile Include="ViewModels\LabelViewModel.cs" />
     <Compile Include="ViewModels\SettingsEditorModel.cs" />
+    <Compile Include="Views\LayoutAlgorithmsConverter.cs" />
     <Compile Include="Views\SettingsEditor.xaml.cs">
       <DependentUpon>SettingsEditor.xaml</DependentUpon>
     </Compile>

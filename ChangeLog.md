@@ -2,6 +2,7 @@
 
 - CodeInspection.Inspector.GetCalledMethods() added
 - CodeInspection.Inspector supports nested classes
+- Added layout algorithm "flow" (renamed "dot" to "Trees" and "Sftp" to "Galaxies")
 
 ## 2.6.0 - 2017-12-29
 

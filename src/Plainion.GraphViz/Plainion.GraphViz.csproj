@@ -81,6 +81,7 @@
     <Compile Include="Algorithms\UnfoldAndHide.cs" />
     <Compile Include="Dot\DotGraphHeader.cs" />
     <Compile Include="Dot\DotPlainParser.cs" />
+    <Compile Include="Dot\DotSettings.cs" />
     <Compile Include="Dot\DotWriter.cs" />
     <Compile Include="Dot\LayoutAlgorithm.cs" />
     <Compile Include="HelpClient.cs" />

@@ -26,13 +26,20 @@ namespace Plainion.GraphViz.Dot
 
         public void Relayout(IGraphPresentation presentation)
         {
+            var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
+
             var writer = new DotWriter(myDotFile.FullName);
             writer.FastRenderingNodeCountLimit = FastRenderingNodeCountLimit;
             writer.IgnoreStyle = true;
 
+            if (layoutAlgorithm == LayoutAlgorithm.Flow)
+            {
+                writer.Settings = DotPresets.Flow;
+            }
+
             var writtenNodesCount = writer.Write(presentation.GetModule<ITransformationModule>().Graph, presentation.Picking, presentation);
 
-            myConverter.Algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Auto && writtenNodesCount > FastRenderingNodeCountLimit
+            myConverter.Algorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > FastRenderingNodeCountLimit
                 ? LayoutAlgorithm.Sfdp
                 : presentation.GetModule<IGraphLayoutModule>().Algorithm;
 

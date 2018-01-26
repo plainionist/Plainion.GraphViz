@@ -161,6 +161,7 @@ namespace Plainion.GraphViz.Viewer
                 }
 
                 var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();
+                graphLayoutModule.Algorithm = LayoutAlgorithm;
                 PropertyBinding.Bind(() => LayoutAlgorithm, () => graphLayoutModule.Algorithm);
 
                 RaisePropertyChanged(nameof(IsEnabled));
