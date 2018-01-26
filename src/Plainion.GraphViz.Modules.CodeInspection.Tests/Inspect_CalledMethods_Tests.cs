@@ -70,6 +70,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             Verify(typeof(Caller.Inner), nameof(Caller.Inner.Exec), typeof(Callee), nameof(Callee.InstanceMethod));
         }
 
+        [Test]
+        public void FromPrivatMethod()
+        {
+            var reflector = new Inspector(new MonoLoader(), typeof(Caller));
+
+            var calls = reflector.GetCalledMethods();
+
+            var expected = new[] {
+                new MethodCall(new Method(typeof(Caller), nameof(Caller.Facade)),new Method(typeof(Caller), "DoItSilently")),
+                new MethodCall(new Method(typeof(Caller), "DoItSilently"),new Method( typeof(Callee), nameof(Callee.StaticMethod)))
+            };
+
+            Assert.That(calls.Intersect(expected), Is.EquivalentTo(expected));
+        }
+
         private void Verify(Type callerType, string callerMethod, Type callingType, string callingMethod)
         {
             var reflector = new Inspector(new MonoLoader(), callerType);
@@ -120,6 +135,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
             callee["a"] = callee["b"];
             callee.Event += (s, e) => { };
+        }
+
+        public void Facade()
+        {
+            DoItSilently();
+        }
+
+        private void DoItSilently()
+        {
+            Callee.StaticMethod();
         }
     }
 
