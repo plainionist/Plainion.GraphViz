@@ -18,7 +18,7 @@
                 return new DotSettings
                 {
                     RankDir = "BT",
-                    Ratio = "conpress",
+                    Ratio = "compress",
                     RankSep = "2.0 equally"
                 };
             }
