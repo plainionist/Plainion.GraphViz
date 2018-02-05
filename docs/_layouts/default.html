@@ -39,10 +39,10 @@
                 {% if p.navigation_weight %}
                 
                 {% if p.section %}
-                <p style="font-weight:bold">{{ p.section }}</p>
+                <div style="font-weight:bold;margin-top:10px">{{ p.section }}</div>
                 {% endif %}
 
-                <div style="margin-bottom:5px">
+                <div>
                     <a href="{{ '/' | absolute_url }}{{ p.url }}" {% if p.url == page.url %} style="font-weight:bold" {% endif %}>
                         {{ p.title }}
                     </a>
