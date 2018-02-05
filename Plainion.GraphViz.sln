@@ -45,9 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E71E2B6C-0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HowTos", "HowTos", "{7A2532F6-1D31-4A5E-B86E-E291B1E5C9FE}"
 	ProjectSection(SolutionItems) = preProject
-		docs\HowTos\How to import graphs from documents.md = docs\HowTos\How to import graphs from documents.md
-		docs\HowTos\How to import graphs from source code.md = docs\HowTos\How to import graphs from source code.md
-		docs\HowTos\How to save my work.md = docs\HowTos\How to save my work.md
+		docs\HowTos\Import graphs from source code.md = docs\HowTos\Import graphs from source code.md
+		docs\HowTos\Save my work.md = docs\HowTos\Save my work.md
 	EndProjectSection
 EndProject
 Global
