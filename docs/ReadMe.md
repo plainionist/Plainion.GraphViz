@@ -1,8 +1,8 @@
 
 Do you have a huge graph and wonder how you could uncover its secrets?
 
-![](Screenshots/Overview.png)
-![](Screenshots/Galaxy.1.png)
+![](Screenshots/Overview.2.png)
+![](Screenshots/Galaxy.2.png)
 
 Plainion.GraphViz is the solution you are looking for ;-)
 

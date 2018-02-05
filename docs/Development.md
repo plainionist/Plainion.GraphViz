@@ -1,5 +1,6 @@
 ---
 title: Contributing &amp; Extending
+section: Contribution
 navigation_weight: 200
 ---
 

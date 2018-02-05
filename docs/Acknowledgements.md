@@ -1,5 +1,6 @@
 ---
 title: Acknowledgements
+section: References
 navigation_weight: 500
 ---
 

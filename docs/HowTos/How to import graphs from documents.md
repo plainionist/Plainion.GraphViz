@@ -1,5 +1,6 @@
 ---
 title: How to import graphs from documents?
+section: HowTos
 navigation_weight: 100
 ---
 
