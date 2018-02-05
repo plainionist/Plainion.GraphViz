@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}" media="screen" type="text/css">
     <link rel="stylesheet" href="{{ '/assets/css/print.css' | relative_url }}" media="print" type="text/css">
 
+    <style>
+        /* Desktops and laptops ----------- */
+        @media only screen and (min-width : 1224px) {
+            .inner {
+                width:1040px;
+            }
+            aside#sidebar {
+                width: 300px;
+            }        
+        }
+    </style>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
