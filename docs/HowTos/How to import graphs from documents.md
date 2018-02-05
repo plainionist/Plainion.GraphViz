@@ -1,6 +1,6 @@
 ---
 title: How to import graphs from documents?
-navigation_weight: 1
+navigation_weight: 100
 ---
 
 Use the "Open" button from the toolbar to load graphs from documents. 

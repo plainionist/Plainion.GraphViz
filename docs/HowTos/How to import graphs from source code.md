@@ -1,6 +1,6 @@
 ---
 title: How to import graphs from source code?
-navigation_weight: 2
+navigation_weight: 102
 ---
 
 Use the "Tools" button from the toolbar to load graphs from other "sources".

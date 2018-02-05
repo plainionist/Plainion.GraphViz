@@ -1,25 +1,23 @@
 
-Plainion.GraphViz is a browser for complex and huge graphs. 
-
-It makes it easy to dive into any kind of graph from various sources by interactively allowing to show, hide and fold any part of the graph.
+Do you have a huge graph and wonder how you could uncover its secrets?
 
 ![](Screenshots/Overview.png)
 ![](Screenshots/Galaxy.1.png)
 
-## Installation
+Plainion.GraphViz is the solution you are looking for ;-)
 
-- download [latest release](https://github.com/plainionist/Plainion.GraphViz/releases) and unpack it somewhere
-- start the Plainion.GraphViz.Viewer.exe
+## Getting Started
 
-## Usage
+- Download the [latest release](https://github.com/plainionist/Plainion.GraphViz/releases) 
+- Unpack the ZIP at any convenient placeplace
+- Start the Plainion.GraphViz.Viewer.exe
+- Load your graph with the "Open" button or just drop it on the canvas.
+  Supported formats:
+  - DOT
+  - GraphML
+  - DGML
 
-Once a graph was imported (see below)
+## Next 
 
-- use search edit box to fast navigate to nodes 
-- use mouse wheel and right mouse button drag for zoom 
-- use left mouse button for pan 
-- use context menu on nodes, edges and clusters to morph the graph into any shape 
-- use ![](Screenshots/Filter.png) to filter the graph based on regex
-- use ![](Screenshots/Clusters.png) to define clusters with Drag&Drop
-
+- Read [Basic navigation](BasicNavigation)
 

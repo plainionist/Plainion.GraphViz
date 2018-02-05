@@ -1,6 +1,6 @@
 ---
 title: Acknowledgements
-navigation_weight: 100
+navigation_weight: 500
 ---
 
 For rendering Plainion.GraphViz uses the great [graphviz](http://graphviz.org) library.

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz", "src\Plainion.GraphViz\Plainion.GraphViz.csproj", "{8CC5C764-ACE2-4AF2-BCA1-F78753E709AA}"
 EndProject
@@ -34,6 +34,21 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Plainion.GraphViz.Help", "src\Plainion.GraphViz.Help\Plainion.GraphViz.Help.fsproj", "{CB482864-793E-421E-9106-8C081D60574F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.CodeInspection.Core", "src\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj", "{EB61222B-B3D5-4901-A42D-7386E4AE08D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E71E2B6C-0936-48AD-8185-49E3D575FF30}"
+	ProjectSection(SolutionItems) = preProject
+		docs\Acknowledgements.md = docs\Acknowledgements.md
+		docs\BasicNavigation.md = docs\BasicNavigation.md
+		docs\Development.md = docs\Development.md
+		docs\ReadMe.md = docs\ReadMe.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HowTos", "HowTos", "{7A2532F6-1D31-4A5E-B86E-E291B1E5C9FE}"
+	ProjectSection(SolutionItems) = preProject
+		docs\HowTos\How to import graphs from documents.md = docs\HowTos\How to import graphs from documents.md
+		docs\HowTos\How to import graphs from source code.md = docs\HowTos\How to import graphs from source code.md
+		docs\HowTos\How to save my work.md = docs\HowTos\How to save my work.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,5 +107,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E71E2B6C-0936-48AD-8185-49E3D575FF30} = {CBE6C788-0BFF-476E-8C34-584844EA0837}
+		{7A2532F6-1D31-4A5E-B86E-E291B1E5C9FE} = {E71E2B6C-0936-48AD-8185-49E3D575FF30}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1D0F946E-D018-4453-8742-2E26BC70E4BF}
 	EndGlobalSection
 EndGlobal

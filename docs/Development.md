@@ -1,6 +1,6 @@
 ---
 title: Contributing &amp; Extending
-navigation_weight: 50
+navigation_weight: 200
 ---
 
 # Extensibility
