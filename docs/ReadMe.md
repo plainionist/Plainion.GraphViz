@@ -6,7 +6,7 @@ Do you have a huge graph and wonder how you could uncover its secrets?
 
 Plainion.GraphViz is the solution you are looking for ;-)
 
-## Getting Started
+# Getting Started
 
 - Download the [latest release](https://github.com/plainionist/Plainion.GraphViz/releases) 
 - Unpack the ZIP at any convenient placeplace
@@ -17,7 +17,7 @@ Plainion.GraphViz is the solution you are looking for ;-)
   - GraphML
   - DGML
 
-## What next?
+# What next?
 
 - Read [Basics](Basics)
 - Read [Filters](Filters)

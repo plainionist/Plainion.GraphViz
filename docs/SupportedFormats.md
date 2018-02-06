@@ -3,15 +3,31 @@ title: Supported formats
 navigation_weight: 40
 ---
 
-# DOT
+# Supported Formats
 
-# DOT Plain
+## DOT
 
-# DGML
+TBD
 
-# GraphML
+what languagle aspects are taken over? labels? ...
 
-# PGV
+## DOT Plain
 
-# Tools
+TBD
+
+## DGML
+
+TBD
+
+## GraphML
+
+TBD
+
+## PGV
+
+TBD
+
+## Tools
+
+TBD
 
