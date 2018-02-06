@@ -36,11 +36,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Clusters.md" />
+    <None Include="Filters.md" />
+    <None Include="SupportedFormats.md" />
     <None Include="_layouts\default.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Acknowledgements.md" />
-    <None Include="BasicNavigation.md" />
+    <None Include="Basics.md" />
     <None Include="Development.md" />
     <None Include="HowTos\Import graphs from source code.md" />
     <None Include="HowTos\Save my work.md" />

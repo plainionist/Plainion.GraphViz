@@ -17,7 +17,11 @@ Plainion.GraphViz is the solution you are looking for ;-)
   - GraphML
   - DGML
 
-## Next 
+## What next?
 
-- Read [Basic navigation](BasicNavigation)
+- Read [Basics](Basics)
+- Read [Filters](Filters)
+- Take one of the sample graphs and play around with it
+- Browse through the remaining documentation
+- Provide feedback ;-)
 

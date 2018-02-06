@@ -1,6 +1,6 @@
 ---
-title: Basic navigation
-navigation_weight: 10
+title: Clusters
+navigation_weight: 30
 ---
 
 - use search edit box to fast navigate to nodes 
