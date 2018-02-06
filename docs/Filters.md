@@ -57,5 +57,14 @@ which should be self-explanatory.
 
 ## Create filters from algorithms
 
+The context menu available from the canvas provides some additional algorithms to compute filters.
 
+![](Screenshots/FilterFromAlgos.png) 
+
+These algorithms are node independent and are applied to the entire graph.
+
+## Tips
+
+After having done some filtering you can use the context menu on the canvas and the "Relayout" menu entry to re-layout
+the graph. This usually shows the remaining nodes in a more compact form.
 
