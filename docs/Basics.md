@@ -59,7 +59,7 @@ automatically.
 
 ### Flow
 
-![](Screenshots/Trees.png)
+![](Screenshots/Flow.png)
 
 This algorithm is very similar to the "Tree" algorithm except that arrows are flowing from left to right.
 
