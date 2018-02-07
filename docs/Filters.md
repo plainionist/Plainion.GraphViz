@@ -25,7 +25,11 @@ You can use the DEL key or the context menu to delete filters.
 ## Combining filters
 
 When multiple filters are applied, Plainion.GraphViz uses similar technique as "ray casting" to determine which nodes should 
-be shown and which not. It starts at the top of the stack and checks for each node whether it is "covered" by a filter:
+be shown and which not. 
+
+![](Screenshots/RayCasting.png) 
+
+It starts at the top of the stack and checks for each node whether it is "covered" by a filter:
 
 - if YES and filter is a HIDE filter the node will be HIDDEN
 - if YES and filter is a SHOW filter the node will be SHOWN
