@@ -1,6 +1,5 @@
 ---
 title: Import graphs from source code
-section: How to ...
 navigation_weight: 110
 ---
 
