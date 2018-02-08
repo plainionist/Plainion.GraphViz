@@ -1,37 +1,46 @@
 digraph {
-
-	subgraph cluster_C1 {
-		label = "Component A";
-
-		a0
-		a1
-		a2
-		a3
-	}
-
-	subgraph cluster_C2 {
-		label = "Component B";
-
-		b0
-		b1
-		b2
-		b3
-	}
-
-	start -> a0;
-	start -> b0;
-
-	a0 -> a1
-	a1 -> a2
-	a2 -> a3
-
-	b0 -> b1
-	b1 -> b2
-	b2 -> b3;
-
-	a1 -> b3;
-	b2 -> a3;
-	a3 -> a0;
-	a3 -> end;
-	b3 -> end;
+  ratio="compress"
+  rankdir=BT
+  ranksep="2.0 equally"
+  subgraph "cluster_C1" {
+    label = "Feature A"
+    "Builder" [label="Builder", color=#FFD3D3D3]
+    "Component" [label="Component", color=#FFD3D3D3]
+    "Factory" [label="Factory", color=#FFD3D3D3]
+    "IComponent" [label="IComponent", color=#FFD3D3D3]
+    "POCO1" [label="POCO1", color=#FFD3D3D3]
+    "POCO2" [label="POCO2", color=#FFD3D3D3]
+  }
+  subgraph "cluster_C2" {
+    label = "Feature B"
+    "Command" [label="Command", color=#FFD3D3D3]
+    "Context" [label="Context", color=#FFD3D3D3]
+    "EventBroker" [label="EventBroker", color=#FFD3D3D3]
+    "EventConverter" [label="EventConverter", color=#FFD3D3D3]
+    "Operation" [label="Operation", color=#FFD3D3D3]
+  }
+  "Builder" [label="Builder", color=#FFD3D3D3]
+  "Command" [label="Command", color=#FFD3D3D3]
+  "Component" [label="Component", color=#FFD3D3D3]
+  "Context" [label="Context", color=#FFD3D3D3]
+  "EventBroker" [label="EventBroker", color=#FFD3D3D3]
+  "EventConverter" [label="EventConverter", color=#FFD3D3D3]
+  "Facade" [label="Facade", color=#FFD3D3D3]
+  "Factory" [label="Factory", color=#FFD3D3D3]
+  "IComponent" [label="IComponent", color=#FFD3D3D3]
+  "Operation" [label="Operation", color=#FFD3D3D3]
+  "POCO1" [label="POCO1", color=#FFD3D3D3]
+  "POCO2" [label="POCO2", color=#FFD3D3D3]
+  "Builder" -> "POCO1" [label=".", color=#FF000000]
+  "Builder" -> "POCO2" [label=".", color=#FF000000]
+  "Component" -> "IComponent" [label=".", color=#FF000000]
+  "Context" -> "IComponent" [label=".", color=#FF000000]
+  "EventBroker" -> "EventConverter" [label=".", color=#FF000000]
+  "Facade" -> "Builder" [label=".", color=#FF000000]
+  "Facade" -> "EventBroker" [label=".", color=#FF000000]
+  "Facade" -> "Factory" [label=".", color=#FF000000]
+  "Factory" -> "Component" [label=".", color=#FF000000]
+  "Factory" -> "Context" [label=".", color=#FF000000]
+  "Factory" -> "Operation" [label=".", color=#FF000000]
+  "Operation" -> "Command" [label=".", color=#FF000000]
 }

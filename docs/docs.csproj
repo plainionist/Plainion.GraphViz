@@ -38,6 +38,7 @@
   <ItemGroup>
     <None Include="Clusters.md" />
     <None Include="Filters.md" />
+    <None Include="HowTos\Create graphs with DOT language.md" />
     <None Include="SupportedFormats.md" />
     <None Include="_layouts\default.html" />
   </ItemGroup>
