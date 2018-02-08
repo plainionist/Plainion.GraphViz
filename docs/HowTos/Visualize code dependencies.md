@@ -16,7 +16,7 @@ your system has.
 
 An initial package spec can look like this:
 
-```XML
+```xml
 <?xml version="1.0" encoding="utf-16"?>
 <SystemPackaging AssemblyRoot="." xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
     <Package Name="Plainion.Foundations">
@@ -64,7 +64,7 @@ The "include" and "exclude" directives within a cluster map to namespaces.
 You can then either analyse the dependencies between packages by selecting the packages of interest or within one package 
 by just selecting a particular one.
 
-![](../Screenshots/GenerateGraphFromPackageSpec.1.png)
+![](../Screenshots/GenerateGraphFromPackageSpec.png)
 
 If you don't have specified any clusters within your packages you can select "Create clusters for namespaces" to generate
 clusters automatically, one for each namespace.
