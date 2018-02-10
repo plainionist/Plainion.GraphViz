@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.Analysis.Bookmarks"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:prism="http://www.codeplex.com/prism"
+        xmlns:pn="http://github.com/ronin4net/plainion"
+        x:Name="_this">
+
+    <Grid Background="#FDFDF5">
+    </Grid>
+</UserControl>

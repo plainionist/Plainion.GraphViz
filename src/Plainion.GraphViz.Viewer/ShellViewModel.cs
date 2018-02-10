@@ -41,6 +41,9 @@ namespace Plainion.GraphViz.Viewer
             ClusterEditorRequest = new InteractionRequest<INotification>();
             OpenClusterEditor = new DelegateCommand(OnOpenClusterEditor);
 
+            BookmarksRequest = new InteractionRequest<INotification>();
+            OpenBookmarks = new DelegateCommand(OnOpenBookmarks);
+
             SettingsEditorRequest = new InteractionRequest<IConfirmation>();
             OpenSettingsEditor = new DelegateCommand(OnOpenSettingsEditor);
 
@@ -112,6 +115,18 @@ namespace Plainion.GraphViz.Viewer
         }
 
         public InteractionRequest<INotification> ClusterEditorRequest { get; private set; }
+
+        public ICommand OpenBookmarks { get; private set; }
+
+        private void OnOpenBookmarks()
+        {
+            var notification = new Notification();
+            notification.Title = "Bookmarks";
+
+            BookmarksRequest.Raise(notification, c => { });
+        }
+
+        public InteractionRequest<INotification> BookmarksRequest { get; private set; }
 
         public ICommand OpenSettingsEditor { get; private set; }
 

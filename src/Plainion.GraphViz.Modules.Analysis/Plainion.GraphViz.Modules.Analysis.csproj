@@ -68,6 +68,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bookmarks.xaml.cs">
+      <DependentUpon>Bookmarks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BookmarksViewModel.cs" />
     <Compile Include="ExtendedAutoCompleteBox.cs" />
     <Compile Include="AnalysisModule.cs" />
     <Compile Include="ClusterEditor.xaml.cs">
@@ -93,6 +97,10 @@
     <Compile Include="SearchBoxModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Bookmarks.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ClusterEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

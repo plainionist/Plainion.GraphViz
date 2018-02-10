@@ -33,6 +33,16 @@
                 </pn:PopupViewAction.WindowStyle>
             </pn:PopupViewAction>
         </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding BookmarksRequest, Mode=OneWay}">
+            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.Bookmarks}" IsIndependent="True">
+                <pn:PopupViewAction.WindowStyle>
+                    <Style TargetType="{x:Type Window}">
+                        <Setter Property="Width" Value="600"/>
+                        <Setter Property="Height" Value="700"/>
+                    </Style>
+                </pn:PopupViewAction.WindowStyle>
+            </pn:PopupViewAction>
+        </prism:InteractionRequestTrigger>
         <prism:InteractionRequestTrigger SourceObject="{Binding SettingsEditorRequest, Mode=OneWay}">
             <prism:PopupWindowAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.SettingsEditor}"/>
         </prism:InteractionRequestTrigger>
@@ -90,6 +100,10 @@
                 <Button Command="{Binding OpenClusterEditor}" Padding="1" Margin="2" IsEnabled="{Binding Path=IsEnabled}"
                         ToolTip="Cluster nodes">
                     <Image Source="/Resources/Clusters.png" Width="16"/>
+                </Button>
+                <Button Command="{Binding OpenBookmarks}" Padding="1" Margin="2" IsEnabled="{Binding Path=IsEnabled}"
+                        ToolTip="Cluster nodes">
+                    <Image Source="/Resources/Bookmarks.png" Width="16"/>
                 </Button>
 
                 <ComboBox Margin="2" ItemsSource="{Binding Source={StaticResource LayoutAlgorithms}}"

@@ -5,7 +5,7 @@ using Prism.Regions;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [ModuleExport( typeof( AnalysisModule ) )]
+    [ModuleExport(typeof(AnalysisModule))]
     public class AnalysisModule : IModule
     {
         [Import]
@@ -13,10 +13,11 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         public void Initialize()
         {
-            RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.SearchBox, typeof( SearchBox ) );
-            RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.NodeMasksEditor, typeof( NodeMasksEditor ) );
-            RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.NodeMasksView, typeof( NodeMasksView ) );
-            RegionManager.RegisterViewWithRegion( GraphViz.Infrastructure.RegionNames.ClusterEditor, typeof( ClusterEditor ) );
+            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.SearchBox, typeof(SearchBox));
+            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
+            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksView, typeof(NodeMasksView));
+            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.ClusterEditor, typeof(ClusterEditor));
+            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.Bookmarks, typeof(Bookmarks));
         }
     }
 }
