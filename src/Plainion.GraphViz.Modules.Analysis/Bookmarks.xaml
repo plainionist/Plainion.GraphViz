@@ -32,7 +32,8 @@
         </Grid>
 
         <ListView Grid.Row="1" Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                  Margin="5,0,5,5" MinHeight="200" ItemsSource="{Binding Bookmarks}" SelectedItem="{Binding SelectedBookmark, Mode=TwoWay}">
+                  Margin="5,0,5,5" MinHeight="200" ItemsSource="{Binding Bookmarks}" SelectedItem="{Binding SelectedBookmark, Mode=TwoWay}"
+                  ToolTip="Double-click to apply a bookmark. Context menu for deletion.">
             <ListView.InputBindings>
                 <KeyBinding Key="Delete" Command="{Binding DeleteBookmarkCommand}"/>
             </ListView.InputBindings>
@@ -41,14 +42,18 @@
                     <MenuItem Header="Delete" Command="{Binding DeleteBookmarkCommand}"/>
                 </ContextMenu>
             </ListView.ContextMenu>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Grid.InputBindings>
+                    <TextBlock Text="{Binding Caption}" Background="Transparent" HorizontalAlignment="Stretch">
+                        <TextBlock.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.ApplyBookmarkCommand, ElementName=_this}"/>
-                        </Grid.InputBindings>
-                        <TextBlock Text="{Binding Caption}"/>
-                    </Grid>
+                        </TextBlock.InputBindings>
+                    </TextBlock>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
