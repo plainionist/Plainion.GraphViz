@@ -9,7 +9,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:v="clr-namespace:Plainion.GraphViz.Modules.CodeInspection.Packaging"
-        xmlns:g="clr-namespace:Plainion.GraphViz;assembly=Plainion.GraphViz"
         mc:Ignorable="d"  
         d:DesignHeight="400" d:DesignWidth="500">
     <UserControl.Resources>
@@ -59,10 +58,12 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0">
-                    <CheckBox Content="Used types only" IsChecked="{Binding UsedTypesOnly}"/>
+                    <CheckBox Content="Used types only" IsChecked="{Binding UsedTypesOnly}"
+                              ToolTip="Types not used by any other type are not added to the graph"/>
                     <CheckBox Content="All edges" IsChecked="{Binding AllEdges}"  Margin="10,0,0,0"
-                              ToolTip="When analysing more than one package show also inner package edges"/>
-                    <CheckBox Content="Create clusters for namespaces" IsChecked="{Binding CreateClustersForNamespaces}" Margin="10,0,0,0"/>
+                              ToolTip="Show inner package dependencies as well when analysing multiple packages"/>
+                    <CheckBox Content="Create clusters for namespaces" IsChecked="{Binding CreateClustersForNamespaces}" Margin="10,0,0,0"
+                              ToolTip="Types will be grouped into clusters per namespace"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
@@ -75,7 +76,6 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="Open spec"  Command="{Binding Path=OpenCommand}"/>
-            <g:HelpLink Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Page="/CodeInspection/Packaging/Overview.md"/>
             <Button Grid.Column="2" Content="Create graph" Command="{Binding Path=CreateGraphCommand}" Margin="5,0,0,0"/>
             <Button Grid.Column="3" Content="Cancel" Command="{Binding Path=CancelCommand}" Margin="5,0,0,0"/>
         </Grid>

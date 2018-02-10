@@ -1,7 +1,6 @@
-﻿using System.Collections;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 
 namespace Plainion.GraphViz
 {
@@ -22,7 +21,7 @@ namespace Plainion.GraphViz
 
         private void OnTipsClick( object sender, RoutedEventArgs e )
         {
-            HelpClient.OpenPage( Page );
+            Process.Start("https://plainionist.github.io/Plainion.GraphViz/");
         }
     }
 }

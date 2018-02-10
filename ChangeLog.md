@@ -1,3 +1,9 @@
+## 2.8.0 - 2018-02-
+
+- Online help will be included in the released package as markdown. 
+  Html based help is only available online on GitHub
+- UI tooltips improved
+
 ## 2.7.0 - 2017-12-26
 
 - CodeInspection.Inspector.GetCalledMethods() added

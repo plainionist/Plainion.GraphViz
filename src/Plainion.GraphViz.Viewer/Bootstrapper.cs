@@ -62,10 +62,6 @@ namespace Plainion.GraphViz.Viewer
 
         public override void Run(bool runWithDefaultConfiguration)
         {
-            var helpRoot = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Help");
-            Help.Server.Start(helpRoot)
-                .ContinueWith(t => HelpClient.Port = t.Result);
-
             base.Run(runWithDefaultConfiguration);
 
             Application.Current.Exit += OnShutdown;
@@ -76,7 +72,6 @@ namespace Plainion.GraphViz.Viewer
 
         protected virtual void OnShutdown(object sender, ExitEventArgs e)
         {
-            Help.Server.Stop();
             Container.Dispose();
         }
     }

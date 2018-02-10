@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\Help\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\Help\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -36,35 +36,143 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Clusters.md" />
-    <None Include="Filters.md" />
-    <None Include="HowTos\Create graphs with DOT language.md" />
-    <None Include="HowTos\Trace paths between nodes.md" />
-    <None Include="SupportedFormats.md" />
-    <None Include="_layouts\default.html" />
+    <Content Include="_layouts\default.html" />
+    <Content Include="_config.yml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Acknowledgements.md" />
-    <None Include="Basics.md" />
-    <None Include="Development.md" />
-    <None Include="HowTos\Visualize code dependencies.md" />
-    <None Include="HowTos\Save my work.md" />
-    <None Include="ReadMe.md" />
-    <None Include="Viewer.Samples\Clusters.dot" />
-    <None Include="Viewer.Samples\Graph.1.dgml" />
-    <None Include="Viewer.Samples\Graph.1.dot" />
-    <None Include="Viewer.Samples\Graph.1.tips" />
-    <None Include="Viewer.Samples\Graph.2.plain" />
-    <None Include="Viewer.Samples\wikipedia.sample.graphml" />
-    <None Include="_config.yml" />
+    <Content Include="Viewer.Samples\Clusters.dot" />
+    <Content Include="Viewer.Samples\Graph.1.dgml" />
+    <Content Include="Viewer.Samples\Graph.1.dot" />
+    <Content Include="Viewer.Samples\Graph.1.tips" />
+    <Content Include="Viewer.Samples\Graph.2.plain" />
+    <Content Include="Viewer.Samples\wikipedia.sample.graphml" />
+    <Content Include="Viewer.Samples\Blade.GraphViz.Viewer.xaml" />
+    <Content Include="Viewer.Samples\Packaging.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Viewer.Samples\Blade.GraphViz.Viewer.xaml">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Viewer.Samples\Packaging.xaml">
-      <SubType>Designer</SubType>
-    </None>
+    <Content Include="Clusters.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Filters.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HowTos\Create graphs with DOT language.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HowTos\Trace paths between nodes.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SupportedFormats.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Acknowledgements.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Basics.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Development.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HowTos\Visualize code dependencies.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HowTos\Save my work.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReadMe.md" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\AddToCluster.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\ClusterEditor.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Deselect-all.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\FilterFromAlgos.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\FilterFromNodes.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\FiltersEditor.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\FilterWithPattern.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Flow.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Fold.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Galaxies.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Galaxy.1.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Galaxy.2.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\GenerateGraphFromPackageSpec.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Goto-target.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Home.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Overview.2.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Overview.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\PackageDependencies.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\PackageSpecEditor.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\RayCasting.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\RayCasting.xml" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Search.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\ShowSelectedClusters.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\SubGraphs.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\TraceResult.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\TraceTargetSelection.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\TraceTo.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\Trees.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\UnfoldAndHideAllButTargets.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Screenshots\UnfoldedDependencies.png" >
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

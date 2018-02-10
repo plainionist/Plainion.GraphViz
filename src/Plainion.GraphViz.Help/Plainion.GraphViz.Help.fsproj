@@ -38,6 +38,7 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Content Include="Help/Template.html"/>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Server.fs" />
     <Content Include="app.config" />

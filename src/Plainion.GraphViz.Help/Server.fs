@@ -1,8 +1,4 @@
-﻿/// @@@content@@@ - placeholder for the actual help page content
-/// @@@navigation@@@ - placehodler for navigation (all help pages) ... all .md files
-/// In navigation "Overview.md" will always be first entry  
-
-module Plainion.GraphViz.Help.Server
+﻿module Plainion.GraphViz.Help.Server
 
 open System.Threading.Tasks
 
@@ -17,6 +13,7 @@ module internal Impl =
     open System.IO
     open Markdig
     open System
+    open Suave.Redirection
 
     let getTemplate documentRoot =
         let templateFile = Path.Combine(documentRoot, "Template.html")
@@ -35,7 +32,7 @@ module internal Impl =
             sprintf " - [%s](/%s)" name path
 
         let pageSorter (file:string) =
-            if file.EndsWith("Overview.md", StringComparison.OrdinalIgnoreCase) then
+            if file.EndsWith("ReadMe.md", StringComparison.OrdinalIgnoreCase) then
                 "0"
             else
                 file
@@ -60,10 +57,6 @@ module internal Impl =
     let applyTemplate (template:string) navigationHtml contentHtml =
         template.Replace("@@@navigation@@@", navigationHtml).Replace("@@@content@@@", contentHtml)
 
-    let homePage documentRoot =
-        "# Welcome to the online help!"
-        |> Markdown.ToHtml
-
     let page documentRoot path =
         let localFile = Path.Combine(documentRoot, path)
         if File.Exists localFile then 
@@ -84,12 +77,11 @@ module internal Impl =
         let navigation = getNavigation documentRoot template
         let applyTemplate = applyTemplate template navigation
         let page = page documentRoot >> applyTemplate
-        let home () = documentRoot |> (homePage >> applyTemplate)
 
         let app : WebPart =
             choose [ 
-                path "/" >=> OK (home ()) 
-                pathScan "/%s.md" (fun p -> OK (page (p + ".md")))
+                path "/" >=> redirect "/ReadMe"
+                pathScan "/%s" (fun p -> OK (page (p + ".md")))
                 Files.browseHome
             ]
 

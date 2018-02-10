@@ -76,4 +76,10 @@ code base of course.
 
 ![](../Screenshots/Galaxy.2.png)
 
+## Conventions
 
+Graphs generated from code dependencies will follow the following conventions:
+
+- Blue edges: inheritance or interface implementation
+- Black edges: method calls
+- Gray edges: everything else (e.g. usage of cast operators)

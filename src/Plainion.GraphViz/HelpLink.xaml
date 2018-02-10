@@ -6,7 +6,7 @@
              x:Name="_this">
     <Grid>
         <TextBlock Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Hyperlink Click="OnTipsClick">Help?</Hyperlink>
+            <Hyperlink Click="OnTipsClick">Help</Hyperlink>
         </TextBlock>
     </Grid>
 </UserControl>

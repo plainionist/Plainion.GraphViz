@@ -95,9 +95,6 @@
       <DependentUpon>StatusMessagesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\StatusMessagesViewModel.cs" />
-    <Content Include="Help\Template.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Plainion.GraphViz.Viewer.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -136,10 +133,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Plainion.GraphViz.Help\Plainion.GraphViz.Help.fsproj">
-      <Project>{cb482864-793e-421e-9106-8c081d60574f}</Project>
-      <Name>Plainion.GraphViz.Help</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj">
       <Project>{FC787D39-FC3E-4031-BD87-D6971F3006FA}</Project>
       <Name>Plainion.GraphViz.Infrastructure</Name>

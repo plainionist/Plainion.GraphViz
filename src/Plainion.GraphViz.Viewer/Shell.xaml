@@ -117,12 +117,13 @@
             <g:TipsPopup Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
                 <g:TipsPopup.Bullets>
                     <x:Array Type="sys:String" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                        <sys:String>Use the context menu on canvas and graph to work with the graph</sys:String>
-                        <sys:String>Use right-mouse-button-drag and mouse wheel for zoom</sys:String>
-                        <sys:String>Use Ctrl-click to select graph items</sys:String>
+                        <sys:String>Pan: LMB drag</sys:String>
+                        <sys:String>Zoom: mouse wheel or RMB drag</sys:String>
+                        <sys:String>Filter: context menu on graph elements and canvas</sys:String>
                     </x:Array>
                 </g:TipsPopup.Bullets>
             </g:TipsPopup>
+            <g:HelpLink Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Page="/"/>
         </StackPanel>
     </Grid>
 </Window>
