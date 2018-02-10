@@ -1,5 +1,5 @@
 ---
-title: Clusters
+title: Bookmarks
 navigation_weight: 40
 ---
 
