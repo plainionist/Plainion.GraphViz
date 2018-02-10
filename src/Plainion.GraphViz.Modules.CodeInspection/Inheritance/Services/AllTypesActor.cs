@@ -7,15 +7,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
     class AllTypesActor : MarshalByRefObject
     {
-        protected AllTypesActor(string applicationBase)
-        {
-            Contract.RequiresNotNullNotEmpty(applicationBase, "applicationBase");
-
-            ApplicationBase = applicationBase;
-        }
-
-        public string ApplicationBase { get; private set; }
-
         public string AssemblyLocation { get; set; }
 
         public IEnumerable<TypeDescriptor> Execute()

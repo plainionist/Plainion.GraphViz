@@ -43,7 +43,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
         }
 
         // <returns>Delegate to cancel the background processing</returns>
-        private Action RunAsync(InheritanceGraphActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        private Action RunAsync(InheritanceActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
             var worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
@@ -78,7 +78,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         internal Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
-            using (var inspector = new InspectorHandle<InheritanceGraphActor>(Path.GetDirectoryName(assemblyLocation)))
+            using (var inspector = new InspectorHandle<InheritanceActor>(Path.GetDirectoryName(assemblyLocation)))
             {
                 inspector.Value.IgnoreDotNetTypes = ignoreDotNetTypes;
                 inspector.Value.AssemblyLocation = assemblyLocation;

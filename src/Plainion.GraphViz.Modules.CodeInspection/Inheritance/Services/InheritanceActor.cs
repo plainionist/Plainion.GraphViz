@@ -7,18 +7,9 @@ using Plainion.GraphViz.Infrastructure;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
-    class InheritanceGraphActor : MarshalByRefObject
+    class InheritanceActor : MarshalByRefObject
     {
         private string mySelectedAssemblyName;
-
-        protected InheritanceGraphActor(string applicationBase)
-        {
-            Contract.RequiresNotNullNotEmpty(applicationBase, "applicationBase");
-
-            ApplicationBase = applicationBase;
-        }
-
-        public string ApplicationBase { get; private set; }
 
         /// <summary>
         /// Set if you want to have progress be reported

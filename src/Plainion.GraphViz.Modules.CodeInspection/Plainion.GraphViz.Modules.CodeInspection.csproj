@@ -150,7 +150,7 @@
     <Compile Include="Inheritance\Services\AssemblyUtils.cs" />
     <Compile Include="Inheritance\Services\ICancellationToken.cs" />
     <Compile Include="Inheritance\Services\AllTypesActor.cs" />
-    <Compile Include="Inheritance\Services\InheritanceGraphActor.cs" />
+    <Compile Include="Inheritance\Services\InheritanceActor.cs" />
     <Compile Include="Inheritance\Services\InheritanceAnalyzer.cs" />
     <Compile Include="Inheritance\InheritanceGraphBuilderView.xaml.cs">
       <DependentUpon>InheritanceGraphBuilderView.xaml</DependentUpon>
