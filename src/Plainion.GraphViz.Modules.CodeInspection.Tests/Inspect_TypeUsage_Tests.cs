@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
-using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
+using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests

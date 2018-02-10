@@ -7,17 +7,16 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services;
-using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
@@ -30,8 +29,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         private bool myIsReady;
         private bool myIgnoreDotNetTypes;
         private Action myCancelBackgroundProcessing;
-        private IInspectorHandle<InheritanceGraphActor> myInheritanceGraphInspector;
-        private IInspectorHandle<AllTypesActor> myAllTypesInspector;
         private bool myAddToGraph;
 
         public InheritanceGraphBuilderViewModel()
@@ -123,13 +120,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         {
             IsReady = false;
 
-            myInheritanceGraphInspector = InspectionService.CreateInspector<InheritanceGraphActor>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
-
-            myInheritanceGraphInspector.Value.IgnoreDotNetTypes = IgnoreDotNetTypes;
-            myInheritanceGraphInspector.Value.AssemblyLocation = AssemblyToAnalyseLocation;
-            myInheritanceGraphInspector.Value.SelectedType = TypeToAnalyse;
-
-            myCancelBackgroundProcessing = InspectionService.RunAsync(myInheritanceGraphInspector.Value, v => ProgressValue = v, OnInheritanceGraphCompleted);
+            myCancelBackgroundProcessing = InspectionService.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, OnInheritanceGraphCompleted);
         }
 
         internal void OnClosed()
@@ -137,18 +128,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             AssemblyToAnalyseLocation = null;
 
             myCancelBackgroundProcessing?.Invoke();
-
-            if (myAllTypesInspector != null)
-            {
-                myAllTypesInspector.Dispose();
-                myAllTypesInspector = null;
-            }
-
-            if (myInheritanceGraphInspector != null)
-            {
-                myInheritanceGraphInspector.Dispose();
-                myInheritanceGraphInspector = null;
-            }
 
             IsReady = true;
         }
@@ -169,21 +148,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
                     if (!string.IsNullOrWhiteSpace(myAssemblyToAnalyseLocation) && File.Exists(myAssemblyToAnalyseLocation))
                     {
-                        myAllTypesInspector = InspectionService.CreateInspector<AllTypesActor>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
-
-                        myAllTypesInspector.Value.AssemblyLocation = myAssemblyToAnalyseLocation;
-
-                        Types.AddRange(myAllTypesInspector.Value.Execute());
+                        Types.AddRange(InspectionService.GetAllTypes(myAssemblyToAnalyseLocation));
                     }
                 }
             }
         }
 
-        public ObservableCollection<TypeDescriptor> Types
-        {
-            get;
-            private set;
-        }
+        public ObservableCollection<TypeDescriptor> Types { get; private set; }
 
         public TypeDescriptor TypeToAnalyse
         {

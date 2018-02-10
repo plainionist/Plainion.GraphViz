@@ -144,7 +144,6 @@
     <Compile Include="Packaging\Spec\Package.cs" />
     <Compile Include="Packaging\Spec\PackageBase.cs" />
     <Compile Include="Packaging\Spec\Wildcard.cs" />
-    <Compile Include="Inheritance\Services\IInspectorHandle.cs" />
     <Compile Include="Properties\AssemblyDefs.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Inheritance\Services\AssemblyInspectionService.cs" />

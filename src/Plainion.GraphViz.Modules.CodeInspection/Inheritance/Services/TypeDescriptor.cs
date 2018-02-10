@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework
+namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
     [Serializable]
     public class TypeDescriptor

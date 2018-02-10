@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
-using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework;
-using Plainion;
-using System.Reflection;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
+using System.Reflection;
 using System.Security.Policy;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
@@ -57,7 +55,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
             myActiveDomains = new Dictionary<string, DomainHandle>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public IInspectorHandle<T> CreateInspector<T>(string appBase) where T : class
+        private InspectorHandle<T> CreateInspector<T>(string appBase) where T : class
         {
             if (!myActiveDomains.ContainsKey(appBase))
             {
@@ -70,7 +68,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
             return new InspectorHandle<T>(domainHandle, inspector);
         }
 
-        private class InspectorHandle<T> : IInspectorHandle<T> where T : class
+        private class InspectorHandle<T> : IDisposable where T : class
         {
             private DomainHandle myDomain;
 
@@ -104,7 +102,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         /// <summary/>
         /// <returns>Delegate to cancel the background processing</returns>
-        internal Action RunAsync(InheritanceGraphActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        private Action RunAsync(InheritanceGraphActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
             var worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
@@ -135,6 +133,28 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
                     worker.CancelAsync();
                 }
             };
+        }
+
+        internal Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        {
+            using (var inspector = CreateInspector<InheritanceGraphActor>(Path.GetDirectoryName(assemblyLocation)))
+            {
+                inspector.Value.IgnoreDotNetTypes = ignoreDotNetTypes;
+                inspector.Value.AssemblyLocation = assemblyLocation;
+                inspector.Value.SelectedType = typeToAnalyse;
+
+                return RunAsync(inspector.Value, progressCallback, completedCallback);
+            }
+        }
+
+        internal IEnumerable<TypeDescriptor> GetAllTypes(string assemblyLocation)
+        {
+            using (var inspector = CreateInspector<AllTypesActor>(Path.GetDirectoryName(assemblyLocation)))
+            {
+                inspector.Value.AssemblyLocation = assemblyLocation;
+
+                return inspector.Value.Execute();
+            }
         }
     }
 
