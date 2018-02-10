@@ -2,7 +2,7 @@
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework
 {
-    public interface IInspectorHandle<T> : IDisposable where T : InspectorBase
+    public interface IInspectorHandle<T> : IDisposable 
     {
         T Value { get; }
     }

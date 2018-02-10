@@ -1,30 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
-    class AllTypesInspector : InspectorBase
+    class AllTypesInspector : MarshalByRefObject
     {
-        public AllTypesInspector( string applicationBase )
-            : base( applicationBase )
+        protected AllTypesInspector(string applicationBase)
         {
+            Contract.RequiresNotNullNotEmpty(applicationBase, "applicationBase");
+
+            ApplicationBase = applicationBase;
         }
 
-        public string AssemblyLocation
-        {
-            get;
-            set;
-        }
+        public string ApplicationBase { get; private set; }
+
+        public string AssemblyLocation { get; set; }
 
         public IEnumerable<TypeDescriptor> Execute()
         {
-            Contract.RequiresNotNullNotEmpty( AssemblyLocation, "AssemblyLocation" );
+            Contract.RequiresNotNullNotEmpty(AssemblyLocation, "AssemblyLocation");
 
-            var assembly = Assembly.ReflectionOnlyLoadFrom( AssemblyLocation );
+            var assembly = Assembly.ReflectionOnlyLoadFrom(AssemblyLocation);
             return assembly.GetTypes()
-                .Select( t => new TypeDescriptor( t ) )
+                .Select(t => new TypeDescriptor(t))
                 .ToList();
         }
     }

@@ -149,8 +149,6 @@
     <Compile Include="RegionNames.cs" />
     <Compile Include="Inheritance\AssemblyInspectionService.cs" />
     <Compile Include="Inheritance\AssemblyUtils.cs" />
-    <Compile Include="Inheritance\InspectorBase.cs" />
-    <Compile Include="Inheritance\BackgroundWorkerAdapter.cs" />
     <Compile Include="Inheritance\ICancellationToken.cs" />
     <Compile Include="Inheritance\AllTypesInspector.cs" />
     <Compile Include="Inheritance\InheritanceGraphInspector.cs" />
@@ -159,10 +157,8 @@
       <DependentUpon>InheritanceGraphBuilderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Inheritance\InheritanceGraphBuilderViewModel.cs" />
-    <Compile Include="Inheritance\AssemblyResolveHandler.cs" />
     <Compile Include="CodeInspectionModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Inheritance\InspectionDomain.cs" />
     <Compile Include="Inheritance\TypeDescriptor.cs" />
     <Compile Include="Inheritance\TypeRelationshipDocument.cs" />
   </ItemGroup>

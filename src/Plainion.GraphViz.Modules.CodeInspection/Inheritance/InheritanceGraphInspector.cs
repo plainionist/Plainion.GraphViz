@@ -8,14 +8,18 @@ using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
-    class InheritanceGraphInspector : InspectorBase
+    class InheritanceGraphInspector : MarshalByRefObject
     {
         private string mySelectedAssemblyName;
 
-        public InheritanceGraphInspector(string applicationBase)
-            : base(applicationBase)
+        protected InheritanceGraphInspector(string applicationBase)
         {
+            Contract.RequiresNotNullNotEmpty(applicationBase, "applicationBase");
+
+            ApplicationBase = applicationBase;
         }
+
+        public string ApplicationBase { get; private set; }
 
         /// <summary>
         /// Set if you want to have progress be reported
@@ -65,7 +69,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
             double progressCounter = assemblies.Length;
 
-            ReportProgress(( int )( ( assemblies.Length - progressCounter ) / assemblies.Length * 100 ));
+            ReportProgress((int)((assemblies.Length - progressCounter) / assemblies.Length * 100));
 
             if (IsCancellationRequested)
             {
@@ -83,7 +87,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
                 progressCounter--;
 
-                ReportProgress(( int )( ( assemblies.Length - progressCounter ) / assemblies.Length * 100 ));
+                ReportProgress((int)((assemblies.Length - progressCounter) / assemblies.Length * 100));
 
                 if (IsCancellationRequested)
                 {
