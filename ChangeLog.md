@@ -1,4 +1,4 @@
-## 2.8.0 - 2018-02-
+## 2.8.0 - 2018-02-10
 
 - Online help will be included in the released package as markdown. 
   Html based help is only available online on GitHub

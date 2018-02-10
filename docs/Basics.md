@@ -12,7 +12,7 @@ Each graph consists of nodes and edges. Optionally nodes an be grouped into (clu
 The interaction with the graph is mostly mouse driven.
 
 - Use LMB-Drag to pan the graph
-- Use the mouse wheel to zoom in and out at the point in the graph where the mouse pointer is pointing to
+- Use the mouse wheel or cursor up/down keys to zoom in and out at the point in the graph where the mouse pointer is pointing to
 - Use RMB-Drag to draw a rectangle you want to zoom in
 
 ![](Screenshots/Goto-target.png)

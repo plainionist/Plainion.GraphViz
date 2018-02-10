@@ -50,127 +50,132 @@
     <Content Include="Viewer.Samples\Packaging.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Clusters.md" >
+    <Content Include="Clusters.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Filters.md" >
+    <Content Include="Filters.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="HowTos\Create graphs with DOT language.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="HowTos\Trace paths between nodes.md" >
+    <Content Include="HowTos\Trace paths between nodes.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SupportedFormats.md" >
+    <Content Include="SupportedFormats.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Acknowledgements.md" >
+    <Content Include="Acknowledgements.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Basics.md" >
+    <Content Include="Basics.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Development.md" >
+    <Content Include="Development.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="HowTos\Visualize code dependencies.md" >
+    <Content Include="HowTos\Visualize code dependencies.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="HowTos\Save my work.md" >
+    <Content Include="HowTos\Save my work.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ReadMe.md" >
+    <Content Include="ReadMe.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\AddToCluster.png" >
+    <Content Include="Screenshots\AddToCluster.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\ClusterEditor.png" >
+    <Content Include="Screenshots\ClusterEditor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Deselect-all.png" >
+    <Content Include="Screenshots\Deselect-all.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\FilterFromAlgos.png" >
+    <Content Include="Screenshots\FilterFromAlgos.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\FilterFromNodes.png" >
+    <Content Include="Screenshots\FilterFromNodes.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\FiltersEditor.png" >
+    <Content Include="Screenshots\FiltersEditor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\FilterWithPattern.png" >
+    <Content Include="Screenshots\FilterWithPattern.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Flow.png" >
+    <Content Include="Screenshots\Flow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Fold.png" >
+    <Content Include="Screenshots\Fold.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Galaxies.png" >
+    <Content Include="Screenshots\Galaxies.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Galaxy.1.png" >
+    <Content Include="Screenshots\Galaxy.1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Galaxy.2.png" >
+    <Content Include="Screenshots\Galaxy.2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\GenerateGraphFromPackageSpec.png" >
+    <Content Include="Screenshots\GenerateGraphFromPackageSpec.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Goto-target.png" >
+    <Content Include="Screenshots\Goto-target.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Home.png" >
+    <Content Include="Screenshots\Home.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Overview.2.png" >
+    <Content Include="Screenshots\Overview.2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Overview.png" >
+    <Content Include="Screenshots\Overview.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\PackageDependencies.png" >
+    <Content Include="Screenshots\PackageDependencies.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\PackageSpecEditor.png" >
+    <Content Include="Screenshots\PackageSpecEditor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\RayCasting.png" >
+    <Content Include="Screenshots\RayCasting.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\RayCasting.xml" >
+    <Content Include="Screenshots\RayCasting.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Search.png" >
+    <Content Include="Screenshots\Search.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\ShowSelectedClusters.png" >
+    <Content Include="Screenshots\ShowSelectedClusters.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\SubGraphs.png" >
+    <Content Include="Screenshots\SubGraphs.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\TraceResult.png" >
+    <Content Include="Screenshots\TraceResult.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\TraceTargetSelection.png" >
+    <Content Include="Screenshots\TraceTargetSelection.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\TraceTo.png" >
+    <Content Include="Screenshots\TraceTo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\Trees.png" >
+    <Content Include="Screenshots\Trees.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\UnfoldAndHideAllButTargets.png" >
+    <Content Include="Screenshots\UnfoldAndHideAllButTargets.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Screenshots\UnfoldedDependencies.png" >
+    <Content Include="Screenshots\UnfoldedDependencies.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bookmarks.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
