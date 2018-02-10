@@ -21,7 +21,7 @@ using Plainion.GraphViz.Modules.CodeInspection.Core;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
-    [Export( typeof( InheritanceGraphBuilderViewModel ) )]
+    [Export(typeof(InheritanceGraphBuilderViewModel))]
     public class InheritanceGraphBuilderViewModel : ViewModelBase
     {
         private string myAssemblyToAnalyseLocation;
@@ -39,11 +39,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             Types = new ObservableCollection<TypeDescriptor>();
             TypeFilter = OnFilterItem;
 
-            CreateGraphCommand = new DelegateCommand( CreateGraph, () => TypeToAnalyse != null && IsReady );
-            AddToGraphCommand = new DelegateCommand( AddToGraph, () => TypeToAnalyse != null && IsReady );
-            CancelCommand = new DelegateCommand( () => myCancelBackgroundProcessing(), () => !IsReady );
-            BrowseAssemblyCommand = new DelegateCommand( OnBrowseClicked, () => IsReady );
-            ClosedCommand = new DelegateCommand( OnClosed );
+            CreateGraphCommand = new DelegateCommand(CreateGraph, () => TypeToAnalyse != null && IsReady);
+            AddToGraphCommand = new DelegateCommand(AddToGraph, () => TypeToAnalyse != null && IsReady);
+            CancelCommand = new DelegateCommand(() => myCancelBackgroundProcessing(), () => !IsReady);
+            BrowseAssemblyCommand = new DelegateCommand(OnBrowseClicked, () => IsReady);
+            ClosedCommand = new DelegateCommand(OnClosed);
 
             OpenFileRequest = new InteractionRequest<OpenFileDialogNotification>();
 
@@ -62,7 +62,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             get { return myIsReady; }
             set
             {
-                if ( SetProperty( ref myIsReady, value ) )
+                if (SetProperty(ref myIsReady, value))
                 {
                     CreateGraphCommand.RaiseCanExecuteChanged();
                     AddToGraphCommand.RaiseCanExecuteChanged();
@@ -100,54 +100,60 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             notification.Filter = "Assemblies (*.dll,*.exe)|*.dll;*.exe";
             notification.FilterIndex = 0;
 
-            OpenFileRequest.Raise( notification,
+            OpenFileRequest.Raise(notification,
                 n =>
                 {
-                    if ( n.Confirmed )
+                    if (n.Confirmed)
                     {
                         AssemblyToAnalyseLocation = n.FileName;
                     }
-                } );
+                });
         }
 
         public AutoCompleteFilterPredicate<object> TypeFilter { get; private set; }
 
-        private bool OnFilterItem( string search, object item )
+        private bool OnFilterItem(string search, object item)
         {
             var type = (TypeDescriptor)item;
 
-            return type.FullName.ToLower().Contains( search.ToLower() );
+            return type.FullName.ToLower().Contains(search.ToLower());
         }
 
         private void CreateGraph()
         {
             IsReady = false;
 
-            InspectionService.UpdateInspectorOnDemand( ref myInheritanceGraphInspector, Path.GetDirectoryName( AssemblyToAnalyseLocation ) );
+            myInheritanceGraphInspector = InspectionService.CreateInspector<InheritanceGraphInspector>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
             myInheritanceGraphInspector.Value.IgnoreDotNetTypes = IgnoreDotNetTypes;
             myInheritanceGraphInspector.Value.AssemblyLocation = AssemblyToAnalyseLocation;
             myInheritanceGraphInspector.Value.SelectedType = TypeToAnalyse;
 
-            myCancelBackgroundProcessing = InspectionService.RunAsync( myInheritanceGraphInspector.Value, v => ProgressValue = v, OnInheritanceGraphCompleted );
+            myCancelBackgroundProcessing = InspectionService.RunAsync(myInheritanceGraphInspector.Value, v => ProgressValue = v, OnInheritanceGraphCompleted);
         }
 
         internal void OnClosed()
         {
             AssemblyToAnalyseLocation = null;
 
-            if ( myCancelBackgroundProcessing != null )
+            myCancelBackgroundProcessing?.Invoke();
+
+            if (myAllTypesInspector != null)
             {
-                myCancelBackgroundProcessing();
+                myAllTypesInspector.Dispose();
+                myAllTypesInspector = null;
             }
 
-            InspectionService.DestroyInspectorOnDemand( ref myAllTypesInspector );
-            InspectionService.DestroyInspectorOnDemand( ref myInheritanceGraphInspector );
+            if (myInheritanceGraphInspector != null)
+            {
+                myInheritanceGraphInspector.Dispose();
+                myInheritanceGraphInspector = null;
+            }
 
             IsReady = true;
         }
 
-        protected override void OnModelPropertyChanged( string propertyName )
+        protected override void OnModelPropertyChanged(string propertyName)
         {
         }
 
@@ -156,18 +162,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             get { return myAssemblyToAnalyseLocation; }
             set
             {
-                if ( SetProperty( ref myAssemblyToAnalyseLocation, value ) )
+                if (SetProperty(ref myAssemblyToAnalyseLocation, value))
                 {
                     TypeToAnalyse = null;
                     Types.Clear();
 
-                    if ( !string.IsNullOrWhiteSpace( myAssemblyToAnalyseLocation ) && File.Exists( myAssemblyToAnalyseLocation ) )
+                    if (!string.IsNullOrWhiteSpace(myAssemblyToAnalyseLocation) && File.Exists(myAssemblyToAnalyseLocation))
                     {
-                        InspectionService.UpdateInspectorOnDemand( ref myAllTypesInspector, Path.GetDirectoryName( AssemblyToAnalyseLocation ) );
+                        myAllTypesInspector = InspectionService.CreateInspector<AllTypesInspector>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
                         myAllTypesInspector.Value.AssemblyLocation = myAssemblyToAnalyseLocation;
 
-                        Types.AddRange( myAllTypesInspector.Value.Execute() );
+                        Types.AddRange(myAllTypesInspector.Value.Execute());
                     }
                 }
             }
@@ -185,13 +191,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             set
             {
                 // if s.th. is typed which is not available in the list of types we will get null here
-                SetProperty( ref myTypeToAnalyse, value );
+                SetProperty(ref myTypeToAnalyse, value);
                 CreateGraphCommand.RaiseCanExecuteChanged();
                 AddToGraphCommand.RaiseCanExecuteChanged();
 
-                if ( myTypeToAnalyse == null )
+                if (myTypeToAnalyse == null)
                 {
-                    SetError( ValidationFailure.Error );
+                    SetError(ValidationFailure.Error);
                 }
                 else
                 {
@@ -203,31 +209,31 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         public bool IgnoreDotNetTypes
         {
             get { return myIgnoreDotNetTypes; }
-            set { SetProperty( ref myIgnoreDotNetTypes, value ); }
+            set { SetProperty(ref myIgnoreDotNetTypes, value); }
         }
 
         public int ProgressValue
         {
             get { return myProgress; }
-            set { SetProperty( ref myProgress, value ); }
+            set { SetProperty(ref myProgress, value); }
         }
 
-        private void OnInheritanceGraphCompleted( TypeRelationshipDocument document )
+        private void OnInheritanceGraphCompleted(TypeRelationshipDocument document)
         {
             try
             {
-                if ( document == null )
+                if (document == null)
                 {
                     return;
                 }
 
-                if ( !document.Graph.Nodes.Any() )
+                if (!document.Graph.Nodes.Any())
                 {
-                    MessageBox.Show( "No nodes found" );
+                    MessageBox.Show("No nodes found");
                     return;
                 }
 
-                var presentation = PresentationCreationService.CreatePresentation( Path.GetDirectoryName( AssemblyToAnalyseLocation ) );
+                var presentation = PresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
                 var captionModule = presentation.GetPropertySetFor<Caption>();
                 var tooltipModule = presentation.GetPropertySetFor<ToolTipContent>();
@@ -235,38 +241,38 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
                 presentation.Graph = document.Graph;
 
-                foreach ( var desc in document.Descriptors )
+                foreach (var desc in document.Descriptors)
                 {
-                    captionModule.Add( new Caption( desc.Id, desc.Name ) );
-                    tooltipModule.Add( new ToolTipContent( desc.Id, desc.FullName ) );
+                    captionModule.Add(new Caption(desc.Id, desc.Name));
+                    tooltipModule.Add(new ToolTipContent(desc.Id, desc.FullName));
                 }
 
-                foreach ( var entry in document.EdgeTypes )
+                foreach (var entry in document.EdgeTypes)
                 {
-                    edgeStyleModule.Add( new EdgeStyle( entry.Key )
+                    edgeStyleModule.Add(new EdgeStyle(entry.Key)
                     {
                         Color = entry.Value == ReferenceType.DerivesFrom ? Brushes.Black : Brushes.Blue
-                    } );
+                    });
                 }
 
-                if ( myAddToGraph && Model.Presentation != null && Model.Presentation.Graph != null )
+                if (myAddToGraph && Model.Presentation != null && Model.Presentation.Graph != null)
                 {
-                    presentation = Model.Presentation.UnionWith( presentation,
-                        () => PresentationCreationService.CreatePresentation( Path.GetDirectoryName( AssemblyToAnalyseLocation ) ) );
+                    presentation = Model.Presentation.UnionWith(presentation,
+                        () => PresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation)));
 
                     myAddToGraph = false;
                 }
 
-                if ( document.FailedItems.Any() )
+                if (document.FailedItems.Any())
                 {
-                    foreach ( var item in document.FailedItems )
+                    foreach (var item in document.FailedItems)
                     {
                         var sb = new StringBuilder();
-                        sb.AppendLine( "Loading failed" );
-                        sb.AppendFormat( "Item: {0}", item.Item );
+                        sb.AppendLine("Loading failed");
+                        sb.AppendFormat("Item: {0}", item.Item);
                         sb.AppendLine();
-                        sb.AppendFormat( "Reason: {0}", item.FailureReason );
-                        StatusMessageService.Publish( new StatusMessage( sb.ToString() ) );
+                        sb.AppendFormat("Reason: {0}", item.FailureReason);
+                        StatusMessageService.Publish(new StatusMessage(sb.ToString()));
                     }
                 }
 
