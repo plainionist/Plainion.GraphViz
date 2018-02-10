@@ -34,10 +34,12 @@ namespace Plainion.GraphViz
 
             Loaded += OnLoaded;
 
-            myZoomVertical.Value = 50;
-            myZoomHorizontal.Value = 50;
-            myZoomHorizontal.IsEnabled = false;
-            myZoomHorizontal.IsEnabled = false;
+            myZoomSlider.Value = 50;
+            myZoomSlider.IsEnabled = false;
+
+            // ensure to get key events
+            myZoomSlider.Focusable = false;
+            Focusable = true;
         }
 
         public IGraphViewNavigation Navigation
@@ -101,8 +103,7 @@ namespace Plainion.GraphViz
                 }
             }
 
-            myZoomHorizontal.IsEnabled = myGraphVisual.Presentation != null;
-            myZoomHorizontal.IsEnabled = myGraphVisual.Presentation != null;
+            myZoomSlider.IsEnabled = myGraphVisual.Presentation != null;
         }
 
         public ILayoutEngine LayoutEngine
@@ -245,8 +246,7 @@ namespace Plainion.GraphViz
             var zoomY = ScrollViewer.ViewportHeight / height;
             var zoom = Math.Min(zoomX, zoomY);
 
-            // uses same zoom for x and y to preserve aspect ratio
-            Scale(zoom, zoom);
+            Scale(zoom);
 
             var scrollTarget = scrollToCenter
                 ? new Point(left + width / 2, top + height / 2)
@@ -270,7 +270,7 @@ namespace Plainion.GraphViz
             var scaleY = (RenderSize.Height - padding) / myGraphVisual.ContentSize.Height;
             var scale = Math.Min(1, Math.Min(scaleX, scaleY));
 
-            Scale(scale, scale);
+            Scale(scale);
 
             UpdateLayout();
 
@@ -278,10 +278,11 @@ namespace Plainion.GraphViz
             ScrollViewer.ScrollToVerticalOffset((myGraphVisual.RenderSize.Height - ScrollViewer.ViewportHeight) / 2);
         }
 
-        private void Scale(double scaleX, double scaleY)
+        // uses same zoom for x and y to preserve aspect ratio
+        private void Scale(double scale)
         {
-            myScaleTransform.ScaleX = scaleX;
-            myScaleTransform.ScaleY = scaleY;
+            myScaleTransform.ScaleX = scale;
+            myScaleTransform.ScaleY = scale;
 
             myGraphVisual.SetScaling(myScaleTransform.ScaleX, myScaleTransform.ScaleY);
         }
@@ -291,17 +292,36 @@ namespace Plainion.GraphViz
             e.Handled = true;
 
             var absMousePos = Mouse.GetPosition(myGraphVisual);
-            var poiBeforeScale = myScaleTransform.Transform(absMousePos);
-
             var delta = 1 + (Math.Sign(e.Delta) * 0.1);
-            Scale(myScaleTransform.ScaleX * delta, myScaleTransform.ScaleY * delta);
+            ZoomAtPoint(absMousePos, delta);
+        }
 
-            var poiAfterScale = myScaleTransform.Transform(absMousePos);
+        private void ZoomAtPoint(Point pos, double delta)
+        {
+            var poiBeforeScale = myScaleTransform.Transform(pos);
+
+            Scale(myScaleTransform.ScaleX * delta);
+
+            var poiAfterScale = myScaleTransform.Transform(pos);
             var xoff = ScrollViewer.HorizontalOffset + (poiAfterScale.X - poiBeforeScale.X);
             var yoff = ScrollViewer.VerticalOffset + (poiAfterScale.Y - poiBeforeScale.Y);
 
             ScrollViewer.ScrollToHorizontalOffset(xoff);
             ScrollViewer.ScrollToVerticalOffset(yoff);
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Up || e.Key == Key.Down)
+            {
+                var absMousePos = Mouse.GetPosition(myGraphVisual);
+                var delta = 1 + ((e.Key == Key.Up ? 1 : -1) * 0.1);
+                ZoomAtPoint(absMousePos, delta);
+
+                e.Handled = true;
+            }
+
+            base.OnPreviewKeyUp(e);
         }
 
         private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -363,23 +383,19 @@ namespace Plainion.GraphViz
 
             var slider = (Slider)sender;
 
-            var delta = (1 + (Math.Sign(e.NewValue - e.OldValue) * 0.1));
+            var delta = (1 + (Math.Sign(e.NewValue - e.OldValue) * 0.025));
             if (delta == 0)
             {
                 return;
             }
 
-            var center = new Point(RenderSize.Width / 2, RenderSize.Height / 2);
-            var poiBeforeScale = myScaleTransform.Transform(center);
+            Scale(myScaleTransform.ScaleX * delta);
 
-            Scale(myScaleTransform.ScaleX * delta, myScaleTransform.ScaleY * delta);
+            // makes the scrolling smoooth
+            UpdateLayout();
 
-            var poiAfterScale = myScaleTransform.Transform(center);
-            var xoff = ScrollViewer.HorizontalOffset + (poiAfterScale.X - poiBeforeScale.X);
-            var yoff = ScrollViewer.VerticalOffset + (poiAfterScale.Y - poiBeforeScale.Y);
-
-            ScrollViewer.ScrollToHorizontalOffset(xoff);
-            ScrollViewer.ScrollToVerticalOffset(yoff);
+            ScrollViewer.ScrollToHorizontalOffset(ScrollViewer.ScrollableWidth / 2);
+            ScrollViewer.ScrollToVerticalOffset(ScrollViewer.ScrollableHeight / 2);
         }
     }
 }
