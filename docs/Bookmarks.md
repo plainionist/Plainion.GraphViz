@@ -7,7 +7,7 @@ navigation_weight: 40
 
 Bookmarks can be used to jump between different views on the graph
 
-![](Screenshots/Bookmarks.png) 
+![](Screenshots/BookmarksEditor.png) 
 
 Bookmarks remember filters and cluster foldings.
 
