@@ -8,7 +8,7 @@ using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services.Framework;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
-    class InheritanceGraphInspector : AsyncInspectorBase<TypeRelationshipDocument>
+    class InheritanceGraphInspector : InspectorBase
     {
         private string mySelectedAssemblyName;
 
@@ -17,13 +17,36 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         {
         }
 
+        /// <summary>
+        /// Set if you want to have progress be reported
+        /// </summary>
+        public IProgress<int> ProgressCallback { get; set; }
+
+        /// <summary>
+        /// Set if you want to be able to cancel.
+        /// </summary>
+        public ICancellationToken CancellationToken { get; set; }
+
+        protected void ReportProgress(int value)
+        {
+            if (ProgressCallback != null)
+            {
+                ProgressCallback.Report(value);
+            }
+        }
+
+        protected bool IsCancellationRequested
+        {
+            get { return CancellationToken != null && CancellationToken.IsCancellationRequested; }
+        }
+
         public bool IgnoreDotNetTypes { get; set; }
 
         public string AssemblyLocation { get; set; }
 
         public TypeDescriptor SelectedType { get; set; }
 
-        public override TypeRelationshipDocument Execute()
+        public TypeRelationshipDocument Execute()
         {
             Contract.RequiresNotNullNotEmpty(AssemblyLocation, "AssemblyLocation");
             Contract.RequiresNotNull(SelectedType, "SelectedType");

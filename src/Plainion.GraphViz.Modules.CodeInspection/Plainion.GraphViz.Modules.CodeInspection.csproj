@@ -153,7 +153,6 @@
     <Compile Include="Inheritance\BackgroundWorkerAdapter.cs" />
     <Compile Include="Inheritance\ICancellationToken.cs" />
     <Compile Include="Inheritance\AllTypesInspector.cs" />
-    <Compile Include="Inheritance\AsyncInspectorBase.cs" />
     <Compile Include="Inheritance\InheritanceGraphInspector.cs" />
     <Compile Include="Inheritance\InheritanceGraphBuilder.cs" />
     <Compile Include="Inheritance\InheritanceGraphBuilderView.xaml.cs">

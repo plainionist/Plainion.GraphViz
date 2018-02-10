@@ -7,7 +7,7 @@ using Plainion;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
-    [Export( typeof( AssemblyInspectionService ) )]
+    [Export(typeof(AssemblyInspectionService))]
     public class AssemblyInspectionService
     {
         private Dictionary<string, DomainHandle> myActiveDomains;
@@ -16,11 +16,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
         {
             private AssemblyInspectionService myService;
 
-            public DomainHandle( AssemblyInspectionService service, string applicationDomain )
+            public DomainHandle(AssemblyInspectionService service, string applicationDomain)
             {
                 myService = service;
 
-                Domain = new InspectionDomain( applicationDomain );
+                Domain = new InspectionDomain(applicationDomain);
                 RefCount = 0;
             }
 
@@ -36,11 +36,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
             {
                 RefCount--;
 
-                if( RefCount == 0 )
+                if (RefCount == 0)
                 {
-                    Contract.Invariant( Domain != null, "Domain already destroyed" );
+                    Contract.Invariant(Domain != null, "Domain already destroyed");
 
-                    myService.myActiveDomains.Remove( Domain.ApplicationBase );
+                    myService.myActiveDomains.Remove(Domain.ApplicationBase);
                     Domain.Dispose();
                     Domain = null;
                 }
@@ -49,27 +49,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         public AssemblyInspectionService()
         {
-            myActiveDomains = new Dictionary<string, DomainHandle>( StringComparer.OrdinalIgnoreCase );
+            myActiveDomains = new Dictionary<string, DomainHandle>(StringComparer.OrdinalIgnoreCase);
         }
 
-        public IInspectorHandle<T> CreateInspector<T>( string inspectionRootDirectory ) where T : InspectorBase
+        public IInspectorHandle<T> CreateInspector<T>(string inspectionRootDirectory) where T : InspectorBase
         {
-            if( !myActiveDomains.ContainsKey( inspectionRootDirectory ) )
+            if (!myActiveDomains.ContainsKey(inspectionRootDirectory))
             {
-                myActiveDomains[ inspectionRootDirectory ] = new DomainHandle( this, inspectionRootDirectory );
+                myActiveDomains[inspectionRootDirectory] = new DomainHandle(this, inspectionRootDirectory);
             }
 
-            var domainHandle = myActiveDomains[ inspectionRootDirectory ];
+            var domainHandle = myActiveDomains[inspectionRootDirectory];
             var inspector = domainHandle.Domain.CreateInspector<T>();
 
-            return new InspectorHandle<T>( domainHandle, inspector );
+            return new InspectorHandle<T>(domainHandle, inspector);
         }
 
         private class InspectorHandle<T> : IInspectorHandle<T> where T : InspectorBase
         {
             private DomainHandle myDomain;
 
-            public InspectorHandle( DomainHandle assemblyInspectionService, T inspector )
+            public InspectorHandle(DomainHandle assemblyInspectionService, T inspector)
             {
                 myDomain = assemblyInspectionService;
                 Value = inspector;
@@ -77,21 +77,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
                 myDomain.Acquire();
             }
 
-            public T Value
-            {
-                get;
-                private set;
-            }
+            public T Value { get; private set; }
 
             public void Dispose()
             {
                 var disposableValue = Value as IDisposable;
-                if( disposableValue != null )
+                if (disposableValue != null)
                 {
                     disposableValue.Dispose();
                 }
 
-                if( myDomain != null )
+                if (myDomain != null)
                 {
                     myDomain.Release();
                 }
@@ -103,33 +99,33 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         /// <summary/>
         /// <returns>Delegate to cancel the background processing</returns>
-        internal Action RunAsync<TResult>( AsyncInspectorBase<TResult> inspector, Action<int> progressCallback, Action<TResult> completedCallback )
+        internal Action RunAsync(InheritanceGraphInspector inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
             var worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
 
-            worker.DoWork += ( s, e ) =>
+            worker.DoWork += (s, e) =>
                 {
-                    var adapter = new BackgroundWorkerAdapter( ( BackgroundWorker )s );
+                    var adapter = new BackgroundWorkerAdapter((BackgroundWorker)s);
                     inspector.ProgressCallback = adapter;
                     inspector.CancellationToken = adapter;
 
                     e.Result = inspector.Execute();
                 };
-            worker.ProgressChanged += ( s, e ) => progressCallback( e.ProgressPercentage );
-            worker.RunWorkerCompleted += ( s, e ) =>
+            worker.ProgressChanged += (s, e) => progressCallback(e.ProgressPercentage);
+            worker.RunWorkerCompleted += (s, e) =>
                 {
-                    completedCallback( ( TResult )e.Result );
+                    completedCallback((TypeRelationshipDocument)e.Result);
                     // TODO: is this a good idea? aren't we still in the callstack of the worker?
                     worker.Dispose();
                 };
 
-            worker.RunWorkerAsync( inspector );
+            worker.RunWorkerAsync(inspector);
 
             return () =>
             {
-                if( worker.IsBusy && !worker.CancellationPending )
+                if (worker.IsBusy && !worker.CancellationPending)
                 {
                     worker.CancelAsync();
                 }
