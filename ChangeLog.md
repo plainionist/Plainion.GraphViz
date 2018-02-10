@@ -3,6 +3,7 @@
 - Online help will be included in the released package as markdown. 
   Html based help is only available online on GitHub
 - UI tooltips improved
+- zoom sliders added
 
 ## 2.7.0 - 2017-12-26
 

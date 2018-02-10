@@ -4,6 +4,7 @@ using System.Linq;
 using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -19,8 +20,8 @@ namespace Plainion.GraphViz
         private Point myZoomStartPoint;
         private AdornerLayer myAdornerLayer;
         private RubberbandAdorner myRubberBand;
-
         private DateTime myLastRefresh = DateTime.Now;
+        private bool myZoomGuard;
 
         public GraphView()
         {
@@ -32,6 +33,11 @@ namespace Plainion.GraphViz
             MouseLeftButtonUp += OnMouseLeftButtonUp;
 
             Loaded += OnLoaded;
+
+            myZoomVertical.Value = 50;
+            myZoomHorizontal.Value = 50;
+            myZoomHorizontal.IsEnabled = false;
+            myZoomHorizontal.IsEnabled = false;
         }
 
         public IGraphViewNavigation Navigation
@@ -63,12 +69,15 @@ namespace Plainion.GraphViz
 
         private static void OnGraphSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var graphView = (GraphView)d;
+            ((GraphView)d).OnGraphSourceChanged();
+        }
 
-            if (graphView.myGraphVisual.Presentation != null)
+        private void OnGraphSourceChanged()
+        {
+            if (myGraphVisual.Presentation != null)
             {
-                var adornerLayer = AdornerLayer.GetAdornerLayer(graphView.myGraphVisual);
-                var adorners = adornerLayer.GetAdorners(graphView.myGraphVisual);
+                var adornerLayer = AdornerLayer.GetAdornerLayer(myGraphVisual);
+                var adorners = adornerLayer.GetAdorners(myGraphVisual);
                 if (adorners != null)
                 {
                     var toolTipAdorner = adorners.OfType<ToolTipAdorner>().SingleOrDefault();
@@ -79,19 +88,21 @@ namespace Plainion.GraphViz
                 }
             }
 
-            var presentation = (IGraphPresentation)e.NewValue;
-            graphView.myGraphVisual.Presentation = presentation;
+            myGraphVisual.Presentation = GraphSource;
 
-            if (graphView.myGraphVisual.Presentation != null)
+            if (myGraphVisual.Presentation != null)
             {
-                var toolTipModule = presentation.GetPropertySetFor<ToolTipContent>();
+                var toolTipModule = GraphSource.GetPropertySetFor<ToolTipContent>();
                 if (toolTipModule != null)
                 {
-                    var adornerLayer = AdornerLayer.GetAdornerLayer(graphView.myGraphVisual);
-                    var adorner = new ToolTipAdorner(graphView.myGraphVisual, graphView.myGraphVisual, toolTipModule);
+                    var adornerLayer = AdornerLayer.GetAdornerLayer(myGraphVisual);
+                    var adorner = new ToolTipAdorner(myGraphVisual, myGraphVisual, toolTipModule);
                     adornerLayer.Add(adorner);
                 }
             }
+
+            myZoomHorizontal.IsEnabled = myGraphVisual.Presentation != null;
+            myZoomHorizontal.IsEnabled = myGraphVisual.Presentation != null;
         }
 
         public ILayoutEngine LayoutEngine
@@ -282,7 +293,8 @@ namespace Plainion.GraphViz
             var absMousePos = Mouse.GetPosition(myGraphVisual);
             var poiBeforeScale = myScaleTransform.Transform(absMousePos);
 
-            Scale(myScaleTransform.ScaleX * (1 + (Math.Sign(e.Delta) * 0.1)), myScaleTransform.ScaleY * (1 + (Math.Sign(e.Delta) * 0.1)));
+            var delta = 1 + (Math.Sign(e.Delta) * 0.1);
+            Scale(myScaleTransform.ScaleX * delta, myScaleTransform.ScaleY * delta);
 
             var poiAfterScale = myScaleTransform.Transform(absMousePos);
             var xoff = ScrollViewer.HorizontalOffset + (poiAfterScale.X - poiBeforeScale.X);
@@ -332,5 +344,42 @@ namespace Plainion.GraphViz
         /// Key: name of the type of the element under cursor - "Default" for none
         /// </summary>
         public Dictionary<string, ContextMenu> ContextMenus { get; set; }
+
+        private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            var slider = (Slider)sender;
+
+            myZoomGuard = true;
+            slider.Value = slider.Maximum / 2;
+            myZoomGuard = false;
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (myZoomGuard || GraphSource == null)
+            {
+                return;
+            }
+
+            var slider = (Slider)sender;
+
+            var delta = (1 + (Math.Sign(e.NewValue - e.OldValue) * 0.1));
+            if (delta == 0)
+            {
+                return;
+            }
+
+            var center = new Point(RenderSize.Width / 2, RenderSize.Height / 2);
+            var poiBeforeScale = myScaleTransform.Transform(center);
+
+            Scale(myScaleTransform.ScaleX * delta, myScaleTransform.ScaleY * delta);
+
+            var poiAfterScale = myScaleTransform.Transform(center);
+            var xoff = ScrollViewer.HorizontalOffset + (poiAfterScale.X - poiBeforeScale.X);
+            var yoff = ScrollViewer.VerticalOffset + (poiAfterScale.Y - poiBeforeScale.Y);
+
+            ScrollViewer.ScrollToHorizontalOffset(xoff);
+            ScrollViewer.ScrollToVerticalOffset(yoff);
+        }
     }
 }
