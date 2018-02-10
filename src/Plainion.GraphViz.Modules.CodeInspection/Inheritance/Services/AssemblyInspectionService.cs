@@ -13,71 +13,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
     [Export(typeof(AssemblyInspectionService))]
     public class AssemblyInspectionService
     {
-        private Dictionary<string, DomainHandle> myActiveDomains;
-
-        private class DomainHandle
-        {
-            private AssemblyInspectionService myService;
-
-            public DomainHandle(AssemblyInspectionService service, string appBase)
-            {
-                myService = service;
-
-                Domain = new InspectionDomain(appBase);
-                RefCount = 0;
-            }
-
-            public InspectionDomain Domain { get; private set; }
-            public int RefCount { get; private set; }
-
-            public void Acquire()
-            {
-                RefCount++;
-            }
-
-            public void Release()
-            {
-                RefCount--;
-
-                if (RefCount == 0)
-                {
-                    Contract.Invariant(Domain != null, "Domain already destroyed");
-
-                    myService.myActiveDomains.Remove(Domain.ApplicationBase);
-                    Domain.Dispose();
-                    Domain = null;
-                }
-            }
-        }
-
-        public AssemblyInspectionService()
-        {
-            myActiveDomains = new Dictionary<string, DomainHandle>(StringComparer.OrdinalIgnoreCase);
-        }
-
-        private InspectorHandle<T> CreateInspector<T>(string appBase) where T : class
-        {
-            if (!myActiveDomains.ContainsKey(appBase))
-            {
-                myActiveDomains[appBase] = new DomainHandle(this, appBase);
-            }
-
-            var domainHandle = myActiveDomains[appBase];
-            var inspector = domainHandle.Domain.CreateInspector<T>();
-
-            return new InspectorHandle<T>(domainHandle, inspector);
-        }
-
         private class InspectorHandle<T> : IDisposable where T : class
         {
-            private DomainHandle myDomain;
+            private InspectionDomain myDomain;
 
-            public InspectorHandle(DomainHandle assemblyInspectionService, T inspector)
+            public InspectorHandle(string appBase)
             {
-                myDomain = assemblyInspectionService;
-                Value = inspector;
-
-                myDomain.Acquire();
+                myDomain = new InspectionDomain(appBase);
+                Value = myDomain.CreateInspector<T>();
             }
 
             public T Value { get; private set; }
@@ -89,15 +32,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
                 {
                     disposableValue.Dispose();
                 }
+                Value = null;
 
                 if (myDomain != null)
                 {
-                    myDomain.Release();
+                    myDomain.Dispose();
+                    myDomain = null;
                 }
-
-                Value = null;
-                myDomain = null;
             }
+        }
+
+        private InspectorHandle<T> CreateInspector<T>(string appBase) where T : class
+        {
+            return new InspectorHandle<T>(appBase);
         }
 
         /// <summary/>
@@ -158,7 +105,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
         }
     }
 
-    internal class BackgroundWorkerAdapter : MarshalByRefObject, IProgress<int>, ICancellationToken
+    class BackgroundWorkerAdapter : MarshalByRefObject, IProgress<int>, ICancellationToken
     {
         private BackgroundWorker myWorker;
 
@@ -178,7 +125,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
         }
     }
 
-    internal class InspectionDomain : IDisposable
+    class InspectionDomain : IDisposable
     {
         private AppDomain myDomain;
         private AssemblyResolveHandler myAssemblyResolveHandler;
@@ -226,7 +173,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
         }
     }
 
-    internal class AssemblyResolveHandler : MarshalByRefObject
+    class AssemblyResolveHandler : MarshalByRefObject
     {
         //private volatile object myAssemblyRefereces;
 

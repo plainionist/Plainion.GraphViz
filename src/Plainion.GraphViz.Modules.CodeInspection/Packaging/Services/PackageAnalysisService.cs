@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Configuration;
-using Newtonsoft.Json;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
 {
