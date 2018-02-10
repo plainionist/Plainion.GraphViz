@@ -39,6 +39,7 @@
     <None Include="Clusters.md" />
     <None Include="Filters.md" />
     <None Include="HowTos\Create graphs with DOT language.md" />
+    <None Include="HowTos\Trace paths between nodes.md" />
     <None Include="SupportedFormats.md" />
     <None Include="_layouts\default.html" />
   </ItemGroup>
@@ -46,7 +47,7 @@
     <None Include="Acknowledgements.md" />
     <None Include="Basics.md" />
     <None Include="Development.md" />
-    <None Include="HowTos\Import graphs from source code.md" />
+    <None Include="HowTos\Visualize code dependencies.md" />
     <None Include="HowTos\Save my work.md" />
     <None Include="ReadMe.md" />
     <None Include="Viewer.Samples\Clusters.dot" />

@@ -1,6 +1,6 @@
 ---
 title: Visualize code dependencies
-navigation_weight: 110
+navigation_weight: 120
 ---
 
 # Visualize code dependencies (.NET only)
