@@ -5,6 +5,7 @@
 - UI tooltips improved
 - Zoom sliders added
 - Zoom with cursor keys at mouse position supported
+- Bookmarks added to enable jumping between different settings
 
 ## 2.7.0 - 2017-12-26
 

@@ -201,6 +201,9 @@ namespace Plainion.GraphViz
             myRubberBand = new RubberbandAdorner(this, e.GetPosition(this), args => args.RightButton);
             myRubberBand.Closed += myRubberBand_Closed;
             myAdornerLayer.Add(myRubberBand);
+
+            // prepare for key events
+            Focus();
         }
 
         private void myRubberBand_Closed(object sender, EventArgs e)
@@ -337,6 +340,9 @@ namespace Plainion.GraphViz
                 var selection = myGraphVisual.Presentation.GetPropertySetFor<Selection>().Get(graphItem.Id);
                 selection.IsSelected = !selection.IsSelected;
             }
+
+            // prepare for key events
+            Focus();
         }
 
         public void NavigateTo(IGraphItem item)
