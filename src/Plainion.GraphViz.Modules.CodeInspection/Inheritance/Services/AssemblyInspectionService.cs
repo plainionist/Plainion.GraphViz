@@ -11,7 +11,7 @@ using System.Security.Policy;
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
     [Export(typeof(AssemblyInspectionService))]
-    public class AssemblyInspectionService
+    class AssemblyInspectionService
     {
         private class InspectorHandle<T> : IDisposable where T : class
         {
@@ -27,10 +27,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
             public void Dispose()
             {
-                var disposableValue = Value as IDisposable;
-                if (disposableValue != null)
+                var disposable = Value as IDisposable;
+                if (disposable != null)
                 {
-                    disposableValue.Dispose();
+                    disposable.Dispose();
                 }
                 Value = null;
 
@@ -42,13 +42,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
             }
         }
 
-        private InspectorHandle<T> CreateInspector<T>(string appBase) where T : class
-        {
-            return new InspectorHandle<T>(appBase);
-        }
-
-        /// <summary/>
-        /// <returns>Delegate to cancel the background processing</returns>
+        // <returns>Delegate to cancel the background processing</returns>
         private Action RunAsync(InheritanceGraphActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
             var worker = new BackgroundWorker();
@@ -84,7 +78,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         internal Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
-            using (var inspector = CreateInspector<InheritanceGraphActor>(Path.GetDirectoryName(assemblyLocation)))
+            using (var inspector = new InspectorHandle<InheritanceGraphActor>(Path.GetDirectoryName(assemblyLocation)))
             {
                 inspector.Value.IgnoreDotNetTypes = ignoreDotNetTypes;
                 inspector.Value.AssemblyLocation = assemblyLocation;
@@ -96,7 +90,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         internal IEnumerable<TypeDescriptor> GetAllTypes(string assemblyLocation)
         {
-            using (var inspector = CreateInspector<AllTypesActor>(Path.GetDirectoryName(assemblyLocation)))
+            using (var inspector = new InspectorHandle<AllTypesActor>(Path.GetDirectoryName(assemblyLocation)))
             {
                 inspector.Value.AssemblyLocation = assemblyLocation;
 
@@ -175,12 +169,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
     class AssemblyResolveHandler : MarshalByRefObject
     {
-        //private volatile object myAssemblyRefereces;
-
         public void Attach()
         {
-            //myAssemblyRefereces = GetType().Assembly.GetTypes();
-
             AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += OnReflectionOnlyAssemblyResolve;
         }

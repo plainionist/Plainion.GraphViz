@@ -2,7 +2,7 @@
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
-    internal class AssemblyUtils
+    class AssemblyUtils
     {
         public static bool IsManagedAssembly( string fileName )
         {

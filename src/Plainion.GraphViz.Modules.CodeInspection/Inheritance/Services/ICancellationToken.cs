@@ -1,7 +1,7 @@
 ﻿
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
-    public interface ICancellationToken
+    interface ICancellationToken
     {
         bool IsCancellationRequested { get; }
     }

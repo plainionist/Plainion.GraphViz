@@ -3,7 +3,7 @@
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 {
     [Serializable]
-    public class TypeDescriptor
+    class TypeDescriptor
     {
         private int myHashCode;
 

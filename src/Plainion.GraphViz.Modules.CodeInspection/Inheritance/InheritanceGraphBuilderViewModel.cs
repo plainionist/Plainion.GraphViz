@@ -21,7 +21,7 @@ using Prism.Interactivity.InteractionRequest;
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
     [Export(typeof(InheritanceGraphBuilderViewModel))]
-    public class InheritanceGraphBuilderViewModel : ViewModelBase
+    class InheritanceGraphBuilderViewModel : ViewModelBase
     {
         private string myAssemblyToAnalyseLocation;
         private TypeDescriptor myTypeToAnalyse;
