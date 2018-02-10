@@ -30,8 +30,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         private bool myIsReady;
         private bool myIgnoreDotNetTypes;
         private Action myCancelBackgroundProcessing;
-        private IInspectorHandle<InheritanceGraphInspector> myInheritanceGraphInspector;
-        private IInspectorHandle<AllTypesInspector> myAllTypesInspector;
+        private IInspectorHandle<InheritanceGraphActor> myInheritanceGraphInspector;
+        private IInspectorHandle<AllTypesActor> myAllTypesInspector;
         private bool myAddToGraph;
 
         public InheritanceGraphBuilderViewModel()
@@ -123,7 +123,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         {
             IsReady = false;
 
-            myInheritanceGraphInspector = InspectionService.CreateInspector<InheritanceGraphInspector>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
+            myInheritanceGraphInspector = InspectionService.CreateInspector<InheritanceGraphActor>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
             myInheritanceGraphInspector.Value.IgnoreDotNetTypes = IgnoreDotNetTypes;
             myInheritanceGraphInspector.Value.AssemblyLocation = AssemblyToAnalyseLocation;
@@ -169,7 +169,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
                     if (!string.IsNullOrWhiteSpace(myAssemblyToAnalyseLocation) && File.Exists(myAssemblyToAnalyseLocation))
                     {
-                        myAllTypesInspector = InspectionService.CreateInspector<AllTypesInspector>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
+                        myAllTypesInspector = InspectionService.CreateInspector<AllTypesActor>(Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
                         myAllTypesInspector.Value.AssemblyLocation = myAssemblyToAnalyseLocation;
 

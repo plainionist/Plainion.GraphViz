@@ -104,7 +104,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         /// <summary/>
         /// <returns>Delegate to cancel the background processing</returns>
-        internal Action RunAsync(InheritanceGraphInspector inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        internal Action RunAsync(InheritanceGraphActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
             var worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;

@@ -16,7 +16,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void GetUsedTypes_typeof_Found()
         {
-            Verify(typeof(TypeOf), typeof(AllTypesInspector));
+            Verify(typeof(TypeOf), typeof(AllTypesActor));
         }
 
         [Test]
@@ -194,7 +194,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         public void Init()
         {
-            Types.Add(typeof(AllTypesInspector));
+            Types.Add(typeof(AllTypesActor));
         }
     }
 
