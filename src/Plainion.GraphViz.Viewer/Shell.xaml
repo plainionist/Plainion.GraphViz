@@ -37,8 +37,8 @@
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.Bookmarks}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
-                        <Setter Property="Width" Value="600"/>
-                        <Setter Property="Height" Value="700"/>
+                        <Setter Property="Width" Value="300"/>
+                        <Setter Property="Height" Value="400"/>
                     </Style>
                 </pn:PopupViewAction.WindowStyle>
             </pn:PopupViewAction>

@@ -46,7 +46,7 @@ namespace Plainion.GraphViz.Presentation
             presentation.Graph = ReadGraph();
 
             ReadNodeMasks(presentation.GetModule<NodeMaskModule>());
-            ReadTansformations(presentation.GetModule<TransformationModule>(), presentation);
+            ReadTansformations(presentation);
             ReadCaptions(presentation.GetModule<CaptionModule>());
             ReadNodeStyles(presentation.GetPropertySetFor<NodeStyle>());
             ReadEdgeStyles(presentation.GetPropertySetFor<EdgeStyle>());
@@ -91,7 +91,8 @@ namespace Plainion.GraphViz.Presentation
             return builder.Graph;
         }
 
-        private void ReadNodeMasks(NodeMaskModule module)
+        // for bookmarks
+        internal void ReadNodeMasks(NodeMaskModule module)
         {
             var count = myReader.ReadInt32();
             for (int i = 0; i < count; ++i)
@@ -137,8 +138,11 @@ namespace Plainion.GraphViz.Presentation
             }
         }
 
-        private void ReadTansformations(TransformationModule module, IGraphPresentation presentation)
+        // for bookmarks
+        internal void ReadTansformations( IGraphPresentation presentation)
         {
+            var module = presentation.GetModule<TransformationModule>();
+
             // TransformationModule adds default transformations
             // -> remove those
             foreach (var t in module.Items.ToList())

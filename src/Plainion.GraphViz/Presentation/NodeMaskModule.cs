@@ -26,14 +26,14 @@ namespace Plainion.GraphViz.Presentation
             mySelfObserver.ModuleChanged += OnModuleChanged;
         }
 
-        private void OnModuleChanged( object sender, EventArgs e )
+        private void OnModuleChanged(object sender, EventArgs e)
         {
             HideAllNodesOnDemand();
         }
 
-        private void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnCollectionChanged( e );
+            OnCollectionChanged(e);
         }
 
         public override IEnumerable<INodeMask> Items
@@ -41,70 +41,81 @@ namespace Plainion.GraphViz.Presentation
             get { return myMasks; }
         }
 
-        public void Push( INodeMask mask )
+        public void Push(INodeMask mask)
         {
-            Insert( 0, mask );
+            Insert(0, mask);
         }
 
-        public void Insert( int pos, INodeMask mask )
+        public void Insert(int pos, INodeMask mask)
         {
-            if( mask is AllNodesMask )
+            if (mask is AllNodesMask)
             {
-                if( myAllNodesMask != null )
+                if (myAllNodesMask != null)
                 {
-                    myMasks.Remove( myAllNodesMask );
+                    myMasks.Remove(myAllNodesMask);
                 }
 
-                myMasks.Insert( pos, mask );
+                myMasks.Insert(pos, mask);
 
                 myAllNodesMask = mask;
             }
             else
             {
-                myMasks.Insert( pos, mask );
+                myMasks.Insert(pos, mask);
             }
         }
 
-        public void Remove( INodeMask mask )
+        public void Remove(INodeMask mask)
         {
-            if( mask == myAllNodesMask )
+            if (mask == myAllNodesMask)
             {
                 return;
             }
 
-            myMasks.Remove( mask );
+            myMasks.Remove(mask);
         }
 
-        public void MoveUp( INodeMask mask )
+        public void Clear()
         {
-            int pos = myMasks.IndexOf( mask );
-            if( pos == 0 )
+            myMasks.Clear();
+
+            if (AutoHideAllNodesForShowMasks)
+            {
+                AutoHideAllNodesForShowMasks = false;
+                AutoHideAllNodesForShowMasks = true;
+            }
+        }
+
+        public void MoveUp(INodeMask mask)
+        {
+            int pos = myMasks.IndexOf(mask);
+            if (pos == 0)
             {
                 return;
             }
 
-            myMasks.Move( pos, pos - 1 );
+            myMasks.Move(pos, pos - 1);
         }
 
-        public void MoveDown( INodeMask mask )
+        public void MoveDown(INodeMask mask)
         {
-            int pos = myMasks.IndexOf( mask );
-            if( pos == myMasks.Count - 1 )
+            int pos = myMasks.IndexOf(mask);
+            if (pos == myMasks.Count - 1)
             {
                 return;
             }
 
-            myMasks.Move( pos, pos + 1 );
+            myMasks.Move(pos, pos + 1);
         }
 
         private void HideAllNodesOnDemand()
         {
-            if( myAllNodesMask != null && myMasks.Any( s => s.IsShowMask && s.IsApplied ) )
+            if (myAllNodesMask != null && myMasks.Any(s => s.IsShowMask && s.IsApplied))
             {
                 myAllNodesMask.IsApplied = true;
             }
 
-            if( myAllNodesMask != null && !myMasks.Any( s => s.IsShowMask && s.IsApplied ) )
+            if (myAllNodesMask != null && !myMasks.Any(s => s.IsShowMask && s.IsApplied))
             {
                 myAllNodesMask.IsApplied = false;
             }
@@ -119,20 +130,20 @@ namespace Plainion.GraphViz.Presentation
             get { return myAllNodesMask != null; }
             set
             {
-                if( value && myAllNodesMask == null )
+                if (value && myAllNodesMask == null)
                 {
                     myAllNodesMask = new AllNodesMask();
                     myAllNodesMask.IsShowMask = false;
 
-                    Insert( 0, myAllNodesMask );
+                    Insert(0, myAllNodesMask);
 
                     return;
                 }
 
-                if( !value && myAllNodesMask != null )
+                if (!value && myAllNodesMask != null)
                 {
                     myAllNodesMask = null;
-                    Remove( myAllNodesMask );
+                    Remove(myAllNodesMask);
                 }
             }
         }

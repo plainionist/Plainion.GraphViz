@@ -10,28 +10,28 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [Export( typeof( NodeMasksViewModel ) )]
+    [Export(typeof(NodeMasksViewModel))]
     internal class NodeMasksViewModel : ViewModelBase
     {
         internal class Entry
         {
             private IGraphPresentation myPresentation;
 
-            public Entry( INodeMask mask, IGraphPresentation presentation )
+            public Entry(INodeMask mask, IGraphPresentation presentation)
             {
-                Contract.RequiresNotNull( mask, "mask" );
-                Contract.RequiresNotNull( presentation, "presentation" );
+                Contract.RequiresNotNull(mask, "mask");
+                Contract.RequiresNotNull(presentation, "presentation");
 
                 Mask = mask;
                 myPresentation = presentation;
 
-                SetToolTip( mask );
+                SetToolTip(mask);
             }
 
-            private void SetToolTip( INodeMask mask )
+            private void SetToolTip(INodeMask mask)
             {
                 var nodeMask = mask as NodeMask;
-                if ( nodeMask == null )
+                if (nodeMask == null)
                 {
                     return;
                 }
@@ -39,11 +39,11 @@ namespace Plainion.GraphViz.Modules.Analysis
                 var captionModule = myPresentation.GetPropertySetFor<Caption>();
 
                 var nodeLabels = nodeMask.Values
-                    .Select( nodeId => captionModule.Get( nodeId ).DisplayText )
-                    .OrderBy( l => l )
+                    .Select(nodeId => captionModule.Get(nodeId).DisplayText)
+                    .OrderBy(l => l)
                     .ToList();
 
-                ToolTip = string.Join( Environment.NewLine, nodeLabels );
+                ToolTip = string.Join(Environment.NewLine, nodeLabels);
             }
 
             public INodeMask Mask { get; private set; }
@@ -62,28 +62,28 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             Masks = new ObservableCollection<Entry>();
 
-            DeleteMaskCommand = new DelegateCommand( OnDeleteMask );
-            MoveMaskUpCommand = new DelegateCommand( OnMoveMaskUp );
-            MoveMaskDownCommand = new DelegateCommand( OnMoveMaskDown );
+            DeleteMaskCommand = new DelegateCommand(OnDeleteMask);
+            MoveMaskUpCommand = new DelegateCommand(OnMoveMaskUp);
+            MoveMaskDownCommand = new DelegateCommand(OnMoveMaskDown);
         }
 
-        protected override void OnModelPropertyChanged( string propertyName )
+        protected override void OnModelPropertyChanged(string propertyName)
         {
-            if ( propertyName == "Presentation" )
+            if (propertyName == "Presentation")
             {
-                if ( myPresentation == Model.Presentation )
+                if (myPresentation == Model.Presentation)
                 {
                     return;
                 }
 
-                if ( myPresentation != null )
+                if (myPresentation != null)
                 {
                     myPresentation.GetModule<INodeMaskModule>().CollectionChanged -= OnMasksChanged;
                 }
 
                 myPresentation = Model.Presentation;
 
-                if ( myPresentation != null )
+                if (myPresentation != null)
                 {
                     UpdateMasks();
 
@@ -96,50 +96,34 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             Masks.Clear();
 
-            foreach ( var mask in myPresentation.GetModule<INodeMaskModule>().Items )
+            foreach (var mask in myPresentation.GetModule<INodeMaskModule>().Items)
             {
-                Masks.Add( new Entry( mask, myPresentation ) );
+                Masks.Add(new Entry(mask, myPresentation));
             }
         }
 
-        private void OnMasksChanged( object sender, NotifyCollectionChangedEventArgs e )
+        private void OnMasksChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             UpdateMasks();
         }
 
-        public ObservableCollection<Entry> Masks
-        {
-            get;
-            private set;
-        }
+        public ObservableCollection<Entry> Masks { get; private set; }
 
-        public ICommand DeleteMaskCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand DeleteMaskCommand { get; private set; }
 
-        public ICommand MoveMaskUpCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand MoveMaskUpCommand { get; private set; }
 
-        public ICommand MoveMaskDownCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand MoveMaskDownCommand { get; private set; }
 
         private void OnDeleteMask()
         {
-            if ( SelectedItem == null )
+            if (SelectedItem == null)
             {
                 return;
             }
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Remove( SelectedItem.Mask );
+            module.Remove(SelectedItem.Mask);
 
             SelectedItem = Masks.FirstOrDefault();
         }
@@ -147,35 +131,35 @@ namespace Plainion.GraphViz.Modules.Analysis
         public Entry SelectedItem
         {
             get { return mySelectedItem; }
-            set { SetProperty( ref mySelectedItem, value ); }
+            set { SetProperty(ref mySelectedItem, value); }
         }
 
         private void OnMoveMaskUp()
         {
             var item = SelectedItem;
-            if ( item == null )
+            if (item == null)
             {
                 return;
             }
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-            module.MoveUp( item.Mask );
+            module.MoveUp(item.Mask);
 
-            SelectedItem = Masks.Single( e => e.Mask == item.Mask );
+            SelectedItem = Masks.Single(e => e.Mask == item.Mask);
         }
 
         private void OnMoveMaskDown()
         {
             var item = SelectedItem;
-            if ( item == null )
+            if (item == null)
             {
                 return;
             }
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-            module.MoveDown( item.Mask );
+            module.MoveDown(item.Mask);
 
-            SelectedItem = Masks.Single( e => e.Mask == item.Mask );
+            SelectedItem = Masks.Single(e => e.Mask == item.Mask);
         }
     }
 }

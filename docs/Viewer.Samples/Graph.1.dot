@@ -2,429 +2,429 @@ digraph {
   ratio="compress"
   rankdir=BT
   ranksep="2.0 equally"
-  "Common.Components.SyncAC" [label="SyncAC"]
-  "Common.Components.VToolAC" [label="VToolAC"]
-  "Common.Components.DataTrackingAC" [label="DataTrackingAC"]
-  "Common.Components.FloatingWindowAC" [label="FloatingWindowAC"]
-  "Common.Components.MovieAC" [label="MovieAC"]
-  "Common.Components.MeasurementsAC" [label="MeasurementsAC"]
-  "Common.Components.MaskAC" [label="MaskAC"]
-  "Common.Components.UndoRedoAC" [label="UndoRedoAC"]
-  "Common.Components.SynchronousAC" [label="SynchronousAC"]
-  "Common.Components.PublishAC" [label="PublishAC"]
-  "Common.Components.InteractionsAC" [label="InteractionsAC"]
-  "Common.Components.DragDropAC" [label="DragDropAC"]
-  "Common.Components.TimeTrackingAC" [label="TimeTrackingAC"]
-  "Common.Components.ProgressAC" [label="ProgressAC"]
-  "Common.Components.DocumentsAC" [label="DocumentsAC"]
-  "Common.Components.KeyHandlingAC" [label="KeyHandlingAC"]
-  "Common.Components.CultureAC" [label="CultureAC"]
-  "Common.Components.ToolsAC" [label="ToolsAC"]
-  "Common.Components.ExportingAC" [label="ExportingAC"]
-  "Common.Components.AlgorithmsHostingAC" [label="AlgorithmsHostingAC"]
-  "Common.Components.DisplayAC" [label="DisplayAC"]
-  "Common.Components.SelectionAC" [label="SelectionAC"]
-  "Common.Components.RequiredDataTrackingAC" [label="RequiredDataTrackingAC"]
-  "Common.Components.AreaToolAC" [label="AreaToolAC"]
-  "Common.Components.PresetAC" [label="PresetAC"]
-  "Common.Components.FilteringAC" [label="FilteringAC"]
-  "Common.Components.GenericProcessingAC" [label="GenericProcessingAC"]
-  "Common.Components.AYTrackingAC" [label="AYTrackingAC"]
-  "Common.Components.ChunkCreationAC" [label="ChunkCreationAC"]
-  "Common.Components.GenModelAC" [label="GenModelAC"]
-  "Common.Components.LicensingAC" [label="LicensingAC"]
-  "Common.Components.IModuleInitializer" [label="IModuleInitializer"]
-  "Common.Components.AYTrackingStrategy" [label="AYTrackingStrategy"]
-  "Common.Facades.ComponentFacade" [label="ComponentFacade"]
-  "Common.Facades.PublishingFacade" [label="PublishingFacade"]
-  "Common.Facades.SelectionFacade" [label="SelectionFacade"]
-  "Common.Facades.DataFacade" [label="DataFacade"]
-  "Common.Facades.HandlerFacade" [label="HandlerFacade"]
-  "Common.Facades.RefLsFacade" [label="RefLsFacade"]
-  "Common.Facades.WindowFacade" [label="WindowFacade"]
-  "Common.Facades.SnapshotFacade" [label="SnapshotFacade"]
-  "Common.Facades.CommunicationFacade" [label="CommunicationFacade"]
-  "Common.Facades.IOneWayManager" [label="IOneWayManager"]
-  "Common.PublishAllStrategy" [label="PublishAllStrategy"]
-  "Common.WindowSelectionStrategyFactory" [label="WindowSelectionStrategyFactory"]
-  "Common.AlgorithmServiceExporter" [label="AlgorithmServiceExporter"]
-  "Common.IDialog" [label="IDialog"]
-  "Common.ICommuStateUpdateService" [label="ICommuStateUpdateService"]
-  "Common.IDataProcessor" [label="IDataProcessor"]
-  "Common.IDataCreationService" [label="IDataCreationService"]
-  "Common.IDataLoadingStrategy" [label="IDataLoadingStrategy"]
-  "Common.IDataLoadingManager" [label="IDataLoadingManager"]
-  "Common.IResultsService" [label="IResultsService"]
-  "Application.Infrastructure.ResultsAC" [label="ResultsAC"]
-  "Application.Infrastructure.ResultsSelectionAC" [label="ResultsSelectionAC"]
-  "Application.Infrastructure.CommunicationAC" [label="CommunicationAC"]
-  "Application.Infrastructure.ProgressToolTipCreator" [label="ProgressToolTipCreator"]
-  "Application.Infrastructure.Configuration.ConfigurationConverter" [label="ConfigurationConverter"]
-  "Application.Infrastructure.Observer" [label="Observer"]
-  "Application.Infrastructure.FloatingWindowTracking" [label="FloatingWindowTracking"]
-  "Application.Infrastructure.ToolBarAC" [label="ToolBarAC"]
-  "Application.Infrastructure.ReanimationConstraints" [label="ReanimationConstraints"]
-  "Application.Infrastructure.AsyncCancelAC" [label="AsyncCancelAC"]
-  "Application.Infrastructure.ProfileAC" [label="ProfileAC"]
-  "Application.Visualization.LayoutAC" [label="LayoutAC"]
-  "Application.Visualization.StyleAC" [label="StyleAC"]
-  "Application.Visualization.ModelAC" [label="ModelAC"]
-  "Application.Visualization.FloatingWindowAC" [label="FloatingWindowAC"]
-  "Application.DocumentsRoot" [label="DocumentsRoot"]
-  "Application.DocumentStorage" [label="DocumentStorage"]
-  "Application.DataHandlingAC" [label="DataHandlingAC"]
-  "Application.DataLoadingAC" [label="DataLoadingAC"]
-  "Application.ConfigurationAC" [label="ConfigurationAC"]
-  "Application.TakingAC" [label="TakingAC"]
-  "Application.ResultsAC" [label="ResultsAC"]
-  "Application.ProgressAC" [label="ProgressAC"]
-  "Application.ModelExtension" [label="ModelExtension"]
-  "Application.ViewingAC" [label="ViewingAC"]
-  "Application.ResultsConfigAC" [label="ResultsConfigAC"]
-  "Application.AdvancedResultsConfigAC" [label="AdvancedResultsConfigAC"]
-  "Application.DragDropAC" [label="DragDropAC"]
-  "Application.CalculationQueue" [label="CalculationQueue"]
-  "Application.PersistenceService" [label="PersistenceService"]
-  "Application.DataPersistenceAC" [label="DataPersistenceAC"]
-  "Application.PreFetchingAC" [label="PreFetchingAC"]
-  "Application.PreFetchingStrategy" [label="PreFetchingStrategy"]
-  "Application.SpecialProgressToolTipCreator" [label="SpecialProgressToolTipCreator"]
-  "Application.DataAC" [label="DataAC"]
-  "Application.SnapshotStrategyFactory" [label="SnapshotStrategyFactory"]
-  "Platform.GeneralVisualizationService" [label="GeneralVisualizationService"]
-  "Platform.ICommunicationChannelService" [label="ICommunicationChannelService"]
-  "Platform.IStateCommunicationHandling" [label="IStateCommunicationHandling"]
-  "Platform.IDispenser" [label="IDispenser"]
-  "Platform.IDataService" [label="IDataService"]
-  "Platform.IImageService" [label="IImageService"]
-  "Platform.ICentralConroller" [label="ICentralConroller"]
-  "Platform.IWorkflowExecutionService" [label="IWorkflowExecutionService"]
-  "Platform.IApplicationSupportService" [label="IApplicationSupportService"]
-  "Platform.IGeneralForm" [label="IGeneralForm"]
-  "Platform.ICultureService" [label="ICultureService"]
-  "Platform.ICommunicationBroker" [label="ICommunicationBroker"]
-  "Platform.IApplication" [label="IApplication"]
-  "Common.Components.SyncAC" -> "Common.Components.DisplayAC"
-  "Common.Components.SyncAC" -> "Common.WindowSelectionStrategyFactory"
-  "Common.Components.SyncAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.VToolAC" -> "Common.Components.DisplayAC"
-  "Common.Components.VToolAC" -> "Common.WindowSelectionStrategyFactory"
-  "Common.Components.VToolAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.VToolAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.DataTrackingAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.FloatingWindowAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.FloatingWindowAC" -> "Platform.ICommunicationChannelService"
-  "Common.Components.FloatingWindowAC" -> "Platform.IDataService"
-  "Common.Components.FloatingWindowAC" -> "Platform.IImageService"
-  "Common.Components.MovieAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.MeasurementsAC" -> "Common.Components.MaskAC"
-  "Common.Components.MeasurementsAC" -> "Common.Components.DisplayAC"
-  "Common.Components.MeasurementsAC" -> "Common.WindowSelectionStrategyFactory"
-  "Common.Components.MeasurementsAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.MeasurementsAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.MeasurementsAC" -> "Platform.ICommunicationChannelService"
-  "Common.Components.MeasurementsAC" -> "Platform.IImageService"
-  "Common.Components.MaskAC" -> "Common.Components.DisplayAC"
-  "Common.Components.MaskAC" -> "Common.WindowSelectionStrategyFactory"
-  "Common.Components.MaskAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.MaskAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.UndoRedoAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.SynchronousAC" -> "Common.Components.DragDropAC"
-  "Common.Components.SynchronousAC" -> "Common.Components.DisplayAC"
-  "Common.Components.SynchronousAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.SynchronousAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.PublishAC" -> "Common.PublishAllStrategy"
-  "Common.Components.PublishAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.PublishAC" -> "Platform.IDataService"
-  "Common.Components.PublishAC" -> "Platform.ICentralConroller"
-  "Common.Components.PublishAC" -> "Platform.IApplicationSupportService"
-  "Common.Components.PublishAC" -> "Platform.IApplication"
-  "Common.Components.InteractionsAC" -> "Common.Components.MeasurementsAC"
-  "Common.Components.InteractionsAC" -> "Platform.ICommunicationBroker"
-  "Common.Components.InteractionsAC" -> "Common.ICommuStateUpdateService"
-  "Common.Components.DragDropAC" -> "Common.Components.DisplayAC"
-  "Common.Components.DragDropAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.DragDropAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.TimeTrackingAC" -> "Application.ModelExtension"
-  "Common.Components.TimeTrackingAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.TimeTrackingAC" -> "Platform.ICentralConroller"
-  "Common.Components.ProgressAC" -> "Application.Infrastructure.ProgressToolTipCreator"
-  "Common.Components.ProgressAC" -> "Application.SpecialProgressToolTipCreator"
-  "Common.Components.ProgressAC" -> "Platform.ICommunicationChannelService"
-  "Common.Components.DocumentsAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.DocumentsAC" -> "Platform.IImageService"
-  "Common.Components.KeyHandlingAC" -> "Common.Components.DisplayAC"
-  "Common.Components.CultureAC" -> "Platform.ICultureService"
-  "Common.Components.ToolsAC" -> "Common.Components.MeasurementsAC"
-  "Common.Components.ToolsAC" -> "Platform.IImageService"
-  "Common.Components.ExportingAC" -> "Common.Components.DisplayAC"
-  "Common.Components.ExportingAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.ExportingAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.ExportingAC" -> "Platform.IDataService"
-  "Common.Facades.ComponentFacade" -> "Common.Components.SyncAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.VToolAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.DataTrackingAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.FloatingWindowAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.MovieAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.MeasurementsAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.MaskAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.UndoRedoAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.SynchronousAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.PublishAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.DragDropAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.TimeTrackingAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.ProgressAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.DocumentsAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.KeyHandlingAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.CultureAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.ToolsAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.ExportingAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.AlgorithmsHostingAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.DisplayAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.SelectionAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.RequiredDataTrackingAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.AreaToolAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.PresetAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.FilteringAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.GenericProcessingAC"
-  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.ResultsAC"
-  "Common.Facades.ComponentFacade" -> "Application.DataHandlingAC"
-  "Common.Facades.ComponentFacade" -> "Application.DataLoadingAC"
-  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.CommunicationAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.AYTrackingAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.ChunkCreationAC"
-  "Common.Facades.ComponentFacade" -> "Application.ConfigurationAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.GenModelAC"
-  "Common.Facades.ComponentFacade" -> "Common.Components.LicensingAC"
-  "Common.Facades.ComponentFacade" -> "Application.TakingAC"
-  "Common.Facades.ComponentFacade" -> "Application.ResultsAC"
-  "Common.Facades.ComponentFacade" -> "Application.ProgressAC"
-  "Common.Facades.ComponentFacade" -> "Application.Visualization.LayoutAC"
-  "Common.Facades.ComponentFacade" -> "Application.Visualization.StyleAC"
-  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.Observer"
-  "Common.Facades.ComponentFacade" -> "Application.Visualization.ModelAC"
-  "Common.Facades.ComponentFacade" -> "Application.ViewingAC"
-  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.ToolBarAC"
-  "Common.Facades.ComponentFacade" -> "Application.ResultsConfigAC"
-  "Common.Facades.ComponentFacade" -> "Application.AdvancedResultsConfigAC"
-  "Common.Facades.ComponentFacade" -> "Application.Visualization.FloatingWindowAC"
-  "Common.Facades.ComponentFacade" -> "Application.DragDropAC"
-  "Common.Facades.ComponentFacade" -> "Application.CalculationQueue"
-  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.AsyncCancelAC"
-  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.ProfileAC"
-  "Common.Facades.ComponentFacade" -> "Application.DataPersistenceAC"
-  "Common.Facades.ComponentFacade" -> "Application.PreFetchingAC"
-  "Common.Facades.ComponentFacade" -> "Application.DataAC"
-  "Common.Facades.ComponentFacade" -> "Common.AlgorithmServiceExporter"
-  "Common.Facades.ComponentFacade" -> "Platform.IGeneralForm"
-  "Common.Facades.PublishingFacade" -> "Common.Components.PublishAC"
-  "Common.Facades.SelectionFacade" -> "Application.Infrastructure.ResultsAC"
-  "Common.Facades.DataFacade" -> "Platform.IDataService"
-  "Common.Facades.HandlerFacade" -> "Common.Components.SyncAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.VToolAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.DataTrackingAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.FloatingWindowAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.MovieAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.MeasurementsAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.MaskAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.UndoRedoAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.SynchronousAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.PublishAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.DragDropAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.TimeTrackingAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.ProgressAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.DocumentsAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.KeyHandlingAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.CultureAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.ToolsAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.ExportingAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.AlgorithmsHostingAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.DisplayAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.SelectionAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.RequiredDataTrackingAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.AreaToolAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.PresetAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.FilteringAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.GenericProcessingAC"
-  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.ResultsAC"
-  "Common.Facades.HandlerFacade" -> "Application.DataHandlingAC"
-  "Common.Facades.HandlerFacade" -> "Application.DataLoadingAC"
-  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.CommunicationAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.AYTrackingAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.ChunkCreationAC"
-  "Common.Facades.HandlerFacade" -> "Application.ConfigurationAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.GenModelAC"
-  "Common.Facades.HandlerFacade" -> "Common.Components.LicensingAC"
-  "Common.Facades.HandlerFacade" -> "Application.TakingAC"
-  "Common.Facades.HandlerFacade" -> "Application.ResultsAC"
-  "Common.Facades.HandlerFacade" -> "Application.ProgressAC"
-  "Common.Facades.HandlerFacade" -> "Application.Visualization.LayoutAC"
-  "Common.Facades.HandlerFacade" -> "Application.Visualization.StyleAC"
-  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.Observer"
-  "Common.Facades.HandlerFacade" -> "Application.Visualization.ModelAC"
-  "Common.Facades.HandlerFacade" -> "Application.ViewingAC"
-  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.ToolBarAC"
-  "Common.Facades.HandlerFacade" -> "Application.ResultsConfigAC"
-  "Common.Facades.HandlerFacade" -> "Application.AdvancedResultsConfigAC"
-  "Common.Facades.HandlerFacade" -> "Application.Visualization.FloatingWindowAC"
-  "Common.Facades.HandlerFacade" -> "Application.DragDropAC"
-  "Common.Facades.HandlerFacade" -> "Application.CalculationQueue"
-  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.AsyncCancelAC"
-  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.ProfileAC"
-  "Common.Facades.HandlerFacade" -> "Application.DataPersistenceAC"
-  "Common.Facades.HandlerFacade" -> "Application.PreFetchingAC"
-  "Common.Facades.HandlerFacade" -> "Application.DataAC"
-  "Common.Facades.HandlerFacade" -> "Common.IDialog"
-  "Common.Facades.RefLsFacade" -> "Common.Components.DisplayAC"
-  "Common.Facades.WindowFacade" -> "Common.Components.DisplayAC"
-  "Common.Facades.SnapshotFacade" -> "Common.Components.PublishAC"
-  "Common.Facades.SnapshotFacade" -> "Common.Components.DocumentsAC"
-  "Common.Facades.SnapshotFacade" -> "Common.Components.ToolsAC"
-  "Common.Facades.SnapshotFacade" -> "Common.Components.DisplayAC"
-  "Common.Facades.SnapshotFacade" -> "Application.Infrastructure.ResultsAC"
-  "Common.Facades.SnapshotFacade" -> "Platform.GeneralVisualizationService"
-  "Common.Facades.SnapshotFacade" -> "Platform.IDataService"
-  "Common.Facades.SnapshotFacade" -> "Platform.IImageService"
-  "Common.Facades.CommunicationFacade" -> "Platform.IStateCommunicationHandling"
-  "Common.Facades.CommunicationFacade" -> "Platform.ICentralConroller"
-  "Common.Facades.CommunicationFacade" -> "Platform.IWorkflowExecutionService"
-  "Common.Facades.CommunicationFacade" -> "Common.ICommuStateUpdateService"
-  "Common.Components.AlgorithmsHostingAC" -> "Common.Components.ProgressAC"
-  "Common.Components.AlgorithmsHostingAC" -> "Common.AlgorithmServiceExporter"
-  "Common.PublishAllStrategy" -> "Platform.GeneralVisualizationService"
-  "Common.PublishAllStrategy" -> "Platform.IDispenser"
-  "Common.Components.DisplayAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.DisplayAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.DisplayAC" -> "Platform.ICommunicationChannelService"
-  "Common.Components.DisplayAC" -> "Common.ICommuStateUpdateService"
-  "Common.Components.SelectionAC" -> "Common.Components.DisplayAC"
-  "Common.Components.RequiredDataTrackingAC" -> "Common.Components.DataTrackingAC"
-  "Common.Components.RequiredDataTrackingAC" -> "Common.Components.TimeTrackingAC"
-  "Common.Components.AreaToolAC" -> "Common.Components.DisplayAC"
-  "Common.Components.AreaToolAC" -> "Common.WindowSelectionStrategyFactory"
-  "Common.Components.AreaToolAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.AreaToolAC" -> "Platform.IImageService"
-  "Common.Components.AreaToolAC" -> "Platform.ICommunicationBroker"
-  "Common.Components.PresetAC" -> "Common.Components.DisplayAC"
-  "Common.Components.PresetAC" -> "Common.WindowSelectionStrategyFactory"
-  "Common.Components.PresetAC" -> "Platform.GeneralVisualizationService"
-  "Common.Components.PresetAC" -> "Common.Components.IModuleInitializer"
-  "Common.Components.FilteringAC" -> "Common.Components.DisplayAC"
-  "Common.Components.GenericProcessingAC" -> "Common.Components.ProgressAC"
-  "Common.Components.GenericProcessingAC" -> "Platform.IApplication"
-  "Application.Infrastructure.ResultsAC" -> "Common.Components.UndoRedoAC"
-  "Application.Infrastructure.ResultsAC" -> "Common.Components.TimeTrackingAC"
-  "Application.Infrastructure.ResultsAC" -> "Application.Infrastructure.ResultsSelectionAC"
-  "Application.Infrastructure.ResultsAC" -> "Application.DocumentsRoot"
-  "Application.Infrastructure.ResultsAC" -> "Platform.GeneralVisualizationService"
-  "Application.Infrastructure.ResultsAC" -> "Common.Components.AYTrackingStrategy"
-  "Application.Infrastructure.ResultsSelectionAC" -> "Application.Infrastructure.ReanimationConstraints"
-  "Application.Infrastructure.ResultsSelectionAC" -> "Platform.GeneralVisualizationService"
-  "Application.DataHandlingAC" -> "Common.Components.DisplayAC"
-  "Application.DataHandlingAC" -> "Common.AlgorithmServiceExporter"
-  "Application.DataHandlingAC" -> "Application.ModelExtension"
-  "Application.DataHandlingAC" -> "Platform.GeneralVisualizationService"
-  "Application.DataHandlingAC" -> "Platform.ICentralConroller"
-  "Application.DataHandlingAC" -> "Platform.IApplication"
-  "Application.DataHandlingAC" -> "Common.IDataProcessor"
-  "Application.DataLoadingAC" -> "Platform.GeneralVisualizationService"
-  "Application.DataLoadingAC" -> "Common.IDataLoadingManager"
-  "Application.Infrastructure.CommunicationAC" -> "Common.IResultsService"
-  "Common.Components.AYTrackingAC" -> "Common.Components.TimeTrackingAC"
-  "Common.Components.AYTrackingAC" -> "Platform.ICentralConroller"
-  "Common.Components.AYTrackingAC" -> "Common.Components.AYTrackingStrategy"
-  "Common.Components.ChunkCreationAC" -> "Common.IDataCreationService"
-  "Common.Components.ChunkCreationAC" -> "Common.IDataLoadingStrategy"
-  "Application.Infrastructure.ProgressToolTipCreator" -> "Application.ConfigurationAC"
-  "Application.Infrastructure.ProgressToolTipCreator" -> "Platform.ICultureService"
-  "Common.AlgorithmServiceExporter" -> "Common.Components.ProgressAC"
-  "Common.AlgorithmServiceExporter" -> "Platform.IGeneralForm"
-  "Common.Components.GenModelAC" -> "Application.DocumentsRoot"
-  "Common.Components.GenModelAC" -> "Application.DocumentStorage"
-  "Application.DocumentStorage" -> "Application.DocumentsRoot"
-  "Common.Components.LicensingAC" -> "Platform.ICultureService"
-  "Common.Components.LicensingAC" -> "Common.IDialog"
-  "Common.Components.LicensingAC" -> "Platform.IApplication"
-  "Application.TakingAC" -> "Application.ConfigurationAC"
-  "Application.TakingAC" -> "Common.AlgorithmServiceExporter"
-  "Application.TakingAC" -> "Application.DocumentsRoot"
-  "Application.TakingAC" -> "Common.Components.LicensingAC"
-  "Application.TakingAC" -> "Platform.GeneralVisualizationService"
-  "Application.TakingAC" -> "Platform.IDispenser"
-  "Application.TakingAC" -> "Common.ICommuStateUpdateService"
-  "Application.ResultsAC" -> "Application.ConfigurationAC"
-  "Application.ResultsAC" -> "Application.DocumentsRoot"
-  "Application.ResultsAC" -> "Application.SnapshotStrategyFactory"
-  "Application.ResultsAC" -> "Platform.IDispenser"
-  "Application.ProgressAC" -> "Application.DataHandlingAC"
-  "Application.ProgressAC" -> "Application.TakingAC"
-  "Application.ProgressAC" -> "Application.ResultsAC"
-  "Application.ProgressAC" -> "Common.ICommuStateUpdateService"
-  "Application.ModelExtension" -> "Common.AlgorithmServiceExporter"
-  "Application.Infrastructure.Configuration.ConfigurationConverter" -> "Application.ConfigurationAC"
-  "Application.Infrastructure.Configuration.ConfigurationConverter" -> "Common.AlgorithmServiceExporter"
-  "Application.Visualization.LayoutAC" -> "Common.Components.DisplayAC"
-  "Application.Visualization.LayoutAC" -> "Platform.IImageService"
-  "Application.Visualization.LayoutAC" -> "Common.Facades.IOneWayManager"
-  "Application.Visualization.StyleAC" -> "Platform.IImageService"
-  "Application.Visualization.StyleAC" -> "Common.ICommuStateUpdateService"
-  "Application.Infrastructure.Observer" -> "Common.Components.DisplayAC"
-  "Application.Visualization.ModelAC" -> "Common.Components.SynchronousAC"
-  "Application.Visualization.ModelAC" -> "Common.Components.DisplayAC"
-  "Application.Visualization.ModelAC" -> "Platform.IDataService"
-  "Application.Visualization.ModelAC" -> "Platform.IImageService"
-  "Application.Infrastructure.FloatingWindowTracking" -> "Platform.IImageService"
-  "Application.ViewingAC" -> "Application.ConfigurationAC"
-  "Application.ViewingAC" -> "Common.AlgorithmServiceExporter"
-  "Application.ViewingAC" -> "Application.DocumentsRoot"
-  "Application.ViewingAC" -> "Application.Infrastructure.ToolBarAC"
-  "Application.Infrastructure.ToolBarAC" -> "Application.ConfigurationAC"
-  "Application.Infrastructure.ToolBarAC" -> "Application.DocumentsRoot"
-  "Application.Infrastructure.ToolBarAC" -> "Common.ICommuStateUpdateService"
-  "Application.Infrastructure.ReanimationConstraints" -> "Application.DataHandlingAC"
-  "Application.Infrastructure.ReanimationConstraints" -> "Application.ConfigurationAC"
-  "Application.Infrastructure.ReanimationConstraints" -> "Application.DocumentsRoot"
-  "Application.Infrastructure.ReanimationConstraints" -> "Application.TakingAC"
-  "Application.Infrastructure.ReanimationConstraints" -> "Application.ResultsAC"
-  "Application.Infrastructure.ReanimationConstraints" -> "Application.ViewingAC"
-  "Application.AdvancedResultsConfigAC" -> "Application.ConfigurationAC"
-  "Application.AdvancedResultsConfigAC" -> "Platform.IImageService"
-  "Application.Visualization.FloatingWindowAC" -> "Common.Components.FloatingWindowAC"
-  "Application.Visualization.FloatingWindowAC" -> "Platform.IApplication"
-  "Application.DragDropAC" -> "Common.Components.DragDropAC"
-  "Application.DragDropAC" -> "Common.Components.DisplayAC"
-  "Application.DragDropAC" -> "Application.DataHandlingAC"
-  "Application.DragDropAC" -> "Platform.ICentralConroller"
-  "Application.DragDropAC" -> "Platform.IApplication"
-  "Application.Infrastructure.AsyncCancelAC" -> "Application.DataHandlingAC"
-  "Application.Infrastructure.AsyncCancelAC" -> "Application.ConfigurationAC"
-  "Application.Infrastructure.AsyncCancelAC" -> "Application.TakingAC"
-  "Application.Infrastructure.AsyncCancelAC" -> "Application.CalculationQueue"
-  "Application.Infrastructure.AsyncCancelAC" -> "Platform.IApplication"
-  "Application.PersistenceService" -> "Application.DataHandlingAC"
-  "Application.PersistenceService" -> "Application.ConfigurationAC"
-  "Application.PersistenceService" -> "Application.DocumentsRoot"
-  "Application.PersistenceService" -> "Application.TakingAC"
-  "Application.PersistenceService" -> "Application.ResultsAC"
-  "Application.PersistenceService" -> "Application.ViewingAC"
-  "Application.PersistenceService" -> "Application.Infrastructure.ToolBarAC"
-  "Application.PersistenceService" -> "Platform.GeneralVisualizationService"
-  "Application.PersistenceService" -> "Platform.IDataService"
-  "Application.PersistenceService" -> "Platform.IApplication"
-  "Application.DataPersistenceAC" -> "Common.Components.PublishAC"
-  "Application.DataPersistenceAC" -> "Application.DataHandlingAC"
-  "Application.DataPersistenceAC" -> "Application.PersistenceService"
-  "Application.PreFetchingAC" -> "Application.PreFetchingStrategy"
-  "Application.PreFetchingAC" -> "Platform.IApplication"
-  "Application.PreFetchingAC" -> "Common.IDataLoadingStrategy"
-  "Application.PreFetchingAC" -> "Common.IDataLoadingManager"
-  "Application.PreFetchingStrategy" -> "Application.DataHandlingAC"
-  "Application.PreFetchingStrategy" -> "Application.TakingAC"
-  "Application.PreFetchingStrategy" -> "Application.ResultsAC"
-  "Application.PreFetchingStrategy" -> "Application.ViewingAC"
-  "Application.SpecialProgressToolTipCreator" -> "Platform.ICultureService"
-  "Application.DataAC" -> "Application.DataLoadingAC"
-  "Application.SnapshotStrategyFactory" -> "Application.ConfigurationAC"
-  "Application.SnapshotStrategyFactory" -> "Application.DocumentsRoot"
-  "Application.SnapshotStrategyFactory" -> "Application.TakingAC"
+  "Application.AdvancedResultsConfigAC" [label="AdvancedResultsConfigAC", color=#FFD3D3D3]
+  "Application.CalculationQueue" [label="CalculationQueue", color=#FFD3D3D3]
+  "Application.ConfigurationAC" [label="ConfigurationAC", color=#FFD3D3D3]
+  "Application.DataAC" [label="DataAC", color=#FFD3D3D3]
+  "Application.DataHandlingAC" [label="DataHandlingAC", color=#FFD3D3D3]
+  "Application.DataLoadingAC" [label="DataLoadingAC", color=#FFD3D3D3]
+  "Application.DataPersistenceAC" [label="DataPersistenceAC", color=#FFD3D3D3]
+  "Application.DocumentsRoot" [label="DocumentsRoot", color=#FFD3D3D3]
+  "Application.DocumentStorage" [label="DocumentStorage", color=#FFD3D3D3]
+  "Application.DragDropAC" [label="DragDropAC", color=#FFD3D3D3]
+  "Application.Infrastructure.AsyncCancelAC" [label="AsyncCancelAC", color=#FFD3D3D3]
+  "Application.Infrastructure.CommunicationAC" [label="CommunicationAC", color=#FFD3D3D3]
+  "Application.Infrastructure.Configuration.ConfigurationConverter" [label="ConfigurationConverter", color=#FFD3D3D3]
+  "Application.Infrastructure.FloatingWindowTracking" [label="FloatingWindowTracking", color=#FFD3D3D3]
+  "Application.Infrastructure.Observer" [label="Observer", color=#FFD3D3D3]
+  "Application.Infrastructure.ProfileAC" [label="ProfileAC", color=#FFD3D3D3]
+  "Application.Infrastructure.ProgressToolTipCreator" [label="ProgressToolTipCreator", color=#FFD3D3D3]
+  "Application.Infrastructure.ReanimationConstraints" [label="ReanimationConstraints", color=#FFD3D3D3]
+  "Application.Infrastructure.ResultsAC" [label="ResultsAC", color=#FFD3D3D3]
+  "Application.Infrastructure.ResultsSelectionAC" [label="ResultsSelectionAC", color=#FFD3D3D3]
+  "Application.Infrastructure.ToolBarAC" [label="ToolBarAC", color=#FFD3D3D3]
+  "Application.ModelExtension" [label="ModelExtension", color=#FFD3D3D3]
+  "Application.PersistenceService" [label="PersistenceService", color=#FFD3D3D3]
+  "Application.PreFetchingAC" [label="PreFetchingAC", color=#FFD3D3D3]
+  "Application.PreFetchingStrategy" [label="PreFetchingStrategy", color=#FFD3D3D3]
+  "Application.ProgressAC" [label="ProgressAC", color=#FFD3D3D3]
+  "Application.ResultsAC" [label="ResultsAC", color=#FFD3D3D3]
+  "Application.ResultsConfigAC" [label="ResultsConfigAC", color=#FFD3D3D3]
+  "Application.SnapshotStrategyFactory" [label="SnapshotStrategyFactory", color=#FFD3D3D3]
+  "Application.SpecialProgressToolTipCreator" [label="SpecialProgressToolTipCreator", color=#FFD3D3D3]
+  "Application.TakingAC" [label="TakingAC", color=#FFD3D3D3]
+  "Application.ViewingAC" [label="ViewingAC", color=#FFD3D3D3]
+  "Application.Visualization.FloatingWindowAC" [label="FloatingWindowAC", color=#FFD3D3D3]
+  "Application.Visualization.LayoutAC" [label="LayoutAC", color=#FFD3D3D3]
+  "Application.Visualization.ModelAC" [label="ModelAC", color=#FFD3D3D3]
+  "Application.Visualization.StyleAC" [label="StyleAC", color=#FFD3D3D3]
+  "Common.AlgorithmServiceExporter" [label="AlgorithmServiceExporter", color=#FFD3D3D3]
+  "Common.Components.AlgorithmsHostingAC" [label="AlgorithmsHostingAC", color=#FFD3D3D3]
+  "Common.Components.AreaToolAC" [label="AreaToolAC", color=#FFD3D3D3]
+  "Common.Components.AYTrackingAC" [label="AYTrackingAC", color=#FFD3D3D3]
+  "Common.Components.AYTrackingStrategy" [label="AYTrackingStrategy", color=#FFD3D3D3]
+  "Common.Components.ChunkCreationAC" [label="ChunkCreationAC", color=#FFD3D3D3]
+  "Common.Components.CultureAC" [label="CultureAC", color=#FFD3D3D3]
+  "Common.Components.DataTrackingAC" [label="DataTrackingAC", color=#FFD3D3D3]
+  "Common.Components.DisplayAC" [label="DisplayAC", color=#FFD3D3D3]
+  "Common.Components.DocumentsAC" [label="DocumentsAC", color=#FFD3D3D3]
+  "Common.Components.DragDropAC" [label="DragDropAC", color=#FFD3D3D3]
+  "Common.Components.ExportingAC" [label="ExportingAC", color=#FFD3D3D3]
+  "Common.Components.FilteringAC" [label="FilteringAC", color=#FFD3D3D3]
+  "Common.Components.FloatingWindowAC" [label="FloatingWindowAC", color=#FFD3D3D3]
+  "Common.Components.GenericProcessingAC" [label="GenericProcessingAC", color=#FFD3D3D3]
+  "Common.Components.GenModelAC" [label="GenModelAC", color=#FFD3D3D3]
+  "Common.Components.IModuleInitializer" [label="IModuleInitializer", color=#FFD3D3D3]
+  "Common.Components.InteractionsAC" [label="InteractionsAC", color=#FFD3D3D3]
+  "Common.Components.KeyHandlingAC" [label="KeyHandlingAC", color=#FFD3D3D3]
+  "Common.Components.LicensingAC" [label="LicensingAC", color=#FFD3D3D3]
+  "Common.Components.MaskAC" [label="MaskAC", color=#FFD3D3D3]
+  "Common.Components.MeasurementsAC" [label="MeasurementsAC", color=#FFD3D3D3]
+  "Common.Components.MovieAC" [label="MovieAC", color=#FFD3D3D3]
+  "Common.Components.PresetAC" [label="PresetAC", color=#FFD3D3D3]
+  "Common.Components.ProgressAC" [label="ProgressAC", color=#FFD3D3D3]
+  "Common.Components.PublishAC" [label="PublishAC", color=#FFD3D3D3]
+  "Common.Components.RequiredDataTrackingAC" [label="RequiredDataTrackingAC", color=#FFD3D3D3]
+  "Common.Components.SelectionAC" [label="SelectionAC", color=#FFD3D3D3]
+  "Common.Components.SyncAC" [label="SyncAC", color=#FFD3D3D3]
+  "Common.Components.SynchronousAC" [label="SynchronousAC", color=#FFD3D3D3]
+  "Common.Components.TimeTrackingAC" [label="TimeTrackingAC", color=#FFD3D3D3]
+  "Common.Components.ToolsAC" [label="ToolsAC", color=#FFD3D3D3]
+  "Common.Components.UndoRedoAC" [label="UndoRedoAC", color=#FFD3D3D3]
+  "Common.Components.VToolAC" [label="VToolAC", color=#FFD3D3D3]
+  "Common.Facades.CommunicationFacade" [label="CommunicationFacade", color=#FFD3D3D3]
+  "Common.Facades.ComponentFacade" [label="ComponentFacade", color=#FFD3D3D3]
+  "Common.Facades.DataFacade" [label="DataFacade", color=#FFD3D3D3]
+  "Common.Facades.HandlerFacade" [label="HandlerFacade", color=#FFD3D3D3]
+  "Common.Facades.IOneWayManager" [label="IOneWayManager", color=#FFD3D3D3]
+  "Common.Facades.PublishingFacade" [label="PublishingFacade", color=#FFD3D3D3]
+  "Common.Facades.RefLsFacade" [label="RefLsFacade", color=#FFD3D3D3]
+  "Common.Facades.SelectionFacade" [label="SelectionFacade", color=#FFD3D3D3]
+  "Common.Facades.SnapshotFacade" [label="SnapshotFacade", color=#FFD3D3D3]
+  "Common.Facades.WindowFacade" [label="WindowFacade", color=#FFD3D3D3]
+  "Common.ICommuStateUpdateService" [label="ICommuStateUpdateService", color=#FFD3D3D3]
+  "Common.IDataCreationService" [label="IDataCreationService", color=#FFD3D3D3]
+  "Common.IDataLoadingManager" [label="IDataLoadingManager", color=#FFD3D3D3]
+  "Common.IDataLoadingStrategy" [label="IDataLoadingStrategy", color=#FFD3D3D3]
+  "Common.IDataProcessor" [label="IDataProcessor", color=#FFD3D3D3]
+  "Common.IDialog" [label="IDialog", color=#FFD3D3D3]
+  "Common.IResultsService" [label="IResultsService", color=#FFD3D3D3]
+  "Common.PublishAllStrategy" [label="PublishAllStrategy", color=#FFD3D3D3]
+  "Common.WindowSelectionStrategyFactory" [label="WindowSelectionStrategyFactory", color=#FFD3D3D3]
+  "Platform.GeneralVisualizationService" [label="GeneralVisualizationService", color=#FFD3D3D3]
+  "Platform.IApplication" [label="IApplication", color=#FFD3D3D3]
+  "Platform.IApplicationSupportService" [label="IApplicationSupportService", color=#FFD3D3D3]
+  "Platform.ICentralConroller" [label="ICentralConroller", color=#FFD3D3D3]
+  "Platform.ICommunicationBroker" [label="ICommunicationBroker", color=#FFD3D3D3]
+  "Platform.ICommunicationChannelService" [label="ICommunicationChannelService", color=#FFD3D3D3]
+  "Platform.ICultureService" [label="ICultureService", color=#FFD3D3D3]
+  "Platform.IDataService" [label="IDataService", color=#FFD3D3D3]
+  "Platform.IDispenser" [label="IDispenser", color=#FFD3D3D3]
+  "Platform.IGeneralForm" [label="IGeneralForm", color=#FFD3D3D3]
+  "Platform.IImageService" [label="IImageService", color=#FFD3D3D3]
+  "Platform.IStateCommunicationHandling" [label="IStateCommunicationHandling", color=#FFD3D3D3]
+  "Platform.IWorkflowExecutionService" [label="IWorkflowExecutionService", color=#FFD3D3D3]
+  "Application.AdvancedResultsConfigAC" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.AdvancedResultsConfigAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Application.DataAC" -> "Application.DataLoadingAC" [label=".", color=#FF000000]
+  "Application.DataHandlingAC" -> "Application.ModelExtension" [label=".", color=#FF000000]
+  "Application.DataHandlingAC" -> "Common.AlgorithmServiceExporter" [label=".", color=#FF000000]
+  "Application.DataHandlingAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Application.DataHandlingAC" -> "Common.IDataProcessor" [label=".", color=#FF000000]
+  "Application.DataHandlingAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Application.DataHandlingAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Application.DataHandlingAC" -> "Platform.ICentralConroller" [label=".", color=#FF000000]
+  "Application.DataLoadingAC" -> "Common.IDataLoadingManager" [label=".", color=#FF000000]
+  "Application.DataLoadingAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Application.DataPersistenceAC" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Application.DataPersistenceAC" -> "Application.PersistenceService" [label=".", color=#FF000000]
+  "Application.DataPersistenceAC" -> "Common.Components.PublishAC" [label=".", color=#FF000000]
+  "Application.DocumentStorage" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.DragDropAC" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Application.DragDropAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Application.DragDropAC" -> "Common.Components.DragDropAC" [label=".", color=#FF000000]
+  "Application.DragDropAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Application.DragDropAC" -> "Platform.ICentralConroller" [label=".", color=#FF000000]
+  "Application.Infrastructure.AsyncCancelAC" -> "Application.CalculationQueue" [label=".", color=#FF000000]
+  "Application.Infrastructure.AsyncCancelAC" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.AsyncCancelAC" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.AsyncCancelAC" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.AsyncCancelAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Application.Infrastructure.CommunicationAC" -> "Common.IResultsService" [label=".", color=#FF000000]
+  "Application.Infrastructure.Configuration.ConfigurationConverter" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.Configuration.ConfigurationConverter" -> "Common.AlgorithmServiceExporter" [label=".", color=#FF000000]
+  "Application.Infrastructure.FloatingWindowTracking" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Application.Infrastructure.Observer" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ProgressToolTipCreator" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ProgressToolTipCreator" -> "Platform.ICultureService" [label=".", color=#FF000000]
+  "Application.Infrastructure.ReanimationConstraints" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ReanimationConstraints" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ReanimationConstraints" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.Infrastructure.ReanimationConstraints" -> "Application.ResultsAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ReanimationConstraints" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ReanimationConstraints" -> "Application.ViewingAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsAC" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsAC" -> "Application.Infrastructure.ResultsSelectionAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsAC" -> "Common.Components.AYTrackingStrategy" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsAC" -> "Common.Components.TimeTrackingAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsAC" -> "Common.Components.UndoRedoAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsSelectionAC" -> "Application.Infrastructure.ReanimationConstraints" [label=".", color=#FF000000]
+  "Application.Infrastructure.ResultsSelectionAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Application.Infrastructure.ToolBarAC" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.Infrastructure.ToolBarAC" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.Infrastructure.ToolBarAC" -> "Common.ICommuStateUpdateService" [label=".", color=#FF000000]
+  "Application.ModelExtension" -> "Common.AlgorithmServiceExporter" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Application.Infrastructure.ToolBarAC" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Application.ResultsAC" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Application.ViewingAC" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Application.PersistenceService" -> "Platform.IDataService" [label=".", color=#FF000000]
+  "Application.PreFetchingAC" -> "Application.PreFetchingStrategy" [label=".", color=#FF000000]
+  "Application.PreFetchingAC" -> "Common.IDataLoadingManager" [label=".", color=#FF000000]
+  "Application.PreFetchingAC" -> "Common.IDataLoadingStrategy" [label=".", color=#FF000000]
+  "Application.PreFetchingAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Application.PreFetchingStrategy" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Application.PreFetchingStrategy" -> "Application.ResultsAC" [label=".", color=#FF000000]
+  "Application.PreFetchingStrategy" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Application.PreFetchingStrategy" -> "Application.ViewingAC" [label=".", color=#FF000000]
+  "Application.ProgressAC" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Application.ProgressAC" -> "Application.ResultsAC" [label=".", color=#FF000000]
+  "Application.ProgressAC" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Application.ProgressAC" -> "Common.ICommuStateUpdateService" [label=".", color=#FF000000]
+  "Application.ResultsAC" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.ResultsAC" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.ResultsAC" -> "Application.SnapshotStrategyFactory" [label=".", color=#FF000000]
+  "Application.ResultsAC" -> "Platform.IDispenser" [label=".", color=#FF000000]
+  "Application.SnapshotStrategyFactory" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.SnapshotStrategyFactory" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.SnapshotStrategyFactory" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Application.SpecialProgressToolTipCreator" -> "Platform.ICultureService" [label=".", color=#FF000000]
+  "Application.TakingAC" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.TakingAC" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.TakingAC" -> "Common.AlgorithmServiceExporter" [label=".", color=#FF000000]
+  "Application.TakingAC" -> "Common.Components.LicensingAC" [label=".", color=#FF000000]
+  "Application.TakingAC" -> "Common.ICommuStateUpdateService" [label=".", color=#FF000000]
+  "Application.TakingAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Application.TakingAC" -> "Platform.IDispenser" [label=".", color=#FF000000]
+  "Application.ViewingAC" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Application.ViewingAC" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Application.ViewingAC" -> "Application.Infrastructure.ToolBarAC" [label=".", color=#FF000000]
+  "Application.ViewingAC" -> "Common.AlgorithmServiceExporter" [label=".", color=#FF000000]
+  "Application.Visualization.FloatingWindowAC" -> "Common.Components.FloatingWindowAC" [label=".", color=#FF000000]
+  "Application.Visualization.FloatingWindowAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Application.Visualization.LayoutAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Application.Visualization.LayoutAC" -> "Common.Facades.IOneWayManager" [label=".", color=#FF000000]
+  "Application.Visualization.LayoutAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Application.Visualization.ModelAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Application.Visualization.ModelAC" -> "Common.Components.SynchronousAC" [label=".", color=#FF000000]
+  "Application.Visualization.ModelAC" -> "Platform.IDataService" [label=".", color=#FF000000]
+  "Application.Visualization.ModelAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Application.Visualization.StyleAC" -> "Common.ICommuStateUpdateService" [label=".", color=#FF000000]
+  "Application.Visualization.StyleAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Common.AlgorithmServiceExporter" -> "Common.Components.ProgressAC" [label=".", color=#FF000000]
+  "Common.AlgorithmServiceExporter" -> "Platform.IGeneralForm" [label=".", color=#FF000000]
+  "Common.Components.AlgorithmsHostingAC" -> "Common.AlgorithmServiceExporter" [label=".", color=#FF000000]
+  "Common.Components.AlgorithmsHostingAC" -> "Common.Components.ProgressAC" [label=".", color=#FF000000]
+  "Common.Components.AreaToolAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.AreaToolAC" -> "Common.WindowSelectionStrategyFactory" [label=".", color=#FF000000]
+  "Common.Components.AreaToolAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.AreaToolAC" -> "Platform.ICommunicationBroker" [label=".", color=#FF000000]
+  "Common.Components.AreaToolAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Common.Components.AYTrackingAC" -> "Common.Components.AYTrackingStrategy" [label=".", color=#FF000000]
+  "Common.Components.AYTrackingAC" -> "Common.Components.TimeTrackingAC" [label=".", color=#FF000000]
+  "Common.Components.AYTrackingAC" -> "Platform.ICentralConroller" [label=".", color=#FF000000]
+  "Common.Components.ChunkCreationAC" -> "Common.IDataCreationService" [label=".", color=#FF000000]
+  "Common.Components.ChunkCreationAC" -> "Common.IDataLoadingStrategy" [label=".", color=#FF000000]
+  "Common.Components.CultureAC" -> "Platform.ICultureService" [label=".", color=#FF000000]
+  "Common.Components.DataTrackingAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.DisplayAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.DisplayAC" -> "Common.ICommuStateUpdateService" [label=".", color=#FF000000]
+  "Common.Components.DisplayAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.DisplayAC" -> "Platform.ICommunicationChannelService" [label=".", color=#FF000000]
+  "Common.Components.DocumentsAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.DocumentsAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Common.Components.DragDropAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.DragDropAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.DragDropAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.ExportingAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.ExportingAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.ExportingAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.ExportingAC" -> "Platform.IDataService" [label=".", color=#FF000000]
+  "Common.Components.FilteringAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.FloatingWindowAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.FloatingWindowAC" -> "Platform.ICommunicationChannelService" [label=".", color=#FF000000]
+  "Common.Components.FloatingWindowAC" -> "Platform.IDataService" [label=".", color=#FF000000]
+  "Common.Components.FloatingWindowAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Common.Components.GenericProcessingAC" -> "Common.Components.ProgressAC" [label=".", color=#FF000000]
+  "Common.Components.GenericProcessingAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Common.Components.GenModelAC" -> "Application.DocumentsRoot" [label=".", color=#FF000000]
+  "Common.Components.GenModelAC" -> "Application.DocumentStorage" [label=".", color=#FF000000]
+  "Common.Components.InteractionsAC" -> "Common.Components.MeasurementsAC" [label=".", color=#FF000000]
+  "Common.Components.InteractionsAC" -> "Common.ICommuStateUpdateService" [label=".", color=#FF000000]
+  "Common.Components.InteractionsAC" -> "Platform.ICommunicationBroker" [label=".", color=#FF000000]
+  "Common.Components.KeyHandlingAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.LicensingAC" -> "Common.IDialog" [label=".", color=#FF000000]
+  "Common.Components.LicensingAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Common.Components.LicensingAC" -> "Platform.ICultureService" [label=".", color=#FF000000]
+  "Common.Components.MaskAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.MaskAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.MaskAC" -> "Common.WindowSelectionStrategyFactory" [label=".", color=#FF000000]
+  "Common.Components.MaskAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.MeasurementsAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.MeasurementsAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.MeasurementsAC" -> "Common.Components.MaskAC" [label=".", color=#FF000000]
+  "Common.Components.MeasurementsAC" -> "Common.WindowSelectionStrategyFactory" [label=".", color=#FF000000]
+  "Common.Components.MeasurementsAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.MeasurementsAC" -> "Platform.ICommunicationChannelService" [label=".", color=#FF000000]
+  "Common.Components.MeasurementsAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Common.Components.MovieAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.PresetAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.PresetAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.PresetAC" -> "Common.WindowSelectionStrategyFactory" [label=".", color=#FF000000]
+  "Common.Components.PresetAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.ProgressAC" -> "Application.Infrastructure.ProgressToolTipCreator" [label=".", color=#FF000000]
+  "Common.Components.ProgressAC" -> "Application.SpecialProgressToolTipCreator" [label=".", color=#FF000000]
+  "Common.Components.ProgressAC" -> "Platform.ICommunicationChannelService" [label=".", color=#FF000000]
+  "Common.Components.PublishAC" -> "Common.PublishAllStrategy" [label=".", color=#FF000000]
+  "Common.Components.PublishAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.PublishAC" -> "Platform.IApplication" [label=".", color=#FF000000]
+  "Common.Components.PublishAC" -> "Platform.IApplicationSupportService" [label=".", color=#FF000000]
+  "Common.Components.PublishAC" -> "Platform.ICentralConroller" [label=".", color=#FF000000]
+  "Common.Components.PublishAC" -> "Platform.IDataService" [label=".", color=#FF000000]
+  "Common.Components.RequiredDataTrackingAC" -> "Common.Components.DataTrackingAC" [label=".", color=#FF000000]
+  "Common.Components.RequiredDataTrackingAC" -> "Common.Components.TimeTrackingAC" [label=".", color=#FF000000]
+  "Common.Components.SelectionAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.SyncAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.SyncAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.SyncAC" -> "Common.WindowSelectionStrategyFactory" [label=".", color=#FF000000]
+  "Common.Components.SynchronousAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.SynchronousAC" -> "Common.Components.DragDropAC" [label=".", color=#FF000000]
+  "Common.Components.SynchronousAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.SynchronousAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.TimeTrackingAC" -> "Application.ModelExtension" [label=".", color=#FF000000]
+  "Common.Components.TimeTrackingAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.TimeTrackingAC" -> "Platform.ICentralConroller" [label=".", color=#FF000000]
+  "Common.Components.ToolsAC" -> "Common.Components.MeasurementsAC" [label=".", color=#FF000000]
+  "Common.Components.ToolsAC" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Common.Components.UndoRedoAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Components.VToolAC" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Components.VToolAC" -> "Common.Components.IModuleInitializer" [label=".", color=#FF000000]
+  "Common.Components.VToolAC" -> "Common.WindowSelectionStrategyFactory" [label=".", color=#FF000000]
+  "Common.Components.VToolAC" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Facades.CommunicationFacade" -> "Common.ICommuStateUpdateService" [label=".", color=#FF000000]
+  "Common.Facades.CommunicationFacade" -> "Platform.ICentralConroller" [label=".", color=#FF000000]
+  "Common.Facades.CommunicationFacade" -> "Platform.IStateCommunicationHandling" [label=".", color=#FF000000]
+  "Common.Facades.CommunicationFacade" -> "Platform.IWorkflowExecutionService" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.AdvancedResultsConfigAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.CalculationQueue" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.DataAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.DataLoadingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.DataPersistenceAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.DragDropAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.AsyncCancelAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.CommunicationAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.Observer" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.ProfileAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.ResultsAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Infrastructure.ToolBarAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.PreFetchingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.ProgressAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.ResultsAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.ResultsConfigAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.ViewingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Visualization.FloatingWindowAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Visualization.LayoutAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Visualization.ModelAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Application.Visualization.StyleAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.AlgorithmServiceExporter" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.AlgorithmsHostingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.AreaToolAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.AYTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.ChunkCreationAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.CultureAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.DataTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.DocumentsAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.DragDropAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.ExportingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.FilteringAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.FloatingWindowAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.GenericProcessingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.GenModelAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.KeyHandlingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.LicensingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.MaskAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.MeasurementsAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.MovieAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.PresetAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.ProgressAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.PublishAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.RequiredDataTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.SelectionAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.SyncAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.SynchronousAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.TimeTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.ToolsAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.UndoRedoAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Common.Components.VToolAC" [label=".", color=#FF000000]
+  "Common.Facades.ComponentFacade" -> "Platform.IGeneralForm" [label=".", color=#FF000000]
+  "Common.Facades.DataFacade" -> "Platform.IDataService" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.AdvancedResultsConfigAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.CalculationQueue" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.ConfigurationAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.DataAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.DataHandlingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.DataLoadingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.DataPersistenceAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.DragDropAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.AsyncCancelAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.CommunicationAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.Observer" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.ProfileAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.ResultsAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Infrastructure.ToolBarAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.PreFetchingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.ProgressAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.ResultsAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.ResultsConfigAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.TakingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.ViewingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Visualization.FloatingWindowAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Visualization.LayoutAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Visualization.ModelAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Application.Visualization.StyleAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.AlgorithmsHostingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.AreaToolAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.AYTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.ChunkCreationAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.CultureAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.DataTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.DocumentsAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.DragDropAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.ExportingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.FilteringAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.FloatingWindowAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.GenericProcessingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.GenModelAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.KeyHandlingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.LicensingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.MaskAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.MeasurementsAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.MovieAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.PresetAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.ProgressAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.PublishAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.RequiredDataTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.SelectionAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.SyncAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.SynchronousAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.TimeTrackingAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.ToolsAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.UndoRedoAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.Components.VToolAC" [label=".", color=#FF000000]
+  "Common.Facades.HandlerFacade" -> "Common.IDialog" [label=".", color=#FF000000]
+  "Common.Facades.PublishingFacade" -> "Common.Components.PublishAC" [label=".", color=#FF000000]
+  "Common.Facades.RefLsFacade" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Facades.SelectionFacade" -> "Application.Infrastructure.ResultsAC" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Application.Infrastructure.ResultsAC" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Common.Components.DocumentsAC" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Common.Components.PublishAC" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Common.Components.ToolsAC" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Platform.IDataService" [label=".", color=#FF000000]
+  "Common.Facades.SnapshotFacade" -> "Platform.IImageService" [label=".", color=#FF000000]
+  "Common.Facades.WindowFacade" -> "Common.Components.DisplayAC" [label=".", color=#FF000000]
+  "Common.PublishAllStrategy" -> "Platform.GeneralVisualizationService" [label=".", color=#FF000000]
+  "Common.PublishAllStrategy" -> "Platform.IDispenser" [label=".", color=#FF000000]
 }

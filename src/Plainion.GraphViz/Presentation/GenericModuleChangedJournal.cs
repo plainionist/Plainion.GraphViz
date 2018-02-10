@@ -12,7 +12,7 @@ namespace Plainion.GraphViz.Presentation
         private List<T> myEntries;
         private IEqualityComparer<T> myComparer;
 
-        public GenericModuleChangedJournal( IModule<T> module, IEqualityComparer<T> comparer )
+        public GenericModuleChangedJournal(IModule<T> module, IEqualityComparer<T> comparer)
         {
             myModule = module;
             myComparer = comparer;
@@ -21,76 +21,84 @@ namespace Plainion.GraphViz.Presentation
 
             myModule.CollectionChanged += OnCollectionChanged;
 
-            foreach( var entry in myModule.Items.OfType<INotifyPropertyChanged>() )
+            foreach (var entry in myModule.Items.OfType<INotifyPropertyChanged>())
             {
                 entry.PropertyChanged += OnPropertyChanged;
             }
         }
 
-        private void OnCollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if( e.Action == NotifyCollectionChangedAction.Add )
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                foreach( var item in e.NewItems.Cast<T>() )
+                foreach (var item in e.NewItems.Cast<T>())
                 {
-                    RecordItem( item );
+                    RecordItem(item);
                 }
-                foreach( var item in e.NewItems.OfType<INotifyPropertyChanged>() )
+                foreach (var item in e.NewItems.OfType<INotifyPropertyChanged>())
                 {
                     item.PropertyChanged += OnPropertyChanged;
                 }
             }
-            else if( e.Action == NotifyCollectionChangedAction.Remove )
+            else if (e.Action == NotifyCollectionChangedAction.Remove )
             {
-                foreach( var item in e.OldItems.Cast<T>() )
+                foreach (var item in e.OldItems.Cast<T>())
                 {
-                    RecordItem( item );
+                    RecordItem(item);
                 }
-                foreach( var item in e.OldItems.OfType<INotifyPropertyChanged>() )
+                foreach (var item in e.OldItems.OfType<INotifyPropertyChanged>())
                 {
                     item.PropertyChanged -= OnPropertyChanged;
                 }
             }
-            else if( e.Action == NotifyCollectionChangedAction.Move )
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                foreach( var item in e.NewItems.Cast<T>() )
+                foreach (var item in myModule.Items)
                 {
-                    RecordItem( item );
+                    RecordItem(item);
+                }
+                foreach (var item in myModule.Items.OfType<INotifyPropertyChanged>())
+                {
+                    item.PropertyChanged -= OnPropertyChanged;
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Move)
+            {
+                foreach (var item in e.NewItems.Cast<T>())
+                {
+                    RecordItem(item);
                 }
             }
             else
             {
-                throw new NotSupportedException( e.Action.ToString() );
+                throw new NotSupportedException(e.Action.ToString());
             }
         }
 
-        private void RecordItem( T item )
+        private void RecordItem(T item)
         {
             int i = 0;
-            for( ; i < myEntries.Count; ++i )
+            for (; i < myEntries.Count; ++i)
             {
-                if( myComparer.Equals( myEntries[ i ], item ) )
+                if (myComparer.Equals(myEntries[i], item))
                 {
-                    myEntries[ i ] = item;
+                    myEntries[i] = item;
                     break;
                 }
             }
 
-            if( i == myEntries.Count )
+            if (i == myEntries.Count)
             {
-                myEntries.Add( item );
+                myEntries.Add(item);
             }
 
-            if( ModuleChanged != null )
-            {
-                ModuleChanged( this, EventArgs.Empty );
-            }
+            ModuleChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnPropertyChanged( object sender, PropertyChangedEventArgs e )
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var item = ( T )sender;
-            RecordItem( item );
+            var item = (T)sender;
+            RecordItem(item);
         }
 
         public IEnumerable<T> Entries
@@ -116,7 +124,7 @@ namespace Plainion.GraphViz.Presentation
 
         public void Dispose()
         {
-            foreach( var entry in myModule.Items.OfType<INotifyPropertyChanged>() )
+            foreach (var entry in myModule.Items.OfType<INotifyPropertyChanged>())
             {
                 entry.PropertyChanged -= OnPropertyChanged;
             }

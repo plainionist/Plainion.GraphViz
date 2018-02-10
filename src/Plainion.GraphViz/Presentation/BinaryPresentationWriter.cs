@@ -94,7 +94,8 @@ namespace Plainion.GraphViz.Presentation
             }
         }
 
-        private void WriteNodeMasks(NodeMaskModule module)
+        // for bookmarks
+        internal void WriteNodeMasks(NodeMaskModule module)
         {
             myWriter.Write(module.Items.Count());
             foreach (var mask in module.Items.Reverse())
@@ -128,7 +129,8 @@ namespace Plainion.GraphViz.Presentation
             }
         }
 
-        private void WriteTansformations(TransformationModule module)
+        // for bookmarks
+        internal void WriteTansformations(TransformationModule module)
         {
             myWriter.Write(module.Items.Count());
             foreach (var transformation in module.Items)

@@ -91,6 +91,8 @@
     <Compile Include="Model\IGraph.cs" />
     <Compile Include="Presentation\BinaryPresentationReader.cs" />
     <Compile Include="Presentation\BinaryPresentationWriter.cs" />
+    <Compile Include="Presentation\Bookmark.cs" />
+    <Compile Include="Presentation\BookmarkBuilder.cs" />
     <Compile Include="Presentation\ClusterFoldingTransformation.cs" />
     <Compile Include="Presentation\DynamicClusterTransformation.cs" />
     <Compile Include="Presentation\IGraphTransformation.cs" />
