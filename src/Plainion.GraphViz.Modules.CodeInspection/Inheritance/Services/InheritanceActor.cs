@@ -11,22 +11,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
     {
         private string mySelectedAssemblyName;
 
-        /// <summary>
-        /// Set if you want to have progress be reported
-        /// </summary>
         public IProgress<int> ProgressCallback { get; set; }
 
-        /// <summary>
-        /// Set if you want to be able to cancel.
-        /// </summary>
         public ICancellationToken CancellationToken { get; set; }
 
-        protected void ReportProgress(int value)
+        private void ReportProgress(int value)
         {
-            if (ProgressCallback != null)
-            {
-                ProgressCallback.Report(value);
-            }
+            ProgressCallback?.Report(value);
         }
 
         protected bool IsCancellationRequested

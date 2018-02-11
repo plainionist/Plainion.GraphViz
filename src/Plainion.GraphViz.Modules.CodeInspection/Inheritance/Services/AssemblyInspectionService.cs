@@ -42,7 +42,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
             }
         }
 
-        // <returns>Delegate to cancel the background processing</returns>
+        internal Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        {
+            using (var inspector = new InspectorHandle<InheritanceActor>(Path.GetDirectoryName(assemblyLocation)))
+            {
+                inspector.Value.IgnoreDotNetTypes = ignoreDotNetTypes;
+                inspector.Value.AssemblyLocation = assemblyLocation;
+                inspector.Value.SelectedType = typeToAnalyse;
+
+                return RunAsync(inspector.Value, progressCallback, completedCallback);
+            }
+        }
+
         private Action RunAsync(InheritanceActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
             var worker = new BackgroundWorker();
@@ -74,18 +85,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
                     worker.CancelAsync();
                 }
             };
-        }
-
-        internal Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
-        {
-            using (var inspector = new InspectorHandle<InheritanceActor>(Path.GetDirectoryName(assemblyLocation)))
-            {
-                inspector.Value.IgnoreDotNetTypes = ignoreDotNetTypes;
-                inspector.Value.AssemblyLocation = assemblyLocation;
-                inspector.Value.SelectedType = typeToAnalyse;
-
-                return RunAsync(inspector.Value, progressCallback, completedCallback);
-            }
         }
 
         internal IEnumerable<TypeDescriptor> GetAllTypes(string assemblyLocation)
