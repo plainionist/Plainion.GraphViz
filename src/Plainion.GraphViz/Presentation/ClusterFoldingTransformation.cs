@@ -5,6 +5,9 @@ using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Presentation
 {
+    /// <summary>
+    /// Manages folding of clusters
+    /// </summary>
     public class ClusterFoldingTransformation : BindableBase, IGraphTransformation
     {
         private readonly IGraphPresentation myPresentation;

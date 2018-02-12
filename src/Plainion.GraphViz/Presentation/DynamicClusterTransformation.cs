@@ -5,6 +5,9 @@ using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Presentation
 {
+    /// <summary>
+    /// Manages dynamics on clusters like: new clusters, hide clusters, rename clusters, etc
+    /// </summary>
     public class DynamicClusterTransformation : BindableBase, IGraphTransformation
     {
         // key: nodeId, value: clusterId
