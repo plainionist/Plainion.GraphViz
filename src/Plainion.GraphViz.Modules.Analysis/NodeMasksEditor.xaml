@@ -27,7 +27,7 @@
         </Grid.RowDefinitions>
 
         <ContentControl Grid.Row="0" prism:RegionManager.RegionName="{x:Static inf:RegionNames.NodeMasksView}"
-                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,0,0" MinHeight="150"/>
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,0,0"/>
 
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
@@ -63,7 +63,7 @@
             </Grid>
 
             <ListView Grid.Row="1" Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      Margin="5,0,5,0" MinHeight="200" 
+                      Margin="5,0,5,0" 
                       ItemsSource="{Binding PreviewNodes}" SelectedItem="{Binding SelectedPreviewItem}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

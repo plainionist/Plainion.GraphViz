@@ -1,3 +1,7 @@
+## 2.9.0 - 2018-02-
+
+- size of the filter editor slightly increased to that all content fits without scrollbar
+
 ## 2.8.0 - 2018-02-10
 
 - Online help will be included in the released package as markdown. 
