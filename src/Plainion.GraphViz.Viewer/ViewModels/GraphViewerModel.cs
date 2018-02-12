@@ -34,11 +34,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: true));
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
             ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Execute(n));
-            ShowNodeWithReachablesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation, true).Execute(GetRelevantNodes(n)));
+            ShowNodeWithReachablesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = true }.Execute(GetRelevantNodes(n)));
 
             HideIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: false));
             HideOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
-            RemoveUnreachableNodesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation, false).Execute(GetRelevantNodes(n)));
+            RemoveUnreachableNodesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = false }.Execute(GetRelevantNodes(n)));
 
             SelectNodeCommand = new DelegateCommand<Node>(n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
             SelectNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Select(n));

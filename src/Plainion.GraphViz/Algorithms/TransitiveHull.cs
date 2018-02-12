@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
@@ -12,17 +11,30 @@ namespace Plainion.GraphViz.Algorithms
     public class TransitiveHull
     {
         private readonly IGraphPresentation myPresentation;
-        private bool myShow;
-        private bool myReverse;
 
-        public TransitiveHull(IGraphPresentation presentation, bool show,bool reverse = false)
+        public TransitiveHull(IGraphPresentation presentation)
         {
             Contract.RequiresNotNull(presentation, "presentation");
 
             myPresentation = presentation;
-            myShow = show;
-            myReverse = reverse;
+
+            Show = true;
+            Reverse = false;
         }
+
+        /// <summary>
+        /// True: generates a mask containing the given nodes and their transitive hull.
+        /// False: generates a mask containing all nodes but the given nodes and their transitive hull.
+        /// Default: true.
+        /// </summary>
+        public bool Show { get; set; }
+
+        /// <summary>
+        /// True: considers only "in" edges when building the hull.
+        /// False: considers only "out" edges when buildling the hull.
+        /// Default: false.
+        /// </summary>
+        public bool Reverse { get; set; }
 
         public void Execute(IReadOnlyCollection<Node> nodes)
         {
@@ -31,8 +43,8 @@ namespace Plainion.GraphViz.Algorithms
                 .Distinct();
 
             var mask = new NodeMask();
-            mask.IsShowMask = myShow;
-            if (myShow)
+            mask.IsShowMask = Show;
+            if (Show)
             {
                 mask.Set(connectedNodes);
             }
@@ -45,11 +57,11 @@ namespace Plainion.GraphViz.Algorithms
             if (nodes.Count == 1)
             {
                 var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-                mask.Label = (myReverse ? "Reverse t" : "T") + "ransitive hull of " + caption.DisplayText;
+                mask.Label = (Reverse ? "Reverse t" : "T") + "ransitive hull of " + caption.DisplayText;
             }
             else
             {
-                mask.Label = (myReverse ? "Reverse t" : "T") + "ransitive hull of multiple nodes";
+                mask.Label = (Reverse ? "Reverse t" : "T") + "ransitive hull of multiple nodes";
             }
 
             var module = myPresentation.GetModule<INodeMaskModule>();
@@ -74,13 +86,13 @@ namespace Plainion.GraphViz.Algorithms
 
         private IEnumerable<Edge> SelectSiblings(Node n)
         {
-            if (myShow)
+            if (Show)
             {
-                return myReverse ? n.In : n.Out;
+                return Reverse ? n.In : n.Out;
             }
             else
             {
-                return myReverse ? n.In.Where(e => myPresentation.Picking.Pick(e.Source)) : n.Out.Where(e => myPresentation.Picking.Pick(e.Target));
+                return Reverse ? n.In.Where(e => myPresentation.Picking.Pick(e.Source)) : n.Out.Where(e => myPresentation.Picking.Pick(e.Target));
             }
         }
     }
