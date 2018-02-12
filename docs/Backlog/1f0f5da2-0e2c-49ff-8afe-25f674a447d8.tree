@@ -41,5 +41,29 @@
     <Node Id="fa67f51f-10b8-47a0-b0ec-38c58f4d5899">
       <Caption><![CDATA[ClusterEditor - recursive clusters]]></Caption>
     </Node>
+    <Node Id="7303bb58-f58f-4ee0-9e18-9bf2c259c902">
+      <Caption><![CDATA[Akka]]></Caption>
+      <Node Id="ee4861f0-1ce2-49dd-8d29-185b5c3c4875">
+        <Caption><![CDATA[progress]]></Caption>
+      </Node>
+      <Node Id="0b4e8dbe-ddbd-4160-8085-8dd5281a4776">
+        <Caption><![CDATA[how to do message chunking?]]></Caption>
+      </Node>
+      <Node Id="33edd133-1842-4200-b9bb-290f7f3919d0">
+        <Caption><![CDATA[productize]]></Caption>
+      </Node>
+    </Node>
+    <Node Id="e631a154-9e89-45dd-a3a4-835636df136c">
+      <Caption><![CDATA[Akka.Cluster]]></Caption>
+      <Node Id="d0a6277c-ac25-4a8e-ac3f-c16918818081">
+        <Caption><![CDATA[no TPL inside actor - use child actors]]></Caption>
+      </Node>
+    </Node>
+    <Node Id="07121741-cea6-4c45-83de-f995c6f3e598">
+      <Caption><![CDATA[combine logging with status messages]]></Caption>
+    </Node>
+    <Node Id="8dc3c107-a908-4fef-bbfe-6f0263bc4757">
+      <Caption><![CDATA[ControlFlow]]></Caption>
+    </Node>
   </Node>
 </Tree>

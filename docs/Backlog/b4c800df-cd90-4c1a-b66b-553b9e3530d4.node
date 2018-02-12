@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="b4c800df-cd90-4c1a-b66b-553b9e3530d4" Created="636540488910672264" LastModified="636540489659582264">
+  <Caption><![CDATA[migrate inheritance graph to akka]]></Caption>
+  <Content><![CDATA[- migrate inheritance to actor
+- switch inheritance to inspector
+- automatically restart actor system (process) if new app base
+]]></Content>
+</Node>

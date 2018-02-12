@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Node Id="ddf001d0-e766-4243-91d2-b7f6558c124e" Created="636540489247972264" LastModified="636540489633102264">
+  <Caption><![CDATA[make algorithms easier combinable]]></Caption>
+  <Content><![CDATA[- we need smaller building blocks
+- should each algo just return a mask?]]></Content>
+</Node>
