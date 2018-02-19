@@ -1,1 +1,6 @@
 theme: jekyll-theme-architect
+
+gems:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
