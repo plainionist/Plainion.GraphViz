@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Prism.Commands;
@@ -13,6 +14,7 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Prism.Events;
+
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
@@ -45,7 +47,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Select(n));
             SelectNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Select(n));
 
-            CaptionToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(Presentation.GetModule<CaptionModule>().Get(n.Id).DisplayText));
+            CaptionToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(GetCaptionFromNode(n)));
             IdToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(n.Id));
 
             GoToEdgeSourceCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Source));
@@ -55,6 +57,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.AllSiblings), CanUnfold);
             UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
             UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
+
+            CopyAllCaptionToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetCaptionOfAllVisibleNodesFrom(c)));
 
             ShowMostIncomingsCommand = new DelegateCommand(() => new ShowMostIncomings(Presentation).Execute(5), () => Presentation != null);
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
@@ -86,6 +90,35 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
+        }
+
+        private string GetCaptionOfAllVisibleNodesFrom(Cluster c)
+        {
+            var allNodesInCluster = c.Nodes;
+            var visibleNodes = GetAllVisibleNodes(allNodesInCluster);
+            StringBuilder str = new StringBuilder();
+            foreach (var n in visibleNodes)
+            {
+                str.AppendLine(GetCaptionFromNode(n));
+            }
+            return str.ToString();
+        }
+
+        private string GetCaptionFromNode(Node n)
+        {
+            return Presentation.GetModule<ICaptionModule>().Get(n.Id).DisplayText;
+        }
+
+
+        private IEnumerable<Node> GetAllVisibleNodes(IEnumerable<Node> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                if (Presentation.Picking.Pick(node))
+                {
+                    yield return node;
+                }
+            }
         }
 
         private Action<ClusterFoldingTransformation> ToggleClusterFolding(Cluster commandParamter)
@@ -221,6 +254,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ICommand SelectNodeWithSiblingsCommand { get; private set; }
 
         public ICommand CaptionToClipboardCommand { get; private set; }
+
+        public ICommand CopyAllCaptionToClipboardCommand { get; private set; }
 
         public ICommand IdToClipboardCommand { get; private set; }
 
