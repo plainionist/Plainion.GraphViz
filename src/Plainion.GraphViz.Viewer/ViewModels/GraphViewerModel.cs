@@ -58,7 +58,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
             UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
 
-            CopyAllCaptionToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetCaptionOfAllVisibleNodesFrom(c)));
+            CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
+            CopyAllIdentifiersToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetIdentifiersOfAllVisibleNodesFrom(c)));
 
             ShowMostIncomingsCommand = new DelegateCommand(() => new ShowMostIncomings(Presentation).Execute(5), () => Presentation != null);
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
@@ -92,11 +93,17 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
         }
 
-        private string GetCaptionOfAllVisibleNodesFrom(Cluster c)
+        private string GetCaptionFromNode(Node n)
         {
-            var allNodesInCluster = c.Nodes;
-            var visibleNodes = GetAllVisibleNodes(allNodesInCluster);
-            StringBuilder str = new StringBuilder();
+            return Presentation.GetModule<ICaptionModule>().Get(n.Id).DisplayText;
+        }
+
+        private string GetCaptionsOfAllVisibleNodesFrom(Cluster c)
+        {
+            var visibleNodes = c.Nodes
+                .Where(n => Presentation.Picking.Pick(n));
+
+            var str = new StringBuilder();
             foreach (var n in visibleNodes)
             {
                 str.AppendLine(GetCaptionFromNode(n));
@@ -104,21 +111,17 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             return str.ToString();
         }
 
-        private string GetCaptionFromNode(Node n)
+        private string GetIdentifiersOfAllVisibleNodesFrom(Cluster c)
         {
-            return Presentation.GetModule<ICaptionModule>().Get(n.Id).DisplayText;
-        }
+            var visibleNodes = c.Nodes
+                .Where(n => Presentation.Picking.Pick(n));
 
-
-        private IEnumerable<Node> GetAllVisibleNodes(IEnumerable<Node> nodes)
-        {
-            foreach (var node in nodes)
+            var str = new StringBuilder();
+            foreach (var n in visibleNodes)
             {
-                if (Presentation.Picking.Pick(node))
-                {
-                    yield return node;
-                }
+                str.AppendLine(n.Id);
             }
+            return str.ToString();
         }
 
         private Action<ClusterFoldingTransformation> ToggleClusterFolding(Cluster commandParamter)
@@ -255,7 +258,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ICommand CaptionToClipboardCommand { get; private set; }
 
-        public ICommand CopyAllCaptionToClipboardCommand { get; private set; }
+        public ICommand CopyAllCaptionsToClipboardCommand { get; private set; }
+
+        public ICommand CopyAllIdentifiersToClipboardCommand { get; private set; }
 
         public ICommand IdToClipboardCommand { get; private set; }
 

@@ -1,6 +1,7 @@
-## 2.9.0 - 2018-02-
+## 2.9.0 - 2018-02-19
 
 - size of the filter editor slightly increased to that all content fits without scrollbar
+- Added option to copy caption/identifiers of all visible nodes to clipboard
 
 ## 2.8.0 - 2018-02-10
 

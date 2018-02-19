@@ -102,7 +102,8 @@
                 <MenuItem Header="Unfold and hide all but targets" Command="{Binding UnfoldAndHideAllButTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <MenuItem Header="Unfold and hide all but sources" Command="{Binding UnfoldAndHideAllButSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <Separator/>
-                <MenuItem Header="Copy caption of all visible nodes" Command="{Binding CopyAllCaptionToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />
+                <MenuItem Header="Copy caption of all visible nodes" Command="{Binding CopyAllCaptionsToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />
+                <MenuItem Header="Copy identifier of all visible nodes" Command="{Binding CopyAllIdentifiersToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />
             </ContextMenu>
             <ContextMenu x:Key="Default">
                 <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
