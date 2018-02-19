@@ -4,3 +4,7 @@ gems:
   - jekyll-sitemap
   - jekyll-seo-tag
 
+plugins:
+  - jekyll-sitemap
+  
+ 
