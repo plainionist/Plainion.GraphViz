@@ -1,3 +1,7 @@
+## 2.10.0 - 2018-03-
+
+- CodeInspection.Inspector.GetHardcodedStrings() added
+
 ## 2.9.0 - 2018-02-19
 
 - size of the filter editor slightly increased to that all content fits without scrollbar

@@ -19,6 +19,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Inspect_HardcodedStrings_Tests.cs" />
     <Compile Include="Inspect_CalledMethods_Tests.cs" />
     <Compile Include="MethodTests.cs" />
     <Compile Include="MethodCallTests.cs" />

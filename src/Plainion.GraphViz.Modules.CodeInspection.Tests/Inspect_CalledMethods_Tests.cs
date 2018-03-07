@@ -85,6 +85,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             Assert.That(calls.Intersect(expected), Is.EquivalentTo(expected));
         }
 
+        [Test]
+        public void FromConstructor()
+        {
+            Verify(typeof(Caller), ".ctor", typeof(Callee), nameof(Callee.InstanceMethod));
+        }
+
+        [Test]
+        public void FromProperty()
+        {
+            Verify(typeof(Caller), "set_ABC", typeof(Callee), nameof(Callee.InstanceMethod));
+        }
+
         private void Verify(Type callerType, string callerMethod, Type callingType, string callingMethod)
         {
             var reflector = new Inspector(new MonoLoader(), callerType);
@@ -111,7 +123,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             }
         }
 
-        public void Main()
+        public Caller()
+        {
+            new Callee().InstanceMethod();
+        }
+
+        public string ABC
+        {
+            set { new Callee().InstanceMethod(); }
+        }
+
+        public static void Main()
         {
             new Callee().InstanceMethod();
             Callee.StaticMethod();

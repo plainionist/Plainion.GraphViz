@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
+    [DebuggerDisplay("{DeclaringType.Name}.{Name}")]
     public class Method : IEquatable<Method>
     {
         public Method(Type declaringType, string name)

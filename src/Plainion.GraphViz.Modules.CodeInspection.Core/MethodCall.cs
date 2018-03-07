@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using Plainion;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
+    [DebuggerDisplay("{From} -> {To}")]
     public class MethodCall : IEquatable<MethodCall>
     {
         public MethodCall(Method from, Method to)

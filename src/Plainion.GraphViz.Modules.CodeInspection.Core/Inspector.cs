@@ -29,7 +29,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             myLoader = loader;
             myType = type;
 
-            // .net fullnames do escape "."
+            // .net full-names do escape "."
             myFullName = myType.FullName.Replace("\\,", ",");
         }
 
@@ -179,7 +179,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                 return Enumerable.Empty<MethodDefinition>();
             }
 
-            // dont use the ".Types" property - it does not return public nested types
+            // don't use the ".Types" property - it does not return public nested types
             var cecilTypes = myLoader.MonoLoad(myType.Assembly).MainModule.GetTypes();
 
             var cecilType = cecilTypes
@@ -315,7 +315,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
         }
 
         /// <summary>
-        /// Does not cover constructor calls at the moment.
+        /// Does not cover calls of constructors.
         /// </summary>
         public IEnumerable<MethodCall> GetCalledMethods()
         {
@@ -344,6 +344,28 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                     {
                         yield return new MethodCall(caller, new Method(dotNetType, calledMethod.Name));
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns all hard coded strings
+        /// </summary>
+        public IEnumerable<string> GetHardcodedStrings()
+        {
+            return GetMethods()
+                .SelectMany(GetHardcodedStrings)
+                .ToList();
+        }
+
+        private IEnumerable<string> GetHardcodedStrings(MethodDefinition method)
+        {
+            var caller = new Method(myType, method.Name);
+            foreach (var instr in method.Body.Instructions)
+            {
+                if (instr.OpCode == OpCodes.Ldstr)
+                {
+                    yield return (string)instr.Operand;
                 }
             }
         }
