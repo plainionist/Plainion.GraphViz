@@ -1,6 +1,8 @@
-## 2.10.0 - 2018-03-
+## 2.10.0 - 2018-03-12
 
 - CodeInspection.Inspector.GetHardcodedStrings() added
+- Algorithm "Remove nodes without incomings" for clusters added
+- Algorithm "Remove nodes without outgoings" for clusters added
 
 ## 2.9.0 - 2018-02-19
 

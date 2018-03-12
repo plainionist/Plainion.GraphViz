@@ -58,6 +58,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
             UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
 
+            RemoveNodesWithoutIncomingsCommand = new DelegateCommand<Cluster>(c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Incomings).Execute(c));
+            RemoveNodesWithoutOutgoingsCommand = new DelegateCommand<Cluster>(c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Outgoings).Execute(c));
+
             CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
             CopyAllIdentifiersToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetIdentifiersOfAllVisibleNodesFrom(c)));
 
@@ -65,7 +68,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
             ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
 
-            RemoveNodesWithoutEdgesCommand = new DelegateCommand(() => new RemoveNodesWithoutEdges(Presentation).Execute(), () => Presentation != null);
+            RemoveNodesWithoutEdgesCommand = new DelegateCommand(() => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.All).Execute(), () => Presentation != null);
             RemoveNodesReachableFromMultipleClustersCommand = new DelegateCommand(() => new RemoveNodesReachableFromMultipleClusters(Presentation).Execute(), () => Presentation != null);
 
             FoldUnfoldAllClustersCommand = new DelegateCommand(() => new ChangeClusterFolding(Presentation).FoldUnfoldAllClusters(), () => Presentation != null);
@@ -286,6 +289,10 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand<Cluster> UnfoldAndHideAllButSourcesCommand { get; private set; }
 
+        public DelegateCommand<Cluster> RemoveNodesWithoutIncomingsCommand { get; private set; }
+
+        public DelegateCommand<Cluster> RemoveNodesWithoutOutgoingsCommand { get; private set; }
+
         public DelegateCommand FoldUnfoldAllClustersCommand { get; private set; }
 
         public DelegateCommand<string> AddVisibleNodesOutsideClustersToClusterCommand { get; private set; }
@@ -432,6 +439,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                         UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
                         UnfoldAndHideAllButTargetsCommand.RaiseCanExecuteChanged();
                         UnfoldAndHideAllButSourcesCommand.RaiseCanExecuteChanged();
+
+                        RemoveNodesWithoutIncomingsCommand.RaiseCanExecuteChanged();
+                        RemoveNodesWithoutOutgoingsCommand.RaiseCanExecuteChanged();
                     }
                 }
             }
