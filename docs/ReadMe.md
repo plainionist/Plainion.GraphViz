@@ -25,3 +25,11 @@ Plainion.GraphViz is the solution you are looking for ;-)
 - Browse through the remaining documentation
 - Provide feedback ;-)
 
+# Contribution
+
+You have ideas to improve Plainion.GraphViz? You are welcome to contribute!
+
+Plainion.GraphViz is hosted on [GitHub](https://github.com/plainionist/Plainion.GraphViz). 
+Just clone the repository, [setup your environment](Development) and get your fingers dirty ;-) 
+Send me a pull request when you are done!
+
