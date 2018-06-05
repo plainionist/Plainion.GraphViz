@@ -1,3 +1,7 @@
+## 2.11.0 - 2018-
+
+- 
+
 ## 2.10.0 - 2018-03-12
 
 - CodeInspection.Inspector.GetHardcodedStrings() added

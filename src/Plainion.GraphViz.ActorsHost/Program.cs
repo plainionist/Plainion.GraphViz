@@ -14,12 +14,12 @@ namespace Plainion.GraphViz.ActorsHost
                     actor {
                         provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
                     }
-
                     remote {
                         helios.tcp {
                             port = 2525
                             hostname = localhost
-                        }
+                            maximum-frame-size = 4000000b
+                        }                   
                     }
                 }
                 ");
