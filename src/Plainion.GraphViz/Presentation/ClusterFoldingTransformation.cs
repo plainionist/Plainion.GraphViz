@@ -156,6 +156,12 @@ namespace Plainion.GraphViz.Presentation
             }
 
             // add folded clusters
+            var clusterMap = new Dictionary<string, Cluster>();
+            foreach (var cluster in graph.Clusters)
+            {
+                clusterMap.Add(cluster.Id, cluster);
+            }
+
             foreach (var clusterId in myFoldedClusters.ToList())
             {
                 var clusterNodeId = GetClusterNodeId(clusterId);
@@ -163,8 +169,8 @@ namespace Plainion.GraphViz.Presentation
                 builder.TryAddNode(clusterNodeId);
                 builder.TryAddCluster(clusterId, new[] { clusterNodeId });
 
-                var foldedCluster = graph.Clusters.SingleOrDefault(c => c.Id == clusterId);
-                if (foldedCluster == null)
+                Cluster foldedCluster = null;
+                if (!clusterMap.TryGetValue(clusterId, out foldedCluster))
                 {
                     // this cluster was deleted
                     myFoldedClusters.Remove(clusterId);
