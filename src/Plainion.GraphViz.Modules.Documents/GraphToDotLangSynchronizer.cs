@@ -52,15 +52,15 @@ namespace Plainion.GraphViz.Modules.Documents
         private void OnCaptionsChanged(object sender, EventArgs eventArgs)
         {
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            var renamedClusters = myCaptionsJournal.Entries
-                .Where(c => transformationModule.Graph.Clusters.Any(owner => owner.Id == c.OwnerId));
+            var haveClustersRenamed = myCaptionsJournal.Entries
+                .Any(c => transformationModule.Graph.Clusters.Any(owner => owner.Id == c.OwnerId));
 
-            if (!renamedClusters.Any())
+            myCaptionsJournal.Clear();
+
+            if (!haveClustersRenamed)
             {
                 return;
             }
-
-            myCaptionsJournal.Clear();
 
             myWriteDocument(myPresentation);
         }

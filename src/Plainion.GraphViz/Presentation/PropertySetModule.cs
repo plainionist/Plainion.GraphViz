@@ -23,11 +23,23 @@ namespace Plainion.GraphViz.Presentation
             return myItems.ContainsKey(id);
         }
 
+        public T TryGet(string id)
+        {
+            T value = null;
+            if (myItems.TryGetValue(id, out value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+
         public T Get(string id)
         {
-            if (myItems.ContainsKey(id))
+            T value = null;
+            if (myItems.TryGetValue(id, out value))
             {
-                return myItems[id];
+                return value;
             }
 
             // do not put "null" into the items to allow defining new default later on
@@ -37,7 +49,7 @@ namespace Plainion.GraphViz.Presentation
                 return null;
             }
 
-            var value = DefaultProvider(id);
+            value = DefaultProvider(id);
             if (value == null)
             {
                 return null;

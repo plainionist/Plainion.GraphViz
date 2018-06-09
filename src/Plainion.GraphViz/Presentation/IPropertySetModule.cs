@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace Plainion.GraphViz.Presentation
 {
@@ -8,9 +6,10 @@ namespace Plainion.GraphViz.Presentation
     {
         Func<string, T> DefaultProvider { get; set; }
 
-        T Get( string id );
-
         bool Contains(string id);
+        T TryGet(string id);
+        T Get(string id);
+
         void Add(T item);
         void Remove(string id);
         void Clear();
