@@ -20,6 +20,14 @@ namespace Plainion.GraphViz.Model
             get { return myGraph; }
         }
 
+        /// <summary>
+        /// Freezes the graph so that it cannot be altered any longer.
+        /// </summary>
+        public void Freeze()
+        {
+            myGraph.Freeze();
+        }
+
         public Node TryAddNode( string nodeId )
         {
             var node = new Node( nodeId );

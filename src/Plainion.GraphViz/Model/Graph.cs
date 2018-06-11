@@ -25,6 +25,8 @@ namespace Plainion.GraphViz.Model
         {
             Contract.RequiresNotNull( node, "node" );
 
+            Contract.Invariant(!IsFrozen, "Graph is frozen and cannot be modified");
+
             if( myNodes.ContainsKey( node.Id ) )
             {
                 return false;
@@ -46,8 +48,10 @@ namespace Plainion.GraphViz.Model
         public bool TryAdd( Edge edge )
         {
             Contract.RequiresNotNull( edge, "edge" );
-            
-            if( myEdges.ContainsKey( edge.Id ) )
+
+            Contract.Invariant(!IsFrozen, "Graph is frozen and cannot be modified");
+
+            if ( myEdges.ContainsKey( edge.Id ) )
             {
                 return false;
             }
@@ -68,8 +72,10 @@ namespace Plainion.GraphViz.Model
         public bool TryAdd( Cluster cluster )
         {
             Contract.RequiresNotNull( cluster, "cluster" );
-            
-            if( myClusters.ContainsKey( cluster.Id ) )
+
+            Contract.Invariant(!IsFrozen, "Graph is frozen and cannot be modified");
+
+            if ( myClusters.ContainsKey( cluster.Id ) )
             {
                 return false;
             }
@@ -103,6 +109,13 @@ namespace Plainion.GraphViz.Model
             var node = FindNode(nodeId);
             Contract.Requires(node != null, "Node not found: " + nodeId);
             return node;
+        }
+
+        public bool IsFrozen { get; private set; }
+
+        public void Freeze()
+        {
+            IsFrozen = true;
         }
     }
 }

@@ -63,8 +63,15 @@ namespace Plainion.GraphViz.Presentation
                     throw new InvalidOperationException("Graph already set to presentation. Changing Graph is not allowed!");
                 }
 
-                // graph is mutable in order to support easy graph building -> protect against graph changes
-                myGraph = Objects.Clone(value);
+                if (value is Graph g && g.IsFrozen)
+                {
+                    myGraph = g;
+                }
+                else
+                {
+                    // graph is mutable in order to support easy graph building -> protect against graph changes
+                    myGraph = Objects.Clone(value);
+                }
 
                 // fill up the Captions module here directly to avoid performance issues by
                 // "on demand" adding which then fires "changed" events

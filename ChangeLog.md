@@ -2,6 +2,7 @@
 
 - CodeInspection service: maximum-frame-size increased for akka to support big spec files
 - performance improvement for rendering graphs with huge amount of clusters
+- Added "Freeze" API to Graph and RelaxedGraphBuilder to support much faster setting huge graphs to presentation
 
 ## 2.10.0 - 2018-03-12
 
