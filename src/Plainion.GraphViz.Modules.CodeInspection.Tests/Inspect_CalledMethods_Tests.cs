@@ -26,6 +26,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             Verify(typeof(Caller), nameof(Caller.Main), typeof(CalleeBase), nameof(Callee.BaseMethod));
         }
 
+        [Test(Description = "We always get the 'declaring' type - not the one the method is finally called on")]
+        public void CallOfVirtualBaseClassMethod()
+        {
+            Verify(typeof(Caller), nameof(Caller.Action), typeof(CalleeBase), nameof(Callee.VirtualBaseMethod));
+        }
+
+        [Test(Description = "We always get the 'declaring' type - not the one the method is finally called on")]
+        public void CallOfBaseInterfaceMethod()
+        {
+            Verify(typeof(Caller), nameof(Caller.Action), typeof(ICalleeBase), nameof(ICalleeBase.BaseInterfaceMethod));
+        }
+
         [Test]
         public void CallOfInterfaceMethod()
         {
@@ -138,13 +150,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             new Callee().InstanceMethod();
             Callee.StaticMethod();
             new Callee().BaseMethod();
-            new Callee().VirtualMethod();
             new Callee().ExtensionMethod();
+            var c4 = new Callee();
+            c4.VirtualMethod();
         }
 
         public void Action(ICallee callee)
         {
             callee.InterfaceMethod();
+
+            callee.BaseInterfaceMethod();
+
+            var c4 = new Callee();
+            c4.VirtualBaseMethod();
         }
 
         public void SpecialMethods()
@@ -170,7 +188,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         }
     }
 
-    interface ICallee
+    interface ICalleeBase
+    {
+        void BaseInterfaceMethod();
+    }
+
+    interface ICallee : ICalleeBase
     {
         void InterfaceMethod();
     }
@@ -178,6 +201,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     class CalleeBase
     {
         public void BaseMethod()
+        {
+        }
+
+        public virtual void VirtualBaseMethod()
         {
         }
     }
@@ -192,11 +219,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         {
         }
 
+        public void BaseInterfaceMethod()
+        {
+        }
+
         public void InterfaceMethod()
         {
         }
 
         public virtual void VirtualMethod()
+        {
+        }
+
+        public override void VirtualBaseMethod()
         {
         }
 
