@@ -1,4 +1,4 @@
-## 2.11.0 - 2018-
+## 2.11.0 - 2018-07-13
 
 - CodeInspection service: maximum-frame-size increased for akka to support big spec files
 - performance improvement for rendering graphs with huge amount of clusters
