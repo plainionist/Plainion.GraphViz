@@ -1,5 +1,5 @@
 ﻿
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 {
     interface ICancellationToken
     {

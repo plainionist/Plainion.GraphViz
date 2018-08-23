@@ -4,7 +4,7 @@ using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 {
     [Serializable]
     class TypeRelationshipDocument

@@ -11,7 +11,8 @@ using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
-using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services;
+using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
@@ -76,7 +77,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         public IStatusMessageService StatusMessageService { get; set; }
 
         [Import]
-        public AssemblyInspectionService InspectionService { get; set; }
+        public InheritanceClient InheritanceClient { get; set; }
 
         public DelegateCommand CreateGraphCommand { get; private set; }
 
@@ -120,7 +121,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         {
             IsReady = false;
 
-            myCancelBackgroundProcessing = InspectionService.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, OnInheritanceGraphCompleted);
+            myCancelBackgroundProcessing = InheritanceClient.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, OnInheritanceGraphCompleted);
         }
 
         internal void OnClosed()
@@ -148,7 +149,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
                     if (!string.IsNullOrWhiteSpace(myAssemblyToAnalyseLocation) && File.Exists(myAssemblyToAnalyseLocation))
                     {
-                        Types.AddRange(InspectionService.GetAllTypes(myAssemblyToAnalyseLocation));
+                        Types.AddRange(InheritanceClient.GetAllTypes(myAssemblyToAnalyseLocation));
                     }
                 }
             }

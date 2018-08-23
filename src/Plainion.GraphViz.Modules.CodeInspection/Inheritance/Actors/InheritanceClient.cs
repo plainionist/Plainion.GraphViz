@@ -1,44 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
+using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 {
-    [Export(typeof(AssemblyInspectionService))]
-    class AssemblyInspectionService
+    [Export(typeof(InheritanceClient))]
+    class InheritanceClient
     {
-        private class InspectorHandle<T> : IDisposable where T : class
+        internal IEnumerable<TypeDescriptor> GetAllTypes(string assemblyLocation)
         {
-            private InspectionDomain myDomain;
-
-            public InspectorHandle(string appBase)
+            using (var inspector = new InspectorHandle<AllTypesActor>(Path.GetDirectoryName(assemblyLocation)))
             {
-                myDomain = new InspectionDomain(appBase);
-                Value = myDomain.CreateInspector<T>();
-            }
+                inspector.Value.AssemblyLocation = assemblyLocation;
 
-            public T Value { get; private set; }
-
-            public void Dispose()
-            {
-                var disposable = Value as IDisposable;
-                if (disposable != null)
-                {
-                    disposable.Dispose();
-                }
-                Value = null;
-
-                if (myDomain != null)
-                {
-                    myDomain.Dispose();
-                    myDomain = null;
-                }
+                return inspector.Value.Execute();
             }
         }
 
@@ -56,13 +37,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
 
         private Action RunAsync(InheritanceActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
-            var worker = new BackgroundWorker();
+            var worker = new System.ComponentModel.BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
 
             worker.DoWork += (s, e) =>
                 {
-                    var adapter = new BackgroundWorkerAdapter((BackgroundWorker)s);
+                    var adapter = new BackgroundWorkerAdapter((System.ComponentModel.BackgroundWorker)s);
                     inspector.ProgressCallback = adapter;
                     inspector.CancellationToken = adapter;
 
@@ -86,23 +67,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
                 }
             };
         }
-
-        internal IEnumerable<TypeDescriptor> GetAllTypes(string assemblyLocation)
-        {
-            using (var inspector = new InspectorHandle<AllTypesActor>(Path.GetDirectoryName(assemblyLocation)))
-            {
-                inspector.Value.AssemblyLocation = assemblyLocation;
-
-                return inspector.Value.Execute();
-            }
-        }
     }
 
     class BackgroundWorkerAdapter : MarshalByRefObject, IProgress<int>, ICancellationToken
     {
-        private BackgroundWorker myWorker;
+        private System.ComponentModel.BackgroundWorker myWorker;
 
-        public BackgroundWorkerAdapter(BackgroundWorker worker)
+        public BackgroundWorkerAdapter(System.ComponentModel.BackgroundWorker worker)
         {
             myWorker = worker;
         }
@@ -115,6 +86,35 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
         public bool IsCancellationRequested
         {
             get { return myWorker.CancellationPending; }
+        }
+    }
+
+    class InspectorHandle<T> : IDisposable where T : class
+    {
+        private InspectionDomain myDomain;
+
+        public InspectorHandle(string appBase)
+        {
+            myDomain = new InspectionDomain(appBase);
+            Value = myDomain.CreateInspector<T>();
+        }
+
+        public T Value { get; private set; }
+
+        public void Dispose()
+        {
+            var disposable = Value as IDisposable;
+            if (disposable != null)
+            {
+                disposable.Dispose();
+            }
+            Value = null;
+
+            if (myDomain != null)
+            {
+                myDomain.Dispose();
+                myDomain = null;
+            }
         }
     }
 
@@ -148,7 +148,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
         public T CreateInspector<T>()
         {
             return (T)myDomain.CreateInstanceFrom(typeof(T).Assembly.Location, typeof(T).FullName, false,
-                BindingFlags.Default, null, new[] { ApplicationBase }, null, null).Unwrap();
+                BindingFlags.Default, null, null, null, null).Unwrap();
         }
 
         public void Dispose()

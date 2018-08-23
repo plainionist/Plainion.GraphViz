@@ -4,8 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Plainion.GraphViz.Infrastructure;
+using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 {
     class InheritanceActor : MarshalByRefObject
     {

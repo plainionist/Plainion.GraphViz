@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 {
     class AllTypesActor : MarshalByRefObject
     {
