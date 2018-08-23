@@ -6,7 +6,7 @@ using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Services;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {

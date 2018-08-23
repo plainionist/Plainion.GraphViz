@@ -111,17 +111,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packaging\Services\AnalysisDocumentSerializer.cs" />
-    <Compile Include="Packaging\Services\FailureResponse.cs" />
+    <Compile Include="Packaging\Actors\AnalysisDocumentSerializer.cs" />
+    <Compile Include="Packaging\Actors\FailureResponse.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
-    <Compile Include="Packaging\Services\AnalysisDocument.cs" />
-    <Compile Include="Packaging\Services\PackageAnalyzer.cs" />
-    <Compile Include="Packaging\Services\Cancel.cs" />
-    <Compile Include="Packaging\Services\Finished.cs" />
-    <Compile Include="Packaging\Services\AnalysisRequest.cs" />
-    <Compile Include="Packaging\Services\GraphUtils.cs" />
-    <Compile Include="Packaging\Services\PackageAnalysisActor.cs" />
+    <Compile Include="Packaging\Analyzers\AnalysisDocument.cs" />
+    <Compile Include="Packaging\Analyzers\PackageAnalyzer.cs" />
+    <Compile Include="Packaging\Actors\Cancel.cs" />
+    <Compile Include="Packaging\Actors\Finished.cs" />
+    <Compile Include="Packaging\Actors\AnalysisRequest.cs" />
+    <Compile Include="Packaging\Analyzers\GraphUtils.cs" />
+    <Compile Include="Packaging\Actors\PackageAnalysisActor.cs" />
     <Compile Include="Packaging\PackagingGraphBuilderView.xaml.cs">
       <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
     </Compile>
@@ -134,8 +134,8 @@
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
-    <Compile Include="Packaging\Services\PackageAnalysisClient.cs" />
-    <Compile Include="Packaging\Services\SpecUtils.cs" />
+    <Compile Include="Packaging\Actors\PackageAnalysisClient.cs" />
+    <Compile Include="Packaging\Spec\SpecUtils.cs" />
     <Compile Include="Packaging\GraphToSpecSynchronizer.cs" />
     <Compile Include="Packaging\Spec\Cluster.cs" />
     <Compile Include="Packaging\Spec\SystemPackaging.cs" />

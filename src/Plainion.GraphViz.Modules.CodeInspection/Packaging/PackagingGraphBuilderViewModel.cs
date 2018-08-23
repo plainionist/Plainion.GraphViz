@@ -17,11 +17,12 @@ using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging.Services;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Windows.Editors.Xml;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
@@ -41,6 +42,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private IStatusMessageService myStatusMessageService;
         private PackageAnalysisClient myAnalysisClient;
 
+        [ImportingConstructor]
         public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient)
         {
             myPresentationCreationService = presentationCreationService;

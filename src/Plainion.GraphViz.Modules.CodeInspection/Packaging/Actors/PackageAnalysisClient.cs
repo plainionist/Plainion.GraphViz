@@ -7,8 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Configuration;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Services
+namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {
     [Export]
     class PackageAnalysisClient : IDisposable
