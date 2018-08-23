@@ -6,12 +6,12 @@ using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
-    [Export( typeof( PackagingGraphMenuItemModel ) )]
+    [Export(typeof(PackagingGraphMenuItemModel))]
     public class PackagingGraphMenuItemModel : BindableBase
     {
         public PackagingGraphMenuItemModel()
         {
-            OpenPackagingGraphBuilderCommand = new DelegateCommand( OnOpenPackagingGraphBuilder );
+            OpenPackagingGraphBuilderCommand = new DelegateCommand(OnOpenPackagingGraphBuilder);
             PackagingGraphBuilderRequest = new InteractionRequest<INotification>();
         }
 
@@ -20,14 +20,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             var notification = new Notification();
             notification.Title = "Packaging Graph Builder";
 
-            PackagingGraphBuilderRequest.Raise( notification, c => { } );
+            PackagingGraphBuilderRequest.Raise(notification, c => { });
         }
 
-        public ICommand OpenPackagingGraphBuilderCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand OpenPackagingGraphBuilderCommand { get; private set; }
 
         public InteractionRequest<INotification> PackagingGraphBuilderRequest { get; private set; }
     }

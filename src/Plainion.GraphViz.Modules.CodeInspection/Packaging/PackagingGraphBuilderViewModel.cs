@@ -37,9 +37,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private bool myAllEdges;
         private bool myCreateClustersForNamespaces;
         private readonly GraphToSpecSynchronizer myGraphToSpecSynchronizer;
+        private IPresentationCreationService myPresentationCreationService;
+        private IStatusMessageService myStatusMessageService;
+        private PackageAnalysisClient myAnalysisClient;
 
-        public PackagingGraphBuilderViewModel()
+        public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient)
         {
+            myPresentationCreationService = presentationCreationService;
+            myStatusMessageService = statusMessageService;
+            myAnalysisClient = analysisClient;
+
             Document = new TextDocument();
             Document.Changed += Document_Changed;
 
@@ -111,7 +118,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             }
             catch (Exception ex)
             {
-                StatusMessageService.Publish(new StatusMessage("ERROR:" + ex));
+                myStatusMessageService.Publish(new StatusMessage("ERROR:" + ex));
             }
 
             CreateGraphCommand.RaiseCanExecuteChanged();
@@ -146,15 +153,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 }
             }
         }
-
-        [Import]
-        public IPresentationCreationService PresentationCreationService { get; set; }
-
-        [Import]
-        public IStatusMessageService StatusMessageService { get; set; }
-
-        [Import]
-        public PackageAnalysisService AnalysisService { get; set; }
 
         public DelegateCommand CreateGraphCommand { get; private set; }
 
@@ -221,7 +219,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 myCTS = new CancellationTokenSource();
 
-                var doc = await AnalysisService.Analyse(request, myCTS.Token);
+                var doc = await myAnalysisClient.Analyse(request, myCTS.Token);
 
                 myCTS = null;
 
@@ -244,7 +242,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 return;
             }
 
-            var presentation = PresentationCreationService.CreatePresentation(Path.GetTempPath());
+            var presentation = myPresentationCreationService.CreatePresentation(Path.GetTempPath());
 
             var builder = new RelaxedGraphBuilder();
             foreach (var edge in response.Edges)

@@ -134,7 +134,7 @@
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
-    <Compile Include="Packaging\Services\PackageAnalysisService.cs" />
+    <Compile Include="Packaging\Services\PackageAnalysisClient.cs" />
     <Compile Include="Packaging\Services\SpecUtils.cs" />
     <Compile Include="Packaging\GraphToSpecSynchronizer.cs" />
     <Compile Include="Packaging\Spec\Cluster.cs" />
