@@ -111,14 +111,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\Cancel.cs" />
+    <Compile Include="Actors\FailureResponse.cs" />
+    <Compile Include="Actors\Finished.cs" />
+    <Compile Include="Actors\ActorClientBase.cs" />
+    <Compile Include="Actors\ActorsBase.cs" />
     <Compile Include="Packaging\Actors\AnalysisDocumentSerializer.cs" />
-    <Compile Include="Packaging\Actors\FailureResponse.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Packaging\Analyzers\AnalysisDocument.cs" />
     <Compile Include="Packaging\Analyzers\PackageAnalyzer.cs" />
-    <Compile Include="Packaging\Actors\Cancel.cs" />
-    <Compile Include="Packaging\Actors\Finished.cs" />
     <Compile Include="Packaging\Actors\AnalysisRequest.cs" />
     <Compile Include="Packaging\Analyzers\GraphUtils.cs" />
     <Compile Include="Packaging\Actors\PackageAnalysisActor.cs" />

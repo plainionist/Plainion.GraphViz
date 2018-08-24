@@ -11,18 +11,18 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
-using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Windows.Editors.Xml;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
@@ -211,7 +211,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 Spec = Document.Text,
                 PackagesToAnalyze = PackagesToAnalyze != null ? PackagesToAnalyze.ToArray() : null,
-                OutputFile = Path.GetTempFileName(),
                 UsedTypesOnly = UsedTypesOnly,
                 AllEdges = AllEdges,
                 CreateClustersForNamespaces = CreateClustersForNamespaces
@@ -221,7 +220,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 myCTS = new CancellationTokenSource();
 
-                var doc = await myAnalysisClient.Analyse(request, myCTS.Token);
+                var doc = await myAnalysisClient.AnalyseAsync(request, myCTS.Token);
 
                 myCTS.Dispose();
                 myCTS = null;

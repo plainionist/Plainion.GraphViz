@@ -1,29 +1,18 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Plainion.Collections;
+using Plainion.GraphViz.Modules.CodeInspection.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {
-    class PackageAnalysisActor : ReceiveActor, IWithUnboundedStash
+    class PackageAnalysisActor : ActorsBase
     {
-        private CancellationTokenSource myCTS;
-
-        public IStash Stash { get; set; }
-
-        public PackageAnalysisActor()
+        protected override void Ready()
         {
-            myCTS = new CancellationTokenSource();
-
-            Ready();
-        }
-
-        private void Ready()
-        {
-            Receive<AnalysisRequest>( r =>
+            Receive<AnalysisMessage>( r =>
             {
                 Console.WriteLine( "WORKING" );
 
@@ -45,8 +34,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                     }
 
                     var spec = SpecUtils.Deserialize( SpecUtils.Unzip( r.Spec ) );
-                    return analyzer.Execute( spec, myCTS.Token );
-                }, myCTS.Token )
+                    return analyzer.Execute( spec, CancellationToken);
+                }, CancellationToken)
                 .ContinueWith<object>( x =>
                 {
                     if( x.IsCanceled || x.IsFaulted )
@@ -68,45 +57,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
                 Become( Working );
             } );
-        }
-
-        private void Working()
-        {
-            Receive<Cancel>( msg =>
-            {
-                Console.WriteLine( "CANCELED" );
-
-                myCTS.Cancel();
-
-                Sender.Tell( "canceled" );
-
-                BecomeReady();
-            } );
-            Receive<Finished>( msg =>
-            {
-                if( msg.Error != null )
-                {
-                    // https://github.com/akkadotnet/akka.net/issues/1409
-                    // -> exceptions are currently not serializable in raw version
-                    Sender.Tell( new FailureResponse { Error = msg.Error } );
-                }
-                else
-                {
-                    Sender.Tell( msg.ResponseFile );
-                }
-
-                Console.WriteLine( "FINISHED" );
-
-                BecomeReady();
-            } );
-            ReceiveAny( o => Stash.Stash() );
-        }
-
-        private void BecomeReady()
-        {
-            myCTS = new CancellationTokenSource();
-            Stash.UnstashAll();
-            Become( Ready );
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿
-namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
+namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
     class FailureResponse
     {
