@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
+using System.Threading;
+using System.Threading.Tasks;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
@@ -23,7 +25,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
             }
         }
 
-        public Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        public Task<TypeRelationshipDocument> AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, CancellationToken cancellationToken)
         {
             using (var inspector = new InspectorHandle<InheritanceActor>(Path.GetDirectoryName(assemblyLocation)))
             {
@@ -31,41 +33,46 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
                 inspector.Value.AssemblyLocation = assemblyLocation;
                 inspector.Value.SelectedType = typeToAnalyse;
 
-                return RunAsync(inspector.Value, progressCallback, completedCallback);
+                var tcs = new TaskCompletionSource<TypeRelationshipDocument>();
+
+                RunAsync(progressCallback, inspector.Value, tcs, cancellationToken);
+
+                return tcs.Task;
             }
         }
 
-        private Action RunAsync(InheritanceActor inspector, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        private static void RunAsync(Action<int> progressCallback, InheritanceActor inspector, TaskCompletionSource<TypeRelationshipDocument> tcs, CancellationToken cancellationToken)
         {
             var worker = new System.ComponentModel.BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
 
             worker.DoWork += (s, e) =>
-                {
-                    var adapter = new BackgroundWorkerAdapter((System.ComponentModel.BackgroundWorker)s);
-                    inspector.ProgressCallback = adapter;
-                    inspector.CancellationToken = adapter;
+            {
+                var adapter = new BackgroundWorkerAdapter((System.ComponentModel.BackgroundWorker)s);
+                inspector.ProgressCallback = adapter;
+                inspector.CancellationToken = adapter;
 
-                    e.Result = inspector.Execute();
-                };
+                e.Result = inspector.Execute();
+            };
             worker.ProgressChanged += (s, e) => progressCallback(e.ProgressPercentage);
             worker.RunWorkerCompleted += (s, e) =>
-                {
-                    completedCallback((TypeRelationshipDocument)e.Result);
-                    // TODO: is this a good idea? aren't we still in the callstack of the worker?
-                    worker.Dispose();
-                };
+            {
+                tcs.SetResult((TypeRelationshipDocument)e.Result);
+                // TODO: is this a good idea? aren't we still in the callstack of the worker?
+                worker.Dispose();
+            };
 
-            worker.RunWorkerAsync(inspector);
-
-            return () =>
+            cancellationToken.Register(() =>
             {
                 if (worker.IsBusy && !worker.CancellationPending)
                 {
                     worker.CancelAsync();
+                    tcs.SetCanceled();
                 }
-            };
+            });
+
+            worker.RunWorkerAsync(inspector);
         }
     }
 

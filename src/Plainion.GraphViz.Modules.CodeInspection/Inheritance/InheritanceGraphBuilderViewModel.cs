@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -29,7 +30,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         private int myProgress;
         private bool myIsReady;
         private bool myIgnoreDotNetTypes;
-        private Action myCancelBackgroundProcessing;
+        private CancellationTokenSource myCTS;
         private bool myAddToGraph;
         private IPresentationCreationService myPresentationCreationService;
         private IStatusMessageService myStatusMessageService;
@@ -47,7 +48,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
             CreateGraphCommand = new DelegateCommand(CreateGraph, () => TypeToAnalyse != null && IsReady);
             AddToGraphCommand = new DelegateCommand(AddToGraph, () => TypeToAnalyse != null && IsReady);
-            CancelCommand = new DelegateCommand(() => myCancelBackgroundProcessing(), () => !IsReady);
+            CancelCommand = new DelegateCommand(OnCancel, () => !IsReady);
             BrowseAssemblyCommand = new DelegateCommand(OnBrowseClicked, () => IsReady);
             ClosedCommand = new DelegateCommand(OnClosed);
 
@@ -61,6 +62,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         {
             myAddToGraph = true;
             CreateGraph();
+        }
+
+        private void OnCancel()
+        {
+            if (myCTS != null)
+            {
+                myCTS.Cancel();
+            }
+
+            IsReady = true;
         }
 
         public bool IsReady
@@ -116,18 +127,38 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             return type.FullName.ToLower().Contains(search.ToLower());
         }
 
-        private void CreateGraph()
+        private async void CreateGraph()
         {
             IsReady = false;
 
-            myCancelBackgroundProcessing = myInheritanceClient.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, OnInheritanceGraphCompleted);
+            try
+            {
+                myCTS = new CancellationTokenSource();
+
+                var doc = await myInheritanceClient.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, myCTS.Token);
+
+                myCTS.Dispose();
+                myCTS = null;
+
+                if (doc != null)
+                {
+                    OnInheritanceGraphCompleted(doc);
+                }
+            }
+            finally
+            {
+                IsReady = true;
+            }
         }
 
         internal void OnClosed()
         {
             AssemblyToAnalyseLocation = null;
 
-            myCancelBackgroundProcessing?.Invoke();
+            if (myCTS != null)
+            {
+                myCTS.Cancel();
+            }
 
             IsReady = true;
         }
@@ -251,7 +282,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             }
             finally
             {
-                myCancelBackgroundProcessing = null;
+                myCTS.Dispose();
+                myCTS = null;
                 ProgressValue = 0;
                 IsReady = true;
             }

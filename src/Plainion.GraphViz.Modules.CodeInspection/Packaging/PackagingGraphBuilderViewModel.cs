@@ -223,6 +223,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
                 var doc = await myAnalysisClient.Analyse(request, myCTS.Token);
 
+                myCTS.Dispose();
                 myCTS = null;
 
                 if (doc != null)
