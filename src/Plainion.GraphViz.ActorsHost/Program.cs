@@ -7,7 +7,7 @@ namespace Plainion.GraphViz.ActorsHost
 {
     class Program
     {
-        private static void Main( string[] args )
+        private static void Main(string[] args)
         {
             var config = ConfigurationFactory.ParseString(@"
                 akka {
@@ -24,11 +24,11 @@ namespace Plainion.GraphViz.ActorsHost
                 }
                 ");
 
-            using( var system = ActorSystem.Create( "CodeInspection", config ) )
+            using (var system = ActorSystem.Create("CodeInspection", config))
             {
-                Console.WriteLine( "...  running ..." );
+                Console.WriteLine("...  running ...");
 
-                while( true ) Thread.Sleep( 1000 );
+                while (true) Thread.Sleep(1000);
             }
         }
     }

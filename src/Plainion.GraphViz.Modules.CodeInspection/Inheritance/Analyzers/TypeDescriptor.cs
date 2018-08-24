@@ -7,25 +7,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
     {
         private int myHashCode;
 
-        public TypeDescriptor(Type type)
-        {
-            if (type.IsGenericType)
-            {
-                myHashCode = type.GetGenericTypeDefinition().GetHashCode();
-            }
-            else
-            {
-                myHashCode = type.GetHashCode();
-            }
-
-            // Hint: encode the fullname into the Id of the nodes to allow filtering by Id 
-            Id = type.FullName == null ? myHashCode.ToString() : type.FullName + "#" + myHashCode;
-
-            Name = type.Name;
-            // TODO: fullname might be null!!!
-            FullName = type.FullName;
-        }
-
         public string Id { get; private set; }
 
         public string Name { get; private set; }
@@ -46,6 +27,29 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
             }
 
             return myHashCode == other.myHashCode;
+        }
+
+        public static TypeDescriptor Create(Type type)
+        {
+            var descriptor = new TypeDescriptor();
+
+            if (type.IsGenericType)
+            {
+                descriptor.myHashCode = type.GetGenericTypeDefinition().GetHashCode();
+            }
+            else
+            {
+                descriptor.myHashCode = type.GetHashCode();
+            }
+
+            // Hint: encode the fullname into the Id of the nodes to allow filtering by Id 
+            descriptor.Id = type.FullName == null ? descriptor.myHashCode.ToString() : type.FullName + "#" + descriptor.myHashCode;
+
+            descriptor.Name = type.Name;
+            // TODO: fullname might be null!!!
+            descriptor.FullName = type.FullName;
+
+            return descriptor;
         }
     }
 }

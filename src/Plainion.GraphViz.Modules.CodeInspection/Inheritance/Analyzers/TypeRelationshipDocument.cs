@@ -9,30 +9,29 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
     [Serializable]
     class TypeRelationshipDocument
     {
-        private readonly RelaxedGraphBuilder myGraphBuilder;
-        private readonly IDictionary<string, TypeDescriptor> myDescriptors;
+        private HashSet<Tuple<string, string, ReferenceType>> myEdges;
+        private IDictionary<string, TypeDescriptor> myDescriptors;
 
         public TypeRelationshipDocument()
         {
-            myGraphBuilder = new RelaxedGraphBuilder();
             myDescriptors = new Dictionary<string, TypeDescriptor>();
+            myEdges = new HashSet<Tuple<string, string, ReferenceType>>();
             FailedItems = new List<FailedItem>();
-            EdgeTypes = new Dictionary<string, ReferenceType>();
         }
 
         public IList<FailedItem> FailedItems { get; private set; }
-
-        public IGraph Graph
-        {
-            get { return myGraphBuilder.Graph; }
-        }
 
         public IEnumerable<TypeDescriptor> Descriptors
         {
             get { return myDescriptors.Values; }
         }
 
-        public void AddEdge(TypeDescriptor source, TypeDescriptor target)
+        public IEnumerable<Tuple<string, string, ReferenceType>> Edges
+        {
+            get { return myEdges; }
+        }
+
+        public void AddEdge(TypeDescriptor source, TypeDescriptor target, ReferenceType refType)
         {
             if (!myDescriptors.ContainsKey(source.Id))
             {
@@ -44,19 +43,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
                 myDescriptors.Add(target.Id, target);
             }
 
-            myGraphBuilder.TryAddEdge(source.Id, target.Id);
+            myEdges.Add(Tuple.Create(source.Id, target.Id, refType));
         }
-
-        public void AddNode(TypeDescriptor node)
-        {
-            if (!myDescriptors.ContainsKey(node.Id))
-            {
-                myDescriptors.Add(node.Id, node);
-            }
-
-            myGraphBuilder.TryAddNode(node.Id);
-        }
-
-        public IDictionary<string, ReferenceType> EdgeTypes { get; private set; }
     }
 }

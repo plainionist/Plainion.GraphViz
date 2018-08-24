@@ -3,92 +3,96 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
+using Akka.Actor;
 using Plainion.GraphViz.Infrastructure;
+using Plainion.GraphViz.Modules.CodeInspection.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 {
-    class InheritanceActor : MarshalByRefObject
+    class InheritanceActor : ActorsBase
     {
-        private string mySelectedAssemblyName;
-
-        public IProgress<int> ProgressCallback { get; set; }
-
-        public ICancellationToken CancellationToken { get; set; }
-
-        private void ReportProgress(int value)
+        protected override void Ready()
         {
-            ProgressCallback?.Report(value);
-        }
-
-        protected bool IsCancellationRequested
-        {
-            get { return CancellationToken != null && CancellationToken.IsCancellationRequested; }
-        }
-
-        public bool IgnoreDotNetTypes { get; set; }
-
-        public string AssemblyLocation { get; set; }
-
-        public TypeDescriptor SelectedType { get; set; }
-
-        public TypeRelationshipDocument Execute()
-        {
-            Contract.RequiresNotNullNotEmpty(AssemblyLocation, "AssemblyLocation");
-            Contract.RequiresNotNull(SelectedType, "SelectedType");
-
-            var assemblyHome = Path.GetDirectoryName(AssemblyLocation);
-            mySelectedAssemblyName = AssemblyName.GetAssemblyName(AssemblyLocation).ToString();
-
-            ReportProgress(1);
-
-            var assemblies = Directory.EnumerateFiles(assemblyHome, "*.dll")
-                .Concat(Directory.EnumerateFiles(assemblyHome, "*.exe"))
-                .AsParallel()
-                .Where(file => File.Exists(file))
-                .Where(file => AssemblyUtils.IsManagedAssembly(file))
-                .ToArray();
-
-            double progressCounter = assemblies.Length;
-
-            ReportProgress((int)((assemblies.Length - progressCounter) / assemblies.Length * 100));
-
-            if (IsCancellationRequested)
+            Receive<GetInheritanceGraphMessage>(r =>
             {
-                return null;
-            }
+                Console.WriteLine("WORKING");
 
-            var document = new TypeRelationshipDocument();
+                var self = Self;
+                var sender = Sender;
 
-            var builder = new InheritanceAnalyzer();
-            builder.IgnoreDotNetTypes = IgnoreDotNetTypes;
-
-            foreach (var assemblyFile in assemblies)
-            {
-                ProcessAssembly(document, builder, assemblyFile);
-
-                progressCounter--;
-
-                ReportProgress((int)((assemblies.Length - progressCounter) / assemblies.Length * 100));
-
-                if (IsCancellationRequested)
+                Task.Run<TypeRelationshipDocument>(() =>
                 {
-                    return null;
-                }
-            }
+                    var assemblyHome = Path.GetDirectoryName(r.AssemblyLocation);
+                    var assemblyName = AssemblyName.GetAssemblyName(r.AssemblyLocation).ToString();
 
-            builder.WriteTo(SelectedType.Id, document);
+                    ReportProgress();
 
-            return document;
+                    var assemblies = Directory.EnumerateFiles(assemblyHome, "*.dll")
+                        .Concat(Directory.EnumerateFiles(assemblyHome, "*.exe"))
+                        .AsParallel()
+                        .Where(file => File.Exists(file))
+                        .Where(file => AssemblyUtils.IsManagedAssembly(file))
+                        .ToArray();
+
+                    ReportProgress();
+
+                    CancellationToken.ThrowIfCancellationRequested();
+
+                    var document = new TypeRelationshipDocument();
+
+                    var builder = new InheritanceAnalyzer();
+                    builder.IgnoreDotNetTypes = r.IgnoreDotNetTypes;
+
+                    foreach (var assemblyFile in assemblies)
+                    {
+                        ProcessAssembly(assemblyName, document, builder, assemblyFile);
+
+                        ReportProgress();
+
+                        CancellationToken.ThrowIfCancellationRequested();
+                    }
+
+                    builder.WriteTo(r.SelectedType.Id, document);
+
+                    return document;
+                }, CancellationToken)
+                .ContinueWith<object>(x =>
+                {
+                    if (x.IsCanceled)
+                    {
+                        return new CanceledMessage();
+                    }
+
+                    if (x.IsFaulted)
+                    {
+                        // https://github.com/akkadotnet/akka.net/issues/1409
+                        // -> exceptions are currently not serializable in raw version
+                        //return x.Exception;
+                        return new FailedMessage { Error = x.Exception.Dump() };
+                    }
+
+                    return new InheritanceGraphMessage { Document = x.Result };
+                }, TaskContinuationOptions.ExecuteSynchronously)
+                .PipeTo(self, sender);
+
+                Become(Working);
+            });
         }
 
-        private void ProcessAssembly(TypeRelationshipDocument document, InheritanceAnalyzer builder, string assemblyFile)
+        private void ReportProgress()
+        {
+            Console.Write(".");
+        }
+
+        private void ProcessAssembly(string assemblyName, TypeRelationshipDocument document, InheritanceAnalyzer builder, string assemblyFile)
         {
             try
             {
-                var assembly = Assembly.ReflectionOnlyLoadFrom(assemblyFile);
-                if (assembly.GetName().ToString() == mySelectedAssemblyName
-                    || assembly.GetReferencedAssemblies().Any(r => r.ToString() == mySelectedAssemblyName))
+                var assembly = Assembly.LoadFrom(assemblyFile);
+                if (assembly.GetName().ToString() == assemblyName
+                    || assembly.GetReferencedAssemblies().Any(r => r.ToString() == assemblyName))
                 {
                     builder.Process(assembly);
                 }

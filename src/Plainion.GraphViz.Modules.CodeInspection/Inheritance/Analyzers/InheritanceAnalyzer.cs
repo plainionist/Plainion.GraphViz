@@ -43,13 +43,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
                 return;
             }
 
-            var typeDesc = new TypeDescriptor(type);
+            var typeDesc = TypeDescriptor.Create(type);
             myBuilder.TryAddNode(typeDesc.Id);
             myIdToTypeMap[typeDesc.Id] = typeDesc;
 
             if (type.BaseType != null && !IsPrimitive(type.BaseType) && !IgnoreType(type.BaseType))
             {
-                var baseDesc = new TypeDescriptor(type.BaseType);
+                var baseDesc = TypeDescriptor.Create(type.BaseType);
 
                 var edge = myBuilder.TryAddEdge(typeDesc.Id, baseDesc.Id);
                 myIdToTypeMap[baseDesc.Id] = baseDesc;
@@ -68,7 +68,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
                     continue;
                 }
 
-                var ifaceDesc = new TypeDescriptor(iface);
+                var ifaceDesc = TypeDescriptor.Create(iface);
 
                 var edge = myBuilder.TryAddEdge(typeDesc.Id, ifaceDesc.Id);
                 if (edge != null)
@@ -102,11 +102,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
         {
             var visitedTypes = new HashSet<TypeDescriptor>();
             TakeSiblingsOf(document, visitedTypes, myIdToTypeMap[forTypeId]);
-
-            foreach (var edge in document.Graph.Edges)
-            {
-                document.EdgeTypes.Add(edge.Id, myEdgeTypes[edge.Id]);
-            }
         }
 
         private void TakeSiblingsOf(TypeRelationshipDocument document, HashSet<TypeDescriptor> visitedTypes, params TypeDescriptor[] roots)
@@ -124,12 +119,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 
                 var node = myBuilder.Graph.FindNode(root.Id);
 
-                document.AddNode(root);
-
                 foreach (var edge in node.In)
                 {
                     var source = myIdToTypeMap[edge.Source.Id];
-                    document.AddEdge(source, root);
+                    document.AddEdge(source, root, myEdgeTypes[edge.Id]);
                     typesToFollow.Add(source);
                 }
 

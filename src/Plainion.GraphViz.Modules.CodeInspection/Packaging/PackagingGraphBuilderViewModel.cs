@@ -29,7 +29,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
     [Export(typeof(PackagingGraphBuilderViewModel))]
     class PackagingGraphBuilderViewModel : ViewModelBase
     {
-        private int myProgress;
         private bool myIsReady;
         private TextDocument myDocument;
         private IEnumerable<ElementCompletionData> myCompletionData;
@@ -351,12 +350,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 // reset only!
                 myGraphToSpecSynchronizer.Presentation = null;
             }
-        }
-
-        public int ProgressValue
-        {
-            get { return myProgress; }
-            set { SetProperty(ref myProgress, value); }
         }
 
         public bool UsedTypesOnly

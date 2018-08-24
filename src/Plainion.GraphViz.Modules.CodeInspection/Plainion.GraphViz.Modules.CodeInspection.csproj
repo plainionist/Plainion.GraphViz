@@ -112,15 +112,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actors\Messages.cs" />
-    <Compile Include="Packaging\Actors\AnalysisResponse.cs" />
     <Compile Include="Actors\ActorClientBase.cs" />
     <Compile Include="Actors\ActorsBase.cs" />
+    <Compile Include="Inheritance\Actors\Messages.cs" />
     <Compile Include="Packaging\Actors\AnalysisDocumentSerializer.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Packaging\Analyzers\AnalysisDocument.cs" />
     <Compile Include="Packaging\Analyzers\PackageAnalyzer.cs" />
-    <Compile Include="Packaging\Actors\AnalysisRequest.cs" />
+    <Compile Include="Packaging\Actors\Messages.cs" />
     <Compile Include="Packaging\Analyzers\GraphUtils.cs" />
     <Compile Include="Packaging\Actors\PackageAnalysisActor.cs" />
     <Compile Include="Packaging\PackagingGraphBuilderView.xaml.cs">
@@ -149,7 +149,6 @@
     <Compile Include="RegionNames.cs" />
     <Compile Include="Inheritance\Actors\InheritanceClient.cs" />
     <Compile Include="Inheritance\Actors\AssemblyUtils.cs" />
-    <Compile Include="Inheritance\Actors\ICancellationToken.cs" />
     <Compile Include="Inheritance\Actors\AllTypesActor.cs" />
     <Compile Include="Inheritance\Actors\InheritanceActor.cs" />
     <Compile Include="Inheritance\Analyzers\InheritanceAnalyzer.cs" />

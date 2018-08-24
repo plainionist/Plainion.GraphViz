@@ -11,6 +11,7 @@ using System.Windows.Media;
 using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
@@ -27,7 +28,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
     {
         private string myAssemblyToAnalyseLocation;
         private TypeDescriptor myTypeToAnalyse;
-        private int myProgress;
         private bool myIsReady;
         private bool myIgnoreDotNetTypes;
         private CancellationTokenSource myCTS;
@@ -135,7 +135,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             {
                 myCTS = new CancellationTokenSource();
 
-                var doc = await myInheritanceClient.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, myCTS.Token);
+                var doc = await myInheritanceClient.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, myCTS.Token);
 
                 myCTS.Dispose();
                 myCTS = null;
@@ -177,11 +177,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
                     TypeToAnalyse = null;
                     Types.Clear();
 
-                    if (!string.IsNullOrWhiteSpace(myAssemblyToAnalyseLocation) && File.Exists(myAssemblyToAnalyseLocation))
-                    {
-                        Types.AddRange(myInheritanceClient.GetAllTypes(myAssemblyToAnalyseLocation));
-                    }
+                    CollectTypes();
                 }
+            }
+        }
+
+        private async void CollectTypes()
+        {
+            if (!string.IsNullOrWhiteSpace(myAssemblyToAnalyseLocation) && File.Exists(myAssemblyToAnalyseLocation))
+            {
+                var types = await myInheritanceClient.GetAllTypesAsync(myAssemblyToAnalyseLocation, new CancellationTokenSource().Token);
+
+                Types.AddRange(types);
             }
         }
 
@@ -214,79 +221,65 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             set { SetProperty(ref myIgnoreDotNetTypes, value); }
         }
 
-        public int ProgressValue
-        {
-            get { return myProgress; }
-            set { SetProperty(ref myProgress, value); }
-        }
-
         private void OnInheritanceGraphCompleted(TypeRelationshipDocument document)
         {
-            try
+            if (document == null)
             {
-                if (document == null)
-                {
-                    return;
-                }
-
-                if (!document.Graph.Nodes.Any())
-                {
-                    MessageBox.Show("No nodes found");
-                    return;
-                }
-
-                var presentation = myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation));
-
-                var captionModule = presentation.GetPropertySetFor<Caption>();
-                var tooltipModule = presentation.GetPropertySetFor<ToolTipContent>();
-                var edgeStyleModule = presentation.GetPropertySetFor<EdgeStyle>();
-
-                presentation.Graph = document.Graph;
-
-                foreach (var desc in document.Descriptors)
-                {
-                    captionModule.Add(new Caption(desc.Id, desc.Name));
-                    tooltipModule.Add(new ToolTipContent(desc.Id, desc.FullName));
-                }
-
-                foreach (var entry in document.EdgeTypes)
-                {
-                    edgeStyleModule.Add(new EdgeStyle(entry.Key)
-                    {
-                        Color = entry.Value == ReferenceType.DerivesFrom ? Brushes.Black : Brushes.Blue
-                    });
-                }
-
-                if (myAddToGraph && Model.Presentation != null && Model.Presentation.Graph != null)
-                {
-                    presentation = Model.Presentation.UnionWith(presentation,
-                        () => myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation)));
-
-                    myAddToGraph = false;
-                }
-
-                if (document.FailedItems.Any())
-                {
-                    foreach (var item in document.FailedItems)
-                    {
-                        var sb = new StringBuilder();
-                        sb.AppendLine("Loading failed");
-                        sb.AppendFormat("Item: {0}", item.Item);
-                        sb.AppendLine();
-                        sb.AppendFormat("Reason: {0}", item.FailureReason);
-                        myStatusMessageService.Publish(new StatusMessage(sb.ToString()));
-                    }
-                }
-
-                Model.Presentation = presentation;
+                return;
             }
-            finally
+
+            if (!document.Edges.Any())
             {
-                myCTS.Dispose();
-                myCTS = null;
-                ProgressValue = 0;
-                IsReady = true;
+                MessageBox.Show("No nodes found");
+                return;
             }
+
+            var presentation = myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation));
+
+            var captionModule = presentation.GetPropertySetFor<Caption>();
+            var tooltipModule = presentation.GetPropertySetFor<ToolTipContent>();
+            var edgeStyleModule = presentation.GetPropertySetFor<EdgeStyle>();
+
+            var builder = new RelaxedGraphBuilder();
+            foreach (var edge in document.Edges)
+            {
+                var e = builder.TryAddEdge(edge.Item1, edge.Item2);
+                edgeStyleModule.Add(new EdgeStyle(e.Id)
+                {
+                    Color = edge.Item3 == ReferenceType.DerivesFrom ? Brushes.Black : Brushes.Blue
+                });
+            }
+
+            presentation.Graph = builder.Graph;
+
+            foreach (var desc in document.Descriptors)
+            {
+                captionModule.Add(new Caption(desc.Id, desc.Name));
+                tooltipModule.Add(new ToolTipContent(desc.Id, desc.FullName));
+            }
+
+            if (myAddToGraph && Model.Presentation != null && Model.Presentation.Graph != null)
+            {
+                presentation = Model.Presentation.UnionWith(presentation,
+                    () => myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation)));
+
+                myAddToGraph = false;
+            }
+
+            if (document.FailedItems.Any())
+            {
+                foreach (var item in document.FailedItems)
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine("Loading failed");
+                    sb.AppendFormat("Item: {0}", item.Item);
+                    sb.AppendLine();
+                    sb.AppendFormat("Reason: {0}", item.FailureReason);
+                    myStatusMessageService.Publish(new StatusMessage(sb.ToString()));
+                }
+            }
+
+            Model.Presentation = presentation;
         }
     }
 }
