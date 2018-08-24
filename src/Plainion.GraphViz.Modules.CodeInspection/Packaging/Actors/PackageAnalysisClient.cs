@@ -18,7 +18,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
         private ActorSystem mySystem;
         private int myHostPid;
 
-        internal async Task<AnalysisDocument> Analyse(AnalysisRequest request, CancellationToken cancellationToken)
+        public async Task<AnalysisDocument> Analyse(AnalysisRequest request, CancellationToken cancellationToken)
         {
             StartActorSystemOnDemand();
 

@@ -13,7 +13,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
     [Export(typeof(InheritanceClient))]
     class InheritanceClient
     {
-        internal IEnumerable<TypeDescriptor> GetAllTypes(string assemblyLocation)
+        public IEnumerable<TypeDescriptor> GetAllTypes(string assemblyLocation)
         {
             using (var inspector = new InspectorHandle<AllTypesActor>(Path.GetDirectoryName(assemblyLocation)))
             {
@@ -23,7 +23,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
             }
         }
 
-        internal Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
+        public Action AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, Action<int> progressCallback, Action<TypeRelationshipDocument> completedCallback)
         {
             using (var inspector = new InspectorHandle<InheritanceActor>(Path.GetDirectoryName(assemblyLocation)))
             {

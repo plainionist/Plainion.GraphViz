@@ -31,9 +31,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         private bool myIgnoreDotNetTypes;
         private Action myCancelBackgroundProcessing;
         private bool myAddToGraph;
+        private IPresentationCreationService myPresentationCreationService;
+        private IStatusMessageService myStatusMessageService;
+        private InheritanceClient myInheritanceClient;
 
-        public InheritanceGraphBuilderViewModel()
+        [ImportingConstructor]
+        public InheritanceGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, InheritanceClient inheritanceClient)
         {
+            myPresentationCreationService = presentationCreationService;
+            myStatusMessageService = statusMessageService;
+            myInheritanceClient = inheritanceClient;
+
             Types = new ObservableCollection<TypeDescriptor>();
             TypeFilter = OnFilterItem;
 
@@ -69,15 +77,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
                 }
             }
         }
-
-        [Import]
-        public IPresentationCreationService PresentationCreationService { get; set; }
-
-        [Import]
-        public IStatusMessageService StatusMessageService { get; set; }
-
-        [Import]
-        public InheritanceClient InheritanceClient { get; set; }
 
         public DelegateCommand CreateGraphCommand { get; private set; }
 
@@ -121,7 +120,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         {
             IsReady = false;
 
-            myCancelBackgroundProcessing = InheritanceClient.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, OnInheritanceGraphCompleted);
+            myCancelBackgroundProcessing = myInheritanceClient.AnalyzeInheritanceAsync(AssemblyToAnalyseLocation, IgnoreDotNetTypes, TypeToAnalyse, v => ProgressValue = v, OnInheritanceGraphCompleted);
         }
 
         internal void OnClosed()
@@ -149,7 +148,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
                     if (!string.IsNullOrWhiteSpace(myAssemblyToAnalyseLocation) && File.Exists(myAssemblyToAnalyseLocation))
                     {
-                        Types.AddRange(InheritanceClient.GetAllTypes(myAssemblyToAnalyseLocation));
+                        Types.AddRange(myInheritanceClient.GetAllTypes(myAssemblyToAnalyseLocation));
                     }
                 }
             }
@@ -205,7 +204,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
                     return;
                 }
 
-                var presentation = PresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation));
+                var presentation = myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation));
 
                 var captionModule = presentation.GetPropertySetFor<Caption>();
                 var tooltipModule = presentation.GetPropertySetFor<ToolTipContent>();
@@ -230,7 +229,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
                 if (myAddToGraph && Model.Presentation != null && Model.Presentation.Graph != null)
                 {
                     presentation = Model.Presentation.UnionWith(presentation,
-                        () => PresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation)));
+                        () => myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(AssemblyToAnalyseLocation)));
 
                     myAddToGraph = false;
                 }
@@ -244,7 +243,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
                         sb.AppendFormat("Item: {0}", item.Item);
                         sb.AppendLine();
                         sb.AppendFormat("Reason: {0}", item.FailureReason);
-                        StatusMessageService.Publish(new StatusMessage(sb.ToString()));
+                        myStatusMessageService.Publish(new StatusMessage(sb.ToString()));
                     }
                 }
 
