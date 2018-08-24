@@ -38,12 +38,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                 }, CancellationToken)
                 .ContinueWith<object>( x =>
                 {
-                    if( x.IsCanceled || x.IsFaulted )
+                    if (x.IsCanceled)
+                    {
+                        return new CanceledMessage();
+                    }
+
+                    if ( x.IsFaulted)
                     {
                         // https://github.com/akkadotnet/akka.net/issues/1409
                         // -> exceptions are currently not serializable in raw version
                         //return x.Exception;
-                        return new Finished { Error = x.Exception.Dump() };
+                        return new FailedMessage { Error = x.Exception.Dump() };
                     }
 
                     Console.WriteLine( "Writing response ..." );
@@ -51,7 +56,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                     var serializer = new AnalysisDocumentSerializer();
                     serializer.Serialize( x.Result, r.OutputFile );
 
-                    return new Finished { ResponseFile = r.OutputFile };
+                    return new AnalysisResponse { File = r.OutputFile };
                 }, TaskContinuationOptions.ExecuteSynchronously )
                 .PipeTo( self, sender );
 

@@ -23,32 +23,29 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
             var actor = mySystem.ActorOf(Props.Create(actorType)
                 .WithDeploy(Deploy.None.WithScope(new RemoteScope(remoteAddress))));
 
-            Action ShutdownAction = () =>
-            {
-                mySystem.Stop(actor);
-                //actor.Tell(Kill.Instance);
-            };
-
-            cancellationToken.Register(() =>
-            {
-                actor.Tell(new Cancel());
-                ShutdownAction();
-            });
+            cancellationToken.Register(() => actor.Tell(new CancelMessage()));
 
             var response = await actor.Ask(request);
 
             try
             {
-                if ((response is FailureResponse))
+                if (response is FailedMessage m)
                 {
-                    throw new Exception(((FailureResponse)response).Error);
+                    throw new Exception(m.Error);
                 }
-
-                return response;
+                else if (response is CanceledMessage)
+                {
+                    return null;
+                }
+                else
+                {
+                    return response;
+                }
             }
             finally
             {
-                ShutdownAction();
+                mySystem.Stop(actor);
+                //actor.Tell(Kill.Instance);
             }
         }
 

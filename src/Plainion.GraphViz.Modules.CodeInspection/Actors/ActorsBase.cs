@@ -26,33 +26,47 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 
         protected void Working()
         {
-            Receive<Cancel>(msg =>
-           {
-               Console.WriteLine("CANCELED");
+            Receive<CancelMessage>(msg =>
+            {
+                Console.WriteLine("CANCELING");
 
-               myCTS.Cancel();
+                myCTS.Cancel();
 
-               Sender.Tell("canceled");
+                Become(Cancelling);
+            });
 
-               BecomeReady();
-           });
-            Receive<Finished>(msg =>
-           {
-               if (msg.Error != null)
-               {
-                    // https://github.com/akkadotnet/akka.net/issues/1409
-                    // -> exceptions are currently not serializable in raw version
-                    Sender.Tell(new FailureResponse { Error = msg.Error });
-               }
-               else
-               {
-                   Sender.Tell(msg.ResponseFile);
-               }
+            Receive<FinishedMessage>(msg =>
+            {
+                Sender.Tell(msg);
 
-               Console.WriteLine("FINISHED");
+                Console.WriteLine("FINISHED");
 
-               BecomeReady();
-           });
+                BecomeReady();
+            });
+
+            Receive<FailedMessage>(msg =>
+            {
+                Sender.Tell(msg);
+
+                Console.WriteLine("FAILED");
+
+                BecomeReady();
+            });
+
+            ReceiveAny(o => Stash.Stash());
+        }
+
+        private void Cancelling()
+        {
+            Receive<CanceledMessage>(msg =>
+            {
+                Sender.Tell(msg);
+
+                Console.WriteLine("CANCELED");
+
+                BecomeReady();
+            });
+
             ReceiveAny(o => Stash.Stash());
         }
 

@@ -111,9 +111,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\Cancel.cs" />
-    <Compile Include="Actors\FailureResponse.cs" />
-    <Compile Include="Actors\Finished.cs" />
+    <Compile Include="Actors\Messages.cs" />
+    <Compile Include="Packaging\Actors\AnalysisResponse.cs" />
     <Compile Include="Actors\ActorClientBase.cs" />
     <Compile Include="Actors\ActorsBase.cs" />
     <Compile Include="Packaging\Actors\AnalysisDocumentSerializer.cs" />
