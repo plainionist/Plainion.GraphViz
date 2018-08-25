@@ -11,8 +11,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
     class ActorClientBase : IDisposable
     {
-        private ActorSystem mySystem;
-        private int myHostPid;
+        // this class is used in UI thread only so we can safely use shared static variables here
+        private static ActorSystem mySystem;
+        private static int myHostPid;
 
         protected async Task<object> ProcessAsync<TRequest>(Type actorType, TRequest request, CancellationToken cancellationToken)
         {

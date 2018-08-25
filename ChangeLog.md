@@ -1,3 +1,7 @@
+## 2.11.0 - 2018-08-
+
+- CodeInspection.Inheritance migrated to actor system fro maintainability 
+
 ## 2.11.0 - 2018-07-13
 
 - CodeInspection service: maximum-frame-size increased for akka to support big spec files
