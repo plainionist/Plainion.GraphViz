@@ -16,8 +16,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
            {
                Console.WriteLine("WORKING");
 
-                //System.Diagnostics.Debugger.Launch();
-
                 var self = Self;
                var sender = Sender;
 
@@ -45,9 +43,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
                    if (x.IsFaulted)
                    {
-                        // https://github.com/akkadotnet/akka.net/issues/1409
-                        // -> exceptions are currently not serializable in raw version
-                        //return x.Exception;
                         return new FailedMessage { Error = x.Exception.Dump() };
                    }
 

@@ -32,9 +32,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 
                     if (x.IsFaulted)
                     {
-                        // https://github.com/akkadotnet/akka.net/issues/1409
-                        // -> exceptions are currently not serializable in raw version
-                        //return x.Exception;
                         return new FailedMessage { Error = x.Exception.Dump() };
                     }
 
