@@ -1,6 +1,8 @@
-## 2.11.0 - 2018-08-
+## 2.12.0 - 2018-08-
 
-- CodeInspection.Inheritance migrated to actor system fro maintainability 
+- CodeInspection
+  - Infrastructure for actor implementation created
+  - Inheritance analyzer migrated to actor system for maintainability 
 
 ## 2.11.0 - 2018-07-13
 

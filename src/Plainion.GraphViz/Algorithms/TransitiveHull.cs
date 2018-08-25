@@ -31,7 +31,7 @@ namespace Plainion.GraphViz.Algorithms
 
         /// <summary>
         /// True: considers only "in" edges when building the hull.
-        /// False: considers only "out" edges when buildling the hull.
+        /// False: considers only "out" edges when building the hull.
         /// Default: false.
         /// </summary>
         public bool Reverse { get; set; }
@@ -44,6 +44,7 @@ namespace Plainion.GraphViz.Algorithms
 
             var mask = new NodeMask();
             mask.IsShowMask = Show;
+
             if (Show)
             {
                 mask.Set(connectedNodes);
