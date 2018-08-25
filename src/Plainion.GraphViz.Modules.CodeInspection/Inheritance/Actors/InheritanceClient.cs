@@ -35,7 +35,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
             {
                 IgnoreDotNetTypes = ignoreDotNetTypes,
                 AssemblyLocation = assemblyLocation,
-                SelectedType = typeToAnalyse
+                TypeToAnalyze = typeToAnalyse
             };
 
             var response = await this.ProcessAsync(typeof(InheritanceActor), msg, cancellationToken);

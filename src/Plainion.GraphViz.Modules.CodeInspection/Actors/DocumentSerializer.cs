@@ -3,6 +3,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
+    /// <summary>
+    /// Most "analysis documents" cannot be directly serialized and transported through Akka.Net. 
+    /// Use this serializer to serialize the document to byte[] or file and send that through Akka.Net messages.
+    /// </summary>
     class DocumentSerializer
     {
         internal byte[] Serialize<T>(T doc)

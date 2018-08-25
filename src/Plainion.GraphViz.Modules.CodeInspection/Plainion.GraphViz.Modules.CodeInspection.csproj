@@ -115,7 +115,7 @@
     <Compile Include="Actors\ActorClientBase.cs" />
     <Compile Include="Actors\ActorsBase.cs" />
     <Compile Include="Inheritance\Actors\Messages.cs" />
-    <Compile Include="Inheritance\Actors\AnalysisDocumentSerializer.cs" />
+    <Compile Include="Actors\DocumentSerializer.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Packaging\Analyzers\AnalysisDocument.cs" />
@@ -148,7 +148,7 @@
     <Compile Include="Properties\AssemblyDefs.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Inheritance\Actors\InheritanceClient.cs" />
-    <Compile Include="Inheritance\Actors\AssemblyUtils.cs" />
+    <Compile Include="Inheritance\Analyzers\AssemblyUtils.cs" />
     <Compile Include="Inheritance\Actors\AllTypesActor.cs" />
     <Compile Include="Inheritance\Actors\InheritanceActor.cs" />
     <Compile Include="Inheritance\Analyzers\InheritanceAnalyzer.cs" />
@@ -206,6 +206,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="ReadMe.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

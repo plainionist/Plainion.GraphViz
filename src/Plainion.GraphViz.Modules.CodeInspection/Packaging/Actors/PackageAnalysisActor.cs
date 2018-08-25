@@ -12,56 +12,56 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
     {
         protected override void Ready()
         {
-            Receive<AnalysisMessage>( r =>
-            {
-                Console.WriteLine( "WORKING" );
+            Receive<AnalysisMessage>(r =>
+           {
+               Console.WriteLine("WORKING");
 
                 //System.Diagnostics.Debugger.Launch();
 
                 var self = Self;
-                var sender = Sender;
+               var sender = Sender;
 
-                Task.Run<AnalysisDocument>( () =>
-                {
-                    var analyzer = new PackageAnalyzer();
-                    analyzer.UsedTypesOnly = r.UsedTypesOnly;
-                    analyzer.AllEdges = r.AllEdges;
-                    analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
+               Task.Run<AnalysisDocument>(() =>
+               {
+                   var analyzer = new PackageAnalyzer();
+                   analyzer.UsedTypesOnly = r.UsedTypesOnly;
+                   analyzer.AllEdges = r.AllEdges;
+                   analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
 
-                    if( r.PackagesToAnalyze != null )
-                    {
-                        analyzer.PackagesToAnalyze.AddRange( r.PackagesToAnalyze );
-                    }
+                   if (r.PackagesToAnalyze != null)
+                   {
+                       analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
+                   }
 
-                    var spec = SpecUtils.Deserialize( SpecUtils.Unzip( r.Spec ) );
-                    return analyzer.Execute( spec, CancellationToken);
-                }, CancellationToken)
-                .ContinueWith<object>( x =>
-                {
-                    if (x.IsCanceled)
-                    {
-                        return new CanceledMessage();
-                    }
+                   var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
+                   return analyzer.Execute(spec, CancellationToken);
+               }, CancellationToken)
+               .ContinueWith<object>(x =>
+               {
+                   if (x.IsCanceled)
+                   {
+                       return new CanceledMessage();
+                   }
 
-                    if ( x.IsFaulted)
-                    {
+                   if (x.IsFaulted)
+                   {
                         // https://github.com/akkadotnet/akka.net/issues/1409
                         // -> exceptions are currently not serializable in raw version
                         //return x.Exception;
                         return new FailedMessage { Error = x.Exception.Dump() };
-                    }
+                   }
 
-                    Console.WriteLine( "Writing response ..." );
+                   Console.WriteLine("Writing response ...");
 
-                    var serializer = new DocumentSerializer();
-                    serializer.Serialize( x.Result, r.OutputFile );
+                   var serializer = new DocumentSerializer();
+                   serializer.Serialize(x.Result, r.OutputFile);
 
-                    return new AnalysisResponse { File = r.OutputFile };
-                }, TaskContinuationOptions.ExecuteSynchronously )
-                .PipeTo( self, sender );
+                   return new AnalysisResponse { File = r.OutputFile };
+               }, TaskContinuationOptions.ExecuteSynchronously)
+               .PipeTo(self, sender);
 
-                Become( Working );
-            } );
+               Become(Working);
+           });
         }
     }
 }

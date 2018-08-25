@@ -18,7 +18,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
     {
         public bool IgnoreDotNetTypes { get; set; }
         public string AssemblyLocation { get; set; }
-        public TypeDescriptor SelectedType { get; set; }
+        public TypeDescriptor TypeToAnalyze { get; set; }
     }
 
     class InheritanceGraphMessage : FinishedMessage

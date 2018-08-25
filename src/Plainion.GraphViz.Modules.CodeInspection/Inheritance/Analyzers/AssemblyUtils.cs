@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
+namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 {
     class AssemblyUtils
     {

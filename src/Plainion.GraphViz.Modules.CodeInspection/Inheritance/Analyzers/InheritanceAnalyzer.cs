@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading;
+using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 
@@ -22,11 +26,78 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 
         public bool IgnoreDotNetTypes { get; set; }
 
-        internal void Process(Assembly assembly)
+        public TypeRelationshipDocument Execute(string assemblyLocation, TypeDescriptor type, CancellationToken cancellationToken)
         {
-            foreach (var type in assembly.GetTypes())
+            var assemblyHome = Path.GetDirectoryName(assemblyLocation);
+            var assemblyName = AssemblyName.GetAssemblyName(assemblyLocation).ToString();
+
+            Console.Write(".");
+
+            var assemblies = Directory.EnumerateFiles(assemblyHome, "*.dll")
+                .Concat(Directory.EnumerateFiles(assemblyHome, "*.exe"))
+                .AsParallel()
+                .Where(file => File.Exists(file))
+                .Where(file => AssemblyUtils.IsManagedAssembly(file))
+                .ToArray();
+
+            Console.Write(".");
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var document = new TypeRelationshipDocument();
+
+
+            foreach (var assemblyFile in assemblies)
             {
-                ProcessType(type);
+                ProcessAssembly(assemblyName, document, assemblyFile);
+
+                Console.Write(".");
+
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            var visitedTypes = new HashSet<TypeDescriptor>();
+            TakeSiblingsOf(document, visitedTypes, myIdToTypeMap[type.Id]);
+
+            return document;
+        }
+
+        private void ProcessAssembly(string assemblyName, TypeRelationshipDocument document, string assemblyFile)
+        {
+            try
+            {
+                var assembly = Assembly.LoadFrom(assemblyFile);
+                if (assembly.GetName().ToString() == assemblyName
+                    || assembly.GetReferencedAssemblies().Any(r => r.ToString() == assemblyName))
+                {
+                    foreach (var type in assembly.GetTypes())
+                    {
+                        ProcessType(type);
+                    }
+                }
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine("Failed to load assembly");
+
+                foreach (var loaderEx in ex.LoaderExceptions)
+                {
+                    sb.Append("  LoaderException (");
+                    sb.Append(loaderEx.GetType().Name);
+                    sb.Append(") ");
+                    sb.AppendLine(loaderEx.Message);
+                }
+
+                document.AddFailedItem(new FailedItem(assemblyFile, sb.ToString().Trim()));
+            }
+            catch (Exception ex)
+            {
+                var sb = new StringBuilder();
+                sb.Append("Failed to load assembly: ");
+                sb.Append(ex.Message);
+
+                document.AddFailedItem(new FailedItem(assemblyFile, sb.ToString()));
             }
         }
 
@@ -96,12 +167,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
         private bool IsPrimitive(Type type)
         {
             return type == typeof(object) || type == typeof(ValueType) || type == typeof(Enum);
-        }
-
-        internal void WriteTo(string forTypeId, TypeRelationshipDocument document)
-        {
-            var visitedTypes = new HashSet<TypeDescriptor>();
-            TakeSiblingsOf(document, visitedTypes, myIdToTypeMap[forTypeId]);
         }
 
         private void TakeSiblingsOf(TypeRelationshipDocument document, HashSet<TypeDescriptor> visitedTypes, params TypeDescriptor[] roots)
