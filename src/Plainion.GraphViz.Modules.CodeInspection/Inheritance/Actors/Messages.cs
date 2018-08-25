@@ -23,6 +23,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 
     class InheritanceGraphMessage : FinishedMessage
     {
-        public TypeRelationshipDocument Document { get; set; }
+        public byte[] Document { get; set; }
     }
 }

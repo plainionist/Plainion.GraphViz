@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
 using Plainion.GraphViz.Modules.CodeInspection.Actors;
@@ -48,7 +42,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 
             if (response is InheritanceGraphMessage m)
             {
-                return m.Document;
+                var serializer = new DocumentSerializer();
+                return serializer.Deserialize<TypeRelationshipDocument>(m.Document);
             }
             else
             {

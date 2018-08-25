@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Newtonsoft.Json;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Modules.CodeInspection.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
@@ -73,7 +74,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
                         return new FailedMessage { Error = x.Exception.Dump() };
                     }
 
-                    return new InheritanceGraphMessage { Document = x.Result };
+                    var serializer = new DocumentSerializer();
+                    var blob = serializer.Serialize(x.Result);
+
+                    return new InheritanceGraphMessage { Document = blob };
                 }, TaskContinuationOptions.ExecuteSynchronously)
                 .PipeTo(self, sender);
 
@@ -110,7 +114,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
                     sb.AppendLine(loaderEx.Message);
                 }
 
-                document.FailedItems.Add(new FailedItem(assemblyFile, sb.ToString().Trim()));
+                document.AddFailedItem(new FailedItem(assemblyFile, sb.ToString().Trim()));
             }
             catch (Exception ex)
             {
@@ -118,7 +122,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
                 sb.Append("Failed to load assembly: ");
                 sb.Append(ex.Message);
 
-                document.FailedItems.Add(new FailedItem(assemblyFile, sb.ToString()));
+                document.AddFailedItem(new FailedItem(assemblyFile, sb.ToString()));
             }
         }
     }

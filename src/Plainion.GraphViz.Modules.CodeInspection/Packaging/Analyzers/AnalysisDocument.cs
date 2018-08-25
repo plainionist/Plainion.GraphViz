@@ -5,19 +5,18 @@ using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
-    // we use private properties here to support Json serialiation
     [Serializable]
     class AnalysisDocument
     {
-        private HashSet<string> myNodes { get; set; }
-        private HashSet<Tuple<string, string>> myEdges { get; set; }
-        private Dictionary<string, IEnumerable<string>> myClusters { get; set; }
+        private HashSet<string> myNodes;
+        private HashSet<Tuple<string, string>> myEdges;
+        private Dictionary<string, IEnumerable<string>> myClusters;
         // key: id, value: caption
-        private Dictionary<string, string> myCaptions { get; set; }
+        private Dictionary<string, string> myCaptions;
         // key: id, value: color
-        private Dictionary<string, string> myNodeStyles { get; set; }
+        private Dictionary<string, string> myNodeStyles;
         // key: id, value: color
-        private Dictionary<string, string> myEdgeStyles { get; set; }
+        private Dictionary<string, string> myEdgeStyles;
 
         public AnalysisDocument()
         {
@@ -42,48 +41,48 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         public IReadOnlyDictionary<string, string> EdgeStyles { get { return myEdgeStyles; } }
 
-        internal void Add( Reference edge )
+        internal void Add(Reference edge)
         {
-            myEdges.Add( Tuple.Create( edge.From.FullName, edge.To.FullName ) );
+            myEdges.Add(Tuple.Create(edge.From.FullName, edge.To.FullName));
         }
 
-        internal void AddEdgeColor( Reference edge, string color )
+        internal void AddEdgeColor(Reference edge, string color)
         {
-            var edgeId = Model.Edge.CreateId( edge.From.FullName, edge.To.FullName );
-            if( !myEdgeStyles.ContainsKey( edgeId ) )
+            var edgeId = Model.Edge.CreateId(edge.From.FullName, edge.To.FullName);
+            if (!myEdgeStyles.ContainsKey(edgeId))
             {
-                myEdgeStyles.Add( edgeId, color );
+                myEdgeStyles.Add(edgeId, color);
             }
         }
 
-        internal void Add( Type node )
+        internal void Add(Type node)
         {
-            myNodes.Add( node.FullName );
+            myNodes.Add(node.FullName);
 
-            if( !myCaptions.ContainsKey( node.FullName ) )
+            if (!myCaptions.ContainsKey(node.FullName))
             {
-                myCaptions.Add( node.FullName, node.Name );
+                myCaptions.Add(node.FullName, node.Name);
             }
         }
 
-        internal void AddToCluster( Type node, Cluster cluster )
+        internal void AddToCluster(Type node, Cluster cluster)
         {
             IEnumerable<string> existing;
-            if( !myClusters.TryGetValue( cluster.Id, out existing ) )
+            if (!myClusters.TryGetValue(cluster.Id, out existing))
             {
                 existing = new HashSet<string>();
-                myClusters.Add( cluster.Id, existing );
-                myCaptions.Add( cluster.Id, cluster.Name );
+                myClusters.Add(cluster.Id, existing);
+                myCaptions.Add(cluster.Id, cluster.Name);
             }
 
-            ( ( HashSet<string> )existing ).Add( node.FullName );
+            ((HashSet<string>)existing).Add(node.FullName);
         }
 
-        internal void AddNodeColor( Type node, string fillColor )
+        internal void AddNodeColor(Type node, string fillColor)
         {
-            if( !myNodeStyles.ContainsKey( node.FullName ) )
+            if (!myNodeStyles.ContainsKey(node.FullName))
             {
-                myNodeStyles.Add( node.FullName, fillColor );
+                myNodeStyles.Add(node.FullName, fillColor);
             }
         }
     }

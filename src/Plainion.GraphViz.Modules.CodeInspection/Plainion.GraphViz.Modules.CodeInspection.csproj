@@ -115,7 +115,7 @@
     <Compile Include="Actors\ActorClientBase.cs" />
     <Compile Include="Actors\ActorsBase.cs" />
     <Compile Include="Inheritance\Actors\Messages.cs" />
-    <Compile Include="Packaging\Actors\AnalysisDocumentSerializer.cs" />
+    <Compile Include="Inheritance\Actors\AnalysisDocumentSerializer.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Packaging\Analyzers\AnalysisDocument.cs" />

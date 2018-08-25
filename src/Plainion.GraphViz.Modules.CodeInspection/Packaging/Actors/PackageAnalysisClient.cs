@@ -35,8 +35,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
             {
                 if (response is AnalysisResponse m)
                 {
-                    var serializer = new AnalysisDocumentSerializer();
-                    return serializer.Deserialize(m.File);
+                    var serializer = new DocumentSerializer();
+                    return serializer.Deserialize<AnalysisDocument>(m.File);
                 }
                 else
                 {

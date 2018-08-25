@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Plainion.GraphViz.Infrastructure;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
@@ -10,28 +9,24 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
     class TypeRelationshipDocument
     {
         private HashSet<Tuple<string, string, ReferenceType>> myEdges;
-        private IDictionary<string, TypeDescriptor> myDescriptors;
+        private Dictionary<string, TypeDescriptor> myDescriptors;
+        private int myEdgeCount;
+        private List<FailedItem> myFailedItems;
 
         public TypeRelationshipDocument()
         {
             myDescriptors = new Dictionary<string, TypeDescriptor>();
             myEdges = new HashSet<Tuple<string, string, ReferenceType>>();
-            FailedItems = new List<FailedItem>();
+            myFailedItems = new List<FailedItem>();
         }
 
-        public IList<FailedItem> FailedItems { get; private set; }
+        public IEnumerable<FailedItem> FailedItems { get { return myFailedItems; } }
 
-        public IEnumerable<TypeDescriptor> Descriptors
-        {
-            get { return myDescriptors.Values; }
-        }
+        public IEnumerable<TypeDescriptor> Descriptors { get { return myDescriptors.Values; } }
 
-        public IEnumerable<Tuple<string, string, ReferenceType>> Edges
-        {
-            get { return myEdges; }
-        }
+        public IEnumerable<Tuple<string, string, ReferenceType>> Edges { get { return myEdges; } }
 
-        public void AddEdge(TypeDescriptor source, TypeDescriptor target, ReferenceType refType)
+        internal void AddEdge(TypeDescriptor source, TypeDescriptor target, ReferenceType refType)
         {
             if (!myDescriptors.ContainsKey(source.Id))
             {
@@ -44,6 +39,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
             }
 
             myEdges.Add(Tuple.Create(source.Id, target.Id, refType));
+
+            myEdgeCount = myEdges.Count;
+        }
+
+        internal void AddFailedItem(FailedItem item)
+        {
+            myFailedItems.Add(item);
         }
     }
 }

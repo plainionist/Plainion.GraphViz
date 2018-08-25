@@ -53,7 +53,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
                     Console.WriteLine( "Writing response ..." );
 
-                    var serializer = new AnalysisDocumentSerializer();
+                    var serializer = new DocumentSerializer();
                     serializer.Serialize( x.Result, r.OutputFile );
 
                     return new AnalysisResponse { File = r.OutputFile };
