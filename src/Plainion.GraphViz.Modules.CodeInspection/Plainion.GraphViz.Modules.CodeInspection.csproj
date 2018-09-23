@@ -39,6 +39,9 @@
     <Reference Include="DotNetty.Transport, Version=0.4.6.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DotNetty.Transport.0.4.6\lib\net45\DotNetty.Transport.dll</HintPath>
     </Reference>
+    <Reference Include="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.3.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.Protobuf.3.3.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
@@ -57,8 +60,8 @@
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Plainion.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Core.3.5.0\lib\NET45\Plainion.Core.dll</HintPath>
@@ -85,6 +88,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Console">
+      <HintPath>..\..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
@@ -116,6 +122,10 @@
     <Compile Include="Actors\ActorsBase.cs" />
     <Compile Include="Inheritance\Actors\Messages.cs" />
     <Compile Include="Actors\DocumentSerializer.cs" />
+    <Compile Include="Inheritance\InheritanceGraphMenuItem.xaml.cs">
+      <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
     <Compile Include="Packaging\EnumToBoolExtension.cs" />
     <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
     <Compile Include="Packaging\Analyzers\AnalysisDocument.cs" />
@@ -131,10 +141,17 @@
       <DependentUpon>PackagingGraphMenuItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Packaging\PackagingGraphMenuItemModel.cs" />
-    <Compile Include="Inheritance\InheritanceGraphMenuItem.xaml.cs">
-      <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
+    <Compile Include="PathFinder\Actors\PathFinderActor.cs" />
+    <Compile Include="PathFinder\Actors\PathFinderClient.cs" />
+    <Compile Include="PathFinder\Actors\Messages.cs" />
+    <Compile Include="PathFinder\PathFinderView.xaml.cs">
+      <DependentUpon>PathFinderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
+    <Compile Include="PathFinder\PathFinderViewModel.cs" />
+    <Compile Include="PathFinder\PathFinderMenuItem.xaml.cs">
+      <DependentUpon>PathFinderMenuItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PathFinder\PathFinderMenuItemModel.cs" />
     <Compile Include="Packaging\Actors\PackageAnalysisClient.cs" />
     <Compile Include="Packaging\Spec\SpecUtils.cs" />
     <Compile Include="Packaging\GraphToSpecSynchronizer.cs" />
@@ -169,6 +186,14 @@
       <Project>{FC787D39-FC3E-4031-BD87-D6971F3006FA}</Project>
       <Name>Plainion.GraphViz.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Batch2\Plainion.GraphViz.Modules.CodeInspection.Batch2.csproj">
+      <Project>{69728622-c72d-4171-a523-86d780236065}</Project>
+      <Name>Plainion.GraphViz.Modules.CodeInspection.Batch2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Batch\Plainion.GraphViz.Modules.CodeInspection.Batch.fsproj">
+      <Project>{e286a18e-65e2-46fa-a3b7-bf99792dab08}</Project>
+      <Name>Plainion.GraphViz.Modules.CodeInspection.Batch</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj">
       <Project>{eb61222b-b3d5-4901-a42d-7386e4ae08d6}</Project>
       <Name>Plainion.GraphViz.Modules.CodeInspection.Core</Name>
@@ -179,6 +204,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Inheritance\InheritanceGraphMenuItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Packaging\PackagingGraphBuilderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -191,7 +220,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Inheritance\InheritanceGraphMenuItem.xaml">
+    <Page Include="PathFinder\PathFinderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PathFinder\PathFinderMenuItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -208,5 +241,6 @@
     </None>
     <None Include="ReadMe.md" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

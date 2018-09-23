@@ -223,11 +223,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 
         private void OnInheritanceGraphCompleted(TypeRelationshipDocument document)
         {
-            if (document == null)
-            {
-                return;
-            }
-
             if (!document.Edges.Any())
             {
                 MessageBox.Show("No nodes found");

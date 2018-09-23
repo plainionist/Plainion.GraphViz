@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
@@ -24,11 +25,18 @@ namespace Plainion.GraphViz.ActorsHost
                 }
                 ");
 
-            using (var system = ActorSystem.Create("CodeInspection", config))
+            try
             {
-                Console.WriteLine("...  running ...");
+                using (var system = ActorSystem.Create("CodeInspection", config))
+                {
+                    Console.WriteLine("...  running ...");
 
-                while (true) Thread.Sleep(1000);
+                    while (true) Thread.Sleep(1000);
+                }
+            }
+            catch
+            {
+                Console.WriteLine(" === DEAD === ");
             }
         }
     }

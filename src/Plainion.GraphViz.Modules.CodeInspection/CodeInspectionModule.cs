@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.Composition;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging;
+using Plainion.GraphViz.Modules.CodeInspection.PathFinder;
 using Prism.Mef.Modularity;
 using Prism.Modularity;
 using Prism.Regions;
 
 namespace Plainion.GraphViz.Modules.CodeInspection
 {
-    [ModuleExport( typeof( CodeInspectionModule ) )]
+    [ModuleExport(typeof(CodeInspectionModule))]
     public class CodeInspectionModule : IModule
     {
         [Import]
@@ -20,6 +21,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection
 
             RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PackagingGraphMenuItem));
             RegionManager.RegisterViewWithRegion(RegionNames.PackagingGraphBuilder, typeof(PackagingGraphBuilderView));
+
+            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PathFinderMenuItem));
+            RegionManager.RegisterViewWithRegion(RegionNames.PathFinder, typeof(PathFinderView));
         }
     }
 }

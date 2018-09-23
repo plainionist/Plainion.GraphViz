@@ -1,0 +1,9 @@
+{
+    "binFolder": "D:/Workspace/Plainion/Plainion.GraphViz/bin/Debug",
+    "keepInnerAssemblyDependencies": true,
+    "keepSourceAssemblyClusters": false,
+    "keepTargetAssemblyClusters": false,
+    "sources": [ "Plainion.GraphViz.Modules.CodeInspection.*.dll" ],
+    "targets": [ "Plainion.Core.dll" ],
+    "relevantAssemblies": [ "Plainion.*" ]
+}
