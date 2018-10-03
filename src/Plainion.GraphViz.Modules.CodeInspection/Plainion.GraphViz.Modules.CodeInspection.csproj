@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\build\Globals.msbuild" />
   <PropertyGroup>
     <ProjectGuid>{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}</ProjectGuid>
@@ -60,6 +60,9 @@
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -87,6 +90,13 @@
       <HintPath>..\..\packages\Prism.Wpf.6.3.0\lib\net45\Prism.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.AppContext.4.3.0\lib\net463\System.AppContext.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Console">
       <HintPath>..\..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
@@ -189,10 +199,6 @@
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Batch2\Plainion.GraphViz.Modules.CodeInspection.Batch2.csproj">
       <Project>{69728622-c72d-4171-a523-86d780236065}</Project>
       <Name>Plainion.GraphViz.Modules.CodeInspection.Batch2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Batch\Plainion.GraphViz.Modules.CodeInspection.Batch.fsproj">
-      <Project>{e286a18e-65e2-46fa-a3b7-bf99792dab08}</Project>
-      <Name>Plainion.GraphViz.Modules.CodeInspection.Batch</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj">
       <Project>{eb61222b-b3d5-4901-a42d-7386e4ae08d6}</Project>

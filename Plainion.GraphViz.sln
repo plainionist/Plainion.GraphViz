@@ -35,8 +35,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "docs", "docs\docs.csproj", "{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Plainion.GraphViz.Modules.CodeInspection.Batch", "src\Plainion.GraphViz.Modules.CodeInspection.Batch\Plainion.GraphViz.Modules.CodeInspection.Batch.fsproj", "{E286A18E-65E2-46FA-A3B7-BF99792DAB08}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.CodeInspection.Batch2", "src\Plainion.GraphViz.Modules.CodeInspection.Batch2\Plainion.GraphViz.Modules.CodeInspection.Batch2.csproj", "{69728622-C72D-4171-A523-86D780236065}"
 EndProject
 Global
@@ -93,10 +91,6 @@ Global
 		{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E286A18E-65E2-46FA-A3B7-BF99792DAB08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E286A18E-65E2-46FA-A3B7-BF99792DAB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E286A18E-65E2-46FA-A3B7-BF99792DAB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E286A18E-65E2-46FA-A3B7-BF99792DAB08}.Release|Any CPU.Build.0 = Release|Any CPU
 		{69728622-C72D-4171-A523-86D780236065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69728622-C72D-4171-A523-86D780236065}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69728622-C72D-4171-A523-86D780236065}.Release|Any CPU.ActiveCfg = Release|Any CPU

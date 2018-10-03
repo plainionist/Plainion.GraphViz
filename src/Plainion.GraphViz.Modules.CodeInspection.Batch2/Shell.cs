@@ -55,24 +55,25 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
             return ret;
         }
 
+        public static IEnumerable<string> ResolveAssemblies(string binFolder, string pattern)
+        {
+            var files = Directory.GetFiles(binFolder, pattern);
+            if (files.Length == 0)
+            {
+                Shell.Warn($"No assemblies found for pattern: {pattern}");
+                return Enumerable.Empty<string>();
+            }
+            else
+            {
+                return files
+                    .Select(f => Path.GetFullPath(f))
+                    .ToList();
+            }
+        }
+
         public static IEnumerable<string> ResolveAssemblies(string binFolder, IEnumerable<string> patterns)
         {
-            return patterns
-                .SelectMany(pattern => 
-                    { 
-                        var files = Directory.GetFiles(binFolder, pattern) ;
-                        if (files.Length == 0)
-                        {
-                            Shell.Warn($"No assemblies found for pattern: {pattern}");
-                            return Enumerable.Empty<string>();
-                        }
-                        else
-                        {
-                            return files;
-                        }
-                    })
-                .Select(f => Path.GetFullPath(f))
-                .ToList();
+            return patterns.SelectMany(p => ResolveAssemblies(binFolder, p)).ToList();
+        }
     }
-}
 }

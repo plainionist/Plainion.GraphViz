@@ -1,0 +1,12 @@
+{
+    "binFolder": "D:/Workspace/Plainion/Plainion.GraphViz/bin/Debug",
+    "sources": [ "Plainion.GraphViz.*.dll" ],
+    "targets": [
+        {
+            "assembly": "Plainion.Core.dll",
+            "type": "Plainion.Contract",
+            "method": "RequiresNotNull"
+        }
+    ],
+    "relevantAssemblies": [ "Plainion.*.dll" ]
+}
