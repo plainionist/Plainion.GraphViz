@@ -127,6 +127,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CallTree\Actors\Messages.cs" />
+    <Compile Include="CallTree\Actors\CallTreeActor.cs" />
+    <Compile Include="CallTree\Actors\CallTreeClient.cs" />
     <Compile Include="CallTree\Analyzers\CallTreeAnalyzer.cs" />
     <Compile Include="CallTree\Analyzers\InterfaceImplementationsMap.cs" />
     <Compile Include="Common\Actors\Messages.cs" />
