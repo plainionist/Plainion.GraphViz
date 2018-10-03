@@ -1,8 +1,10 @@
-## 2.12.0 - 2018-08-
+## 2.12.0 - 2018-10-03
 
 - CodeInspection
   - Infrastructure for actor implementation created
   - Inheritance analyzer migrated to actor system for maintainability 
+  - PathFinder analysis added
+  - CallTree analysis added
 
 ## 2.11.0 - 2018-07-13
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using Plainion.GraphViz.Modules.CodeInspection.CallTree;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging;
 using Plainion.GraphViz.Modules.CodeInspection.PathFinder;
@@ -24,6 +25,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection
 
             RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PathFinderMenuItem));
             RegionManager.RegisterViewWithRegion(RegionNames.PathFinder, typeof(PathFinderView));
+
+            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(CallTreeMenuItem));
+            RegionManager.RegisterViewWithRegion(RegionNames.CallTree, typeof(CallTreeView));
         }
     }
 }

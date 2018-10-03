@@ -132,6 +132,14 @@
     <Compile Include="CallTree\Actors\CallTreeClient.cs" />
     <Compile Include="CallTree\Analyzers\CallTreeAnalyzer.cs" />
     <Compile Include="CallTree\Analyzers\InterfaceImplementationsMap.cs" />
+    <Compile Include="CallTree\CallTreeMenuItem.xaml.cs">
+      <DependentUpon>CallTreeMenuItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CallTree\CallTreeMenuItemModel.cs" />
+    <Compile Include="CallTree\CallTreeView.xaml.cs">
+      <DependentUpon>CallTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CallTree\CallTreeViewModel.cs" />
     <Compile Include="Common\Actors\Messages.cs" />
     <Compile Include="Common\Actors\ActorClientBase.cs" />
     <Compile Include="Common\Actors\ActorsBase.cs" />
@@ -216,6 +224,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CallTree\CallTreeMenuItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CallTree\CallTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Inheritance\InheritanceGraphMenuItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
