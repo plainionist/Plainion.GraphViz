@@ -7,10 +7,12 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.CodeInspection.Common;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Batch
+namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {
     public class TargetDescriptor
     {
@@ -47,13 +49,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
             }
         }
 
-        private MonoLoader myLoader;
-        private static Regex myTypeParameterPattern = new Regex(@"\[\[.*\]\]");
+        private AssemblyLoader myLoader;
+        private MonoLoader myMonoLoader;
+        private Regex myTypeParameterPattern;
 
         public CallTreeAnalyzer()
         {
-            myLoader = new MonoLoader();
-
+            myLoader = new AssemblyLoader();
+            myMonoLoader = new MonoLoader();
+            myTypeParameterPattern = new Regex(@"\[\[.*\]\]");
         }
 
         public bool AssemblyReferencesOnly { get; set; }
@@ -72,7 +76,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
         {
             Console.Write(".");
 
-            var inspector = new Inspector(myLoader, t);
+            var inspector = new Inspector(myMonoLoader, t);
             return inspector.GetCalledMethods();
         }
 
@@ -182,7 +186,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
                 .ToList();
         }
 
-        private static string GetInterfaceId(Type iface)
+        private string GetInterfaceId(Type iface)
         {
             if (iface.AssemblyQualifiedName == null)
             {
@@ -249,7 +253,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
             Console.WriteLine();
             Console.WriteLine("NOT analyzed assemblies:");
 
-            foreach (var x in myLoader.SkippedAssemblies)
+            foreach (var x in myMonoLoader.SkippedAssemblies)
             {
                 Shell.Warn($"    {x}");
             }
@@ -392,7 +396,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
 
             Console.WriteLine("Loading source assemblies ...");
             var sources = sourceAssemblies
-                .Select(asm => R.LoadAssemblyFrom(asm))
+                .Select(asm => myLoader.LoadAssemblyFrom(asm))
                 .Where(x => x != null)
                 .ToList();
 
@@ -400,7 +404,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
                 targetDescriptors
                     .Select(target =>
                     {
-                        var asm = R.LoadAssemblyFrom(target.Assembly);
+                        var asm = myLoader.LoadAssemblyFrom(target.Assembly);
                         return (asm, GetMethod(asm, target.Type, target.Method));
                     })
                     .ToList());
@@ -411,7 +415,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
 
             if (AssemblyReferencesOnly)
             {
-                Graph.Serialize(outputFile, assemblyGraphPresentation);
+                GraphUtils.Serialize(outputFile, assemblyGraphPresentation);
             }
             else
             {
@@ -423,7 +427,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
                     Shell.Profile("Analyze direct method call dependencies ...", () =>
                     {
                         var p = ReduceToDirectDependencies(targets.Select(x => x.Item2).ToList(), callsPresentation);
-                        Graph.Serialize(outputFile, p);
+                        GraphUtils.Serialize(outputFile, p);
                         return 0;
                     });
 
@@ -441,7 +445,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
                     Shell.Profile("Analyze indirect type dependencies ...", () =>
                     {
                         var p = ReduceToIndirectDependencies(targets.Select(x => x.Item2).ToList(), callsPresentation);
-                        Graph.Serialize(outputFile, p);
+                        GraphUtils.Serialize(outputFile, p);
                         return 0;
                     });
 

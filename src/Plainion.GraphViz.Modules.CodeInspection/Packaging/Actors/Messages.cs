@@ -1,4 +1,4 @@
-﻿using Plainion.GraphViz.Modules.CodeInspection.Actors;
+﻿using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {

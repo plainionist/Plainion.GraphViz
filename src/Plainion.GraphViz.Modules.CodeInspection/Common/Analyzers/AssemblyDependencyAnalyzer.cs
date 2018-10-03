@@ -7,7 +7,7 @@ using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.Text;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Batch
+namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
     public class AssemblyDependencyAnalyzer
     {
@@ -18,10 +18,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
         }
 
         private IEnumerable<Wildcard> myRelevantAssemblies;
+        private AssemblyLoader myLoader;
 
         public AssemblyDependencyAnalyzer(IEnumerable<string> relevantAssemblies)
         {
             myRelevantAssemblies = relevantAssemblies.Select(p => new Wildcard(p)).ToList();
+            myLoader = new AssemblyLoader();
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
         private List<AssemblyReference> Analyze(List<AssemblyReference> analyzed, Assembly asm)
         {
             var dependencies = asm.GetReferencedAssemblies()
-                .Select(x => R.LoadAssembly(x))
+                .Select(x => myLoader.LoadAssembly(x))
                 .Where(x => x != null && FollowAssembly(x))
                 .ToList();
 

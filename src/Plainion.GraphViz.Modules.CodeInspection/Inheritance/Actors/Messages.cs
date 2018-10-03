@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plainion.GraphViz.Modules.CodeInspection.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors

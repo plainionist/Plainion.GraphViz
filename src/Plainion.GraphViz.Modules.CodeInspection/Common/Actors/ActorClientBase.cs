@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Configuration;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Actors
+namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
 {
     class ActorClientBase : IDisposable
     {

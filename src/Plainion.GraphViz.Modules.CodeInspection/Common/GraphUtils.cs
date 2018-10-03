@@ -4,9 +4,9 @@ using System.Linq;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Batch
+namespace Plainion.GraphViz.Modules.CodeInspection.Common
 {
-    public static class Graph
+    public static class GraphUtils
     {
         public static void Serialize(string file, IGraphPresentation presentation)
         {

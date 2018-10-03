@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Batch
+namespace Plainion.GraphViz.Modules.CodeInspection.Common
 {
     public class Shell
     {

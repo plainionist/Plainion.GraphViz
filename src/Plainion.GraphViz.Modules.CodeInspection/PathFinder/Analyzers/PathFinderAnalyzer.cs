@@ -6,10 +6,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.CodeInspection.Common;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Batch
+namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 {
     public class PathFinderAnalyzer
     {
@@ -35,11 +37,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
             }
         }
 
-        private MonoLoader myLoader;
+        private AssemblyLoader myLoader;
+        private MonoLoader myMonoLoader;
 
         public PathFinderAnalyzer()
         {
-            myLoader = new MonoLoader();
+            myLoader = new AssemblyLoader();
+            myMonoLoader = new MonoLoader();
         }
 
         public bool KeepInnerAssemblyDependencies { get; set; }
@@ -51,7 +55,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
         {
             Console.Write(".");
 
-            var inspector = new Inspector(myLoader, t);
+            var inspector = new Inspector(myMonoLoader, t);
             return inspector.GetUsedTypes();
         }
 
@@ -133,7 +137,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
             Console.WriteLine();
             Console.WriteLine("NOT analyzed assemblies:");
 
-            foreach (var asm in myLoader.SkippedAssemblies)
+            foreach (var asm in myMonoLoader.SkippedAssemblies)
             {
                 Shell.Warn("  " + asm);
             }
@@ -217,8 +221,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
             }
 
             Console.WriteLine("Loading assemblies ...");
-            var sources = sourceAssemblies.Select(asm => R.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
-            var targets = targetAssemblies.Select(asm => R.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
+            var sources = sourceAssemblies.Select(asm => myLoader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
+            var targets = targetAssemblies.Select(asm => myLoader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
 
             Console.WriteLine("Analyzing assembly dependencies ...");
             var analyzer = new AssemblyDependencyAnalyzer(relevantAssemblies);
@@ -226,14 +230,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
 
             if (AssemblyReferencesOnly)
             {
-                Graph.Serialize(outputFile, assemblyGraphPresentation);
+                GraphUtils.Serialize(outputFile, assemblyGraphPresentation);
             }
             else
             {
                 Console.WriteLine("Analyze type dependencies ...");
 
                 var p = CreateTypeDependencyGraph(sources, targets, assemblyGraphPresentation);
-                Graph.Serialize(outputFile, p);
+                GraphUtils.Serialize(outputFile, p);
             }
         }
 

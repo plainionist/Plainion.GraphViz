@@ -127,11 +127,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actors\Messages.cs" />
-    <Compile Include="Actors\ActorClientBase.cs" />
-    <Compile Include="Actors\ActorsBase.cs" />
+    <Compile Include="CallTree\Analyzers\CallTreeAnalyzer.cs" />
+    <Compile Include="Common\Actors\Messages.cs" />
+    <Compile Include="Common\Actors\ActorClientBase.cs" />
+    <Compile Include="Common\Actors\ActorsBase.cs" />
+    <Compile Include="Common\Analyzers\AssemblyDependencyAnalyzer.cs" />
+    <Compile Include="Common\Analyzers\AssemblyLoader.cs" />
+    <Compile Include="Common\GraphUtils.cs" />
+    <Compile Include="Common\Shell.cs" />
     <Compile Include="Inheritance\Actors\Messages.cs" />
-    <Compile Include="Actors\DocumentSerializer.cs" />
+    <Compile Include="Common\Actors\DocumentSerializer.cs" />
     <Compile Include="Inheritance\InheritanceGraphMenuItem.xaml.cs">
       <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
     </Compile>
@@ -154,6 +159,7 @@
     <Compile Include="PathFinder\Actors\PathFinderActor.cs" />
     <Compile Include="PathFinder\Actors\PathFinderClient.cs" />
     <Compile Include="PathFinder\Actors\Messages.cs" />
+    <Compile Include="PathFinder\Analyzers\PathFinderAnalyzer.cs" />
     <Compile Include="PathFinder\PathFinderView.xaml.cs">
       <DependentUpon>PathFinderView.xaml</DependentUpon>
     </Compile>
@@ -195,10 +201,6 @@
     <ProjectReference Include="..\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj">
       <Project>{FC787D39-FC3E-4031-BD87-D6971F3006FA}</Project>
       <Name>Plainion.GraphViz.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Batch2\Plainion.GraphViz.Modules.CodeInspection.Batch2.csproj">
-      <Project>{69728622-c72d-4171-a523-86d780236065}</Project>
-      <Name>Plainion.GraphViz.Modules.CodeInspection.Batch2</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj">
       <Project>{eb61222b-b3d5-4901-a42d-7386e4ae08d6}</Project>

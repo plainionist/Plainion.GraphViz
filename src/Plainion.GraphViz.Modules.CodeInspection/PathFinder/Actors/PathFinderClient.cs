@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
-using Plainion.GraphViz.Modules.CodeInspection.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors
 {

@@ -4,11 +4,22 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Batch
+namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
+    public class R
+    {
+        public static string AssemblyName(Assembly asm)
+        {
+            return asm.GetName().Name;
+        }
+
+        public static string TypeFullName(Type t)
+        {
+            return t.FullName != null ? t.FullName : $"{t.Namespace}.{t.Name}";
+        }
+    }
+
     public class AssemblyLoader
     {
         private HashSet<string> myBaseDirs;
@@ -37,16 +48,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Batch
         private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             return AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(asm => String.Equals(asm.FullName, args.Name, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public static string AssemblyName(Assembly asm)
-        {
-            return asm.GetName().Name;
-        }
-
-        public static string TypeFullName(Type t)
-        {
-            return t.FullName != null ? t.FullName : $"{t.Namespace}.{t.Name}";
         }
 
         private Assembly ReflectionOnlyLoadFrom(string file)
