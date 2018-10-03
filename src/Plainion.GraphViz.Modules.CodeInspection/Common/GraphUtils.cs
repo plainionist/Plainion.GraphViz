@@ -12,7 +12,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common
         {
             var graph = presentation.GetModule<ITransformationModule>().Graph;
 
-            if (graph.Nodes.Any())
+            if (graph.Nodes.Any(n => presentation.Picking.Pick(n)))
             {
                 Console.WriteLine("Dumping graph ...");
 

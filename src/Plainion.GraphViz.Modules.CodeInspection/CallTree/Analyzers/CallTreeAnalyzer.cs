@@ -296,7 +296,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             var targetClusters = targetIds
                 .Select(targetId => transformations.Graph.Clusters
                     .AsParallel()
-                    .Single(c => c.Nodes.Any(n => n.Id == targetId)))
+                    .SingleOrDefault(c => c.Nodes.Any(n => n.Id == targetId)))
+                .Where(x => x != null)
                 .ToList();
 
             // 2. fold all clusters to "see" type dependencies only
@@ -328,7 +329,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 Console.WriteLine($"  {asm}");
             }
 
-            Console.WriteLine("Loading source assemblies ...");
+            Console.WriteLine("Loading assemblies ...");
             var sources = sourceAssemblies
                 .Select(asm => myLoader.LoadAssemblyFrom(asm))
                 .Where(x => x != null)
@@ -342,6 +343,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                         return (asm, GetMethod(asm, target.Type, target.Method));
                     })
                     .ToList());
+
+            Console.WriteLine("Targets:");
+            foreach (var t in targets)
+            {
+                Console.WriteLine($"  {R.AssemblyName(t.Item1)}/{t.Item2.myDeclaringType}.{t.Item2.myName}");
+            }
 
             var analyzer = new AssemblyDependencyAnalyzer(relevantAssemblies);
             var assemblyGraphPresentation = Shell.Profile("Analyzing assemblies dependencies ...", () =>

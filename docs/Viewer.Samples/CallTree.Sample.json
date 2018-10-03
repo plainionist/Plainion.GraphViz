@@ -8,5 +8,5 @@
             "method": "RequiresNotNull"
         }
     ],
-    "relevantAssemblies": [ "Plainion.*.dll" ]
+    "relevantAssemblies": [ "Plainion.*" ]
 }
