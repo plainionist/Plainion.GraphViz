@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CallTree\Analyzers\CallTreeAnalyzer.cs" />
+    <Compile Include="CallTree\Analyzers\InterfaceImplementationsMap.cs" />
     <Compile Include="Common\Actors\Messages.cs" />
     <Compile Include="Common\Actors\ActorClientBase.cs" />
     <Compile Include="Common\Actors\ActorsBase.cs" />

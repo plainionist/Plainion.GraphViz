@@ -6,7 +6,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common
 {
-    public static class GraphUtils
+    static class GraphUtils
     {
         public static void Serialize(string file, IGraphPresentation presentation)
         {

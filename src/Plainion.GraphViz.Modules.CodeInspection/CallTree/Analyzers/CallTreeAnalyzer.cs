@@ -14,14 +14,14 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {
-    public class TargetDescriptor
+    class TargetDescriptor
     {
         public string Assembly { get; set; }
         public string Type { get; set; }
         public string Method { get; set; }
     }
 
-    public class CallTreeAnalyzer
+    class CallTreeAnalyzer
     {
         private class MethodNode
         {
@@ -51,26 +51,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
         private AssemblyLoader myLoader;
         private MonoLoader myMonoLoader;
-        private Regex myTypeParameterPattern;
 
         public CallTreeAnalyzer()
         {
             myLoader = new AssemblyLoader();
             myMonoLoader = new MonoLoader();
-            myTypeParameterPattern = new Regex(@"\[\[.*\]\]");
         }
 
         public bool AssemblyReferencesOnly { get; set; }
         public bool StrictCallsOnly { get; set; }
-
-        private MethodDesc CreateMethodDesc(Type declaringType, string name)
-        {
-            return new MethodDesc
-            {
-                myDeclaringType = declaringType,
-                myName = name
-            };
-        }
 
         private IEnumerable<MethodCall> GetCalledMethods(Type t)
         {
@@ -93,12 +82,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 myCaption = method.DeclaringType.Name + "." + method.Name,
                 myDeclaringType = method.DeclaringType
             };
-        }
-
-        private Assembly GetAssembly(string name)
-        {
-            return AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies()
-                .Single(x => R.AssemblyName(x) == name);
         }
 
         private bool CoveredByAssemblyGraph(IEnumerable<Node> relevantNodes, Type t)
@@ -142,16 +125,20 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 throw new InvalidOperationException($"Method not found {typeName}.{methodName} in {assembly.FullName}");
             }
 
-            return CreateMethodDesc(declaringType, methodName);
+            return new MethodDesc
+            {
+                myDeclaringType = declaringType,
+                myName = methodName
+            };
         }
 
-        private List<MethodCall> Analyze(IEnumerable<Node> relevantNodes, Func<MethodCall, IEnumerable<MethodCall>> replaceInterfacesWithImplementation, List<Type> analyzed, List<Type> callers)
+        private List<MethodCall> Analyze(IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<Type> analyzed, List<Type> callers)
         {
             var calls = callers.AsParallel()
                 .SelectMany(t =>
                     GetCalledMethods(t)
                         .Where(r => CoveredByAssemblyGraph(relevantNodes, r.To.DeclaringType))
-                        .SelectMany(replaceInterfacesWithImplementation))
+                        .SelectMany(x => interfaceImplementationsMap.ResolveInterface(x)))
                 .ToList();
 
             var unknownTypes = calls.AsParallel()
@@ -167,43 +154,23 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
             else
             {
-                var children = Analyze(relevantNodes, replaceInterfacesWithImplementation, callers.Concat(analyzed).Distinct().ToList(), unknownTypes);
+                var children = Analyze(relevantNodes, interfaceImplementationsMap, callers.Concat(analyzed).Distinct().ToList(), unknownTypes);
                 return calls.Concat(children).ToList();
             }
         }
 
         // traces from the given source nodes all calls within the assembly graph
-        private List<MethodCall> TraceCalles(IEnumerable<Node> relevantNodes, Func<MethodCall, IEnumerable<MethodCall>> replaceInterfacesWithImplementation, List<MethodDesc> targets, IEnumerable<Assembly> sources)
+        private List<MethodCall> TraceCalles(IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<MethodDesc> targets, IEnumerable<Assembly> sources)
         {
             var targetTypes = targets
                 .Select(m => m.myDeclaringType)
                 .Distinct()
                 .ToList();
 
-            return Analyze(relevantNodes, replaceInterfacesWithImplementation, targetTypes,
+            return Analyze(relevantNodes, interfaceImplementationsMap, targetTypes,
                 sources.SelectMany(x => x.GetTypes()).ToList())
                 .Distinct()
                 .ToList();
-        }
-
-        private string GetInterfaceId(Type iface)
-        {
-            if (iface.AssemblyQualifiedName == null)
-            {
-                return null;
-            }
-            else if (iface.AssemblyQualifiedName.StartsWith("System."))
-            {
-                return null;
-            }
-            else if (iface.AssemblyQualifiedName.Contains("[["))
-            {
-                return myTypeParameterPattern.Replace(iface.AssemblyQualifiedName, "");
-            }
-            else
-            {
-                return iface.AssemblyQualifiedName;
-            }
         }
 
         private GraphPresentation BuildCallTree(List<Assembly> sources, List<MethodDesc> targets, GraphPresentation assemblyGraphPresentation)
@@ -212,43 +179,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .Where(n => assemblyGraphPresentation.Picking.Pick(n))
                 .ToList();
 
-            var interfaceImplMap = relevantNodes
-                .SelectMany(n => GetAssembly(n.Id).GetTypes())
-                .SelectMany(t => t.GetInterfaces().Select(GetInterfaceId).Where(iface => iface != null).Select(iface => (iface, t)))
-                .ToList();
+            var interfaceImplementationsMap = new InterfaceImplementationsMap();
+            interfaceImplementationsMap.Build(relevantNodes, targets.Select(t => t.myDeclaringType));
 
-            var implCountThreshold = 10;
-            var tooGenericInterfaces = interfaceImplMap
-                .GroupBy(x => x.Item1)
-                .Where(x => implCountThreshold < x.Count())
-                .Select(x => x.Key)
-                .ToList();
-
-            interfaceImplMap = interfaceImplMap.Where(x => !tooGenericInterfaces.Contains(x.Item1)).ToList();
-
-            Func<MethodCall, IEnumerable<MethodCall>> replaceInterfacesWithImplementation = call =>
-            {
-                if (call.To.DeclaringType.IsInterface && (!targets.Any(t => t.myDeclaringType == call.To.DeclaringType)))
-                {
-                    var impls = interfaceImplMap.Where(x => x.Item1 == call.To.DeclaringType.AssemblyQualifiedName).ToList();
-                    if (!impls.Any())
-                    {
-                        Shell.Warn($"Implementation not found for: {call.To.DeclaringType.FullName}");
-                        return new[] { call };
-                    }
-                    else
-                    {
-                        Console.Write("#");
-                        return impls.Select(x => new MethodCall(call.From, new Method(x.Item2, call.To.Name)));
-                    }
-                }
-                else
-                {
-                    return new[] { call };
-                }
-            };
-
-            var calls = TraceCalles(relevantNodes, replaceInterfacesWithImplementation, targets, sources);
+            var calls = TraceCalles(relevantNodes, interfaceImplementationsMap, targets, sources);
 
             Console.WriteLine();
             Console.WriteLine("NOT analyzed assemblies:");

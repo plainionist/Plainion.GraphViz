@@ -13,7 +13,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 {
-    public class PathFinderAnalyzer
+    class PathFinderAnalyzer
     {
         private class TypeNode
         {

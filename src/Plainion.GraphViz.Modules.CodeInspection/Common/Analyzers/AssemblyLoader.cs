@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
-    public class R
+    class R
     {
         public static string AssemblyName(Assembly asm)
         {
@@ -20,7 +20,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         }
     }
 
-    public class AssemblyLoader
+    class AssemblyLoader
     {
         private HashSet<string> myBaseDirs;
 

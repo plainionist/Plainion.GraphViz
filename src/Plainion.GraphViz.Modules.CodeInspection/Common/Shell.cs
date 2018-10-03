@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common
 {
-    public class Shell
+    class Shell
     {
         private static object myLock = new object();
 

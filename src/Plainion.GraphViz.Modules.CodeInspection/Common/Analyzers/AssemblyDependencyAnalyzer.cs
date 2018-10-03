@@ -9,7 +9,7 @@ using Plainion.Text;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
-    public class AssemblyDependencyAnalyzer
+    class AssemblyDependencyAnalyzer
     {
         private class AssemblyReference
         {
