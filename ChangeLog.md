@@ -1,4 +1,4 @@
-## 2.12.0 - 2018-10-03
+## 2.12.0 - 2018-10-07
 
 - CodeInspection
   - Infrastructure for actor implementation created

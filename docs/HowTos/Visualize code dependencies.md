@@ -9,7 +9,7 @@ You can generate a graph showing your code dependencies using the "Package depen
 
 ![](../Screenshots/PackageDependencies.png)
 
-Use the "Package Spec Editor" to specify which assemblies to analyse and which high level structure
+Use the "Package Spec Editor" to specify which assemblies to analyze and which high level structure
 your system has.
 
 ![](../Screenshots/PackageSpecEditor.png) 
@@ -61,7 +61,7 @@ A package is specified by a set of assemblies which can be defined using "includ
 A package can have one or more clusters which would then be mapped to [Clusters](../Clusters) in the graph.
 The "include" and "exclude" directives within a cluster map to namespaces.
 
-You can then either analyse the dependencies between packages by selecting the packages of interest or within one package 
+You can then either analyze the dependencies between packages by selecting the packages of interest or within one package 
 by just selecting a particular one.
 
 ![](../Screenshots/GenerateGraphFromPackageSpec.png)
