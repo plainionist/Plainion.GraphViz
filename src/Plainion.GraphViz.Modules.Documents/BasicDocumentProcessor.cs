@@ -15,7 +15,7 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             myPresentation = presentation;
 
-            DocumentCreators = new Dictionary<string, Func<IDocument>>();
+            DocumentCreators = new Dictionary<string, Func<IDocument>>(StringComparer.OrdinalIgnoreCase);
             DocumentCreators[".plain"] = () => new DotPlainDocument();
             DocumentCreators[".graphml"] = () => new GraphMLDocument();
             DocumentCreators[".dgml"] = () => new DgmlDocument();
