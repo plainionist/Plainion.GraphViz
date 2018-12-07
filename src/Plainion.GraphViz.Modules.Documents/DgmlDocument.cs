@@ -19,30 +19,33 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             myCaptions = new List<Caption>();
 
-            var root = XElement.Load( Filename );
+            var root = XElement.Load(Filename);
 
-            foreach( var xmlNode in root.Element( XN( "Nodes" ) ).Elements( XN( "Node" ) ) )
+            if (root.Element(XN("Nodes")) != null)
             {
-                var node = TryAddNode( xmlNode.Attribute( "Id" ).Value );
-                if( node != null )
+                foreach (var xmlNode in root.Element(XN("Nodes")).Elements(XN("Node")))
                 {
-                    var xmlLabel = xmlNode.Attribute( "Label" );
-                    if( xmlLabel != null )
+                    var node = TryAddNode(xmlNode.Attribute("Id").Value);
+                    if (node != null)
                     {
-                        myCaptions.Add( new Caption( node.Id, xmlLabel.Value ) );
+                        var xmlLabel = xmlNode.Attribute("Label");
+                        if (xmlLabel != null)
+                        {
+                            myCaptions.Add(new Caption(node.Id, xmlLabel.Value));
+                        }
                     }
                 }
             }
 
-            foreach( var xmlLink in root.Element( XN( "Links" ) ).Elements( XN( "Link" ) ) )
+            foreach (var xmlLink in root.Element(XN("Links")).Elements(XN("Link")))
             {
-                TryAddEdge( xmlLink.Attribute( "Source" ).Value, xmlLink.Attribute( "Target" ).Value );
+                TryAddEdge(xmlLink.Attribute("Source").Value, xmlLink.Attribute("Target").Value);
             }
         }
 
-        private static XName XN( string localName )
+        private static XName XN(string localName)
         {
-            return XName.Get( localName, "http://schemas.microsoft.com/vs/2009/dgml" );
+            return XName.Get(localName, "http://schemas.microsoft.com/vs/2009/dgml");
         }
     }
 }
