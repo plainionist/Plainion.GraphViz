@@ -4,7 +4,7 @@ using System.Reflection;
 [assembly: AssemblyTitleAttribute("Plainion.GraphViz.Modules.CodeInspection")]
 [assembly: AssemblyProductAttribute("Plainion.GraphViz")]
 [assembly: AssemblyDescriptionAttribute("Plainion.GraphViz")]
-[assembly: AssemblyCopyrightAttribute("Copyright @ 2018")]
+[assembly: AssemblyCopyrightAttribute("Copyright @ 2019")]
 [assembly: AssemblyVersionAttribute("2.12.0")]
 [assembly: AssemblyFileVersionAttribute("2.12.0")]
 namespace System {
@@ -12,7 +12,7 @@ namespace System {
         internal const System.String AssemblyTitle = "Plainion.GraphViz.Modules.CodeInspection";
         internal const System.String AssemblyProduct = "Plainion.GraphViz";
         internal const System.String AssemblyDescription = "Plainion.GraphViz";
-        internal const System.String AssemblyCopyright = "Copyright @ 2018";
+        internal const System.String AssemblyCopyright = "Copyright @ 2019";
         internal const System.String AssemblyVersion = "2.12.0";
         internal const System.String AssemblyFileVersion = "2.12.0";
     }

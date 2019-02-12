@@ -42,7 +42,7 @@ namespace Plainion.GraphViz.Algorithms
 
             var unfoldedCluster = transformations.Graph.Clusters.Single(c => c.Id == cluster.Id);
 
-            // so fare the unfoldedCluster nodes are NOT visible ... if we have used s.th. like "show siblings"
+            // so far the unfoldedCluster nodes are NOT visible ... if we have used s.th. like "show siblings"
             // on the cluster node!
             var referencedNodes = unfoldedCluster.Nodes
                 .Where(n =>

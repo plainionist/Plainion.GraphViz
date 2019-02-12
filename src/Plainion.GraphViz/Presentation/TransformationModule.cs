@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using Plainion.GraphViz.Model;
 
@@ -38,8 +36,7 @@ namespace Plainion.GraphViz.Presentation
         {
             myTransformations.Add(transformation);
 
-            var notifyPropertyChanged = transformation as INotifyPropertyChanged;
-            if (notifyPropertyChanged != null)
+            if (transformation is INotifyPropertyChanged notifyPropertyChanged)
             {
                 notifyPropertyChanged.PropertyChanged += OnTransformationChanged;
             }
@@ -77,8 +74,7 @@ namespace Plainion.GraphViz.Presentation
         {
             myTransformations.Remove(transformation);
 
-            var notifyPropertyChanged = transformation as INotifyPropertyChanged;
-            if (notifyPropertyChanged != null)
+            if (transformation is INotifyPropertyChanged notifyPropertyChanged)
             {
                 notifyPropertyChanged.PropertyChanged -= OnTransformationChanged;
             }
@@ -96,8 +92,7 @@ namespace Plainion.GraphViz.Presentation
             {
                 myTransformations.Remove(transformation);
 
-                var notifyPropertyChanged = transformation as INotifyPropertyChanged;
-                if (notifyPropertyChanged != null)
+                if (transformation is INotifyPropertyChanged notifyPropertyChanged)
                 {
                     notifyPropertyChanged.PropertyChanged -= OnTransformationChanged;
                 }

@@ -42,12 +42,12 @@ namespace Plainion.GraphViz.Visuals
             get { return myPresentation; }
             set
             {
-                if( myPresentation == value )
+                if (myPresentation == value)
                 {
                     return;
                 }
 
-                if( myPresentation != null )
+                if (myPresentation != null)
                 {
                     mySelectionJournal.Dispose();
                     myNodeMaskJournal.Dispose();
@@ -58,7 +58,7 @@ namespace Plainion.GraphViz.Visuals
 
                 myPresentation = value;
 
-                if( myPresentation != null )
+                if (myPresentation != null)
                 {
                     mySelectionJournal = myPresentation.GetPropertySetFor<Selection>().CreateJournal();
                     myNodeMaskJournal = myPresentation.GetModule<INodeMaskModule>().CreateJournal();
@@ -73,7 +73,7 @@ namespace Plainion.GraphViz.Visuals
 
         public void Refresh()
         {
-            if( Presentation == null )
+            if (Presentation == null)
             {
                 return;
             }
@@ -84,25 +84,25 @@ namespace Plainion.GraphViz.Visuals
             // current assumption: it is enough to check the nodes as we would not render edges independent from nodes
 
             var visibleNodes = transformationModule.Graph.Nodes
-                .Where( node => Presentation.Picking.Pick( node ) )
+                .Where(node => Presentation.Picking.Pick(node))
                 .ToList();
 
-            if( visibleNodes.Count == 0 && myDrawingElements.Count == 0 )
+            if (visibleNodes.Count == 0 && myDrawingElements.Count == 0)
             {
                 // no visible nodes and this also already been reflected in the rendering result (canvas is empty)
                 return;
             }
 
             var reLayout = visibleNodes
-                .Any( node => layoutModule.GetLayout( node ) == null )
+                .Any(node => layoutModule.GetLayout(node) == null)
                 || !myTransformationsJournal.IsEmpty;
 
-            if( reLayout )
+            if (reLayout)
             {
-                Contract.Invariant( LayoutEngine != null, "LayoutEngine not set" );
+                Contract.Invariant(LayoutEngine != null, "LayoutEngine not set");
 
-                Debug.WriteLine( "Relayouting" );
-                LayoutEngine.Relayout( Presentation );
+                Debug.WriteLine("Relayouting");
+                LayoutEngine.Relayout(Presentation);
 
                 // reLayout requires reRender
                 myDrawingElements.Clear();
@@ -110,76 +110,76 @@ namespace Plainion.GraphViz.Visuals
 
             this.SnapsToDevicePixels = true;
 
-            if( myDrawingElements.Count == 0 )
+            if (myDrawingElements.Count == 0)
             {
-                Debug.WriteLine( "Re-Rendering" );
+                Debug.WriteLine("Re-Rendering");
 
-                RemoveVisualChild( myDrawing );
+                RemoveVisualChild(myDrawing);
 
                 myDrawing.Children.Clear();
 
                 myDrawing = new DrawingVisual();
 
                 // first draw edges so that in case of overlap with nodes nodes are on top
-                foreach( var edge in transformationModule.Graph.Edges )
+                foreach (var edge in transformationModule.Graph.Edges)
                 {
-                    if( !Presentation.Picking.Pick( edge ) )
+                    if (!Presentation.Picking.Pick(edge))
                     {
                         continue;
                     }
 
-                    var visual = new EdgeVisual( edge, Presentation, myOldScaling );
+                    var visual = new EdgeVisual(edge, Presentation, myOldScaling);
 
-                    myDrawingElements.Add( edge.Id, visual );
+                    myDrawingElements.Add(edge.Id, visual);
 
-                    var layoutState = layoutModule.GetLayout( edge );
-                    visual.Draw( layoutState );
+                    var layoutState = layoutModule.GetLayout(edge);
+                    visual.Draw(layoutState);
 
-                    myDrawing.Children.Add( visual.Visual );
+                    myDrawing.Children.Add(visual.Visual);
                 }
 
-                foreach( var node in transformationModule.Graph.Nodes )
+                foreach (var node in transformationModule.Graph.Nodes)
                 {
-                    if( !Presentation.Picking.Pick( node ) )
+                    if (!Presentation.Picking.Pick(node))
                     {
                         continue;
                     }
 
-                    var visual = new NodeVisual( node, Presentation );
+                    var visual = new NodeVisual(node, Presentation);
 
-                    myDrawingElements.Add( node.Id, visual );
+                    myDrawingElements.Add(node.Id, visual);
 
-                    var layoutState = layoutModule.GetLayout( node );
-                    visual.Draw( layoutState );
+                    var layoutState = layoutModule.GetLayout(node);
+                    visual.Draw(layoutState);
 
-                    myDrawing.Children.Add( visual.Visual );
+                    myDrawing.Children.Add(visual.Visual);
                 }
 
-                foreach( var cluster in transformationModule.Graph.Clusters )
+                foreach (var cluster in transformationModule.Graph.Clusters)
                 {
-                    if( !cluster.Nodes.Any( n => Presentation.Picking.Pick( n ) ) )
+                    if (!cluster.Nodes.Any(n => Presentation.Picking.Pick(n)))
                     {
                         continue;
                     }
 
-                    var visual = new ClusterVisual( cluster, Presentation );
+                    var visual = new ClusterVisual(cluster, Presentation);
 
-                    myDrawingElements.Add( cluster.Id, visual );
+                    myDrawingElements.Add(cluster.Id, visual);
 
-                    visual.Draw( myDrawingElements );
+                    visual.Draw(myDrawingElements);
 
-                    myDrawing.Children.Insert( 0, visual.Visual );
+                    myDrawing.Children.Insert(0, visual.Visual);
                 }
 
-                AddVisualChild( myDrawing );
+                AddVisualChild(myDrawing);
 
                 var selectionModule = Presentation.GetPropertySetFor<Selection>();
-                foreach( var e in selectionModule.Items )
+                foreach (var e in selectionModule.Items)
                 {
                     AbstractElementVisual drawing;
-                    if( myDrawingElements.TryGetValue( e.OwnerId, out drawing ) )
+                    if (myDrawingElements.TryGetValue(e.OwnerId, out drawing))
                     {
-                        drawing.Select( e.IsSelected );
+                        drawing.Select(e.IsSelected);
                     }
                 }
 
@@ -190,61 +190,58 @@ namespace Plainion.GraphViz.Visuals
 
                 InvalidateMeasure();
 
-                if( RenderingFinished != null )
-                {
-                    RenderingFinished( this, EventArgs.Empty );
-                }
+                RenderingFinished?.Invoke(this, EventArgs.Empty);
             }
             else
             {
-                if( !myNodeMaskJournal.IsEmpty )
+                if (!myNodeMaskJournal.IsEmpty)
                 {
-                    foreach( var node in transformationModule.Graph.Nodes )
+                    foreach (var node in transformationModule.Graph.Nodes)
                     {
                         AbstractElementVisual visual;
-                        if( myDrawingElements.TryGetValue( node.Id, out visual ) )
+                        if (myDrawingElements.TryGetValue(node.Id, out visual))
                         {
-                            SetVisibility( ( NodeVisual )visual,
-                                Presentation.Picking.Pick( node ),
-                                v => v.Draw( layoutModule.GetLayout( v.Owner ) ) );
+                            SetVisibility((NodeVisual)visual,
+                                Presentation.Picking.Pick(node),
+                                v => v.Draw(layoutModule.GetLayout(v.Owner)));
                         }
                     }
 
-                    foreach( var edge in transformationModule.Graph.Edges )
+                    foreach (var edge in transformationModule.Graph.Edges)
                     {
                         AbstractElementVisual visual;
-                        if( myDrawingElements.TryGetValue( edge.Id, out visual ) )
+                        if (myDrawingElements.TryGetValue(edge.Id, out visual))
                         {
-                            SetVisibility( ( EdgeVisual )visual,
-                                Presentation.Picking.Pick( edge ),
-                                v => v.Draw( layoutModule.GetLayout( v.Owner ) ) );
+                            SetVisibility((EdgeVisual)visual,
+                                Presentation.Picking.Pick(edge),
+                                v => v.Draw(layoutModule.GetLayout(v.Owner)));
                         }
                     }
 
                     // if node visibility changed we should check whether clusters have to be redrawn
-                    foreach( var cluster in transformationModule.Graph.Clusters )
+                    foreach (var cluster in transformationModule.Graph.Clusters)
                     {
-                        if( cluster.Nodes.Any( n => Presentation.Picking.Pick( n ) ) )
+                        if (cluster.Nodes.Any(n => Presentation.Picking.Pick(n)))
                         {
-                            if( !myDrawingElements.ContainsKey( cluster.Id ) )
+                            if (!myDrawingElements.ContainsKey(cluster.Id))
                             {
-                                var visual = new ClusterVisual( cluster, Presentation );
+                                var visual = new ClusterVisual(cluster, Presentation);
 
-                                myDrawingElements.Add( cluster.Id, visual );
+                                myDrawingElements.Add(cluster.Id, visual);
 
-                                visual.Draw( myDrawingElements );
+                                visual.Draw(myDrawingElements);
 
-                                myDrawing.Children.Insert( 0, visual.Visual );
+                                myDrawing.Children.Insert(0, visual.Visual);
                             }
                         }
                         else
                         {
                             AbstractElementVisual visual;
-                            if( myDrawingElements.TryGetValue( cluster.Id, out visual ) )
+                            if (myDrawingElements.TryGetValue(cluster.Id, out visual))
                             {
-                                myDrawingElements.Remove( cluster.Id );
+                                myDrawingElements.Remove(cluster.Id);
 
-                                myDrawing.Children.Remove( visual.Visual );
+                                myDrawing.Children.Remove(visual.Visual);
                             }
                         }
                     }
@@ -253,14 +250,14 @@ namespace Plainion.GraphViz.Visuals
                     InvalidateVisual();
                 }
 
-                if( !mySelectionJournal.IsEmpty )
+                if (!mySelectionJournal.IsEmpty)
                 {
-                    foreach( var e in mySelectionJournal.Entries )
+                    foreach (var e in mySelectionJournal.Entries)
                     {
                         AbstractElementVisual visual;
-                        if( myDrawingElements.TryGetValue( e.OwnerId, out visual ) )
+                        if (myDrawingElements.TryGetValue(e.OwnerId, out visual))
                         {
-                            visual.Select( e.IsSelected );
+                            visual.Select(e.IsSelected);
                         }
                     }
 
@@ -272,9 +269,9 @@ namespace Plainion.GraphViz.Visuals
                 {
                     myOldScaling = myCurrentScaling;
 
-                    foreach( var edge in myDrawingElements.Values.OfType<EdgeVisual>() )
+                    foreach (var edge in myDrawingElements.Values.OfType<EdgeVisual>())
                     {
-                        edge.ApplyZoomFactor( myCurrentScaling );
+                        edge.ApplyZoomFactor(myCurrentScaling);
                     }
 
                     InvalidateVisual();
@@ -284,29 +281,29 @@ namespace Plainion.GraphViz.Visuals
 
         // when modifying the Children collection we have to consider that we could get here because of IsDirty
         // but IsVisible was already toggled multiple times so that actually nothing has to be done
-        private void SetVisibility<T>( T visual, bool isVisible, Action<T> drawAction ) where T : AbstractElementVisual
+        private void SetVisibility<T>(T visual, bool isVisible, Action<T> drawAction) where T : AbstractElementVisual
         {
-            if( isVisible )
+            if (isVisible)
             {
-                if( visual.Visual == null )
+                if (visual.Visual == null)
                 {
-                    drawAction( visual );
+                    drawAction(visual);
 
-                    myDrawing.Children.Add( visual.Visual );
+                    myDrawing.Children.Add(visual.Visual);
                 }
                 else
                 {
-                    if( !myDrawing.Children.Contains( visual.Visual ) )
+                    if (!myDrawing.Children.Contains(visual.Visual))
                     {
-                        myDrawing.Children.Add( visual.Visual );
+                        myDrawing.Children.Add(visual.Visual);
                     }
                 }
             }
             else
             {
-                if( myDrawing.Children.Contains( visual.Visual ) )
+                if (myDrawing.Children.Contains(visual.Visual))
                 {
-                    myDrawing.Children.Remove( visual.Visual );
+                    myDrawing.Children.Remove(visual.Visual);
                 }
             }
         }
@@ -324,7 +321,7 @@ namespace Plainion.GraphViz.Visuals
         }
 
         // Provide a required override for the GetVisualChild method.
-        protected override Visual GetVisualChild( int index )
+        protected override Visual GetVisualChild(int index)
         {
             return myDrawing;
         }
@@ -333,79 +330,79 @@ namespace Plainion.GraphViz.Visuals
         {
             get
             {
-                if( myDrawingElements.Count == 0 )
+                if (myDrawingElements.Count == 0)
                 {
-                    return new Size( 8, 8 );
+                    return new Size(8, 8);
                 }
 
                 var bounds = myDrawing.ContentBounds;
-                bounds.Union( myDrawing.DescendantBounds );
+                bounds.Union(myDrawing.DescendantBounds);
 
-                return new Size( bounds.Width * 64, bounds.Height * 64 );
+                return new Size(bounds.Width * 64, bounds.Height * 64);
             }
         }
 
-        protected override Size MeasureOverride( Size availableSize )
+        protected override Size MeasureOverride(Size availableSize)
         {
             Rect bounds = myDrawing.ContentBounds;
-            bounds.Union( myDrawing.DescendantBounds );
+            bounds.Union(myDrawing.DescendantBounds);
 
-            if( bounds.IsEmpty )
+            if (bounds.IsEmpty)
             {
                 // if the graph is empty
-                return new Size( 8, 8 );
+                return new Size(8, 8);
             }
 
             // add some extra padding in case the bezier curve is to huge
-            bounds.Inflate( bounds.Width * 0.01, bounds.Height * 0.01 );
+            bounds.Inflate(bounds.Width * 0.01, bounds.Height * 0.01);
 
             var m = new Matrix();
-            m.Translate( -bounds.Left, -bounds.Top );
+            m.Translate(-bounds.Left, -bounds.Top);
             // TODO: why 64?
-            m.Scale( 64, 64 );
+            m.Scale(64, 64);
 
-            myDrawing.Transform = new MatrixTransform( m );
+            myDrawing.Transform = new MatrixTransform(m);
 
-            return new Size( bounds.Width * 64, bounds.Height * 64 );
+            return new Size(bounds.Width * 64, bounds.Height * 64);
         }
 
-        public Rect? GetBoundingBox( IGraphItem item )
+        public Rect? GetBoundingBox(IGraphItem item)
         {
             AbstractElementVisual visual;
-            if( !myDrawingElements.TryGetValue( item.Id, out visual ) || visual.Visual == null )
+            if (!myDrawingElements.TryGetValue(item.Id, out visual) || visual.Visual == null)
             {
                 return null;
             }
 
             var bounds = visual.Visual.ContentBounds;
-            bounds.Scale( 64, 64 );
+            bounds.Scale(64, 64);
             return bounds;
         }
 
         public IGraphItem PickMousePosition()
         {
-            return Pick( Mouse.GetPosition( this ) );
+            return Pick(Mouse.GetPosition(this));
         }
 
-        public IGraphItem Pick( Point position )
+        public IGraphItem Pick(Point position)
         {
-            var result = VisualTreeHelper.HitTest( this, position );
-            if( result == null )
+            var result = VisualTreeHelper.HitTest(this, position);
+            if (result == null)
             {
                 return null;
             }
 
             var visual = result.VisualHit as DrawingVisual;
 
-            if( visual == null )
+            if (visual == null)
             {
                 return null;
             }
 
-            return ( IGraphItem )visual.ReadLocalValue( AbstractElementVisual.GraphItemProperty );
+            return (IGraphItem)visual.ReadLocalValue(AbstractElementVisual.GraphItemProperty);
         }
 
-        public void SetScaling( double scaleX, double scaleY )
+        public void SetScaling(double scaleX, double scaleY)
         {
             myCurrentScaling = Math.Min(scaleX, scaleY);
         }
