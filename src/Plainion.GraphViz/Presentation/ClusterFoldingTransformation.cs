@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.Windows.Mvvm;
@@ -8,21 +9,66 @@ namespace Plainion.GraphViz.Presentation
     /// <summary>
     /// Manages folding of clusters
     /// </summary>
-    public class ClusterFoldingTransformation : BindableBase, IGraphTransformation
+    public class ClusterFoldingTransformation : BindableBase, IGraphTransformation, IDisposable
     {
         private readonly IGraphPresentation myPresentation;
-
         private readonly HashSet<string> myFoldedClusters;
+        private IModuleChangedObserver myNodeMaskModuleObserver;
+        private bool myTransformationTriggered;
 
         // we remember the most recent input graph so that we can figure out
         // later which nodes where in which cluster BEFORE folding
-        private IGraph myGraph;
+        private IGraph myRawGraph;
+
+        private IGraph myRecentTransformedGraph;
 
         public ClusterFoldingTransformation(IGraphPresentation presentation)
         {
             myPresentation = presentation;
 
+            myNodeMaskModuleObserver = myPresentation.GetModule<INodeMaskModule>().CreateObserver();
+            myNodeMaskModuleObserver.ModuleChanged += OnGraphVisibilityChanged;
+
             myFoldedClusters = new HashSet<string>();
+        }
+
+        private void OnGraphVisibilityChanged(object sender, EventArgs e)
+        {
+            if (myRecentTransformedGraph == null)
+            {
+                // we will soon run transformation anyhow
+                return;
+            }
+
+            if (myTransformationTriggered)
+            {
+                // transformation already triggered
+                return;
+            }
+
+            var nextTransformedGraph = BuildGraph(myRawGraph);
+
+            if (myRecentTransformedGraph.Edges.Count() == nextTransformedGraph.Edges.Count()
+                && myRecentTransformedGraph.Edges.Intersect(nextTransformedGraph.Edges, new EdgeComparer()).Count() == nextTransformedGraph.Edges.Count())
+            {
+                // we only need to re-transform the graph if edges would change due to node visibility
+                return;
+            }
+
+            myTransformationTriggered = true;
+
+            // trigger a re-transformation
+            OnPropertyChanged(nameof(Clusters));
+        }
+
+        public void Dispose()
+        {
+            if (myNodeMaskModuleObserver != null)
+            {
+                myNodeMaskModuleObserver.ModuleChanged -= OnGraphVisibilityChanged;
+                myNodeMaskModuleObserver.Dispose();
+                myNodeMaskModuleObserver = null;
+            }
         }
 
         public IEnumerable<string> Clusters
@@ -37,7 +83,7 @@ namespace Plainion.GraphViz.Presentation
 
         public IEnumerable<Node> GetNodes(string clusterId)
         {
-            var graph = myGraph ?? myPresentation.Graph;
+            var graph = myRawGraph ?? myPresentation.Graph;
 
             return graph.Clusters.Single(c => c.Id == clusterId).Nodes;
         }
@@ -130,13 +176,26 @@ namespace Plainion.GraphViz.Presentation
 
         public IGraph Transform(IGraph graph)
         {
-            myGraph = graph;
-
-            if (myFoldedClusters.Count == 0)
+            try
             {
-                return graph;
-            }
+                myRawGraph = graph;
 
+                if (myFoldedClusters.Count == 0)
+                {
+                    return graph;
+                }
+
+                myRecentTransformedGraph = BuildGraph(graph);
+                return myRecentTransformedGraph;
+            }
+            finally
+            {
+                myTransformationTriggered = false;
+            }
+        }
+
+        private IGraph BuildGraph(IGraph graph)
+        {
             var builder = new RelaxedGraphBuilder();
 
             var nodesToClusterMap = new Dictionary<string, string>();
@@ -178,6 +237,8 @@ namespace Plainion.GraphViz.Presentation
                 }
 
                 var foldedNodes = foldedCluster.Nodes
+                    // we add all nodes here for performance reasons - visibility is handled on "edge level" below
+                    //.Where(n => myPresentation.Picking.Pick(n))
                     .Select(n => n.Id)
                     .ToList();
 
@@ -193,8 +254,9 @@ namespace Plainion.GraphViz.Presentation
                 builder.TryAddNode(node);
             }
 
-            // add edges 
-            foreach (var edge in graph.Edges)
+            // add "visible" edges 
+            // ("rebind" edges to cluster nodes in case original source/target is folded now)
+            foreach (var edge in graph.Edges.Where(e => myPresentation.Picking.Pick(e)))
             {
                 var source = edge.Source.Id;
                 var target = edge.Target.Id;

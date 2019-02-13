@@ -1,3 +1,8 @@
+## 2.13.0 - 2019-02-
+
+- Cluster folding respects visibility of edges, meaning: edges between clusters represent
+  the currently visible edges between the nodes of the clusters
+
 ## 2.12.0 - 2018-10-07
 
 - CodeInspection

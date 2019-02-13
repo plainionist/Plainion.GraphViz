@@ -139,16 +139,13 @@ namespace Plainion.GraphViz.Presentation
         }
 
         // for bookmarks
-        internal void ReadTansformations( IGraphPresentation presentation)
+        internal void ReadTansformations(IGraphPresentation presentation)
         {
             var module = presentation.GetModule<TransformationModule>();
 
             // TransformationModule adds default transformations
             // -> remove those
-            foreach (var t in module.Items.ToList())
-            {
-                module.Remove(t);
-            }
+            module.Clear();
 
             var count = myReader.ReadInt32();
             for (int i = 0; i < count; ++i)

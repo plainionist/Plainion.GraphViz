@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -70,26 +71,17 @@ namespace Plainion.GraphViz.Presentation
             }
         }
 
-        public void Remove(IGraphTransformation transformation)
-        {
-            myTransformations.Remove(transformation);
-
-            if (transformation is INotifyPropertyChanged notifyPropertyChanged)
-            {
-                notifyPropertyChanged.PropertyChanged -= OnTransformationChanged;
-            }
-
-            ApplyTransformations();
-
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, transformation));
-        }
-
-        internal void Clear()
+        public void Clear()
         {
             var transformations = myTransformations.ToList();
 
             foreach (var transformation in transformations)
             {
+                if (transformation is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+
                 myTransformations.Remove(transformation);
 
                 if (transformation is INotifyPropertyChanged notifyPropertyChanged)

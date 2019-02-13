@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Plainion.GraphViz.Model;
+﻿using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
@@ -8,9 +7,9 @@ namespace Plainion.GraphViz.Presentation
     /// </summary>
     public interface ITransformationModule : IModule<IGraphTransformation>
     {
-        void Add( IGraphTransformation transformation );
-        
-        void Remove( IGraphTransformation transformation );
+        void Add(IGraphTransformation transformation);
+
+        void Clear();
 
         IGraph Graph { get; }
     }
