@@ -7,20 +7,20 @@ namespace Plainion.GraphViz.Presentation
     {
         private IGraphPresentation myPresentation;
 
-        public GraphPicking( IGraphPresentation presentation )
+        public GraphPicking(IGraphPresentation presentation)
         {
             myPresentation = presentation;
         }
 
-        public bool Pick( Node node )
+        public bool Pick(Node node)
         {
             var masks = myPresentation.GetModule<INodeMaskModule>().Items
-                .Where( s => s.IsApplied );
+                .Where(s => s.IsApplied);
 
-            foreach( var mask in masks )
+            foreach (var mask in masks)
             {
-                var hitValue = mask.IsSet( node );
-                if( hitValue == null )
+                var hitValue = mask.IsSet(node);
+                if (hitValue == null)
                 {
                     // this mask contains no information about the given node
                     continue;
@@ -33,9 +33,9 @@ namespace Plainion.GraphViz.Presentation
             return true;
         }
 
-        public bool Pick( Edge edge )
+        public bool Pick(Edge edge)
         {
-            return Pick( edge.Source ) && Pick( edge.Target );
+            return Pick(edge.Source) && Pick(edge.Target);
         }
     }
 }

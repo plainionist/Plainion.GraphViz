@@ -2,6 +2,7 @@
 
 - Cluster folding respects visibility of edges, meaning: edges between clusters represent
   the currently visible edges between the nodes of the clusters
+- Algorithm "Remove nodes not reachable from outside cluster" added
 
 ## 2.12.0 - 2018-10-07
 

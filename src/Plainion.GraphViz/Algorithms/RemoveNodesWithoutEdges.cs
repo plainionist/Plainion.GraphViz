@@ -73,7 +73,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public void Execute(Cluster cluster)
         {
-            Execute(cluster.Nodes);
+            Execute(cluster.Nodes.Where(n=>myPresentation.Picking.Pick(n)));
         }
 
         private bool HideNode(Node node)

@@ -40,12 +40,16 @@
                     <MenuItem Header="Outgoings" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
-                    <MenuItem Header="Reachables" Command="{Binding ShowNodeWithReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" ToolTip="Selects the transitive hull of the node"/>
-                    <MenuItem Header="Reachables of selection" Command="{Binding ShowNodeWithReachablesCommand}" ToolTip="Selects the transitive hull of selected nodes"/>
+                    <MenuItem Header="Reachables" Command="{Binding ShowNodeWithReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                              ToolTip="Selects the transitive hull of the node"/>
+                    <MenuItem Header="Reachables of selection" Command="{Binding ShowNodeWithReachablesCommand}" 
+                              ToolTip="Selects the transitive hull of selected nodes"/>
                 </MenuItem>
-                <MenuItem Header="Remove (from visible)">
-                    <MenuItem Header="Unreachables" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" ToolTip="Removes all but the transitive hull of the node"/>
-                    <MenuItem Header="Unreachables of selection" Command="{Binding RemoveUnreachableNodesCommand}" ToolTip="Removes all but the transitive hull of selected nodes"/>
+                <MenuItem Header="Remove">
+                    <MenuItem Header="Not reachable" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                              ToolTip="Removes all but the transitive hull of this node"/>
+                    <MenuItem Header="Not reachable from selection" Command="{Binding RemoveUnreachableNodesCommand}" 
+                              ToolTip="Removes all but the transitive hull of selected nodes"/>
                 </MenuItem>
                 <MenuItem Header="Select">
                     <MenuItem Header="This" Command="{Binding SelectNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
@@ -102,8 +106,12 @@
                 <MenuItem Header="Unfold and hide all but targets" Command="{Binding UnfoldAndHideAllButTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <MenuItem Header="Unfold and hide all but sources" Command="{Binding UnfoldAndHideAllButSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <Separator/>
-                <MenuItem Header="Remove nodes without incomings" Command="{Binding RemoveNodesWithoutIncomingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                <MenuItem Header="Remove nodes without outgoings" Command="{Binding RemoveNodesWithoutOutgoingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                <MenuItem Header="Remove nodes">
+                    <MenuItem Header="Without incomings" Command="{Binding RemoveNodesWithoutIncomingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Without outgoings" Command="{Binding RemoveNodesWithoutOutgoingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <Separator/>
+                    <MenuItem Header="Not reachable from outside" Command="{Binding RemoveNodesNotReachableFromOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Copy caption of all visible nodes" Command="{Binding CopyAllCaptionsToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />
                 <MenuItem Header="Copy identifier of all visible nodes" Command="{Binding CopyAllIdentifiersToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />

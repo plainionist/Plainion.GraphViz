@@ -65,6 +65,7 @@
     <Compile Include="Algorithms\ChangeClusterAssignment.cs" />
     <Compile Include="Algorithms\NodeType.cs" />
     <Compile Include="Algorithms\RemoveNodesReachableFromMultipleClusters.cs" />
+    <Compile Include="Algorithms\RemoveNodesNotReachableOutsideCluster.cs" />
     <Compile Include="Algorithms\SelectAll.cs" />
     <Compile Include="Algorithms\TracePath.cs" />
     <Compile Include="Algorithms\ShowMostIncomings.cs" />

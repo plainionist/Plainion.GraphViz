@@ -61,6 +61,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             RemoveNodesWithoutIncomingsCommand = new DelegateCommand<Cluster>(c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Incomings).Execute(c));
             RemoveNodesWithoutOutgoingsCommand = new DelegateCommand<Cluster>(c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Outgoings).Execute(c));
 
+            RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(c => new RemoveNodesNotReachableOutsideCluster(Presentation).Execute(c));
+
             CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
             CopyAllIdentifiersToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetIdentifiersOfAllVisibleNodesFrom(c)));
 
@@ -293,6 +295,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand<Cluster> RemoveNodesWithoutOutgoingsCommand { get; private set; }
 
+        public DelegateCommand<Cluster> RemoveNodesNotReachableFromOutsideCommand { get; private set; }
+
         public DelegateCommand FoldUnfoldAllClustersCommand { get; private set; }
 
         public DelegateCommand<string> AddVisibleNodesOutsideClustersToClusterCommand { get; private set; }
@@ -442,6 +446,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
                         RemoveNodesWithoutIncomingsCommand.RaiseCanExecuteChanged();
                         RemoveNodesWithoutOutgoingsCommand.RaiseCanExecuteChanged();
+                        RemoveNodesNotReachableFromOutsideCommand.RaiseCanExecuteChanged();
                     }
                 }
             }
