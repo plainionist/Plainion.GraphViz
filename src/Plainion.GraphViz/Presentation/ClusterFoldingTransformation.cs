@@ -20,8 +20,19 @@ namespace Plainion.GraphViz.Presentation
         // later which nodes where in which cluster BEFORE folding
         private IGraph myGraph;
 
-        // key: cluster id, value: nodes of this cluster which were visible during last rendering
-        private readonly Dictionary<string, HashSet<string>> myRecentFoldedNodesVisibility;
+        private class ComputedEdge
+        {
+            public bool IsVisible;
+            public List<Edge> Originals = new List<Edge>();
+
+            public bool ShouldBeVisibile(IGraphPicking picking)
+            {
+                return Originals.Any(e => picking.Pick(e));
+            }
+        }
+
+        // key: computed edge id, value: edges built up the computed edge
+        private readonly Dictionary<string, ComputedEdge> myComputedEdges;
 
         public ClusterFoldingTransformation(IGraphPresentation presentation)
         {
@@ -31,19 +42,19 @@ namespace Plainion.GraphViz.Presentation
             myNodeMaskModuleObserver.ModuleChanged += OnGraphVisibilityChanged;
 
             myFoldedClusters = new HashSet<string>();
-            myRecentFoldedNodesVisibility = new Dictionary<string, HashSet<string>>();
+            myComputedEdges = new Dictionary<string, ComputedEdge>();
         }
 
         // If visibility of nodes/edges of a folded cluster changes that way that 
         // it would change the in/out edges of the folded cluster we need to 
         // trigger a transformation so that the "calculated" edges from/to the folded
         // cluster can be updated.
-        private void OnGraphVisibilityChanged(object sender, EventArgs e)
+        private void OnGraphVisibilityChanged(object sender, EventArgs eventArgs)
         {
-            if (!myFoldedClusters.SetEquals(myRecentFoldedNodesVisibility.Keys))
+            if (myGraph == null)
             {
-                // folded clusters out of sync with last rendering state
-                // -> transformation will anyhow be triggered soon outside
+                // no transformation happened so far
+                // -> nothing to notify
                 return;
             }
 
@@ -53,17 +64,18 @@ namespace Plainion.GraphViz.Presentation
                 return;
             }
 
-            IEnumerable<string> GetVisibleNodes(string clusterId) => GetNodes(clusterId).Where(n => myPresentation.Picking.Pick(n)).Select(n => n.Id);
-
-            if (myRecentFoldedNodesVisibility.All(entry => entry.Value.SetEquals(GetVisibleNodes(entry.Key))))
+            if (myComputedEdges.All(x => x.Value.IsVisible == x.Value.ShouldBeVisibile(myPresentation.Picking)))
             {
-                // visibility of folded nodes did not change
+                // visibility of none of the computed edges would change
                 return;
             }
 
-            myChangeNotified = true;
+            NotifyTransformationHasChanged();
+        }
 
-            // notify transformation has changed 
+        private void NotifyTransformationHasChanged()
+        {
+            myChangeNotified = true;
             OnPropertyChanged(nameof(Clusters));
         }
 
@@ -103,7 +115,7 @@ namespace Plainion.GraphViz.Presentation
 
             AddInternal(clusterId);
 
-            OnPropertyChanged(nameof(Clusters));
+            NotifyTransformationHasChanged();
         }
 
         private void AddInternal(string clusterId)
@@ -136,7 +148,7 @@ namespace Plainion.GraphViz.Presentation
                 AddInternal(cluster);
             }
 
-            OnPropertyChanged(nameof(Clusters));
+            NotifyTransformationHasChanged();
         }
 
         public void Remove(string clusterId)
@@ -145,7 +157,7 @@ namespace Plainion.GraphViz.Presentation
 
             if (removed)
             {
-                OnPropertyChanged(nameof(Clusters));
+                NotifyTransformationHasChanged();
             }
         }
 
@@ -165,7 +177,7 @@ namespace Plainion.GraphViz.Presentation
                 myFoldedClusters.Remove(cluster);
             }
 
-            OnPropertyChanged(nameof(Clusters));
+            NotifyTransformationHasChanged();
         }
 
         public void Toggle(string clusterId)
@@ -185,7 +197,7 @@ namespace Plainion.GraphViz.Presentation
             try
             {
                 myGraph = graph;
-                myRecentFoldedNodesVisibility.Clear();
+                myComputedEdges.Clear();
 
                 if (myFoldedClusters.Count == 0)
                 {
@@ -234,22 +246,19 @@ namespace Plainion.GraphViz.Presentation
                 builder.TryAddNode(clusterNodeId);
                 builder.TryAddCluster(clusterId, new[] { clusterNodeId });
 
-                Cluster foldedCluster = null;
-                if (!clusterMap.TryGetValue(clusterId, out foldedCluster))
+                Cluster cluster = null;
+                if (!clusterMap.TryGetValue(clusterId, out cluster))
                 {
                     // this cluster was deleted
                     myFoldedClusters.Remove(clusterId);
                     continue;
                 }
 
-                var visibleNodes = new HashSet<string>();
-                foreach (var n in foldedCluster.Nodes.Where(n => myPresentation.Picking.Pick(n)))
+                // we can safely handle all nodes here as visibility is handled below on "edge-level"
+                foreach (var n in cluster.Nodes)
                 {
-                    nodesToClusterMap[n.Id] = foldedCluster.Id;
-                    visibleNodes.Add(n.Id);
+                    nodesToClusterMap[n.Id] = cluster.Id;
                 }
-
-                myRecentFoldedNodesVisibility.Add(clusterId, visibleNodes);
             }
 
             // add non-clustered nodes
@@ -258,28 +267,46 @@ namespace Plainion.GraphViz.Presentation
                 builder.TryAddNode(node);
             }
 
-            // add "visible" edges 
-            // ("rebind" edges to cluster nodes in case original source/target is folded now)
-            foreach (var edge in graph.Edges.Where(e => myPresentation.Picking.Pick(e)))
+            // add edges
+            foreach (var edge in graph.Edges)
             {
-                var source = edge.Source.Id;
-                var target = edge.Target.Id;
+                var redirectedEdge = edge;
 
-                string clusterId;
-                if (nodesToClusterMap.TryGetValue(source, out clusterId) && myFoldedClusters.Contains(clusterId))
+                // "redirect" source/target in case source/target is inside folded cluster
+
+                if (nodesToClusterMap.TryGetValue(edge.Source.Id, out var clusterId) && myFoldedClusters.Contains(clusterId))
                 {
-                    source = GetClusterNodeId(clusterId);
+                    redirectedEdge = new Edge(builder.Graph.FindNode(GetClusterNodeId(clusterId)), redirectedEdge.Target);
                 }
 
-                if (nodesToClusterMap.TryGetValue(target, out clusterId) && myFoldedClusters.Contains(clusterId))
+                if (nodesToClusterMap.TryGetValue(edge.Target.Id, out clusterId) && myFoldedClusters.Contains(clusterId))
                 {
-                    target = GetClusterNodeId(clusterId);
+                    redirectedEdge = new Edge(redirectedEdge.Source, builder.Graph.FindNode(GetClusterNodeId(clusterId)));
                 }
 
                 // ignore self-edges
-                if (source != target)
+                if (redirectedEdge.Source.Id == redirectedEdge.Target.Id)
                 {
-                    builder.TryAddEdge(source, target);
+                    continue;
+                }
+
+                var isEdgeVisible = myPresentation.Picking.Pick(edge);
+                if (isEdgeVisible)
+                {
+                    // only add visible nodes to the graph
+                    builder.TryAddEdge(redirectedEdge.Source.Id, redirectedEdge.Target.Id);
+                }
+
+                if (redirectedEdge != edge)
+                {
+                    if (!myComputedEdges.TryGetValue(redirectedEdge.Id, out var originalEdges))
+                    {
+                        originalEdges = new ComputedEdge();
+                        myComputedEdges.Add(redirectedEdge.Id, originalEdges);
+                    }
+
+                    originalEdges.IsVisible |= isEdgeVisible;
+                    originalEdges.Originals.Add(edge);
                 }
             }
 
