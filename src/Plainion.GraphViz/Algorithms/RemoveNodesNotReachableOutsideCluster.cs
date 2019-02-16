@@ -37,7 +37,7 @@ namespace Plainion.GraphViz.Algorithms
             mask.IsShowMask = false;
             mask.Set(unreachables);
             var caption = myPresentation.GetPropertySetFor<Caption>().Get(cluster.Id);
-            mask.Label = $"Nodes not reachable from outside {caption}";
+            mask.Label = $"Nodes not reachable from outside {caption.DisplayText}";
 
             var module = myPresentation.GetModule<INodeMaskModule>();
             module.Push(mask);

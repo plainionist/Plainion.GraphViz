@@ -5,13 +5,18 @@ using System.Linq;
 namespace Plainion.GraphViz.Model
 {
     [Serializable]
-    public class Cluster : AbstractGraphItem
+    public class Cluster : IGraphItem
     {
         public Cluster(string id, IEnumerable<Node> nodes)
-            :base(id)
         {
+            Contract.RequiresNotNullNotEmpty(id, nameof(id));
+
+            Id = id;
+
             Nodes = nodes.ToList();
         }
+
+        public string Id { get; private set; }
 
         public IEnumerable<Node> Nodes { get; private set; }
     }
