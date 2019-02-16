@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public AddVisibleNodesOutsideClustersToCluster(IGraphPresentation presentation)
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull(presentation, nameof(presentation));
 
             myPresentation = presentation;
         }
@@ -24,8 +24,7 @@ namespace Plainion.GraphViz.Algorithms
                 .Select(node => node.Id)
                 .ToList();
 
-            new ChangeClusterAssignment(myPresentation)
-                .Execute(t => t.AddToCluster(nodes, clusterId));
+            myPresentation.ChangeClusterAssignment(t => t.AddToCluster(nodes, clusterId));
         }
     }
 }

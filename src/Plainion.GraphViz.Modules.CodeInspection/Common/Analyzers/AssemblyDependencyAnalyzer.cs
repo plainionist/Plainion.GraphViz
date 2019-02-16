@@ -80,7 +80,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         {
             var presentation = new GraphPresentation();
             presentation.Graph = builder.Graph;
-            presentation.GetModule<INodeMaskModule>().AutoHideAllNodesForShowMasks = true;
 
             var algo = new TransitiveHull(presentation);
             algo.Show = true;

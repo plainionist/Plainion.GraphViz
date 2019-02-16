@@ -1,5 +1,7 @@
-## 2.13.0 - 2019-02-
+## 3.0 - 2019-02-
 
+- Show/hide concept completely reworked. Now context menu operations always apply a "delta" to the 
+  seen graph.
 - Cluster folding respects visibility of edges, meaning: edges between clusters represent
   the currently visible edges between the nodes of the clusters
 - Algorithm "Remove nodes not reachable from outside cluster" added

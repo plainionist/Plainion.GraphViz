@@ -19,7 +19,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public ShowHideNodes(IGraphPresentation presentation, bool show, bool negate)
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull(presentation, nameof(presentation));
 
             myPresentation = presentation;
             myShow = show;

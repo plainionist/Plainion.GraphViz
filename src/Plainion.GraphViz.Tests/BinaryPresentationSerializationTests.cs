@@ -75,23 +75,6 @@ namespace Plainion.GraphViz.Tests
         }
 
         [Test]
-        public void WHEN_AllNodesMasksExist_THEN_MasksGetSerialized()
-        {
-            var module = myPresentation.GetModule<NodeMaskModule>();
-            var mask = new AllNodesMask();
-            mask.IsShowMask = false;
-            module.Push(mask);
-
-            var presentation = SerializeDeserialize(myPresentation);
-
-            module = presentation.GetModule<NodeMaskModule>();
-
-            Assert.That(module, Is.Not.SameAs(myPresentation.GetModule<NodeMaskModule>()));
-            Assert.That(module.Items.Single().IsShowMask, Is.False);
-            Assert.That(module.Items.Single(), Is.InstanceOf<AllNodesMask>());
-        }
-
-        [Test]
         public void WHEN_ClusterVisibilityIsDefined_THEN_ClusterVisibilityIsSerialized()
         {
             var module = myPresentation.GetModule<TransformationModule>();

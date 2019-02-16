@@ -124,14 +124,6 @@ namespace Plainion.GraphViz.Presentation
                 mask.IsShowMask = isShowMask;
                 return mask;
             }
-            else if (maskType == "AllNodesMask")
-            {
-                var mask = new AllNodesMask();
-                mask.Label = label;
-                mask.IsApplied = isApplied;
-                mask.IsShowMask = isShowMask;
-                return mask;
-            }
             else
             {
                 throw new NotSupportedException("Unknown mask type: " + maskType);

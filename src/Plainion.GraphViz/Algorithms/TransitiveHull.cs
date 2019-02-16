@@ -14,7 +14,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public TransitiveHull(IGraphPresentation presentation)
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull(presentation, nameof(presentation));
 
             myPresentation = presentation;
 

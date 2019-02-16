@@ -24,15 +24,20 @@
 
         <r:GraphView.ContextMenus>
             <ContextMenu x:Key="Node">
-                <MenuItem Header="Hide">
+                <MenuItem Header="Remove">
                     <MenuItem Header="This" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Selection" Command="{Binding HideNodeCommand}"/>
                     <MenuItem Header="All but selection" Command="{Binding HideAllButCommand}"/>
                     <Separator/>
                     <MenuItem Header="Incomings" Command="{Binding HideIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Outgoings" Command="{Binding HideOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <Separator/>
+                    <MenuItem Header="Not reachable" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                              ToolTip="Removes all but the transitive hull of this node"/>
+                    <MenuItem Header="Not reachable from selection" Command="{Binding RemoveUnreachableNodesCommand}" 
+                              ToolTip="Removes all but the transitive hull of selected nodes"/>
                 </MenuItem>
-                <MenuItem Header="Show (add)">
+                <MenuItem Header="Add">
                     <MenuItem Header="This" Command="{Binding ShowNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Selection" Command="{Binding ShowNodeCommand}"/>
                     <Separator/>
@@ -41,15 +46,9 @@
                     <MenuItem Header="Siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
                     <MenuItem Header="Reachables" Command="{Binding ShowNodeWithReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
-                              ToolTip="Selects the transitive hull of the node"/>
+                              ToolTip="Shows the transitive hull of the node"/>
                     <MenuItem Header="Reachables of selection" Command="{Binding ShowNodeWithReachablesCommand}" 
-                              ToolTip="Selects the transitive hull of selected nodes"/>
-                </MenuItem>
-                <MenuItem Header="Remove">
-                    <MenuItem Header="Not reachable" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
-                              ToolTip="Removes all but the transitive hull of this node"/>
-                    <MenuItem Header="Not reachable from selection" Command="{Binding RemoveUnreachableNodesCommand}" 
-                              ToolTip="Removes all but the transitive hull of selected nodes"/>
+                              ToolTip="Shows the transitive hull of selected nodes"/>
                 </MenuItem>
                 <MenuItem Header="Select">
                     <MenuItem Header="This" Command="{Binding SelectNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>

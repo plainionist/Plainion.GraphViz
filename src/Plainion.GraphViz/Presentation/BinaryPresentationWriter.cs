@@ -119,10 +119,6 @@ namespace Plainion.GraphViz.Presentation
                     myWriter.Write(value);
                 }
             }
-            else if (mask is AllNodesMask)
-            {
-                myWriter.Write("AllNodesMask");
-            }
             else
             {
                 throw new NotSupportedException("Unknown mask type: " + mask.GetType());

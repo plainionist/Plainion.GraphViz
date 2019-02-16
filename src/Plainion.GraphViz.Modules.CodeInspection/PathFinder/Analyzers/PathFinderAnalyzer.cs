@@ -194,7 +194,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 
             var presentation = new GraphPresentation();
             presentation.Graph = builder.Graph;
-            presentation.GetModule<INodeMaskModule>().AutoHideAllNodesForShowMasks = true;
 
             // add captions for readability
             var captions = presentation.GetModule<ICaptionModule>();

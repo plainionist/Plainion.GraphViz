@@ -12,7 +12,5 @@ namespace Plainion.GraphViz.Presentation
         void MoveUp( INodeMask item );
 
         void Remove( INodeMask item );
-
-        bool AutoHideAllNodesForShowMasks { get; set; }
     }
 }

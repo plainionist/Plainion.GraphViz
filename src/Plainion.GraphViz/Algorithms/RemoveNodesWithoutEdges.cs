@@ -33,7 +33,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public RemoveNodesWithoutEdges(IGraphPresentation presentation, Mode mode)
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull(presentation, nameof(presentation));
 
             myPresentation = presentation;
             myMode = mode;

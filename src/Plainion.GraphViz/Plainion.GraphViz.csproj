@@ -61,8 +61,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\ChangeClusterFolding.cs" />
-    <Compile Include="Algorithms\ChangeClusterAssignment.cs" />
     <Compile Include="Algorithms\NodeType.cs" />
     <Compile Include="Algorithms\RemoveNodesReachableFromMultipleClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesNotReachableOutsideCluster.cs" />
@@ -95,6 +93,7 @@
     <Compile Include="Presentation\BookmarkBuilder.cs" />
     <Compile Include="Presentation\ClusterFoldingTransformation.cs" />
     <Compile Include="Presentation\DynamicClusterTransformation.cs" />
+    <Compile Include="Presentation\GraphPresentationExtensions.cs" />
     <Compile Include="Presentation\IGraphTransformation.cs" />
     <Compile Include="Presentation\IModuleRepository.cs" />
     <Compile Include="Presentation\ITransformationModule.cs" />
@@ -103,7 +102,6 @@
     <Compile Include="Presentation\GenericLabelConverter.cs" />
     <Compile Include="Dot\StyleConverter.cs" />
     <Compile Include="Presentation\AbstractModule.cs" />
-    <Compile Include="Presentation\AllNodesMask.cs" />
     <Compile Include="Presentation\AbstractNodeMask.cs" />
     <Compile Include="Presentation\CaptionModule.cs" />
     <Compile Include="Presentation\GenericModuleChangedObserver.cs" />

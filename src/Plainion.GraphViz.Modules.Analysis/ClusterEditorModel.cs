@@ -66,12 +66,10 @@ namespace Plainion.GraphViz.Modules.Analysis
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             captionModule.Add(new Caption(newClusterId, "<new>"));
 
-            new ChangeClusterAssignment(myPresentation)
-                .Execute(t => t.AddCluster(newClusterId));
+            myPresentation.ChangeClusterAssignment(t => t.AddCluster(newClusterId));
 
             // start new clusters folded
-            new ChangeClusterFolding(myPresentation)
-                .Execute(t => t.Toggle(newClusterId));
+            myPresentation.ChangeClusterFolding(t => t.Toggle(newClusterId));
 
             // update tree
             {
@@ -104,8 +102,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
-            var operation = new ChangeClusterAssignment(myPresentation);
-            operation.Execute(t => t.HideCluster(clusterNode.Id));
+            myPresentation.ChangeClusterAssignment(t => t.HideCluster(clusterNode.Id));
 
             // update tree
             {
@@ -149,8 +146,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                 .Select(n => n.Node.Id)
                 .ToList();
 
-            var operation = new ChangeClusterAssignment(myPresentation);
-            operation.Execute(t => t.AddToCluster(nodes, SelectedCluster));
+            myPresentation.ChangeClusterAssignment(t => t.AddToCluster(nodes, SelectedCluster));
 
             // update tree
             {
@@ -311,8 +307,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             var node = (ClusterTreeNode)sender;
 
-            new ChangeClusterAssignment(myPresentation)
-                .Execute(t => t.AddToCluster(node.Id, ((ClusterTreeNode)node.Parent).Id));
+            myPresentation.ChangeClusterAssignment(t => t.AddToCluster(node.Id, ((ClusterTreeNode)node.Parent).Id));
         }
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
@@ -485,8 +480,7 @@ namespace Plainion.GraphViz.Modules.Analysis
 
             var nodeId = ((ClusterTreeNode)droppedElement.DataContext).Id;
 
-            new ChangeClusterAssignment(myPresentation)
-                .Execute(t => t.RemoveFromClusters(nodeId));
+            myPresentation.ChangeClusterAssignment(t => t.RemoveFromClusters(nodeId));
         }
     }
 }

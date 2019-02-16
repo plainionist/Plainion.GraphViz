@@ -225,7 +225,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
                 var presentation = new GraphPresentation();
                 presentation.Graph = builder.Graph;
-                presentation.GetModule<INodeMaskModule>().AutoHideAllNodesForShowMasks = true;
 
                 // add captions for readability
                 var captions = presentation.GetModule<ICaptionModule>();
@@ -263,7 +262,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             CopyCaptions(presentation, inputPresentation);
 
             var masks = presentation.GetModule<INodeMaskModule>();
-            masks.AutoHideAllNodesForShowMasks = true;
 
             // find all nodes from which the targets can be reached
             var algo = new TransitiveHull(presentation);
@@ -287,7 +285,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             CopyCaptions(presentation, inputPresentation);
 
             var masks = presentation.GetModule<INodeMaskModule>();
-            masks.AutoHideAllNodesForShowMasks = true;
 
             var transformations = presentation.GetModule<ITransformationModule>();
 
@@ -301,12 +298,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .ToList();
 
             // 2. fold all clusters to "see" type dependencies only
-            new ChangeClusterFolding(presentation).FoldUnfoldAllClusters();
+            presentation.FoldUnfoldAllClusters();
 
             // 3. unfold clusters of targets again to only "see" dependencies to target nodes
             foreach (var c in targetClusters)
             {
-                new ChangeClusterFolding(presentation).Execute(t => t.Toggle(c.Id));
+                presentation.ChangeClusterFolding(t => t.Toggle(c.Id));
             }
 
             // 4. find all nodes from which the targets can be reached

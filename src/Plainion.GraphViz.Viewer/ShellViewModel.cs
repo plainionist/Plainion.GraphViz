@@ -167,12 +167,9 @@ namespace Plainion.GraphViz.Viewer
 
                 myPresentation = Model.Presentation;
 
-                myPresentation.GetModule<INodeMaskModule>().AutoHideAllNodesForShowMasks = true;
-
                 if (myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit)
                 {
-                    new ChangeClusterFolding(myPresentation)
-                        .FoldUnfoldAllClusters();
+                    myPresentation.FoldUnfoldAllClusters();
                 }
 
                 var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();

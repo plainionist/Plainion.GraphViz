@@ -6,13 +6,16 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
+    /// <summary>
+    /// Considers visibility of nodes and edges.
+    /// </summary>
     public class TracePath
     {
         private readonly IGraphPresentation myPresentation;
 
         public TracePath(IGraphPresentation presentation)
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull(presentation, nameof(presentation));
 
             myPresentation = presentation;
         }

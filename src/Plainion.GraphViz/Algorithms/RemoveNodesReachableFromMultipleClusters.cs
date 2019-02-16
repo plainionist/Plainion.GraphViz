@@ -15,7 +15,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public RemoveNodesReachableFromMultipleClusters(IGraphPresentation presentation)
         {
-            Contract.RequiresNotNull(presentation, "presentation");
+            Contract.RequiresNotNull(presentation, nameof(presentation));
 
             myPresentation = presentation;
         }

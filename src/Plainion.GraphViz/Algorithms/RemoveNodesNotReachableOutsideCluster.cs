@@ -9,8 +9,8 @@ namespace Plainion.GraphViz.Algorithms
         private readonly IGraphPresentation myPresentation;
 
         public RemoveNodesNotReachableOutsideCluster(IGraphPresentation presentation)
-        { 
-            Contract.RequiresNotNull(presentation, "presentation");
+        {
+            Contract.RequiresNotNull(presentation, nameof(presentation));
 
             myPresentation = presentation;
         }
