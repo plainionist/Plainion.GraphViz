@@ -49,13 +49,14 @@ namespace Plainion.GraphViz.Algorithms
             if (nodes.Count() == 1)
             {
                 var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-                mask.Label = (myNegate ? "Not " : "") + caption.DisplayText;
+                mask.Label = caption.DisplayText;
             }
             else
             {
                 var caption = myPresentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
                 mask.Label = caption.DisplayText + "...";
             }
+
             if (myNegate)
             {
                 mask.Label = "Not " + mask.Label;
