@@ -29,18 +29,18 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         [ImportingConstructor]
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
-            HideNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false).Execute(GetRelevantNodes(n)));
-            ShowNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, true).Execute(GetRelevantNodes(n)));
-            HideAllButCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false, true).Execute(GetRelevantNodes(n)));
+            HideNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false).Execute(GetSelectedNodes(n)));
+            ShowNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, true).Execute(GetSelectedNodes(n)));
+            HideAllButCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false, true).Execute(GetSelectedNodes(n)));
 
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: true));
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
             ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Execute(n));
-            ShowNodeWithReachablesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = true }.Execute(GetRelevantNodes(n)));
+            ShowNodeWithReachablesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = true }.Execute(GetSelectedNodes(n)));
 
             HideIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: false));
             HideOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
-            RemoveUnreachableNodesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = false }.Execute(GetRelevantNodes(n)));
+            RemoveUnreachableNodesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = false }.Execute(GetSelectedNodes(n)));
 
             SelectNodeCommand = new DelegateCommand<Node>(n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
             SelectNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Select(n));
@@ -75,16 +75,16 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             FoldUnfoldAllClustersCommand = new DelegateCommand(() => new ChangeClusterFolding(Presentation).FoldUnfoldAllClusters(), () => Presentation != null);
             AddVisibleNodesOutsideClustersToClusterCommand = new DelegateCommand<string>(c => new AddVisibleNodesOutsideClustersToCluster(Presentation).Execute(c), c => Presentation != null);
-            DeselectAllCommand = new DelegateCommand(() => new SelectAll(Presentation).Execute(false), () => Presentation != null);
+            DeselectAllCommand = new DelegateCommand(() => DeselectAll(), () => Presentation != null);
             HomeCommand = new DelegateCommand(() => Navigation.HomeZoomPan(), () => Presentation != null);
             InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
 
             AddToClusterCommand = new DelegateCommand<string>(c => new ChangeClusterAssignment(Presentation).Execute(t => t.AddToCluster(GraphItemForContextMenu.Id, c)));
             AddWithSelectedToClusterCommand = new DelegateCommand<string>(c => new ChangeClusterAssignment(Presentation)
-                .Execute(t => t.AddToCluster(GetRelevantNodes(null)
+                .Execute(t => t.AddToCluster(GetSelectedNodes(null)
                     .Select(n => n.Id).ToArray(), c)));
             RemoveFromClusterCommand = new DelegateCommand<Node>(node => new ChangeClusterAssignment(Presentation)
-                .Execute(t => t.RemoveFromClusters(GetRelevantNodes(node)
+                .Execute(t => t.RemoveFromClusters(GetSelectedNodes(node)
                     .Select(n => n.Id).ToArray())));
 
             TraceToCommand = new DelegateCommand<Node>(n => new TracePath(Presentation).Execute((Node)GraphItemForContextMenu, n));
@@ -96,6 +96,11 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
+        }
+
+        private void DeselectAll()
+        {
+            Presentation.GetPropertySetFor<Selection>().Clear();
         }
 
         private string GetCaptionFromNode(Node n)
@@ -133,7 +138,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         {
             return t =>
             {
-                foreach (var c in GetRelevantClusters(commandParamter))
+                foreach (var c in GetSelectedClusters(commandParamter))
                 {
                     t.Toggle(c.Id);
                 }
@@ -141,7 +146,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         }
 
         // by convention: if given commandParameter is null then "this and all selected" nodes are relevant
-        private Node[] GetRelevantNodes(Node commandParamter)
+        private Node[] GetSelectedNodes(Node commandParamter)
         {
             if (commandParamter != null)
             {
@@ -151,8 +156,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             var selectionModule = Presentation.GetPropertySetFor<Selection>();
             try
             {
-                return Presentation.GetModule<ITransformationModule>().Graph.Nodes
-                    .Where(n => selectionModule.Get(n.Id).IsSelected)
+                // avoid creating a lot of selection objects just to clear the module 
+                // in the next line
+                var nodes = Presentation.GetModule<ITransformationModule>().Graph.Nodes;
+                return selectionModule.Items
+                    .Where(x => x.IsSelected)
+                    .Select(x => nodes.FirstOrDefault(n => n.Id == x.OwnerId))
+                    .Where(n => n != null)
                     .Concat(new[] { (Node)GraphItemForContextMenu })
                     .ToArray();
             }
@@ -164,8 +174,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
         }
 
-        // by convention: if given commandParameter is null then "this and all selected" cluser are relevant
-        private Cluster[] GetRelevantClusters(Cluster commandParamter)
+        // by convention: if given commandParameter is null then "this and all selected" cluster are relevant
+        private Cluster[] GetSelectedClusters(Cluster commandParamter)
         {
             if (commandParamter != null)
             {
@@ -175,8 +185,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             var selectionModule = Presentation.GetPropertySetFor<Selection>();
             try
             {
-                return Presentation.GetModule<ITransformationModule>().Graph.Clusters
-                    .Where(n => selectionModule.Get(n.Id).IsSelected)
+                // avoid creating a lot of selection objects just to clear the module 
+                // in the next line
+                var clusters = Presentation.GetModule<ITransformationModule>().Graph.Clusters;
+                return selectionModule.Items
+                    .Where(x => x.IsSelected)
+                    .Select(x => clusters.FirstOrDefault(c => c.Id == x.OwnerId))
+                    .Where(n => n != null)
                     .Concat(new[] { (Cluster)GraphItemForContextMenu })
                     .ToArray();
             }
@@ -388,7 +403,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             var nodes = transformations.Graph.Nodes
                 .Union(Presentation.Graph.Nodes)
-                .Where(n => selections.Get(n.Id).IsSelected)
+                .Where(n => selections.TryGet(n.Id)?.IsSelected ?? false)
                 .Distinct()
                 .Select(n => new NodeWithCaption(n, captions.Get(n.Id).DisplayText))
                 .OrderBy(n => n.DisplayText);
@@ -413,7 +428,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 mySelectionMenuUpdatePending = true;
 
                 // there could come many notifications in a row due to the "on demand create" Get() behavior
-                // -> lets queue into message pump so that we skip many or all notifactions and just collect
+                // -> lets queue into message pump so that we skip many or all notifications and just collect
                 //    later the final state
                 Application.Current.Dispatcher.BeginInvoke(new Action(BuildSelectedNodesMenu));
             }

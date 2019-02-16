@@ -252,12 +252,14 @@ namespace Plainion.GraphViz.Visuals
 
                 if (!mySelectionJournal.IsEmpty)
                 {
+                    var selectionModule = Presentation.GetPropertySetFor<Selection>();
                     foreach (var e in mySelectionJournal.Entries)
                     {
                         AbstractElementVisual visual;
                         if (myDrawingElements.TryGetValue(e.OwnerId, out visual))
                         {
-                            visual.Select(e.IsSelected);
+                            // for each change apply new status
+                            visual.Select(selectionModule.TryGet(e.OwnerId)?.IsSelected ?? false);
                         }
                     }
 
