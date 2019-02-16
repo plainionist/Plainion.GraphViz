@@ -29,63 +29,140 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         [ImportingConstructor]
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
-            HideNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false).Execute(GetSelectedNodes(n)));
-            ShowNodeCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, true).Execute(GetSelectedNodes(n)));
-            HideAllButCommand = new DelegateCommand<Node>(n => new ShowHideNodes(Presentation, false, true).Execute(GetSelectedNodes(n)));
+            HideNodeCommand = new DelegateCommand<Node>(
+                n => new ShowHideNodes(Presentation, false).Execute(GetSelectedNodes(n)));
 
-            ShowNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: true));
-            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
-            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Execute(n));
-            ShowNodeWithReachablesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = true }.Execute(GetSelectedNodes(n)));
+            ShowNodeCommand = new DelegateCommand<Node>(
+                n => new ShowHideNodes(Presentation, true).Execute(GetSelectedNodes(n)));
 
-            HideIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Execute(n, show: false));
-            HideOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
-            RemoveUnreachableNodesCommand = new DelegateCommand<Node>(n => new TransitiveHull(Presentation) { Show = false }.Execute(GetSelectedNodes(n)));
+            HideAllButCommand = new DelegateCommand<Node>(
+                n => new ShowHideNodes(Presentation, false, true).Execute(GetSelectedNodes(n)));
 
-            SelectNodeCommand = new DelegateCommand<Node>(n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
-            SelectNodeWithIncomingCommand = new DelegateCommand<Node>(n => new ShowHideIncomings(Presentation).Select(n));
-            SelectNodeWithOutgoingCommand = new DelegateCommand<Node>(n => new ShowHideOutgoings(Presentation).Select(n));
-            SelectNodeWithSiblingsCommand = new DelegateCommand<Node>(n => new ShowSiblings(Presentation).Select(n));
+            ShowNodeWithIncomingCommand = new DelegateCommand<Node>(
+                n => new ShowHideIncomings(Presentation).Execute(n, show: true));
 
-            CaptionToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(GetCaptionFromNode(n)));
-            IdToClipboardCommand = new DelegateCommand<Node>(n => Clipboard.SetText(n.Id));
+            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(
+                n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
 
-            GoToEdgeSourceCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Source));
-            GoToEdgeTargetCommand = new DelegateCommand<Edge>(edge => Navigation.NavigateTo(edge.Target));
+            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(
+                n => new ShowSiblings(Presentation).Execute(n));
 
-            ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(c => Presentation.ChangeClusterFolding(ToggleClusterFolding(c)));
-            UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.AllSiblings), CanUnfold);
-            UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
-            UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
+            ShowNodeWithReachablesCommand = new DelegateCommand<Node>(
+                n => new TransitiveHull(Presentation) { Show = true }.Execute(GetSelectedNodes(n)));
 
-            RemoveNodesWithoutIncomingsCommand = new DelegateCommand<Cluster>(c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Incomings).Execute(c));
-            RemoveNodesWithoutOutgoingsCommand = new DelegateCommand<Cluster>(c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Outgoings).Execute(c));
+            HideIncomingCommand = new DelegateCommand<Node>(
+                n => new ShowHideIncomings(Presentation).Execute(n, show: false));
 
-            RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(c => new RemoveNodesNotReachableOutsideCluster(Presentation).Execute(c));
+            HideOutgoingCommand = new DelegateCommand<Node>(
+                n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
 
-            CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
-            CopyAllIdentifiersToClipboardCommand = new DelegateCommand<Cluster>(c => Clipboard.SetDataObject(GetIdentifiersOfAllVisibleNodesFrom(c)));
+            RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
+                n => new TransitiveHull(Presentation) { Show = false }.Execute(GetSelectedNodes(n)));
 
-            ShowMostIncomingsCommand = new DelegateCommand(() => new ShowMostIncomings(Presentation).Execute(5), () => Presentation != null);
-            ShowCyclesCommand = new DelegateCommand(() => new ShowCycles(Presentation).Execute(), () => Presentation != null);
-            ShowNodesOutsideClustersCommand = new DelegateCommand(() => new ShowNodesOutsideClusters(Presentation).Execute(), () => Presentation != null);
+            SelectNodeCommand = new DelegateCommand<Node>(
+                n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
 
-            RemoveNodesWithoutEdgesCommand = new DelegateCommand(() => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.All).Execute(), () => Presentation != null);
-            RemoveNodesReachableFromMultipleClustersCommand = new DelegateCommand(() => new RemoveNodesReachableFromMultipleClusters(Presentation).Execute(), () => Presentation != null);
+            SelectNodeWithIncomingCommand = new DelegateCommand<Node>(
+                n => new ShowHideIncomings(Presentation).Select(n));
 
-            FoldUnfoldAllClustersCommand = new DelegateCommand(() => Presentation.FoldUnfoldAllClusters(), () => Presentation != null);
-            AddVisibleNodesOutsideClustersToClusterCommand = new DelegateCommand<string>(c => new AddVisibleNodesOutsideClustersToCluster(Presentation).Execute(c), c => Presentation != null);
-            DeselectAllCommand = new DelegateCommand(() => DeselectAll(), () => Presentation != null);
-            HomeCommand = new DelegateCommand(() => Navigation.HomeZoomPan(), () => Presentation != null);
-            InvalidateLayoutCommand = new DelegateCommand(() => Presentation.InvalidateLayout(), () => Presentation != null);
+            SelectNodeWithOutgoingCommand = new DelegateCommand<Node>(
+                n => new ShowHideOutgoings(Presentation).Select(n));
 
-            AddToClusterCommand = new DelegateCommand<string>(c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(GraphItemForContextMenu.Id, c)));
-            AddWithSelectedToClusterCommand = new DelegateCommand<string>(c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(GetSelectedNodes(null)
+            SelectNodeWithSiblingsCommand = new DelegateCommand<Node>(
+                n => new ShowSiblings(Presentation).Select(n));
+
+            CaptionToClipboardCommand = new DelegateCommand<Node>(
+                n => Clipboard.SetText(GetCaptionFromNode(n)));
+
+            IdToClipboardCommand = new DelegateCommand<Node>(
+                n => Clipboard.SetText(n.Id));
+
+            GoToEdgeSourceCommand = new DelegateCommand<Edge>(
+                edge => Navigation.NavigateTo(edge.Source));
+
+            GoToEdgeTargetCommand = new DelegateCommand<Edge>(
+                edge => Navigation.NavigateTo(edge.Target));
+
+            ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(
+                c => Presentation.ChangeClusterFolding(ToggleClusterFolding(c)));
+
+            UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(
+                c => new UnfoldAndHide(Presentation).Execute(c, NodeType.AllSiblings), CanUnfold);
+
+            UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>
+                (c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
+
+            UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(
+                c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
+
+            RemoveNodesWithoutIncomingsCommand = new DelegateCommand<Cluster>(
+                c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Incomings).Execute(c));
+
+            RemoveNodesWithoutOutgoingsCommand = new DelegateCommand<Cluster>(
+                c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Outgoings).Execute(c));
+
+            RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(
+                c => new RemoveNodesNotReachableOutsideCluster(Presentation).Execute(c));
+
+            CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(
+                c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
+
+            CopyAllIdentifiersToClipboardCommand = new DelegateCommand<Cluster>(
+                c => Clipboard.SetDataObject(GetIdentifiersOfAllVisibleNodesFrom(c)));
+
+            ShowMostIncomingsCommand = new DelegateCommand(
+                () => new ShowMostIncomings(Presentation).Execute(5), 
+                () => Presentation != null);
+
+            ShowCyclesCommand = new DelegateCommand(
+                () => new ShowCycles(Presentation).Execute(), 
+                () => Presentation != null);
+
+            ShowNodesOutsideClustersCommand = new DelegateCommand(
+                () => new ShowNodesOutsideClusters(Presentation).Execute(), 
+                () => Presentation != null);
+
+            RemoveNodesWithoutEdgesCommand = new DelegateCommand(
+                () => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.All).Execute(), 
+                () => Presentation != null);
+
+            RemoveNodesReachableFromMultipleClustersCommand = new DelegateCommand(
+                () => new RemoveNodesReachableFromMultipleClusters(Presentation).Execute(), 
+                () => Presentation != null);
+
+            FoldUnfoldAllClustersCommand = new DelegateCommand(
+                () => Presentation.FoldUnfoldAllClusters(), 
+                () => Presentation != null);
+
+            AddVisibleNodesOutsideClustersToClusterCommand = new DelegateCommand<string>(
+                c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(new GetNodesOutsideCluster(Presentation).Compute(c), c)), 
+                c => Presentation != null);
+
+            DeselectAllCommand = new DelegateCommand(
+                () => Presentation.GetPropertySetFor<Selection>().Clear(), 
+                () => Presentation != null);
+
+            HomeCommand = new DelegateCommand(
+                () => Navigation.HomeZoomPan(), 
+                () => Presentation != null);
+
+            InvalidateLayoutCommand = new DelegateCommand(
+                () => Presentation.InvalidateLayout(),
+                () => Presentation != null);
+
+            AddToClusterCommand = new DelegateCommand<string>(
+                c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(GraphItemForContextMenu.Id, c)));
+
+            AddWithSelectedToClusterCommand = new DelegateCommand<string>(
+                c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(GetSelectedNodes(null)
                     .Select(n => n.Id).ToArray(), c)));
-            RemoveFromClusterCommand = new DelegateCommand<Node>(node => Presentation.ChangeClusterAssignment(t => t.RemoveFromClusters(GetSelectedNodes(node)
+
+            RemoveFromClusterCommand = new DelegateCommand<Node>(
+                node => Presentation.ChangeClusterAssignment(t => t.RemoveFromClusters(GetSelectedNodes(node)
                     .Select(n => n.Id).ToArray())));
 
-            TraceToCommand = new DelegateCommand<Node>(n => new TracePath(Presentation).Execute((Node)GraphItemForContextMenu, n));
+            TraceToCommand = new DelegateCommand<Node>(
+                n => new TracePath(Presentation).Execute((Node)GraphItemForContextMenu, n));
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>();
             PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
@@ -94,11 +171,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
-        }
-
-        private void DeselectAll()
-        {
-            Presentation.GetPropertySetFor<Selection>().Clear();
         }
 
         private string GetCaptionFromNode(Node n)

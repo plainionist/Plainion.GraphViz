@@ -61,13 +61,14 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\AbstractAlgorithm.cs" />
     <Compile Include="Algorithms\NodeType.cs" />
     <Compile Include="Algorithms\RemoveNodesReachableFromMultipleClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesNotReachableOutsideCluster.cs" />
     <Compile Include="Algorithms\TracePath.cs" />
     <Compile Include="Algorithms\ShowMostIncomings.cs" />
     <Compile Include="Algorithms\TransitiveHull.cs" />
-    <Compile Include="Algorithms\AddVisibleNodesOutsideClustersToCluster.cs" />
+    <Compile Include="Algorithms\GetNodesOutsideCluster.cs" />
     <Compile Include="Algorithms\ShowNodesOutsideClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
     <Compile Include="Algorithms\ShowHideNodes.cs" />
