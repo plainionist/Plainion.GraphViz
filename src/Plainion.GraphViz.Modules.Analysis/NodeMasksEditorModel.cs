@@ -18,6 +18,7 @@ namespace Plainion.GraphViz.Modules.Analysis
     {
         private string myFilter;
         private bool myFilterOnId;
+        private bool myIgnoreFolding;
         private bool myPreviewVisibleNodesOnly;
         private ICollectionView myPreviewNodes;
         private NodeWithCaption mySelectedPreviewItem;
@@ -45,8 +46,8 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             var regex = new Regex(Filter.ToLower(), RegexOptions.IgnoreCase);
 
-            var transformations = myPresentation.GetModule<ITransformationModule>();
-            var matchedNodes = transformations.Graph.Nodes
+            var graph = myIgnoreFolding ? myPresentation.Graph : myPresentation.GetModule<ITransformationModule>().Graph;
+            var matchedNodes = graph.Nodes
                 .Where(n => myFilterOnId ? regex.IsMatch(n.Id) : regex.IsMatch(myPresentation.GetPropertySetFor<Caption>().Get(n.Id).DisplayText));
 
             // TODO: should we have default "hide" really?
@@ -56,7 +57,6 @@ namespace Plainion.GraphViz.Modules.Analysis
             mask.Label = string.Format("Pattern '{0}'", Filter);
 
             var module = myPresentation.GetModule<INodeMaskModule>();
-
             module.Push(mask);
 
             Filter = null;
@@ -140,6 +140,21 @@ namespace Plainion.GraphViz.Modules.Analysis
             }
         }
 
+        public bool IgnoreFolding
+        {
+            get { return myIgnoreFolding; }
+            set
+            {
+                if (SetProperty(ref myIgnoreFolding, value))
+                {
+                    ClearErrors();
+                    // we have to completely rebuild the collection
+                    myPreviewNodes = null;
+                    PreviewNodes.Refresh();
+                }
+            }
+        }
+
         public bool PreviewVisibleNodesOnly
         {
             get { return myPreviewVisibleNodesOnly; }
@@ -160,8 +175,8 @@ namespace Plainion.GraphViz.Modules.Analysis
                 {
                     var captionModule = myPresentation.GetPropertySetFor<Caption>();
 
-                    var transformations = myPresentation.GetModule<ITransformationModule>();
-                    var nodes = transformations.Graph.Nodes
+                    var graph = myIgnoreFolding ? myPresentation.Graph : myPresentation.GetModule<ITransformationModule>().Graph;
+                    var nodes = graph.Nodes
                         .Select(n => new NodeWithCaption(n, myFilterOnId ? n.Id : captionModule.Get(n.Id).DisplayText));
 
                     myPreviewNodes = CollectionViewSource.GetDefaultView(nodes);

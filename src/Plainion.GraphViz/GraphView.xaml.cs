@@ -142,9 +142,11 @@ namespace Plainion.GraphViz
         {
             FitGraphToWindow();
 
-            FocusManager.SetIsFocusScope(this, true);
-            Focus();
-            Keyboard.Focus(this);
+            // if we do this here we loose focus in e.g. NodeEditor or other UI elements
+            // which influence graph
+            //FocusManager.SetIsFocusScope(this, true);
+            //Focus();
+            //Keyboard.Focus(this);
         }
 
         // http://gaggerostechnicalnotes.blogspot.de/2012/01/onidle-event-in-wpf.html

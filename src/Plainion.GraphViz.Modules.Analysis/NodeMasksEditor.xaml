@@ -59,7 +59,10 @@
                 </TextBox>
                 <Button Grid.Row="0" Grid.Column="2" Content="Add"  Command="{Binding AddCommand}" Margin="5,0,0,0"/>
 
-                <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Content="Filter on identifier" IsChecked="{Binding FilterOnId}"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,5,0,0">
+                    <CheckBox Content="Filter on identifier" IsChecked="{Binding FilterOnId}"/>
+                    <CheckBox Content="Ignore folding" IsChecked="{Binding IgnoreFolding}" Margin="5,0,0,0"/>
+                </StackPanel>
             </Grid>
 
             <ListView Grid.Row="1" Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
