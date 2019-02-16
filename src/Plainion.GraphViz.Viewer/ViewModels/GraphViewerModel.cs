@@ -102,7 +102,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 c => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Outgoings).Execute(c));
 
             RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(
-                c => new RemoveNodesNotReachableOutsideCluster(Presentation).Execute(c));
+                c => Presentation.GetModule<INodeMaskModule>().Push(new RemoveNodesNotReachableOutsideCluster(Presentation).Compute(c)));
 
             CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(
                 c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
@@ -111,39 +111,39 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 c => Clipboard.SetDataObject(GetIdentifiersOfAllVisibleNodesFrom(c)));
 
             ShowMostIncomingsCommand = new DelegateCommand(
-                () => new ShowMostIncomings(Presentation).Execute(5), 
+                () => new ShowMostIncomings(Presentation).Execute(5),
                 () => Presentation != null);
 
             ShowCyclesCommand = new DelegateCommand(
-                () => new ShowCycles(Presentation).Execute(), 
+                () => new ShowCycles(Presentation).Execute(),
                 () => Presentation != null);
 
             ShowNodesOutsideClustersCommand = new DelegateCommand(
-                () => new ShowNodesOutsideClusters(Presentation).Execute(), 
+                () => new ShowNodesOutsideClusters(Presentation).Execute(),
                 () => Presentation != null);
 
             RemoveNodesWithoutEdgesCommand = new DelegateCommand(
-                () => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.All).Execute(), 
+                () => new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.All).Execute(),
                 () => Presentation != null);
 
             RemoveNodesReachableFromMultipleClustersCommand = new DelegateCommand(
-                () => new RemoveNodesReachableFromMultipleClusters(Presentation).Execute(), 
+                () => new RemoveNodesReachableFromMultipleClusters(Presentation).Execute(),
                 () => Presentation != null);
 
             FoldUnfoldAllClustersCommand = new DelegateCommand(
-                () => Presentation.FoldUnfoldAllClusters(), 
+                () => Presentation.FoldUnfoldAllClusters(),
                 () => Presentation != null);
 
             AddVisibleNodesOutsideClustersToClusterCommand = new DelegateCommand<string>(
-                c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(new GetNodesOutsideCluster(Presentation).Compute(c), c)), 
+                c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(new GetNodesOutsideCluster(Presentation).Compute(c), c)),
                 c => Presentation != null);
 
             DeselectAllCommand = new DelegateCommand(
-                () => Presentation.GetPropertySetFor<Selection>().Clear(), 
+                () => Presentation.GetPropertySetFor<Selection>().Clear(),
                 () => Presentation != null);
 
             HomeCommand = new DelegateCommand(
-                () => Navigation.HomeZoomPan(), 
+                () => Navigation.HomeZoomPan(),
                 () => Presentation != null);
 
             InvalidateLayoutCommand = new DelegateCommand(

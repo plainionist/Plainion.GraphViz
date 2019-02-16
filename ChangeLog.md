@@ -7,6 +7,7 @@
 - Algorithm "Remove nodes not reachable from outside cluster" added
 - Filtering on folded nodes possible in filter dialog
 - Fixed selection update problems (in cases without redraw)
+- Various algorithms renamed and made immutable in that sense that presentation is not altered
 
 ## 2.12.0 - 2018-10-07
 

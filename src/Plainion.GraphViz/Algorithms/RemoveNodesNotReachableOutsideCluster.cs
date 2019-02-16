@@ -4,21 +4,17 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    public class RemoveNodesNotReachableOutsideCluster
+    public class RemoveNodesNotReachableOutsideCluster : AbstractAlgorithm
     {
-        private readonly IGraphPresentation myPresentation;
-
         public RemoveNodesNotReachableOutsideCluster(IGraphPresentation presentation)
+            :base(presentation)
         {
-            Contract.RequiresNotNull(presentation, nameof(presentation));
-
-            myPresentation = presentation;
         }
 
-        public void Execute(Cluster cluster)
+        public INodeMask Compute(Cluster cluster)
         {
             var unreachables = cluster.Nodes
-                .Where(n => !n.In.Any(e => myPresentation.Picking.Pick(e)))
+                .Where(n => !n.In.Any(e => Presentation.Picking.Pick(e)))
                 .ToList();
 
             var moreUnreachablesFound = true;
@@ -26,7 +22,7 @@ namespace Plainion.GraphViz.Algorithms
             {
                 var moreUnreachables = cluster.Nodes
                     .Except(unreachables)
-                    .Where(n => n.In.All(e => !myPresentation.Picking.Pick(e) || unreachables.Contains(e.Source)))
+                    .Where(n => n.In.All(e => !Presentation.Picking.Pick(e) || unreachables.Contains(e.Source)))
                     .ToList();
 
                 moreUnreachablesFound = moreUnreachables.Any();
@@ -36,11 +32,10 @@ namespace Plainion.GraphViz.Algorithms
             var mask = new NodeMask();
             mask.IsShowMask = false;
             mask.Set(unreachables);
-            var caption = myPresentation.GetPropertySetFor<Caption>().Get(cluster.Id);
+            var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
             mask.Label = $"Nodes not reachable from outside {caption.DisplayText}";
 
-            var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push(mask);
+            return mask;
         }
     }
 }
