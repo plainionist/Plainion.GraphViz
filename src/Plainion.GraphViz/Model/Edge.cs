@@ -1,30 +1,31 @@
 ﻿using System;
-using Plainion;
 
 namespace Plainion.GraphViz.Model
 {
     [Serializable]
-    public class Edge : IGraphItem
+    public class Edge : AbstractGraphItem
     {
-        public Edge( Node source, Node target )
+        public Edge(Node source, Node target)
+            : base(CreateId(source, target))
         {
-            Contract.RequiresNotNull( source, "source" );
-            Contract.RequiresNotNull( target, "target" );
-
             Source = source;
             Target = target;
-
-            Id = CreateId( Source.Id, Target.Id );
         }
 
-        public string Id { get; private set; }
+        private static string CreateId(Node source, Node target)
+        {
+            Contract.RequiresNotNull(source, nameof(source));
+            Contract.RequiresNotNull(target, nameof(target));
+
+            return CreateId(source.Id, target.Id);
+        }
 
         public Node Source { get; private set; }
         public Node Target { get; private set; }
 
-        public static string CreateId( string sourceNodeId, string targetNodeId )
+        public static string CreateId(string sourceId, string targetId)
         {
-            return string.Format( "edge-from-{0}-to-{1}", sourceNodeId, targetNodeId );
+            return $"edge-from-{sourceId}-to-{targetId}";
         }
     }
 }

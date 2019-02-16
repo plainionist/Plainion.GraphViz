@@ -1,7 +1,9 @@
 ﻿
+using System;
+
 namespace Plainion.GraphViz.Model
 {
-    public interface IGraphItem
+    public interface IGraphItem : IEquatable<IGraphItem>
     {
         string Id { get; }
     }

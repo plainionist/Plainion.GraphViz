@@ -4,6 +4,7 @@
   the currently visible edges between the nodes of the clusters
 - Algorithm "Remove nodes not reachable from outside cluster" added
 - Filtering on folded nodes possible in filter dialog
+- Graph model design made more robust
 
 ## 2.12.0 - 2018-10-07
 

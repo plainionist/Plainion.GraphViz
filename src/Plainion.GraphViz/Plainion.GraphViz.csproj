@@ -86,6 +86,7 @@
     <Compile Include="Dot\DotWriter.cs" />
     <Compile Include="Dot\LayoutAlgorithm.cs" />
     <Compile Include="IGraphViewNavigation.cs" />
+    <Compile Include="Model\AbstractGraphItem.cs" />
     <Compile Include="Model\Cluster.cs" />
     <Compile Include="Model\RelaxedGraphBuilder.cs" />
     <Compile Include="Dot\DotToDotPlainConverter.cs" />
