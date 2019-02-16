@@ -14,13 +14,14 @@ namespace Plainion.GraphViz.Presentation
         private readonly IGraphPresentation myPresentation;
         private readonly HashSet<string> myFoldedClusters;
         private IModuleChangedObserver myNodeMaskModuleObserver;
-        private bool myTransformationTriggered;
+        private bool myChangeNotified;
 
         // we remember the most recent input graph so that we can figure out
         // later which nodes where in which cluster BEFORE folding
-        private IGraph myRawGraph;
+        private IGraph myGraph;
 
-        private IGraph myRecentTransformedGraph;
+        // key: cluster id, value: nodes of this cluster which were visible during last rendering
+        private readonly Dictionary<string, HashSet<string>> myRecentFoldedNodesVisibility;
 
         public ClusterFoldingTransformation(IGraphPresentation presentation)
         {
@@ -30,34 +31,39 @@ namespace Plainion.GraphViz.Presentation
             myNodeMaskModuleObserver.ModuleChanged += OnGraphVisibilityChanged;
 
             myFoldedClusters = new HashSet<string>();
+            myRecentFoldedNodesVisibility = new Dictionary<string, HashSet<string>>();
         }
 
+        // If visibility of nodes/edges of a folded cluster changes that way that 
+        // it would change the in/out edges of the folded cluster we need to 
+        // trigger a transformation so that the "calculated" edges from/to the folded
+        // cluster can be updated.
         private void OnGraphVisibilityChanged(object sender, EventArgs e)
         {
-            if (myRecentTransformedGraph == null)
+            if (!myFoldedClusters.SetEquals(myRecentFoldedNodesVisibility.Keys))
             {
-                // we will soon run transformation anyhow
+                // folded clusters out of sync with last rendering state
+                // -> transformation will anyhow be triggered soon outside
                 return;
             }
 
-            if (myTransformationTriggered)
+            if (myChangeNotified)
             {
-                // transformation already triggered
+                // no need to notify again
                 return;
             }
 
-            var nextTransformedGraph = BuildGraph(myRawGraph);
+            IEnumerable<string> GetVisibleNodes(string clusterId) => GetNodes(clusterId).Where(n => myPresentation.Picking.Pick(n)).Select(n => n.Id);
 
-            if (myRecentTransformedGraph.Edges.Count() == nextTransformedGraph.Edges.Count()
-                && myRecentTransformedGraph.Edges.Intersect(nextTransformedGraph.Edges, new EdgeComparer()).Count() == nextTransformedGraph.Edges.Count())
+            if (myRecentFoldedNodesVisibility.All(entry => entry.Value.SetEquals(GetVisibleNodes(entry.Key))))
             {
-                // we only need to re-transform the graph if edges would change due to node visibility
+                // visibility of folded nodes did not change
                 return;
             }
 
-            myTransformationTriggered = true;
+            myChangeNotified = true;
 
-            // trigger a re-transformation
+            // notify transformation has changed 
             OnPropertyChanged(nameof(Clusters));
         }
 
@@ -83,7 +89,7 @@ namespace Plainion.GraphViz.Presentation
 
         public IEnumerable<Node> GetNodes(string clusterId)
         {
-            var graph = myRawGraph ?? myPresentation.Graph;
+            var graph = myGraph ?? myPresentation.Graph;
 
             return graph.Clusters.Single(c => c.Id == clusterId).Nodes;
         }
@@ -178,19 +184,19 @@ namespace Plainion.GraphViz.Presentation
         {
             try
             {
-                myRawGraph = graph;
+                myGraph = graph;
+                myRecentFoldedNodesVisibility.Clear();
 
                 if (myFoldedClusters.Count == 0)
                 {
                     return graph;
                 }
 
-                myRecentTransformedGraph = BuildGraph(graph);
-                return myRecentTransformedGraph;
+                return BuildGraph(graph);
             }
             finally
             {
-                myTransformationTriggered = false;
+                myChangeNotified = false;
             }
         }
 
@@ -236,16 +242,14 @@ namespace Plainion.GraphViz.Presentation
                     continue;
                 }
 
-                var foldedNodes = foldedCluster.Nodes
-                    // we add all nodes here for performance reasons - visibility is handled on "edge level" below
-                    //.Where(n => myPresentation.Picking.Pick(n))
-                    .Select(n => n.Id)
-                    .ToList();
-
-                foreach (var n in foldedNodes)
+                var visibleNodes = new HashSet<string>();
+                foreach (var n in foldedCluster.Nodes.Where(n => myPresentation.Picking.Pick(n)))
                 {
-                    nodesToClusterMap[n] = foldedCluster.Id;
+                    nodesToClusterMap[n.Id] = foldedCluster.Id;
+                    visibleNodes.Add(n.Id);
                 }
+
+                myRecentFoldedNodesVisibility.Add(clusterId, visibleNodes);
             }
 
             // add non-clustered nodes
@@ -261,15 +265,15 @@ namespace Plainion.GraphViz.Presentation
                 var source = edge.Source.Id;
                 var target = edge.Target.Id;
 
-                string foldedClusterId;
-                if (nodesToClusterMap.TryGetValue(source, out foldedClusterId) && myFoldedClusters.Contains(foldedClusterId))
+                string clusterId;
+                if (nodesToClusterMap.TryGetValue(source, out clusterId) && myFoldedClusters.Contains(clusterId))
                 {
-                    source = GetClusterNodeId(foldedClusterId);
+                    source = GetClusterNodeId(clusterId);
                 }
 
-                if (nodesToClusterMap.TryGetValue(target, out foldedClusterId) && myFoldedClusters.Contains(foldedClusterId))
+                if (nodesToClusterMap.TryGetValue(target, out clusterId) && myFoldedClusters.Contains(clusterId))
                 {
-                    target = GetClusterNodeId(foldedClusterId);
+                    target = GetClusterNodeId(clusterId);
                 }
 
                 // ignore self-edges

@@ -128,7 +128,6 @@
     <Compile Include="Presentation\NotifyPropertyChangedBase.cs" />
     <Compile Include="Presentation\NullGraphPicking.cs" />
     <Compile Include="Presentation\PickingCache.cs" />
-    <Compile Include="Model\EdgeComparer.cs" />
     <Compile Include="Presentation\PropertySetComparer.cs" />
     <Compile Include="Presentation\EdgeLayout.cs" />
     <Compile Include="Presentation\NodeLayout.cs" />
