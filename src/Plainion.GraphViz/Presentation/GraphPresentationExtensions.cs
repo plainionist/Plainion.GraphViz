@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Plainion.GraphViz.Presentation
@@ -15,6 +16,11 @@ namespace Plainion.GraphViz.Presentation
                 .Single();
 
             action(transformation);
+        }
+
+        public static void AddToCluster(this IGraphPresentation presentation, IReadOnlyCollection<string> nodes, string cluster)
+        {
+            presentation.ChangeClusterAssignment(t => t.AddToCluster(nodes, cluster));
         }
 
         public static void ChangeClusterFolding(this IGraphPresentation presentation, Action<ClusterFoldingTransformation> action)
@@ -71,6 +77,11 @@ namespace Plainion.GraphViz.Presentation
                     transformation.Add(presentation.Graph.Clusters.Select(c => c.Id));
                 }
             }
+        }
+
+        public static void AddMask(this IGraphPresentation presentation, INodeMask mask)
+        {
+            presentation.GetModule<INodeMaskModule>().Push(mask);
         }
     }
 }

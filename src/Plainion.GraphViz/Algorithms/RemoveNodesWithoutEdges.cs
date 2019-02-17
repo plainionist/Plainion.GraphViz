@@ -5,9 +5,8 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    public class RemoveNodesWithoutEdges
+    public class RemoveNodesWithoutEdges : AbstractAlgorithm
     {
-        private readonly IGraphPresentation myPresentation;
         private Mode myMode;
 
         public enum Mode
@@ -32,20 +31,18 @@ namespace Plainion.GraphViz.Algorithms
         }
 
         public RemoveNodesWithoutEdges(IGraphPresentation presentation, Mode mode)
+            : base(presentation)
         {
-            Contract.RequiresNotNull(presentation, nameof(presentation));
-
-            myPresentation = presentation;
             myMode = mode;
         }
 
-        public void Execute()
+        public INodeMask Compute()
         {
-            var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            Execute(transformationModule.Graph.Nodes);
+            var transformationModule = Presentation.GetModule<ITransformationModule>();
+            return Compute(transformationModule.Graph.Nodes);
         }
 
-        private void Execute(IEnumerable<Node> nodes)
+        private INodeMask Compute(IEnumerable<Node> nodes)
         {
             var nodesToHide = nodes
                 .Where(n => HideNode(n));
@@ -67,19 +64,19 @@ namespace Plainion.GraphViz.Algorithms
             {
                 mask.Label += "edges";
             }
-            var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push(mask);
+
+            return mask;
         }
 
-        public void Execute(Cluster cluster)
+        public INodeMask Compute(Cluster cluster)
         {
-            Execute(cluster.Nodes.Where(n=>myPresentation.Picking.Pick(n)));
+            return Compute(cluster.Nodes.Where(n => Presentation.Picking.Pick(n)));
         }
 
         private bool HideNode(Node node)
         {
-            var noIncomings = !node.In.Any(e => myPresentation.Picking.Pick(e));
-            var noOutgoings = !node.Out.Any(e => myPresentation.Picking.Pick(e));
+            var noIncomings = !node.In.Any(e => Presentation.Picking.Pick(e));
+            var noOutgoings = !node.Out.Any(e => Presentation.Picking.Pick(e));
 
             if (myMode == Mode.All && noIncomings && noOutgoings)
             {

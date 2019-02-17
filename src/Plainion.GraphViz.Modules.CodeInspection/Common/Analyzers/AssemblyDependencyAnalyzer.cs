@@ -86,8 +86,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             algo.Reverse = true;
             algo.Execute(targetCluster.Nodes.ToList());
 
-            var algo2 = new RemoveNodesWithoutEdges(presentation);
-            algo2.Execute();
+            presentation.AddMask(new RemoveNodesWithoutEdges(presentation).Compute());
 
             return presentation;
         }

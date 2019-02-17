@@ -6,27 +6,20 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    /// <summary>
-    /// Shows all nodes which are only reachable from a single cluster
-    /// </summary>
-    public class RemoveNodesReachableFromMultipleClusters
+    public class RemoveNodesReachableFromMultipleClusters : AbstractAlgorithm
     {
-        private readonly IGraphPresentation myPresentation;
-
         public RemoveNodesReachableFromMultipleClusters(IGraphPresentation presentation)
+            :base(presentation)
         {
-            Contract.RequiresNotNull(presentation, nameof(presentation));
-
-            myPresentation = presentation;
         }
 
-        public void Execute()
+        public INodeMask Comppute()
         {
             var mask = new NodeMask();
-            mask.Label = "Nodes reachable by multiple cluster";
+            mask.Label = "Nodes reachable by multiple clusters";
             mask.IsShowMask = false;
 
-            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            var transformationModule = Presentation.GetModule<ITransformationModule>();
 
             // nodeId -> clusterId
             var cache = new Dictionary<Node, string>();
@@ -42,7 +35,7 @@ namespace Plainion.GraphViz.Algorithms
                 }
             }
 
-            foreach (var edge in Traverse.BreathFirst(cache.Keys, source => source.Out.Where(e => myPresentation.Picking.Pick(e.Target))))
+            foreach (var edge in Traverse.BreathFirst(cache.Keys, source => source.Out.Where(e => Presentation.Picking.Pick(e.Target))))
             {
                 // do not hide cluster nodes
                 if (clusterNodes.Contains(edge.Target.Id))
@@ -74,8 +67,7 @@ namespace Plainion.GraphViz.Algorithms
                 }
             }
 
-            var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push(mask);
+            return mask;
         }
     }
 }
