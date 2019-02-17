@@ -39,7 +39,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n => new ShowHideNodes(Presentation, false, true).Execute(GetSelectedNodes(n)));
 
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(
-                n => new ShowHideIncomings(Presentation).Execute(n, show: true));
+                n => Presentation.AddMask(new ShowHideIncomings(Presentation).Compute(n, show: true)));
 
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(
                 n => new ShowHideOutgoings(Presentation).Execute(n, show: true));
@@ -51,7 +51,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n => new TransitiveHull(Presentation) { Show = true }.Execute(GetSelectedNodes(n)));
 
             HideIncomingCommand = new DelegateCommand<Node>(
-                n => new ShowHideIncomings(Presentation).Execute(n, show: false));
+                n => Presentation.AddMask(new ShowHideIncomings(Presentation).Compute(n, show: false)));
 
             HideOutgoingCommand = new DelegateCommand<Node>(
                 n => new ShowHideOutgoings(Presentation).Execute(n, show: false));
@@ -63,7 +63,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
 
             SelectNodeWithIncomingCommand = new DelegateCommand<Node>(
-                n => new ShowHideIncomings(Presentation).Select(n));
+                n => Presentation.Select(n, SiblingsType.Sources));
 
             SelectNodeWithOutgoingCommand = new DelegateCommand<Node>(
                 n => new ShowHideOutgoings(Presentation).Select(n));
@@ -87,13 +87,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 c => Presentation.ChangeClusterFolding(ToggleClusterFolding(c)));
 
             UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(
-                c => new UnfoldAndHide(Presentation).Execute(c, NodeType.AllSiblings), CanUnfold);
+                c => new UnfoldAndHide(Presentation).Execute(c, SiblingsType.Any), CanUnfold);
 
             UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>
-                (c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Targets), CanUnfold);
+                (c => new UnfoldAndHide(Presentation).Execute(c, SiblingsType.Targets), CanUnfold);
 
             UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(
-                c => new UnfoldAndHide(Presentation).Execute(c, NodeType.Sources), CanUnfold);
+                c => new UnfoldAndHide(Presentation).Execute(c, SiblingsType.Sources), CanUnfold);
 
             RemoveNodesWithoutIncomingsCommand = new DelegateCommand<Cluster>(
                 c => Presentation.AddMask(new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Incomings).Compute(c)));

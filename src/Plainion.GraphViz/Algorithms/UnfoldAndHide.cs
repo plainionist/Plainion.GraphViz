@@ -16,8 +16,10 @@ namespace Plainion.GraphViz.Algorithms
             myPresentation = presentation;
         }
 
-        public void Execute(Cluster cluster, NodeType nodeType)
+        public void Execute(Cluster cluster, SiblingsType siblingsType)
         {
+            Contract.Requires(siblingsType != SiblingsType.None, "SiblingsType.None not supported");
+
             var transformations = myPresentation.GetModule<ITransformationModule>();
             var transformation = transformations.Items
                 .OfType<ClusterFoldingTransformation>()
@@ -48,11 +50,11 @@ namespace Plainion.GraphViz.Algorithms
                 .Where(n =>
                 {
                     var nodes = Enumerable.Empty<string>();
-                    if (nodeType == NodeType.AllSiblings || nodeType == NodeType.Sources)
+                    if (siblingsType == SiblingsType.Any || siblingsType == SiblingsType.Sources)
                     {
                         nodes = nodes.Concat(n.Out.Select(e => e.Target.Id));
                     }
-                    if (nodeType == NodeType.AllSiblings || nodeType == NodeType.Targets)
+                    if (siblingsType == SiblingsType.Any || siblingsType == SiblingsType.Targets)
                     {
                         nodes = nodes.Concat(n.In.Select(e => e.Source.Id));
                     }
@@ -63,7 +65,7 @@ namespace Plainion.GraphViz.Algorithms
             mask.Set(referencedNodes);
 
             var caption = myPresentation.GetPropertySetFor<Caption>().Get(cluster.Id);
-            var maskType = nodeType == NodeType.AllSiblings ? "Siblings" : (nodeType == NodeType.Sources ? "Sources" : "Targets");
+            var maskType = siblingsType == SiblingsType.Any ? "Siblings" : (siblingsType == SiblingsType.Sources ? "Sources" : "Targets");
             mask.Label = maskType + " of " + caption.DisplayText;
 
             var module = myPresentation.GetModule<INodeMaskModule>();
