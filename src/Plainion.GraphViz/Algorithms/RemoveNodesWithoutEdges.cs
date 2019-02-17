@@ -5,6 +5,9 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
+    /// <summary>
+    /// Generates a "hide mask" removing all visible nodes not having edges of the given type.
+    /// </summary>
     public class RemoveNodesWithoutEdges : AbstractAlgorithm
     {
         private Mode myMode;

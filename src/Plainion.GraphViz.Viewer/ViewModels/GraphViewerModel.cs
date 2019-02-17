@@ -115,7 +115,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 () => Presentation != null);
 
             ShowCyclesCommand = new DelegateCommand(
-                () => new ShowCycles(Presentation).Execute(),
+                () => Presentation.AddMask(new ExtractCycles(Presentation).Compute()),
                 () => Presentation != null);
 
             ShowNodesOutsideClustersCommand = new DelegateCommand(

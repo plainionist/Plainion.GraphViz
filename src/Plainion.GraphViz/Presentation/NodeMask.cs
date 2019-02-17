@@ -24,29 +24,29 @@ namespace Plainion.GraphViz.Presentation
             IsShowMask = true;
         }
 
-        public NodeMask( SerializationInfo info, StreamingContext context )
-            : base( info, context )
+        public NodeMask(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
-            var count = ( int )info.GetValue( "ValueCount", typeof( int ) );
+            var count = (int)info.GetValue("ValueCount", typeof(int));
 
             myValues = new HashSet<string>();
 
-            for( int i = 0; i < count; ++i )
+            for (int i = 0; i < count; ++i)
             {
-                myValues.Add( ( string )info.GetValue( "Value" + i, typeof( string ) ) );
+                myValues.Add((string)info.GetValue("Value" + i, typeof(string)));
             }
         }
 
-        public override void GetObjectData( SerializationInfo info, StreamingContext context )
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            base.GetObjectData( info, context );
+            base.GetObjectData(info, context);
 
-            info.AddValue( "ValueCount", myValues.Count );
+            info.AddValue("ValueCount", myValues.Count);
 
             int i = 0;
-            foreach( var value in myValues )
+            foreach (var value in myValues)
             {
-                info.AddValue( "Value" + i, value );
+                info.AddValue("Value" + i, value);
                 ++i;
             }
         }
@@ -56,9 +56,9 @@ namespace Plainion.GraphViz.Presentation
             get { return myValues; }
         }
 
-        public override bool? IsSet( Node node )
+        public override bool? IsSet(Node node)
         {
-            if( myValues.Contains( node.Id ) )
+            if (myValues.Contains(node.Id))
             {
                 return IsShowMask;
             }
@@ -68,36 +68,36 @@ namespace Plainion.GraphViz.Presentation
             }
         }
 
-        public void Set( Node node )
+        public void Set(Node node)
         {
-            if( myValues.Contains( node.Id ) )
+            if (myValues.Contains(node.Id))
             {
                 return;
             }
 
-            myValues.Add( node.Id );
+            myValues.Add(node.Id);
 
-            OnPropertyChanged( "Values" );
+            OnPropertyChanged("Values");
         }
 
-        public void Unset( Node node )
+        public void Unset(Node node)
         {
-            myValues.Remove( node.Id );
+            myValues.Remove(node.Id);
 
-            OnPropertyChanged( "Values" );
+            OnPropertyChanged("Values");
         }
 
-        public void Set( IEnumerable<Node> nodes )
+        public void Set(IEnumerable<Node> nodes)
         {
-            foreach( var node in nodes )
+            foreach (var node in nodes)
             {
-                if( !myValues.Contains( node.Id ) )
+                if (!myValues.Contains(node.Id))
                 {
-                    myValues.Add( node.Id );
+                    myValues.Add(node.Id);
                 }
             }
 
-            OnPropertyChanged( "Values" );
+            OnPropertyChanged("Values");
         }
     }
 }

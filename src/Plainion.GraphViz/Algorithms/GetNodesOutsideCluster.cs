@@ -4,6 +4,9 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
+    /// <summary>
+    /// Returns all nodes which are not part of the given cluster.
+    /// </summary>
     public class GetNodesOutsideCluster : AbstractAlgorithm
     {
         public GetNodesOutsideCluster(IGraphPresentation presentation)

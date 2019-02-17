@@ -6,6 +6,9 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
+    /// <summary>
+    /// Generates a "hide mask" removing all visible nodes which are reachable from at least two clusters.
+    /// </summary>
     public class RemoveNodesReachableFromMultipleClusters : AbstractAlgorithm
     {
         public RemoveNodesReachableFromMultipleClusters(IGraphPresentation presentation)

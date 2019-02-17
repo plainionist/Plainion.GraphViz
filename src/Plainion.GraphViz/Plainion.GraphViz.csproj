@@ -72,7 +72,7 @@
     <Compile Include="Algorithms\ShowNodesOutsideClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
     <Compile Include="Algorithms\ShowHideNodes.cs" />
-    <Compile Include="Algorithms\ShowCycles.cs" />
+    <Compile Include="Algorithms\ExtractCycles.cs" />
     <Compile Include="Algorithms\ShowHideIncomings.cs" />
     <Compile Include="Algorithms\ShowHideOutgoings.cs" />
     <Compile Include="Algorithms\ShowSiblings.cs" />

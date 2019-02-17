@@ -1,0 +1,15 @@
+digraph {
+    ratio="compress"
+    rankdir=BT
+    ranksep="2.0 equally"
+    
+    A -> B
+    B -> C
+    C -> D
+    D -> E
+    E -> F
+    F -> G
+
+    D -> A
+    G -> D
+}

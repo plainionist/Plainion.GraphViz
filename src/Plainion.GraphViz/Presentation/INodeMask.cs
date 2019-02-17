@@ -21,6 +21,6 @@ namespace Plainion.GraphViz.Presentation
         /// </summary>
         bool IsApplied { get; set; }
 
-        bool? IsSet( Node node );
+        bool? IsSet(Node node);
     }
 }

@@ -34,19 +34,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void GetUsedTypes_Constructor_Found()
         {
-            Verify( typeof( Constructor ), typeof( ShowCycles ) );
+            Verify( typeof( Constructor ), typeof( ExtractCycles ) );
         }
 
         [Test]
         public void GetUsedTypes_NewArray_Found()
         {
-            Verify( typeof( NewArray ), typeof( ShowCycles ) );
+            Verify( typeof( NewArray ), typeof( ExtractCycles ) );
         }
 
         [Test]
         public void GetUsedTypes_HardCast_Found()
         {
-            Verify( typeof( CastClass ), typeof( ShowCycles ) );
+            Verify( typeof( CastClass ), typeof( ExtractCycles ) );
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void GetUsedTypes_VirtualMethodCall_Found()
         {
-            Verify(typeof(VirtualMethodCall), typeof(ShowCycles));
+            Verify(typeof(VirtualMethodCall), typeof(ExtractCycles));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         public void Init(object arg)
         {
-            var ignore = (ShowCycles)arg;
+            var ignore = (ExtractCycles)arg;
             var ignore2 = arg as UnfoldAndHide;
         }
     }
@@ -106,7 +106,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         public void Init()
         {
-            var ignore = new ShowCycles(null);
+            var ignore = new ExtractCycles(null);
         }
     }
 
@@ -184,7 +184,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         public void Init()
         {
-            var ignore = new ShowCycles[8];
+            var ignore = new ExtractCycles[8];
         }
     }
 
@@ -200,9 +200,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
     class VirtualMethodCall
     {
-        public void Init(ShowCycles algo)
+        public void Init(ExtractCycles algo)
         {
-            algo.Execute();
+            algo.Compute();
         }
     }
 }

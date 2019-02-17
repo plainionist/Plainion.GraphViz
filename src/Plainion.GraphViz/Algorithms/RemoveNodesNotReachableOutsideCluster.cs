@@ -4,6 +4,9 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
+    /// <summary>
+    /// Generates "hide mask" removing all visible nodes from the given cluster which are not reachable from outside the cluster.
+    /// </summary>
     public class RemoveNodesNotReachableOutsideCluster : AbstractAlgorithm
     {
         public RemoveNodesNotReachableOutsideCluster(IGraphPresentation presentation)
@@ -32,6 +35,7 @@ namespace Plainion.GraphViz.Algorithms
             var mask = new NodeMask();
             mask.IsShowMask = false;
             mask.Set(unreachables);
+
             var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
             mask.Label = $"Nodes not reachable from outside {caption.DisplayText}";
 
