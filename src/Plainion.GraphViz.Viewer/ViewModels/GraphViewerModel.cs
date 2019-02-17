@@ -48,7 +48,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n => Presentation.AddMask(new AddSiblings(Presentation).Compute(n)));
 
             ShowNodeWithReachablesCommand = new DelegateCommand<Node>(
-                n => new TransitiveHull(Presentation) { Show = true }.Execute(GetSelectedNodes(n)));
+                n => Presentation.AddMask(new AddRemoveTransitiveHull(Presentation) { Show = true }.Compute(GetSelectedNodes(n))));
 
             HideIncomingCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveSources(Presentation).Compute(n, show: false)));
@@ -57,7 +57,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n => Presentation.AddMask(new AddRemoveTargets(Presentation).Compute(n, show: false)));
 
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
-                n => new TransitiveHull(Presentation) { Show = false }.Execute(GetSelectedNodes(n)));
+                n => Presentation.AddMask(new AddRemoveTransitiveHull(Presentation) { Show = false }.Compute(GetSelectedNodes(n))));
 
             SelectNodeCommand = new DelegateCommand<Node>(
                 n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);

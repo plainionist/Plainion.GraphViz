@@ -261,17 +261,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             CopyCaptions(presentation, inputPresentation);
 
-            var masks = presentation.GetModule<INodeMaskModule>();
-
             // find all nodes from which the targets can be reached
-            var algo = new TransitiveHull(presentation);
+            var algo = new AddRemoveTransitiveHull(presentation);
             algo.Show = true;
             algo.Reverse = true;
 
             var targetIds = targets.Select(target => MethodId(target.myDeclaringType, target.myName)).ToList();
-            algo.Execute(presentation.Graph.Nodes.AsParallel()
+            var mask = algo.Compute(presentation.Graph.Nodes.AsParallel()
                 .Where(n => targetIds.Contains(n.Id))
                 .ToList());
+
+            presentation.AddMask(mask);
 
             return presentation;
         }
@@ -283,8 +283,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             presentation.Graph = inputPresentation.Graph;
 
             CopyCaptions(presentation, inputPresentation);
-
-            var masks = presentation.GetModule<INodeMaskModule>();
 
             var transformations = presentation.GetModule<ITransformationModule>();
 
@@ -307,13 +305,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
 
             // 4. find all nodes from which the targets can be reached
-            var algo = new TransitiveHull(presentation);
+            var algo = new AddRemoveTransitiveHull(presentation);
             algo.Show = true;
             algo.Reverse = true;
 
-            algo.Execute(transformations.Graph.Nodes.AsParallel()
+            var mask = algo.Compute(transformations.Graph.Nodes.AsParallel()
                 .Where(n => targetIds.Contains(n.Id))
                 .ToList());
+
+            presentation.AddMask(mask);
 
             return presentation;
         }

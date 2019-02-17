@@ -18,6 +18,6 @@ namespace Plainion.GraphViz.Model
 
         public string Id { get; private set; }
 
-        public IEnumerable<Node> Nodes { get; private set; }
+        public IReadOnlyCollection<Node> Nodes { get; private set; }
     }
 }

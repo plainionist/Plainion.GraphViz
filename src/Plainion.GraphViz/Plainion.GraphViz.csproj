@@ -65,7 +65,7 @@
     <Compile Include="Algorithms\SiblingsType.cs" />
     <Compile Include="Algorithms\RemoveNodesNotReachableOutsideCluster.cs" />
     <Compile Include="Algorithms\ShowPath.cs" />
-    <Compile Include="Algorithms\TransitiveHull.cs" />
+    <Compile Include="Algorithms\AddRemoveTransitiveHull.cs" />
     <Compile Include="Algorithms\GetNodesOutsideCluster.cs" />
     <Compile Include="Algorithms\RemoveClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
