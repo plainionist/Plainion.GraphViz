@@ -1,64 +1,34 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Algorithms
 {
-    public class ShowHideOutgoings
+    /// <summary>
+    /// Generates show/hide mask of all target nodes
+    /// </summary>
+    public class ShowHideOutgoings : AbstractAlgorithm
     {
-        private readonly IGraphPresentation myPresentation;
-
-        public ShowHideOutgoings( IGraphPresentation presentation )
+        public ShowHideOutgoings(IGraphPresentation presentation)
+            : base(presentation)
         {
-            Contract.RequiresNotNull(presentation, nameof(presentation));
-
-            myPresentation = presentation;
         }
 
-        public void Execute( Node node, bool show)
+        public INodeMask Compute(Node node, bool show)
         {
-            var nodesToShow = GetOutgoings(node);
-            if (show)
-            {
-                nodesToShow.Add(node);
-            }
+            var targets = node.Out
+                .Select(e => e.Target)
+                .Where(n => Presentation.Picking.Pick(n) != show);
 
             var mask = new NodeMask();
             mask.IsShowMask = show;
-            
-            mask.Set(nodesToShow);
 
-            var caption = myPresentation.GetPropertySetFor<Caption>().Get( node.Id );
+            mask.Set(targets);
+
+            var caption = Presentation.GetPropertySetFor<Caption>().Get(node.Id);
             mask.Label = "Outgoing of " + caption.DisplayText;
 
-            var module = myPresentation.GetModule<INodeMaskModule>();
-            module.Push( mask );
-        }
-
-        private IList<Node> GetOutgoings(Node node)
-        {
-            var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            return transformationModule.Graph.Edges
-                .Where(e => e.Source.Id == node.Id)
-                .Select(e => e.Target)
-                .ToList();
-        }
-
-        public void Select(Node node)
-        {
-            var nodes = GetOutgoings(node);
-            nodes.Add(node);
-
-            var selection = myPresentation.GetPropertySetFor<Selection>();
-            foreach (var e in node.Out)
-            {
-                selection.Get(e.Id).IsSelected = true;
-            }
-            foreach (var n in nodes)
-            {
-                selection.Get(n.Id).IsSelected = true;
-            }
+            return mask;
         }
     }
 }
