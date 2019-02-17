@@ -34,19 +34,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void GetUsedTypes_Constructor_Found()
         {
-            Verify( typeof( Constructor ), typeof( ExtractCycles ) );
+            Verify( typeof( Constructor ), typeof( ShowCycles ) );
         }
 
         [Test]
         public void GetUsedTypes_NewArray_Found()
         {
-            Verify( typeof( NewArray ), typeof( ExtractCycles ) );
+            Verify( typeof( NewArray ), typeof( ShowCycles ) );
         }
 
         [Test]
         public void GetUsedTypes_HardCast_Found()
         {
-            Verify( typeof( CastClass ), typeof( ExtractCycles ) );
+            Verify( typeof( CastClass ), typeof( ShowCycles ) );
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void GetUsedTypes_VirtualMethodCall_Found()
         {
-            Verify(typeof(VirtualMethodCall), typeof(ExtractCycles));
+            Verify(typeof(VirtualMethodCall), typeof(ShowCycles));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         public void Init(object arg)
         {
-            var ignore = (ExtractCycles)arg;
+            var ignore = (ShowCycles)arg;
             var ignore2 = arg as UnfoldAndHide;
         }
     }
@@ -106,7 +106,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         public void Init()
         {
-            var ignore = new ExtractCycles(null);
+            var ignore = new ShowCycles(null);
         }
     }
 
@@ -184,7 +184,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         public void Init()
         {
-            var ignore = new ExtractCycles[8];
+            var ignore = new ShowCycles[8];
         }
     }
 
@@ -200,7 +200,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
     class VirtualMethodCall
     {
-        public void Init(ExtractCycles algo)
+        public void Init(ShowCycles algo)
         {
             algo.Compute();
         }

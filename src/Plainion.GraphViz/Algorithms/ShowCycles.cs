@@ -7,12 +7,11 @@ using Plainion.GraphViz.Presentation;
 namespace Plainion.GraphViz.Algorithms
 {
     /// <summary>
-    /// Generates a "hide mask" removing all visible nodes not part of any cycle.
+    /// Generates a "show mask" containing all visible nodes building a cycle.
     /// </summary>
-    /// <remarks>Using hide mask instead of show mask as hide masks are easier to handle</remarks>
-    public class ExtractCycles : AbstractAlgorithm
+    public class ShowCycles : AbstractAlgorithm
     {
-        public ExtractCycles(IGraphPresentation presentation)
+        public ShowCycles(IGraphPresentation presentation)
             : base(presentation)
         {
         }
@@ -23,15 +22,10 @@ namespace Plainion.GraphViz.Algorithms
 
             var mask = new NodeMask();
             mask.Label = "Cycles";
-            mask.IsShowMask = false;
 
             var cycleNodes = FindCycles(graph).ToList();
 
-            // we want to hide each visible node which is NOT part of the cycle
-            foreach (var node in graph.Nodes.Where(Presentation.Picking.Pick).Where(n => !cycleNodes.Contains(n)))
-            {
-                mask.Set(node);
-            }
+            mask.Set(cycleNodes);
 
             return mask;
         }

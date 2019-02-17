@@ -30,31 +30,31 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
             HideNodeCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowHideNodes(Presentation, false).Compute(GetSelectedNodes(n))));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation, false).Compute(GetSelectedNodes(n))));
 
             ShowNodeCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowHideNodes(Presentation, true).Compute(GetSelectedNodes(n))));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation, true).Compute(GetSelectedNodes(n))));
 
             HideAllButCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowHideNodes(Presentation, false, true).Compute(GetSelectedNodes(n))));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation, false, true).Compute(GetSelectedNodes(n))));
 
             ShowNodeWithIncomingCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowHideIncomings(Presentation).Compute(n, show: true)));
+                n => Presentation.AddMask(new AddRemoveSources(Presentation).Compute(n, show: true)));
 
             ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowHideOutgoings(Presentation).Compute(n, show: true)));
+                n => Presentation.AddMask(new AddRemoveTargets(Presentation).Compute(n, show: true)));
 
             ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowSiblings(Presentation).Compute(n)));
+                n => Presentation.AddMask(new AddSiblings(Presentation).Compute(n)));
 
             ShowNodeWithReachablesCommand = new DelegateCommand<Node>(
                 n => new TransitiveHull(Presentation) { Show = true }.Execute(GetSelectedNodes(n)));
 
             HideIncomingCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowHideIncomings(Presentation).Compute(n, show: false)));
+                n => Presentation.AddMask(new AddRemoveSources(Presentation).Compute(n, show: false)));
 
             HideOutgoingCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new ShowHideOutgoings(Presentation).Compute(n, show: false)));
+                n => Presentation.AddMask(new AddRemoveTargets(Presentation).Compute(n, show: false)));
 
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
                 n => new TransitiveHull(Presentation) { Show = false }.Execute(GetSelectedNodes(n)));
@@ -111,7 +111,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 c => Clipboard.SetDataObject(GetIdentifiersOfAllVisibleNodesFrom(c)));
 
             ShowCyclesCommand = new DelegateCommand(
-                () => Presentation.AddMask(new ExtractCycles(Presentation).Compute()),
+                () => Presentation.AddMask(new ShowCycles(Presentation).Compute()),
                 () => Presentation != null);
 
             ShowNodesOutsideClustersCommand = new DelegateCommand(
@@ -154,7 +154,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                     .Select(n => n.Id).ToArray())));
 
             TraceToCommand = new DelegateCommand<Node>(
-                n => new TracePath(Presentation).Execute((Node)GraphItemForContextMenu, n));
+                n => Presentation.AddMask(new ShowPath(Presentation).Compute((Node)GraphItemForContextMenu, n)));
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>();
             PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
