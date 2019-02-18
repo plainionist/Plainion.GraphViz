@@ -29,31 +29,28 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         [ImportingConstructor]
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
-            HideNodeCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveNodes(Presentation, false).Compute(GetSelectedNodes(n))));
+            RemoveNodeCommand = new DelegateCommand<Node>(
+                n => Presentation.AddMask(new RemoveNodes(Presentation).Compute(GetSelectedNodes(n))));
 
-            ShowNodeCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveNodes(Presentation, true).Compute(GetSelectedNodes(n))));
+            RemoveAllButCommand = new DelegateCommand<Node>(
+                n => Presentation.AddMask(new RemoveNodes(Presentation, true).Compute(GetSelectedNodes(n))));
 
-            HideAllButCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveNodes(Presentation, false, true).Compute(GetSelectedNodes(n))));
-
-            ShowNodeWithIncomingCommand = new DelegateCommand<Node>(
+            AddSourcesCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveSources(Presentation).Compute(n, show: true)));
 
-            ShowNodeWithOutgoingCommand = new DelegateCommand<Node>(
+            AddTargetsCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveTargets(Presentation).Compute(n, show: true)));
 
-            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(
+            AddSiblingsCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddSiblings(Presentation).Compute(n)));
 
-            ShowNodeWithReachablesCommand = new DelegateCommand<Node>(
+            AddReachablesCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveTransitiveHull(Presentation) { Show = true }.Compute(GetSelectedNodes(n))));
 
-            HideIncomingCommand = new DelegateCommand<Node>(
+            RemoveSourcesCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveSources(Presentation).Compute(n, show: false)));
 
-            HideOutgoingCommand = new DelegateCommand<Node>(
+            RemoveTargetsCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveTargets(Presentation).Compute(n, show: false)));
 
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
@@ -62,10 +59,10 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectNodeCommand = new DelegateCommand<Node>(
                 n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
 
-            SelectNodeWithIncomingCommand = new DelegateCommand<Node>(
+            SelectNodeWithSourcesCommand = new DelegateCommand<Node>(
                 n => Presentation.Select(n, SiblingsType.Sources));
 
-            SelectNodeWithOutgoingCommand = new DelegateCommand<Node>(
+            SelectNodeWithTargetsCommand = new DelegateCommand<Node>(
                 n => Presentation.Select(n, SiblingsType.Targets));
 
             SelectNodeWithSiblingsCommand = new DelegateCommand<Node>(
@@ -307,21 +304,21 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
-        public ICommand HideNodeCommand { get; private set; }
+        public ICommand RemoveNodeCommand { get; private set; }
 
-        public ICommand HideAllButCommand { get; private set; }
+        public ICommand RemoveAllButCommand { get; private set; }
 
-        public ICommand HideIncomingCommand { get; private set; }
+        public ICommand RemoveSourcesCommand { get; private set; }
 
-        public ICommand HideOutgoingCommand { get; private set; }
+        public ICommand RemoveTargetsCommand { get; private set; }
 
         public ICommand RemoveUnreachableNodesCommand { get; private set; }
 
         public ICommand SelectNodeCommand { get; private set; }
 
-        public ICommand SelectNodeWithIncomingCommand { get; private set; }
+        public ICommand SelectNodeWithSourcesCommand { get; private set; }
 
-        public ICommand SelectNodeWithOutgoingCommand { get; private set; }
+        public ICommand SelectNodeWithTargetsCommand { get; private set; }
 
         public ICommand SelectNodeWithSiblingsCommand { get; private set; }
 
@@ -333,15 +330,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ICommand IdToClipboardCommand { get; private set; }
 
-        public ICommand ShowNodeCommand { get; private set; }
+        public ICommand AddSiblingsCommand { get; private set; }
 
-        public ICommand ShowNodeWithSiblingsCommand { get; private set; }
+        public ICommand AddReachablesCommand { get; private set; }
 
-        public ICommand ShowNodeWithReachablesCommand { get; private set; }
+        public ICommand AddSourcesCommand { get; private set; }
 
-        public ICommand ShowNodeWithIncomingCommand { get; private set; }
-
-        public ICommand ShowNodeWithOutgoingCommand { get; private set; }
+        public ICommand AddTargetsCommand { get; private set; }
 
         public ICommand GoToEdgeSourceCommand { get; private set; }
 

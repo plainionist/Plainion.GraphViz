@@ -27,7 +27,7 @@ namespace Plainion.GraphViz.Algorithms
             mask.Set(sources);
 
             var caption = Presentation.GetPropertySetFor<Caption>().Get(node.Id);
-            mask.Label = "Incoming of " + caption.DisplayText;
+            mask.Label = "Sources of " + caption.DisplayText;
 
             return mask;
         }

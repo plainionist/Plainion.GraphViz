@@ -9,20 +9,18 @@ namespace Plainion.GraphViz.Algorithms
     /// Generates show/hide mask of all nodes given.
     /// In case of "negation" all visible nodes except the given ones are considered
     /// </summary>
-    public class AddRemoveNodes : AbstractAlgorithm
+    public class RemoveNodes : AbstractAlgorithm
     {
-        private bool myShow;
         private bool myNegate;
 
-        public AddRemoveNodes(IGraphPresentation presentation, bool show)
-            : this(presentation, show, false)
+        public RemoveNodes(IGraphPresentation presentation)
+            : this(presentation, false)
         {
         }
 
-        public AddRemoveNodes(IGraphPresentation presentation, bool show, bool negate)
+        public RemoveNodes(IGraphPresentation presentation, bool negate)
             : base(presentation)
         {
-            myShow = show;
             myNegate = negate;
         }
 
@@ -34,7 +32,7 @@ namespace Plainion.GraphViz.Algorithms
         public INodeMask Compute(IEnumerable<Node> nodes)
         {
             var mask = new NodeMask();
-            mask.IsShowMask = myShow;
+            mask.IsShowMask = false;
 
             if (myNegate)
             {

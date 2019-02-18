@@ -15,17 +15,17 @@ namespace Plainion.GraphViz.Algorithms
         public enum Mode
         {
             /// <summary>
-            /// Remove nodes without any edges
+            /// Remove nodes without any siblings
             /// </summary>
             All,
             /// <summary>
-            /// Remove nodes without incoming edges
+            /// Remove nodes without sources
             /// </summary>
-            Incomings,
+            Sources,
             /// <summary>
-            /// Remove nodes without outgoing edges
+            /// Remove nodes without targets
             /// </summary>
-            Outgoings
+            Targets
         }
 
         public RemoveNodesWithoutEdges(IGraphPresentation presentation)
@@ -55,17 +55,17 @@ namespace Plainion.GraphViz.Algorithms
             mask.Set(nodesToHide);
             mask.Label = "Nodes without ";
 
-            if (myMode == Mode.Incomings)
+            if (myMode == Mode.Sources)
             {
-                mask.Label += "incomings";
+                mask.Label += "sources";
             }
-            else if (myMode == Mode.Outgoings)
+            else if (myMode == Mode.Targets)
             {
-                mask.Label += "outgoings";
+                mask.Label += "targets";
             }
             else
             {
-                mask.Label += "edges";
+                mask.Label += "siblings";
             }
 
             return mask;
@@ -78,18 +78,18 @@ namespace Plainion.GraphViz.Algorithms
 
         private bool HideNode(Node node)
         {
-            var noIncomings = !node.In.Any(e => Presentation.Picking.Pick(e));
-            var noOutgoings = !node.Out.Any(e => Presentation.Picking.Pick(e));
+            var noSources = !node.In.Any(e => Presentation.Picking.Pick(e));
+            var noTargets = !node.Out.Any(e => Presentation.Picking.Pick(e));
 
-            if (myMode == Mode.All && noIncomings && noOutgoings)
+            if (myMode == Mode.All && noSources && noTargets)
             {
                 return true;
             }
-            else if (myMode == Mode.Incomings && noIncomings)
+            else if (myMode == Mode.Sources && noSources)
             {
                 return true;
             }
-            else if (myMode == Mode.Outgoings && noOutgoings)
+            else if (myMode == Mode.Targets && noTargets)
             {
                 return true;
             }

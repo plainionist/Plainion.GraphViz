@@ -26,7 +26,7 @@ namespace Plainion.GraphViz.Algorithms
             mask.Set(targets);
 
             var caption = Presentation.GetPropertySetFor<Caption>().Get(node.Id);
-            mask.Label = "Outgoing of " + caption.DisplayText;
+            mask.Label = "Targets of " + caption.DisplayText;
 
             return mask;
         }

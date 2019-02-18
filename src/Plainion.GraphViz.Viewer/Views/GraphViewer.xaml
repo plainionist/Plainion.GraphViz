@@ -25,12 +25,12 @@
         <r:GraphView.ContextMenus>
             <ContextMenu x:Key="Node">
                 <MenuItem Header="Remove">
-                    <MenuItem Header="This" Command="{Binding HideNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Selection" Command="{Binding HideNodeCommand}"/>
-                    <MenuItem Header="All but selection" Command="{Binding HideAllButCommand}"/>
+                    <MenuItem Header="This" Command="{Binding RemoveNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Selection" Command="{Binding RemoveNodeCommand}"/>
+                    <MenuItem Header="All but selection" Command="{Binding RemoveAllButCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Incomings" Command="{Binding HideIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Outgoings" Command="{Binding HideOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Sources" Command="{Binding RemoveSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Targets" Command="{Binding RemoveTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
                     <MenuItem Header="Not reachable" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
                               ToolTip="Removes all but the transitive hull of this node"/>
@@ -38,22 +38,19 @@
                               ToolTip="Removes all but the transitive hull of selected nodes"/>
                 </MenuItem>
                 <MenuItem Header="Add">
-                    <MenuItem Header="This" Command="{Binding ShowNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Selection" Command="{Binding ShowNodeCommand}"/>
+                    <MenuItem Header="Sources" Command="{Binding AddSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Targets" Command="{Binding AddTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Siblings" Command="{Binding AddSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
-                    <MenuItem Header="Incomings" Command="{Binding ShowNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Outgoings" Command="{Binding ShowNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <Separator/>
-                    <MenuItem Header="Reachables" Command="{Binding ShowNodeWithReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                    <MenuItem Header="Reachables" Command="{Binding AddReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
                               ToolTip="Shows the transitive hull of the node"/>
-                    <MenuItem Header="Reachables of selection" Command="{Binding ShowNodeWithReachablesCommand}" 
+                    <MenuItem Header="Reachables of selection" Command="{Binding AddReachablesCommand}" 
                               ToolTip="Shows the transitive hull of selected nodes"/>
                 </MenuItem>
                 <MenuItem Header="Select">
                     <MenuItem Header="This" Command="{Binding SelectNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Incomings" Command="{Binding SelectNodeWithIncomingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Outgoings" Command="{Binding SelectNodeWithOutgoingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Sources" Command="{Binding SelectNodeWithSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Targets" Command="{Binding SelectNodeWithTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding SelectNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 </MenuItem>
                 <Separator/>
@@ -101,7 +98,7 @@
                 <MenuItem Header="Fold/Unfold this" Command="{Binding ToggleClusterFoldingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <MenuItem Header="Fold/Unfold selection" Command="{Binding ToggleClusterFoldingCommand}"/>
                 <Separator/>
-                <MenuItem Header="Remove nodes">
+                <MenuItem Header="">
                     <MenuItem Header="Not connected with outside" Command="{Binding RemoveNodesNotConnectedWithOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
                               ToolTip="Removes all nodes from the cluster which have no edge from/to outside the cluster"/>
                     <MenuItem Header="Not reachable from outside" Command="{Binding RemoveNodesNotReachableFromOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
@@ -114,7 +111,12 @@
                 <MenuItem Header="Copy identifier of all visible nodes" Command="{Binding CopyAllIdentifiersToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />
             </ContextMenu>
             <ContextMenu x:Key="Default">
-                <MenuItem Header="Remove nodes without edges" Command="{Binding RemoveNodesWithoutEdgesCommand}"/>
+                <MenuItem Header="Remove">
+                    <MenuItem Header="Selection" Command="{Binding RemoveNodeCommand}"/>
+                    <MenuItem Header="All but selection" Command="{Binding RemoveAllButCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="Nodes without edges" Command="{Binding RemoveNodesWithoutEdgesCommand}"/>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Specials">
                     <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
