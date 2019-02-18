@@ -30,28 +30,28 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
             RemoveNodeCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new RemoveNodes(Presentation).Compute(GetSelectedNodes(n))));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation).Compute(GetSelectedNodes(n))));
 
             RemoveAllButCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new RemoveNodes(Presentation, true).Compute(GetSelectedNodes(n))));
+                n => OnRemoveAllBut(GetSelectedNodes(n)));
 
             AddSourcesCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveSources(Presentation).Compute(n, add: true)));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Sources }.Compute(n)));
 
             AddTargetsCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveTargets(Presentation).Compute(n, add: true)));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Targets }.Compute(n)));
 
             AddSiblingsCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddSiblings(Presentation).Compute(n)));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation) { SiblingsType = SiblingsType.Any }.Compute(n)));
 
             AddReachablesCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveTransitiveHull(Presentation) { Add = true }.Compute(GetSelectedNodes(n))));
 
             RemoveSourcesCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveSources(Presentation).Compute(n, add: false)));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation) { Add = false, SiblingsType = SiblingsType.Sources }.Compute(n)));
 
             RemoveTargetsCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveTargets(Presentation).Compute(n, add: false)));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation) { Add = false, SiblingsType = SiblingsType.Targets }.Compute(n)));
 
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
                 n => OnRemoveUnreachableNdoes(GetSelectedNodes(n)));
@@ -160,6 +160,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
         }
 
+        private void OnRemoveAllBut(Node[] nodes)
+        {
+            var mask = new AddRemoveNodes(Presentation).Compute(nodes);
+            mask.Invert(Presentation);
+            Presentation.AddMask(mask);
+        }
+
         private void OnInvertSelection()
         {
             var selection = Presentation.GetPropertySetFor<Selection>();
@@ -168,7 +175,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             var inversion = graph.Nodes
                 .Where(Presentation.Picking.Pick)
                 .Where(n => !(selection.TryGet(n.Id)?.IsSelected ?? false))
-                .Select(n=>n.Id)
+                .Select(n => n.Id)
                 .ToList();
 
             var invertedSelection = new HashSet<string>(inversion);

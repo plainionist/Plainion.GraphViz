@@ -71,11 +71,8 @@
     <Compile Include="Algorithms\GetNodesOutsideCluster.cs" />
     <Compile Include="Algorithms\RemoveClusters.cs" />
     <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
-    <Compile Include="Algorithms\RemoveNodes.cs" />
+    <Compile Include="Algorithms\AddRemoveNodes.cs" />
     <Compile Include="Algorithms\ShowCycles.cs" />
-    <Compile Include="Algorithms\AddRemoveSources.cs" />
-    <Compile Include="Algorithms\AddRemoveTargets.cs" />
-    <Compile Include="Algorithms\AddSiblings.cs" />
     <Compile Include="Algorithms\Traverse.cs" />
     <Compile Include="Dot\DotGraphHeader.cs" />
     <Compile Include="Dot\DotPlainParser.cs" />
