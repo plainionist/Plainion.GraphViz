@@ -30,10 +30,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public GraphViewerModel(IEventAggregator eventAggregator)
         {
             RemoveNodeCommand = new DelegateCommand<Node>(
-                n => Presentation.AddMask(new AddRemoveNodes(Presentation).Compute(GetSelectedNodes(n))));
+                n => Presentation.AddMask(new AddRemoveNodes(Presentation).Compute(GetSelectedNodes(n))),
+                n => Presentation != null);
 
             RemoveAllButCommand = new DelegateCommand<Node>(
-                n => OnRemoveAllBut(GetSelectedNodes(n)));
+                n => OnRemoveAllBut(GetSelectedNodes(n)),
+                n => Presentation != null);
 
             AddSourcesCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Sources }.Compute(n)));
@@ -376,9 +378,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
 
-        public ICommand RemoveNodeCommand { get; private set; }
+        public DelegateCommand<Node> RemoveNodeCommand { get; private set; }
 
-        public ICommand RemoveAllButCommand { get; private set; }
+        public DelegateCommand<Node> RemoveAllButCommand { get; private set; }
 
         public ICommand RemoveSourcesCommand { get; private set; }
 
@@ -434,6 +436,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             if (propertyName == "Presentation")
             {
+                RemoveNodeCommand.RaiseCanExecuteChanged();
+                RemoveAllButCommand.RaiseCanExecuteChanged();
                 ShowCyclesCommand.RaiseCanExecuteChanged();
                 RemoveNodesWithoutEdgesCommand.RaiseCanExecuteChanged();
                 ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
