@@ -169,7 +169,7 @@ namespace Plainion.GraphViz.Viewer
 
                 if (myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit)
                 {
-                    myPresentation.FoldUnfoldAllClusters();
+                    myPresentation.ToogleFoldingOfVisibleClusters();
                 }
 
                 var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();

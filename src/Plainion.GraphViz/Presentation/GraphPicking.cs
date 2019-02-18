@@ -37,5 +37,10 @@ namespace Plainion.GraphViz.Presentation
         {
             return Pick(edge.Source) && Pick(edge.Target);
         }
+
+        public bool Pick(Cluster cluster)
+        {
+            return cluster.Nodes.Any(Pick);
+        }
     }
 }

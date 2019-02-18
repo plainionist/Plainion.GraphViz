@@ -87,9 +87,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             var mask = algo.Compute(targetCluster.Nodes);
             mask.Invert(presentation);
 
-            presentation.AddMask(mask);
+            presentation.Masks().Push(mask);
 
-            presentation.AddMask(new RemoveNodesWithoutEdges(presentation).Compute());
+            presentation.Masks().Push(new RemoveNodesWithoutSiblings(presentation).Compute());
 
             return presentation;
         }

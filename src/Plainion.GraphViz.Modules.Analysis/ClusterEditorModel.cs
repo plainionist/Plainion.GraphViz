@@ -66,10 +66,10 @@ namespace Plainion.GraphViz.Modules.Analysis
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             captionModule.Add(new Caption(newClusterId, "<new>"));
 
-            myPresentation.ChangeClusterAssignment(t => t.AddCluster(newClusterId));
+            myPresentation.DynamicClusters().AddCluster(newClusterId);
 
             // start new clusters folded
-            myPresentation.ChangeClusterFolding(t => t.Toggle(newClusterId));
+            myPresentation.ClusterFolding().Toggle(newClusterId);
 
             // update tree
             {
@@ -102,7 +102,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
-            myPresentation.ChangeClusterAssignment(t => t.HideCluster(clusterNode.Id));
+            myPresentation.DynamicClusters().HideCluster(clusterNode.Id);
 
             // update tree
             {
@@ -146,7 +146,7 @@ namespace Plainion.GraphViz.Modules.Analysis
                 .Select(n => n.Node.Id)
                 .ToList();
 
-            myPresentation.ChangeClusterAssignment(t => t.AddToCluster(nodes, SelectedCluster));
+            myPresentation.DynamicClusters().AddToCluster(nodes, SelectedCluster);
 
             // update tree
             {
@@ -307,7 +307,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         {
             var node = (ClusterTreeNode)sender;
 
-            myPresentation.ChangeClusterAssignment(t => t.AddToCluster(node.Id, ((ClusterTreeNode)node.Parent).Id));
+            myPresentation.DynamicClusters().AddToCluster(node.Id, ((ClusterTreeNode)node.Parent).Id);
         }
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
@@ -480,7 +480,7 @@ namespace Plainion.GraphViz.Modules.Analysis
 
             var nodeId = ((ClusterTreeNode)droppedElement.DataContext).Id;
 
-            myPresentation.ChangeClusterAssignment(t => t.RemoveFromClusters(nodeId));
+            myPresentation.DynamicClusters().RemoveFromClusters(nodeId);
         }
     }
 }

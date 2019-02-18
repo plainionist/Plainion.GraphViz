@@ -122,7 +122,9 @@
                     <MenuItem Header="Selected" Command="{Binding RemoveNodeCommand}"/>
                     <MenuItem Header="All but selected" Command="{Binding RemoveAllButCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Nodes without edges" Command="{Binding RemoveNodesWithoutEdgesCommand}"/>
+                    <MenuItem Header="Nodes without sources" Command="{Binding RemoveNodesWithoutSourcesCommand}"/>
+                    <MenuItem Header="Nodes without targets" Command="{Binding RemoveNodesWithoutTargetsCommand}"/>
+                    <MenuItem Header="Nodes without siblings" Command="{Binding RemoveNodesWithoutSiblingsCommand}"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Clear selection" Command="{Binding ClearSelectionCommand}"/>

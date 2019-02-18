@@ -149,7 +149,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
                     // the nodes we get through ITransformationModule might be new instances!
                     // -> get the right node instances based on the returned ids
-                    //    (otherwiese the writer below will remove them from the output)
+                    //    (otherwise the writer below will remove them from the output)
                     var nodes = (folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id))
                         .Select(n => graph.GetNode(n.Id))
                         .ToList();

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
@@ -8,32 +7,18 @@ namespace Plainion.GraphViz.Presentation
 {
     public static class GraphPresentationExtensions
     {
-        public static void ChangeClusterAssignment(this IGraphPresentation presentation, Action<DynamicClusterTransformation> action)
+        public static DynamicClusterTransformation DynamicClusters(this IGraphPresentation presentation)
         {
             Contract.RequiresNotNull(presentation, nameof(presentation));
 
             var transformations = presentation.GetModule<ITransformationModule>();
-            var transformation = transformations.Items
+            return transformations.Items
                 .OfType<DynamicClusterTransformation>()
                 .Single();
-
-            action(transformation);
         }
 
-        public static void AddToCluster(this IGraphPresentation presentation, IEnumerable<string> nodes, string cluster)
+        public static ClusterFoldingTransformation ClusterFolding(this IGraphPresentation presentation)
         {
-            presentation.ChangeClusterAssignment(t => t.AddToCluster(nodes, cluster));
-        }
-
-        public static void RemoveFromClusters(this IGraphPresentation presentation, IEnumerable<string> nodes)
-        {
-            presentation.ChangeClusterAssignment(t => t.RemoveFromClusters(nodes));
-        }
-
-        public static void ChangeClusterFolding(this IGraphPresentation presentation, Action<ClusterFoldingTransformation> action)
-        {
-            Contract.RequiresNotNull(presentation, nameof(presentation));
-
             var transformations = presentation.GetModule<ITransformationModule>();
             var transformation = transformations.Items
                 .OfType<ClusterFoldingTransformation>()
@@ -42,53 +27,38 @@ namespace Plainion.GraphViz.Presentation
             if (transformation == null)
             {
                 transformation = new ClusterFoldingTransformation(presentation);
-
-                action(transformation);
-
                 transformations.Add(transformation);
             }
-            else
-            {
-                action(transformation);
-            }
+
+            return transformation;
         }
 
-        public static void FoldUnfoldAllClusters(this IGraphPresentation presentation)
+        public static void ToogleFoldingOfVisibleClusters(this IGraphPresentation presentation)
         {
             Contract.RequiresNotNull(presentation, nameof(presentation));
 
-            var transformations = presentation.GetModule<ITransformationModule>();
-            var transformation = transformations.Items
-                .OfType<ClusterFoldingTransformation>()
-                .SingleOrDefault();
+            var transformation = presentation.ClusterFolding();
 
-            if (transformation == null)
+            var visibleClusters = presentation.TransformedGraph().Clusters
+                .Where(presentation.Picking.Pick)
+                .Select(c => c.Id)
+                .ToList();
+
+            // any visible cluster folded?
+            if (visibleClusters.Any(transformation.Clusters.Contains))
             {
-                transformation = new ClusterFoldingTransformation(presentation);
-
-                foreach (var cluster in presentation.Graph.Clusters)
-                {
-                    transformation.Add(cluster.Id);
-                }
-
-                transformations.Add(transformation);
+                // safe to pass nodes not known to transformation
+                transformation.Remove(visibleClusters);
             }
             else
             {
-                if (transformation.Clusters.Any())
-                {
-                    transformation.Remove(transformation.Clusters.ToList());
-                }
-                else
-                {
-                    transformation.Add(presentation.Graph.Clusters.Select(c => c.Id));
-                }
+                transformation.Add(visibleClusters);
             }
         }
 
-        public static void AddMask(this IGraphPresentation presentation, INodeMask mask)
+        public static INodeMaskModule Masks(this IGraphPresentation presentation)
         {
-            presentation.GetModule<INodeMaskModule>().Push(mask);
+            return presentation.GetModule<INodeMaskModule>();
         }
 
         public static IGraph TransformedGraph(this IGraphPresentation presentation)

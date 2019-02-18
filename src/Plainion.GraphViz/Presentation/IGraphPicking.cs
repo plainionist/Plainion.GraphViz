@@ -7,7 +7,8 @@ namespace Plainion.GraphViz.Presentation
     /// </summary>
     public interface IGraphPicking
     {
-        bool Pick( Node node );
-        bool Pick( Edge edge );
+        bool Pick(Node node);
+        bool Pick(Edge edge);
+        bool Pick(Cluster cluster);
     }
 }

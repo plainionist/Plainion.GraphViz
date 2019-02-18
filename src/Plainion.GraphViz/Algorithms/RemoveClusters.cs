@@ -17,6 +17,7 @@ namespace Plainion.GraphViz.Algorithms
         {
             var graph = Presentation.GetModule<ITransformationModule>().Graph;
             var clusterNodes = graph.Nodes
+                // do not process hidden nodes
                 .Where(Presentation.Picking.Pick)
                 .Where(node => !(graph.Clusters.Any(c => c.Nodes.Any(n => n.Id == node.Id))));
 

@@ -68,7 +68,7 @@
     <Compile Include="Algorithms\AddRemoveTransitiveHull.cs" />
     <Compile Include="Algorithms\GetNodesOutsideCluster.cs" />
     <Compile Include="Algorithms\RemoveClusters.cs" />
-    <Compile Include="Algorithms\RemoveNodesWithoutEdges.cs" />
+    <Compile Include="Algorithms\RemoveNodesWithoutSiblings.cs" />
     <Compile Include="Algorithms\AddRemoveNodes.cs" />
     <Compile Include="Algorithms\ShowCycles.cs" />
     <Compile Include="Algorithms\Traverse.cs" />

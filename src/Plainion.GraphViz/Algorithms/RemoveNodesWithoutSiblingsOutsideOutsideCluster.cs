@@ -21,20 +21,63 @@ namespace Plainion.GraphViz.Algorithms
 
         public INodeMask Compute(Cluster cluster)
         {
-            // we always want to operate on the "real" nodes of the cluster - even if the cluster is currently folded.
-            // By that the user may not see any effect in the graph when working with folded clusters but this allows
-            // us to filter the graph before unfolding and so avoid huge graphs.
-            var nodesOfCluster = Presentation.Graph.Clusters.Single(c => c.Id == cluster.Id).Nodes;
+            var folding = Presentation.ClusterFolding();
+            var clusterIsFolded = folding.Clusters.Contains(cluster.Id);
+            if (clusterIsFolded)
+            {
+                // the algorithm should work on folded clusters as well so we need to unfold the cluster temporarily 
+                folding.Remove(cluster.Id);
+            }
 
+            try
+            {
+                // re-fetch the cluster in case it was folded
+                var clusterNodes = Presentation.TransformedGraph().Clusters.Single(c => c.Id == cluster.Id).Nodes
+                    // do not process hidden nodes
+                    .Where(Presentation.Picking.Pick)
+                    .ToList();
+
+                var mask = new NodeMask();
+                mask.IsShowMask = false;
+
+                mask.Set(FindNodes(clusterNodes));
+
+                var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
+                if (SiblingsType == SiblingsType.Any)
+                {
+                    mask.Label = $"Nodes without siblings outside {caption.DisplayText}";
+                }
+                else if (SiblingsType == SiblingsType.Sources)
+                {
+                    mask.Label = $"Nodes without sources outside {caption.DisplayText}";
+                }
+                else if (SiblingsType == SiblingsType.Targets)
+                {
+                    mask.Label = $"Nodes without targets outside {caption.DisplayText}";
+                }
+
+                return mask;
+            }
+            finally
+            {
+                if (clusterIsFolded)
+                {
+                    folding.Add(cluster.Id);
+                }
+            }
+        }
+
+        private IEnumerable<Node> FindNodes(IReadOnlyCollection<Node> clusterNodes)
+        {
             var empty = new List<Node>();
-            var nodes = nodesOfCluster
+            var nodes = clusterNodes
                 .Where(n => FilterNodes(n, empty))
                 .ToList();
 
             var moreFound = true;
             while (moreFound)
             {
-                var moreNodes = nodesOfCluster
+                var moreNodes = clusterNodes
                     .Except(nodes)
                     .Where(n => FilterNodes(n, nodes))
                     .ToList();
@@ -43,25 +86,7 @@ namespace Plainion.GraphViz.Algorithms
                 nodes.AddRange(moreNodes);
             }
 
-            var mask = new NodeMask();
-            mask.IsShowMask = false;
-            mask.Set(nodes);
-
-            var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
-            if (SiblingsType == SiblingsType.Any)
-            {
-                mask.Label = $"Nodes without siblings outside {caption.DisplayText}";
-            }
-            else if (SiblingsType == SiblingsType.Sources)
-            {
-                mask.Label = $"Nodes without sources outside {caption.DisplayText}";
-            }
-            else if (SiblingsType == SiblingsType.Targets)
-            {
-                mask.Label = $"Nodes without targets outside {caption.DisplayText}";
-            }
-
-            return mask;
+            return nodes;
         }
 
         private bool FilterNodes(Node n, List<Node> nodes)

@@ -70,7 +70,7 @@ namespace Plainion.GraphViz.Tests
             var nodeC = myPresentation.Graph.Nodes.Single(n => n.Id == "c");
             var module = myPresentation.GetModule<TransformationModule>();
 
-            myPresentation.ChangeClusterFolding(t => t.Toggle("X17"));
+            myPresentation.ClusterFolding().Toggle("X17");
 
             Assert.That(module.Items.OfType<ClusterFoldingTransformation>().Single().Clusters, Is.EquivalentTo(new[] { "X17" }));
 
@@ -78,7 +78,7 @@ namespace Plainion.GraphViz.Tests
             Assert.That(bookmark, Is.Not.Null);
 
             // unfold again to be sure that folding comes really from bookmark
-            myPresentation.ChangeClusterFolding(t => t.Toggle("X17"));
+            myPresentation.ClusterFolding().Toggle("X17");
 
             myBuilder.Apply(myPresentation, bookmark);
 

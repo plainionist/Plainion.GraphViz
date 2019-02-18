@@ -16,5 +16,10 @@ namespace Plainion.GraphViz.Presentation
         {
             return true;
         }
+
+        public bool Pick(Cluster cluster)
+        {
+            return true;
+        }
     }
 }

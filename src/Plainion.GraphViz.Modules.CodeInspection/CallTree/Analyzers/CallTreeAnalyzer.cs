@@ -272,7 +272,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .ToList());
             mask.Invert(presentation);
 
-            presentation.AddMask(mask);
+            presentation.Masks().Push(mask);
 
             return presentation;
         }
@@ -297,12 +297,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .ToList();
 
             // 2. fold all clusters to "see" type dependencies only
-            presentation.FoldUnfoldAllClusters();
+            presentation.ToogleFoldingOfVisibleClusters();
 
             // 3. unfold clusters of targets again to only "see" dependencies to target nodes
             foreach (var c in targetClusters)
             {
-                presentation.ChangeClusterFolding(t => t.Toggle(c.Id));
+                presentation.ClusterFolding().Toggle(c.Id);
             }
 
             // 4. find all nodes from which the targets can be reached
@@ -315,7 +315,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .ToList());
             mask.Invert(presentation);
 
-            presentation.AddMask(mask);
+            presentation.Masks().Push(mask);
 
             return presentation;
         }

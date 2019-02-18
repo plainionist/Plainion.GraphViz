@@ -6,7 +6,7 @@ namespace Plainion.GraphViz.Presentation
 {
     public interface INodeMask : INotifyPropertyChanged, ISerializable
     {
-        string Label { get; }
+        string Label { get; set; }
 
         /// <summary>
         /// Indicates whether the mask defines the nodes to show or to hide
