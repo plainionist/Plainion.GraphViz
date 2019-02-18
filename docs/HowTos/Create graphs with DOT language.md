@@ -24,5 +24,5 @@ digraph {
 You could just describe the edges if all nodes have at least one edge using the "->".
 Nodes without edges are just mentioned in a separate line.
 
-*Note:* If you open a DOT file in Plainion.GraphViz and then continue editing it the visualization in Plainion.GraphViz 
-will adopt automatically whenever you save the file.
+*Note:* If you open a DOT file in Plainion.GraphViz and then continue editing it the visualization in 
+Plainion.GraphViz will adopt automatically whenever you save the file.

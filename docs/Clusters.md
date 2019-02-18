@@ -51,26 +51,3 @@ digraph {
 ```
 
 See [Creating graphs with DOT language](/HowTos/Create graphs with DOT language) for a basic introduction to the DOT language
-
-## Analysing Cluster dependencies
-
-You can analyze which nodes are causing dependencies (edges) between clusters by first creating a show filter for the 
-clusters of interest (this is important as the following steps depend on having a show filter as basis).
-
-![](Screenshots/ShowSelectedClusters.png) 
-
-Now unfold the cluster containing the targeted nodes with "Unfold and hide all but targets"
-
-![](Screenshots/UnfoldAndHideAllButTargets.png) 
-
-Then unfold the cluster containing the "source nodes" with "Unfold and hide all but sources"
-
-![](Screenshots/UnfoldedDependencies.png) 
-
-This will uncover the dependency creating nodes. 
-
-*Note:* In order to generate this view two filters have been applied behind the scenes which you would have 
-to disable/delete in order to get back to the start layout. If you just delete the first two filters you will 
-see nothing on the canvas. This is because the "show both clusters" filter is still active with says "only show 
-the folded clusters". As both clusters are unfolded nothing can be shown.
-
