@@ -1,16 +1,13 @@
-## 3.0 - 2019-02-
+## 3.0 - 2019-02-18
 
-- Show/hide concept completely reworked. Now context menu operations always apply a "delta" to the 
-  seen graph.
-- Cluster folding respects visibility of edges, meaning: edges between clusters represent
-  the currently visible edges between the nodes of the clusters
-- Filtering on folded nodes possible in filter dialog
-- Fixed selection update problems (in cases without redraw)
-- Graph context menus completely reworked
-  - "Hide" renamed to "Remove" and "Show" renamed to "Add" to make clear that detla
-  - unused entries removed
-  - new items added for more flexibility (esp. selection)
-- unused algos removed, others renamed and added
+- Complete redesign of graph context menu with focus on simplicity. Unused and complex
+  entries removed, new and more intuitive entries added.
+- Cluster folding respects visibility of underlaying graph.
+- Filter dialog supports filtering on nodes within folded clusters
+- Update to .Net FW 4.7.2
+- Fixed case handling when loading documents by extension
+- Fixed loading DGML document without nodes
+- Fixed various selection update issues
 
 ## 2.12.0 - 2018-10-07
 

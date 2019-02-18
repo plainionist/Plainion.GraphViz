@@ -82,9 +82,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             presentation.Graph = builder.Graph;
 
             var algo = new AddRemoveTransitiveHull(presentation);
-            algo.Add = true;
+            algo.Add = false;
             algo.Reverse = true;
-            presentation.AddMask(algo.Compute(targetCluster.Nodes));
+            var mask = algo.Compute(targetCluster.Nodes);
+            mask.Invert(presentation);
+
+            presentation.AddMask(mask);
 
             presentation.AddMask(new RemoveNodesWithoutEdges(presentation).Compute());
 
