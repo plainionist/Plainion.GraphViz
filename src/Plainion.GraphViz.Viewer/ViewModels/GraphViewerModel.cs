@@ -110,7 +110,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 () => Presentation != null);
 
             RemoveNodesWithoutEdgesCommand = new DelegateCommand(
-                () => Presentation.AddMask(new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.All).Compute()),
+                () => Presentation.AddMask(new RemoveNodesWithoutEdges(Presentation).Compute()),
                 () => Presentation != null);
 
             FoldUnfoldAllClustersCommand = new DelegateCommand(

@@ -10,33 +10,9 @@ namespace Plainion.GraphViz.Algorithms
     /// </summary>
     public class RemoveNodesWithoutEdges : AbstractAlgorithm
     {
-        private Mode myMode;
-
-        public enum Mode
-        {
-            /// <summary>
-            /// Remove nodes without any siblings
-            /// </summary>
-            All,
-            /// <summary>
-            /// Remove nodes without sources
-            /// </summary>
-            Sources,
-            /// <summary>
-            /// Remove nodes without targets
-            /// </summary>
-            Targets
-        }
-
         public RemoveNodesWithoutEdges(IGraphPresentation presentation)
-            : this(presentation, Mode.All)
-        {
-        }
-
-        public RemoveNodesWithoutEdges(IGraphPresentation presentation, Mode mode)
             : base(presentation)
         {
-            myMode = mode;
         }
 
         public INodeMask Compute()
@@ -53,20 +29,7 @@ namespace Plainion.GraphViz.Algorithms
             var mask = new NodeMask();
             mask.IsShowMask = false;
             mask.Set(nodesToHide);
-            mask.Label = "Nodes without ";
-
-            if (myMode == Mode.Sources)
-            {
-                mask.Label += "sources";
-            }
-            else if (myMode == Mode.Targets)
-            {
-                mask.Label += "targets";
-            }
-            else
-            {
-                mask.Label += "siblings";
-            }
+            mask.Label = "Nodes without edges";
 
             return mask;
         }
@@ -81,22 +44,7 @@ namespace Plainion.GraphViz.Algorithms
             var noSources = !node.In.Any(e => Presentation.Picking.Pick(e));
             var noTargets = !node.Out.Any(e => Presentation.Picking.Pick(e));
 
-            if (myMode == Mode.All && noSources && noTargets)
-            {
-                return true;
-            }
-            else if (myMode == Mode.Sources && noSources)
-            {
-                return true;
-            }
-            else if (myMode == Mode.Targets && noTargets)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return noSources && noTargets;
         }
     }
 }

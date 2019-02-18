@@ -4,13 +4,13 @@
   seen graph.
 - Cluster folding respects visibility of edges, meaning: edges between clusters represent
   the currently visible edges between the nodes of the clusters
-- Algorithm "Remove nodes not reachable from outside cluster" added
 - Filtering on folded nodes possible in filter dialog
 - Fixed selection update problems (in cases without redraw)
-- Various algorithms renamed and API redesigned so that presentation is not altered directly
-- removed various context menu items
-- added various context menu items
-- fixed reselecting a selected node
+- Graph context menus completely reworked
+  - "Hide" renamed to "Remove" and "Show" renamed to "Add" to make clear that detla
+  - unused entries removed
+  - new items added for more flexibility (esp. selection)
+- unused algos removed, others renamed and added
 
 ## 2.12.0 - 2018-10-07
 

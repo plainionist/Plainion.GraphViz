@@ -45,11 +45,12 @@ namespace Plainion.GraphViz.Algorithms
             if (nodes.Count == 1)
             {
                 var caption = Presentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-                mask.Label = (Reverse ? "Reverse t" : "T") + "ransitive hull of " + caption.DisplayText;
+                mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption.DisplayText;
             }
             else
             {
-                mask.Label = (Reverse ? "Reverse t" : "T") + "ransitive hull of multiple nodes";
+                var caption = Presentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
+                mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption.DisplayText + " and ...";
             }
 
             return mask;
