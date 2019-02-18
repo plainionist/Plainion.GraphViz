@@ -77,7 +77,6 @@
     <Compile Include="Algorithms\AddRemoveTargets.cs" />
     <Compile Include="Algorithms\AddSiblings.cs" />
     <Compile Include="Algorithms\Traverse.cs" />
-    <Compile Include="Algorithms\UnfoldAndHide.cs" />
     <Compile Include="Dot\DotGraphHeader.cs" />
     <Compile Include="Dot\DotPlainParser.cs" />
     <Compile Include="Dot\DotSettings.cs" />

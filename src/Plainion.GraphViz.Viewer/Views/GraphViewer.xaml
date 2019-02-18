@@ -101,14 +101,7 @@
                 <MenuItem Header="Fold/Unfold this" Command="{Binding ToggleClusterFoldingCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                 <MenuItem Header="Fold/Unfold selection" Command="{Binding ToggleClusterFoldingCommand}"/>
                 <Separator/>
-                <MenuItem Header="Unfold and hide private nodes" Command="{Binding UnfoldAndHidePrivateNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                <MenuItem Header="Unfold and hide all but targets" Command="{Binding UnfoldAndHideAllButTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                <MenuItem Header="Unfold and hide all but sources" Command="{Binding UnfoldAndHideAllButSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                <Separator/>
                 <MenuItem Header="Remove nodes">
-                    <MenuItem Header="Without incomings" Command="{Binding RemoveNodesWithoutIncomingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Without outgoings" Command="{Binding RemoveNodesWithoutOutgoingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <Separator/>
                     <MenuItem Header="Not connected with outside" Command="{Binding RemoveNodesNotConnectedWithOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
                               ToolTip="Removes all nodes from the cluster which have no edge from/to outside the cluster"/>
                     <MenuItem Header="Not reachable from outside" Command="{Binding RemoveNodesNotReachableFromOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"

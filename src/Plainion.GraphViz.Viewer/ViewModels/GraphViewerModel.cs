@@ -86,21 +86,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             ToggleClusterFoldingCommand = new DelegateCommand<Cluster>(
                 c => Presentation.ChangeClusterFolding(ToggleClusterFolding(c)));
 
-            UnfoldAndHidePrivateNodesCommand = new DelegateCommand<Cluster>(
-                c => new UnfoldAndHide(Presentation).Execute(c, SiblingsType.Any), CanUnfold);
-
-            UnfoldAndHideAllButTargetsCommand = new DelegateCommand<Cluster>
-                (c => new UnfoldAndHide(Presentation).Execute(c, SiblingsType.Targets), CanUnfold);
-
-            UnfoldAndHideAllButSourcesCommand = new DelegateCommand<Cluster>(
-                c => new UnfoldAndHide(Presentation).Execute(c, SiblingsType.Sources), CanUnfold);
-
-            RemoveNodesWithoutIncomingsCommand = new DelegateCommand<Cluster>(
-                c => Presentation.AddMask(new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Incomings).Compute(c)));
-
-            RemoveNodesWithoutOutgoingsCommand = new DelegateCommand<Cluster>(
-                c => Presentation.AddMask(new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Outgoings).Compute(c)));
-
             RemoveNodesNotConnectedWithOutsideCommand = new DelegateCommand<Cluster>(
                 c => Presentation.AddMask(new RemoveNodesNotConnectedWithOutsideCluster(Presentation).Compute(c)));
 
@@ -364,16 +349,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public ICommand ToggleClusterFoldingCommand { get; private set; }
 
-        public DelegateCommand<Cluster> UnfoldAndHidePrivateNodesCommand { get; private set; }
-
-        public DelegateCommand<Cluster> UnfoldAndHideAllButTargetsCommand { get; private set; }
-
-        public DelegateCommand<Cluster> UnfoldAndHideAllButSourcesCommand { get; private set; }
-
-        public DelegateCommand<Cluster> RemoveNodesWithoutIncomingsCommand { get; private set; }
-
-        public DelegateCommand<Cluster> RemoveNodesWithoutOutgoingsCommand { get; private set; }
-
         public DelegateCommand<Cluster> RemoveNodesNotConnectedWithOutsideCommand { get; private set; }
 
         public DelegateCommand<Cluster> RemoveNodesNotReachableFromOutsideCommand { get; private set; }
@@ -522,12 +497,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                     // just open context menu on e.g. node
                     if (myGraphItemForContextMenu is Cluster)
                     {
-                        UnfoldAndHidePrivateNodesCommand.RaiseCanExecuteChanged();
-                        UnfoldAndHideAllButTargetsCommand.RaiseCanExecuteChanged();
-                        UnfoldAndHideAllButSourcesCommand.RaiseCanExecuteChanged();
-
-                        RemoveNodesWithoutIncomingsCommand.RaiseCanExecuteChanged();
-                        RemoveNodesWithoutOutgoingsCommand.RaiseCanExecuteChanged();
                         RemoveNodesNotConnectedWithOutsideCommand.RaiseCanExecuteChanged();
                         RemoveNodesNotReachableFromOutsideCommand.RaiseCanExecuteChanged();
                         RemoveNodesNotReachingOutsideCommand.RaiseCanExecuteChanged();
