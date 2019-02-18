@@ -263,7 +263,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             // find all nodes from which the targets can be reached
             var algo = new AddRemoveTransitiveHull(presentation);
-            algo.Show = true;
+            algo.Add = true;
             algo.Reverse = true;
 
             var targetIds = targets.Select(target => MethodId(target.myDeclaringType, target.myName)).ToList();
@@ -306,7 +306,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             // 4. find all nodes from which the targets can be reached
             var algo = new AddRemoveTransitiveHull(presentation);
-            algo.Show = true;
+            algo.Add = true;
             algo.Reverse = true;
 
             var mask = algo.Compute(transformations.Graph.Nodes.AsParallel()

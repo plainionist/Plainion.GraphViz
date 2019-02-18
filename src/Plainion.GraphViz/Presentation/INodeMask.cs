@@ -22,5 +22,7 @@ namespace Plainion.GraphViz.Presentation
         bool IsApplied { get; set; }
 
         bool? IsSet(Node node);
+
+        void Invert(IGraphPresentation presentation);
     }
 }

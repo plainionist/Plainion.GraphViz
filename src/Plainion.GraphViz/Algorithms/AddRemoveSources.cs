@@ -15,14 +15,14 @@ namespace Plainion.GraphViz.Algorithms
         {
         }
 
-        public INodeMask Compute(Node node, bool show)
+        public INodeMask Compute(Node node, bool add)
         {
             var sources = node.In
                 .Select(e => e.Source)
-                .Where(n => Presentation.Picking.Pick(n) != show);
+                .Where(n => Presentation.Picking.Pick(n) != add);
 
             var mask = new NodeMask();
-            mask.IsShowMask = show;
+            mask.IsShowMask = add;
 
             mask.Set(sources);
 

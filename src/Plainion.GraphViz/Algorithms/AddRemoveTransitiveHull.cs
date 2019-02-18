@@ -13,7 +13,7 @@ namespace Plainion.GraphViz.Algorithms
         public AddRemoveTransitiveHull(IGraphPresentation presentation)
             : base(presentation)
         {
-            Show = true;
+            Add = true;
             Reverse = false;
         }
 
@@ -22,7 +22,7 @@ namespace Plainion.GraphViz.Algorithms
         /// False: generates a mask containing all nodes but the given nodes and their transitive hull.
         /// Default: true.
         /// </summary>
-        public bool Show { get; set; }
+        public bool Add { get; set; }
 
         /// <summary>
         /// True: considers only "in" edges when building the hull.
@@ -38,17 +38,9 @@ namespace Plainion.GraphViz.Algorithms
                 .Distinct();
 
             var mask = new NodeMask();
-            mask.IsShowMask = Show;
+            mask.IsShowMask = Add;
 
-            if (Show)
-            {
-                mask.Set(connectedNodes);
-            }
-            else
-            {
-                var transformationModule = Presentation.GetModule<ITransformationModule>();
-                mask.Set(transformationModule.Graph.Nodes.Where(Presentation.Picking.Pick).Except(connectedNodes));
-            }
+            mask.Set(connectedNodes);
 
             if (nodes.Count == 1)
             {
@@ -81,9 +73,9 @@ namespace Plainion.GraphViz.Algorithms
 
         private IEnumerable<Edge> SelectSiblings(Node n)
         {
-            if (Show)
+            if (Add)
             {
-                return Reverse ? n.In : n.Out;
+                return Reverse ? n.In.Where(e => !Presentation.Picking.Pick(e.Source)) : n.Out.Where(e => !Presentation.Picking.Pick(e.Target));
             }
             else
             {

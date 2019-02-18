@@ -49,9 +49,15 @@
                 </MenuItem>
                 <MenuItem Header="Select">
                     <MenuItem Header="This" Command="{Binding SelectNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <Separator/>
                     <MenuItem Header="Sources" Command="{Binding SelectNodeWithSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Targets" Command="{Binding SelectNodeWithTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding SelectNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <Separator/>
+                    <MenuItem Header="Reachables" Command="{Binding SelectReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                              ToolTip="Shows the transitive hull of the node"/>
+                    <MenuItem Header="Reachables of selection" Command="{Binding SelectReachablesCommand}" 
+                              ToolTip="Shows the transitive hull of selected nodes"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Trace">
@@ -118,10 +124,8 @@
                     <MenuItem Header="Nodes without edges" Command="{Binding RemoveNodesWithoutEdgesCommand}"/>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Specials">
-                    <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
-                    <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
-                </MenuItem>
+                <MenuItem Header="Remove selection" Command="{Binding RemoveSelectionCommand}"/>
+                <MenuItem Header="Invert selection" Command="{Binding InvertSelectionCommand}"/>
                 <Separator/>
                 <MenuItem Header="Fold/Unfold all clusters" Command="{Binding FoldUnfoldAllClustersCommand}"/>
                 <MenuItem Header="Add visible nodes outside clusters to" ItemsSource="{Binding Clusters}">
@@ -132,7 +136,11 @@
                     </MenuItem.ItemTemplate>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Deselect all" Command="{Binding DeselectAllCommand}"/>
+                <MenuItem Header="Specials">
+                    <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
+                    <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
+                </MenuItem>
+                <Separator/>
                 <MenuItem Header="Home" Command="{Binding HomeCommand}"/>
                 <MenuItem Header="Relayout" Command="{Binding InvalidateLayoutCommand}"/>
             </ContextMenu>

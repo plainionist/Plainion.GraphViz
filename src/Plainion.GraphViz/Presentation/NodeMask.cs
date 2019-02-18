@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Plainion.GraphViz.Model;
 
@@ -77,27 +78,43 @@ namespace Plainion.GraphViz.Presentation
 
             myValues.Add(node.Id);
 
-            OnPropertyChanged("Values");
+            OnPropertyChanged(nameof(Values));
         }
 
         public void Unset(Node node)
         {
             myValues.Remove(node.Id);
 
-            OnPropertyChanged("Values");
+            OnPropertyChanged(nameof(Values));
         }
 
         public void Set(IEnumerable<Node> nodes)
         {
             foreach (var node in nodes)
             {
-                if (!myValues.Contains(node.Id))
-                {
-                    myValues.Add(node.Id);
-                }
+                myValues.Add(node.Id);
             }
 
-            OnPropertyChanged("Values");
+            OnPropertyChanged(nameof(Values));
+        }
+
+        public override void Invert(IGraphPresentation presentation)
+        {
+            var graph = presentation.GetModule<ITransformationModule>().Graph;
+
+            var inversion = graph.Nodes
+                .Where(n => IsShowMask ? !presentation.Picking.Pick(n) : presentation.Picking.Pick(n))
+                .Where(n => !myValues.Contains(n.Id))
+                .ToList();
+
+            myValues.Clear();
+
+            foreach (var n in inversion)
+            {
+                myValues.Add(n.Id);
+            }
+
+            OnPropertyChanged(nameof(Values));
         }
     }
 }

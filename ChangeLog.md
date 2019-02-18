@@ -8,6 +8,9 @@
 - Filtering on folded nodes possible in filter dialog
 - Fixed selection update problems (in cases without redraw)
 - Various algorithms renamed and API redesigned so that presentation is not altered directly
+- removed various context menu items
+- added various context menu items
+- fixed reselecting a selected node
 
 ## 2.12.0 - 2018-10-07
 

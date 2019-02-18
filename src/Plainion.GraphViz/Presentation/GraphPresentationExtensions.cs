@@ -86,6 +86,10 @@ namespace Plainion.GraphViz.Presentation
             presentation.GetModule<INodeMaskModule>().Push(mask);
         }
 
+        public static IGraph TransformedGraph(this IGraphPresentation presentation)
+        {
+            return presentation.GetModule<ITransformationModule>().Graph;
+        }
 
         public static void Select(this IGraphPresentation presentation, Node node, SiblingsType role)
         {
