@@ -62,8 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\AbstractAlgorithm.cs" />
+    <Compile Include="Algorithms\RemoveNodesNotConnectedWithOutsideCluster.cs" />
+    <Compile Include="Algorithms\RemoveNodesNotReachingOutsideCluster.cs" />
     <Compile Include="Algorithms\SiblingsType.cs" />
-    <Compile Include="Algorithms\RemoveNodesNotReachableOutsideCluster.cs" />
+    <Compile Include="Algorithms\RemoveNodesNotReachableFromOutsideCluster.cs" />
     <Compile Include="Algorithms\ShowPath.cs" />
     <Compile Include="Algorithms\AddRemoveTransitiveHull.cs" />
     <Compile Include="Algorithms\GetNodesOutsideCluster.cs" />

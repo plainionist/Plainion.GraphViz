@@ -101,8 +101,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             RemoveNodesWithoutOutgoingsCommand = new DelegateCommand<Cluster>(
                 c => Presentation.AddMask(new RemoveNodesWithoutEdges(Presentation, RemoveNodesWithoutEdges.Mode.Outgoings).Compute(c)));
 
+            RemoveNodesNotConnectedWithOutsideCommand = new DelegateCommand<Cluster>(
+                c => Presentation.AddMask(new RemoveNodesNotConnectedWithOutsideCluster(Presentation).Compute(c)));
+
             RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.AddMask(new RemoveNodesNotReachableOutsideCluster(Presentation).Compute(c)));
+                c => Presentation.AddMask(new RemoveNodesNotReachableFromOutsideCluster(Presentation).Compute(c)));
+
+            RemoveNodesNotReachingOutsideCommand = new DelegateCommand<Cluster>(
+                c => Presentation.AddMask(new RemoveNodesNotReachingOutsideCluster(Presentation).Compute(c)));
 
             CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(
                 c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
@@ -368,8 +374,12 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand<Cluster> RemoveNodesWithoutOutgoingsCommand { get; private set; }
 
+        public DelegateCommand<Cluster> RemoveNodesNotConnectedWithOutsideCommand { get; private set; }
+
         public DelegateCommand<Cluster> RemoveNodesNotReachableFromOutsideCommand { get; private set; }
 
+        public DelegateCommand<Cluster> RemoveNodesNotReachingOutsideCommand { get; private set; }
+        
         public DelegateCommand FoldUnfoldAllClustersCommand { get; private set; }
 
         public DelegateCommand<string> AddVisibleNodesOutsideClustersToClusterCommand { get; private set; }
@@ -518,7 +528,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
                         RemoveNodesWithoutIncomingsCommand.RaiseCanExecuteChanged();
                         RemoveNodesWithoutOutgoingsCommand.RaiseCanExecuteChanged();
+                        RemoveNodesNotConnectedWithOutsideCommand.RaiseCanExecuteChanged();
                         RemoveNodesNotReachableFromOutsideCommand.RaiseCanExecuteChanged();
+                        RemoveNodesNotReachingOutsideCommand.RaiseCanExecuteChanged();
                     }
                 }
             }

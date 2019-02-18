@@ -109,7 +109,12 @@
                     <MenuItem Header="Without incomings" Command="{Binding RemoveNodesWithoutIncomingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Without outgoings" Command="{Binding RemoveNodesWithoutOutgoingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
-                    <MenuItem Header="Not reachable from outside" Command="{Binding RemoveNodesNotReachableFromOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="Not connected with outside" Command="{Binding RemoveNodesNotConnectedWithOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Removes all nodes from the cluster which have no edge from/to outside the cluster"/>
+                    <MenuItem Header="Not reachable from outside" Command="{Binding RemoveNodesNotReachableFromOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Removes all nodes from the cluster which are not reachable from outside the cluster"/>
+                    <MenuItem Header="Not reaching outside" Command="{Binding RemoveNodesNotReachingOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Removes all nodes from the cluster from which nodes outside the cluster cannot be reached"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Copy caption of all visible nodes" Command="{Binding CopyAllCaptionsToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />

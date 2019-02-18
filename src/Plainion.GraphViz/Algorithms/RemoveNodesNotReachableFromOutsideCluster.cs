@@ -7,34 +7,34 @@ namespace Plainion.GraphViz.Algorithms
     /// <summary>
     /// Generates "hide mask" removing all visible nodes from the given cluster which are not reachable from outside the cluster.
     /// </summary>
-    public class RemoveNodesNotReachableOutsideCluster : AbstractAlgorithm
+    public class RemoveNodesNotReachableFromOutsideCluster : AbstractAlgorithm
     {
-        public RemoveNodesNotReachableOutsideCluster(IGraphPresentation presentation)
+        public RemoveNodesNotReachableFromOutsideCluster(IGraphPresentation presentation)
             :base(presentation)
         {
         }
 
         public INodeMask Compute(Cluster cluster)
         {
-            var unreachables = cluster.Nodes
-                .Where(n => !n.In.Any(e => Presentation.Picking.Pick(e)))
+            var nodes = cluster.Nodes
+                .Where(n => !n.In.Any(Presentation.Picking.Pick))
                 .ToList();
 
-            var moreUnreachablesFound = true;
-            while (moreUnreachablesFound)
+            var moreFound = true;
+            while (moreFound)
             {
-                var moreUnreachables = cluster.Nodes
-                    .Except(unreachables)
-                    .Where(n => n.In.All(e => !Presentation.Picking.Pick(e) || unreachables.Contains(e.Source)))
+                var moreNodes = cluster.Nodes
+                    .Except(nodes)
+                    .Where(n => n.In.All(e => !Presentation.Picking.Pick(e.Source) || nodes.Contains(e.Source)))
                     .ToList();
 
-                moreUnreachablesFound = moreUnreachables.Any();
-                unreachables.AddRange(moreUnreachables);
+                moreFound = moreNodes.Any();
+                nodes.AddRange(moreNodes);
             }
 
             var mask = new NodeMask();
             mask.IsShowMask = false;
-            mask.Set(unreachables);
+            mask.Set(nodes);
 
             var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
             mask.Label = $"Nodes not reachable from outside {caption.DisplayText}";
