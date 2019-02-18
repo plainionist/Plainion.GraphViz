@@ -56,13 +56,12 @@ namespace Plainion.GraphViz.Presentation
         public void AddToCluster(string nodeId, string clusterId)
         {
             myNodeToClusterMapping[nodeId] = clusterId;
+
             OnPropertyChanged(nameof(NodeToClusterMapping));
         }
 
-        public void AddToCluster(IReadOnlyCollection<string> nodeIds, string clusterId)
+        public void AddToCluster(IEnumerable<string> nodeIds, string clusterId)
         {
-            Contract.RequiresNotNullNotEmpty(nodeIds, "nodeIds");
-
             foreach (var nodeId in nodeIds)
             {
                 myNodeToClusterMapping[nodeId] = clusterId;
@@ -71,7 +70,14 @@ namespace Plainion.GraphViz.Presentation
             OnPropertyChanged(nameof(NodeToClusterMapping));
         }
 
-        public void RemoveFromClusters(params string[] nodeIds)
+        public void RemoveFromClusters(string nodeId)
+        {
+            myNodeToClusterMapping[nodeId] = null;
+
+            OnPropertyChanged(nameof(NodeToClusterMapping));
+        }
+
+        public void RemoveFromClusters(IEnumerable<string> nodeIds)
         {
             foreach (var nodeId in nodeIds)
             {

@@ -20,9 +20,14 @@ namespace Plainion.GraphViz.Presentation
             action(transformation);
         }
 
-        public static void AddToCluster(this IGraphPresentation presentation, IReadOnlyCollection<string> nodes, string cluster)
+        public static void AddToCluster(this IGraphPresentation presentation, IEnumerable<string> nodes, string cluster)
         {
             presentation.ChangeClusterAssignment(t => t.AddToCluster(nodes, cluster));
+        }
+
+        public static void RemoveFromClusters(this IGraphPresentation presentation, IEnumerable<string> nodes)
+        {
+            presentation.ChangeClusterAssignment(t => t.RemoveFromClusters(nodes));
         }
 
         public static void ChangeClusterFolding(this IGraphPresentation presentation, Action<ClusterFoldingTransformation> action)

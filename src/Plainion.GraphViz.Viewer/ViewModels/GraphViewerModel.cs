@@ -59,7 +59,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n => Presentation.AddMask(new AddRemoveNodes(Presentation) { Add = false, SiblingsType = SiblingsType.Any }.Compute(n)));
 
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
-                n => OnRemoveUnreachableNdoes(GetSelectedNodes(n)));
+                n => OnRemoveUnreachableNodes(GetSelectedNodes(n)));
 
             SelectNodeCommand = new DelegateCommand<Node>(
                 n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
@@ -143,15 +143,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 () => Presentation != null);
 
             AddToClusterCommand = new DelegateCommand<string>(
-                c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(GraphItemForContextMenu.Id, c)));
+                c => Presentation.AddToCluster(new[] { GraphItemForContextMenu.Id }, c));
 
             AddWithSelectedToClusterCommand = new DelegateCommand<string>(
-                c => Presentation.ChangeClusterAssignment(t => t.AddToCluster(GetSelectedNodes(null)
-                    .Select(n => n.Id).ToArray(), c)));
+                c => Presentation.AddToCluster(GetSelectedNodes(null).Select(n => n.Id), c));
 
             RemoveFromClusterCommand = new DelegateCommand<Node>(
-                node => Presentation.ChangeClusterAssignment(t => t.RemoveFromClusters(GetSelectedNodes(node)
-                    .Select(n => n.Id).ToArray())));
+                node => Presentation.RemoveFromClusters(GetSelectedNodes(node).Select(n => n.Id)));
 
             TraceToCommand = new DelegateCommand<Node>(
                 n => Presentation.AddMask(new ShowPath(Presentation).Compute((Node)GraphItemForContextMenu, n)));
@@ -165,7 +163,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
         }
 
-        private void OnRemoveAllBut(Node[] nodes)
+        private void OnRemoveAllBut(IEnumerable<Node> nodes)
         {
             var mask = new AddRemoveNodes(Presentation).Compute(nodes);
             mask.Invert(Presentation);
@@ -201,7 +199,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
         }
 
-        private void OnRemoveUnreachableNdoes(Node[] nodes)
+        private void OnRemoveUnreachableNodes(IReadOnlyCollection<Node> nodes)
         {
             var mask = new AddRemoveTransitiveHull(Presentation) { Add = false }.Compute(nodes);
             mask.Invert(Presentation);
@@ -209,7 +207,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             Presentation.AddMask(mask);
         }
 
-        private void SelectReachables(Node[] nodes)
+        private void SelectReachables(IReadOnlyCollection<Node> nodes)
         {
             // pass "Add = false" as we want the transitive hull of the visible nodes
             var mask = new AddRemoveTransitiveHull(Presentation) { Add = false }.Compute(nodes);
@@ -271,7 +269,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         }
 
         // by convention: if given commandParameter is null then "this and all selected" nodes are relevant
-        private Node[] GetSelectedNodes(Node commandParamter)
+        private IReadOnlyCollection<Node> GetSelectedNodes(Node commandParamter)
         {
             if (commandParamter != null)
             {
@@ -289,7 +287,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                     .Select(x => nodes.FirstOrDefault(n => n.Id == x.OwnerId))
                     .Concat(new[] { (Node)GraphItemForContextMenu })
                     .Where(n => n != null)
-                    .ToArray();
+                    .ToList();
             }
             finally
             {
@@ -300,7 +298,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         }
 
         // by convention: if given commandParameter is null then "this and all selected" cluster are relevant
-        private Cluster[] GetSelectedClusters(Cluster commandParamter)
+        private IReadOnlyCollection<Cluster> GetSelectedClusters(Cluster commandParamter)
         {
             if (commandParamter != null)
             {
@@ -318,7 +316,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                     .Select(x => clusters.FirstOrDefault(c => c.Id == x.OwnerId))
                     .Concat(new[] { (Cluster)GraphItemForContextMenu })
                     .Where(n => n != null)
-                    .ToArray();
+                    .ToList();
             }
             finally
             {
