@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
@@ -7,7 +6,7 @@ using Plainion.GraphViz.Presentation;
 namespace Plainion.GraphViz.Algorithms
 {
     /// <summary>
-    /// Generates a "show mask" containing all visible nodes building a cycle.
+    /// Generates a "hide mask" containing all visible nodes NOT building cycles.
     /// </summary>
     public class ShowCycles : AbstractAlgorithm
     {
@@ -21,11 +20,11 @@ namespace Plainion.GraphViz.Algorithms
             var graph = Presentation.GetModule<ITransformationModule>().Graph;
 
             var mask = new NodeMask();
-            mask.Label = "Cycles";
+            mask.IsShowMask = false;
+            mask.Label = "Cycles (inverted)";
 
-            var cycleNodes = FindCycles(graph).ToList();
-
-            mask.Set(cycleNodes);
+            mask.Set(FindCycles(graph));
+            mask.Invert(Presentation);
 
             return mask;
         }

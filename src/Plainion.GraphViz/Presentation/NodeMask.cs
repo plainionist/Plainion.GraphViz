@@ -6,6 +6,9 @@ using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
+    // DESIGN-HINT: masks are "delta" mask by design, means: you have to set nodes explicitly from outside.
+    // For every "unknown"node the mask returns "don't know". This design works well with "add"/"remove" nodes to/from
+    // graph and especially well with folding!
     [Serializable]
     public class NodeMask : AbstractNodeMask
     {

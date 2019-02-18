@@ -7,7 +7,7 @@ using Plainion.GraphViz.Presentation;
 namespace Plainion.GraphViz.Algorithms
 {
     /// <summary>
-    /// Considers visibility of nodes and edges.
+    /// Generates "hide mask" containing all visible nodes NOT on the path between the two given nodes.
     /// </summary>
     public class ShowPath : AbstractAlgorithm
     {
@@ -21,9 +21,11 @@ namespace Plainion.GraphViz.Algorithms
             var captions = Presentation.GetModule<ICaptionModule>();
 
             var mask = new NodeMask();
-            mask.Label = string.Format("Path from {0} to {1}", captions.Get(from.Id).DisplayText, captions.Get(to.Id).DisplayText);
-            mask.IsShowMask = true;
+            mask.IsShowMask = false;
+            mask.Label = $"Path from {captions.Get(from.Id).DisplayText} to {captions.Get(to.Id).DisplayText} (inverted)"; 
+
             mask.Set(GetPaths(from, to));
+            mask.Invert(Presentation);
 
             return mask;
         }
