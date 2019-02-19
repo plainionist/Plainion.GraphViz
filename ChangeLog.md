@@ -2,6 +2,8 @@
 
 - minor wording adjustments in graph context menu
 - fixed extending nodes of unfolded cluster
+- "Show" context menu reintroduced as a shortcut for "Hide all but selected node" and
+  "Add sources/targets/siblings"
 
 ## 3.0 - 2019-02-18
 

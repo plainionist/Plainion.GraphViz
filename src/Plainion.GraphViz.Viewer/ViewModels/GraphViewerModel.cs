@@ -61,6 +61,30 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
                 n => OnRemoveUnreachableNodes(GetSelectedNodes(n)));
 
+            ShowNodeCommand = new DelegateCommand<Node>(
+                n => OnRemoveAllBut(n));
+
+            ShowNodeWithSourcesCommand = new DelegateCommand<Node>(
+                n =>
+                {
+                    OnRemoveAllBut(n);
+                    Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Sources }.Compute(n));
+                });
+
+            ShowNodeWithTargetsCommand = new DelegateCommand<Node>(
+                n =>
+                {
+                    OnRemoveAllBut(n);
+                    Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Targets }.Compute(n));
+                });
+
+            ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(
+                n =>
+                {
+                    OnRemoveAllBut(n);
+                    Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Any }.Compute(n));
+                });
+
             SelectNodeCommand = new DelegateCommand<Node>(
                 n => Presentation.GetPropertySetFor<Selection>().Get(n.Id).IsSelected = true);
 
@@ -171,11 +195,15 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
         }
 
+        private void OnRemoveAllBut(params Node[] nodes)
+        {
+            OnRemoveAllBut((IEnumerable<Node>)nodes);
+        }
+
         private void OnRemoveAllBut(IEnumerable<Node> nodes)
         {
             var mask = new AddRemoveNodes(Presentation).Compute(nodes);
             mask.Invert(Presentation);
-            mask.Label += " (inverted)";
 
             Presentation.Masks().Push(mask);
         }
@@ -213,7 +241,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         {
             var mask = new AddRemoveTransitiveHull(Presentation) { Add = false }.Compute(nodes);
             mask.Invert(Presentation);
-            mask.Label += " (inverted)";
 
             Presentation.Masks().Push(mask);
         }
@@ -403,6 +430,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ICommand RemoveSiblingsCommand { get; private set; }
 
         public ICommand RemoveUnreachableNodesCommand { get; private set; }
+
+        public ICommand ShowNodeCommand { get; private set; }
+
+        public ICommand ShowNodeWithSourcesCommand { get; private set; }
+
+        public ICommand ShowNodeWithTargetsCommand { get; private set; }
+
+        public ICommand ShowNodeWithSiblingsCommand { get; private set; }
 
         public ICommand SelectNodeCommand { get; private set; }
 

@@ -48,12 +48,23 @@
                     <MenuItem Header="Reachables of selection" Command="{Binding AddReachablesCommand}" 
                               ToolTip="Adds all nodes which can be reached from selected nodes"/>
                 </MenuItem>
+                <MenuItem Header="Show">
+                    <MenuItem Header="This" Command="{Binding ShowNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Shortcut for 'Hide all but this'"/>
+                    <Separator/>
+                    <MenuItem Header="With sources" Command="{Binding ShowNodeWithSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Shortcut for 'Hide all but this' and 'Add sources'"/>
+                    <MenuItem Header="With targets" Command="{Binding ShowNodeWithTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Shortcut for 'Hide all but this' and 'Add targets'"/>
+                    <MenuItem Header="With siblings" Command="{Binding ShowNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
+                              ToolTip="Shortcut for 'Hide all but this' and 'Add siblings'"/>
+                </MenuItem>
                 <MenuItem Header="Select">
                     <MenuItem Header="This" Command="{Binding SelectNodeCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
-                    <MenuItem Header="Sources" Command="{Binding SelectNodeWithSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Targets" Command="{Binding SelectNodeWithTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
-                    <MenuItem Header="Siblings" Command="{Binding SelectNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="With sources" Command="{Binding SelectNodeWithSourcesCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="With targets" Command="{Binding SelectNodeWithTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                    <MenuItem Header="With siblings" Command="{Binding SelectNodeWithSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
                     <MenuItem Header="Reachables" Command="{Binding SelectReachablesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
                               ToolTip="Selects all nodes which can be reached from this node"/>

@@ -118,6 +118,8 @@ namespace Plainion.GraphViz.Presentation
             }
 
             OnPropertyChanged(nameof(Values));
+
+            Label = $"All but '{Label}'";
         }
     }
 }

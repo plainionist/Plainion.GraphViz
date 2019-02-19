@@ -22,7 +22,7 @@ namespace Plainion.GraphViz.Algorithms
 
             var mask = new NodeMask();
             mask.IsShowMask = false;
-            mask.Label = $"Path from {captions.Get(from.Id).DisplayText} to {captions.Get(to.Id).DisplayText} (inverted)"; 
+            mask.Label = $"Path from {captions.Get(from.Id).DisplayText} to {captions.Get(to.Id).DisplayText}"; 
 
             mask.Set(GetPaths(from, to));
             mask.Invert(Presentation);

@@ -21,7 +21,7 @@ namespace Plainion.GraphViz.Algorithms
 
             var mask = new NodeMask();
             mask.IsShowMask = false;
-            mask.Label = "Cycles (inverted)";
+            mask.Label = "Cycles";
 
             mask.Set(FindCycles(graph));
             mask.Invert(Presentation);
