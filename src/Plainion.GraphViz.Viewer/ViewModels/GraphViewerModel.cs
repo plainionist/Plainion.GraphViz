@@ -92,13 +92,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 c => ToggleClusterFolding(c));
 
             RemoveNodesNotConnectedWithOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesWithoutSiblingsOutsideOutsideCluster(Presentation) { SiblingsType = SiblingsType.Any }.Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation) { SiblingsType = SiblingsType.Any }.Compute(c)));
 
             RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesWithoutSiblingsOutsideOutsideCluster(Presentation) { SiblingsType = SiblingsType.Sources }.Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation) { SiblingsType = SiblingsType.Sources }.Compute(c)));
 
             RemoveNodesNotReachingOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesWithoutSiblingsOutsideOutsideCluster(Presentation) { SiblingsType = SiblingsType.Targets }.Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation) { SiblingsType = SiblingsType.Targets }.Compute(c)));
 
             CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(
                 c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));

@@ -10,9 +10,9 @@ namespace Plainion.GraphViz.Algorithms
     /// Generates "hide mask" removing all visible nodes from the given cluster without siblings
     /// outside the cluster according to SiblingsType.
     /// </summary>
-    public class RemoveNodesWithoutSiblingsOutsideOutsideCluster : AbstractAlgorithm
+    public class RemoveNodesNotConnectedOutsideCluster : AbstractAlgorithm
     {
-        public RemoveNodesWithoutSiblingsOutsideOutsideCluster(IGraphPresentation presentation)
+        public RemoveNodesNotConnectedOutsideCluster(IGraphPresentation presentation)
             : base(presentation)
         {
         }
@@ -45,15 +45,15 @@ namespace Plainion.GraphViz.Algorithms
                 var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
                 if (SiblingsType == SiblingsType.Any)
                 {
-                    mask.Label = $"Nodes without siblings outside {caption.DisplayText}";
+                    mask.Label = $"Nodes not connected with outside {caption.DisplayText}";
                 }
                 else if (SiblingsType == SiblingsType.Sources)
                 {
-                    mask.Label = $"Nodes without sources outside {caption.DisplayText}";
+                    mask.Label = $"Nodes not reachable from outside {caption.DisplayText}";
                 }
                 else if (SiblingsType == SiblingsType.Targets)
                 {
-                    mask.Label = $"Nodes without targets outside {caption.DisplayText}";
+                    mask.Label = $"Nodes reaching outside {caption.DisplayText}";
                 }
 
                 return mask;

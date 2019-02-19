@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\AbstractAlgorithm.cs" />
-    <Compile Include="Algorithms\RemoveNodesWithoutSiblingsOutsideOutsideCluster.cs" />
+    <Compile Include="Algorithms\RemoveNodesNotConnectedOutsideCluster.cs" />
     <Compile Include="Algorithms\SiblingsType.cs" />
     <Compile Include="Algorithms\ShowPath.cs" />
     <Compile Include="Algorithms\AddRemoveTransitiveHull.cs" />

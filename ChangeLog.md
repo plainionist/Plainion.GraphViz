@@ -1,3 +1,7 @@
+## 3.1 - 2019-02-
+
+- minor wording adjustments in graph context menu
+
 ## 3.0 - 2019-02-18
 
 - Complete redesign of graph context menu with focus on simplicity. Unused and complex
