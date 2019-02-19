@@ -1,6 +1,7 @@
-## 3.1 - 2019-02-
+## 3.1 - 2019-02-19
 
 - minor wording adjustments in graph context menu
+- fixed extending nodes of unfolded cluster
 
 ## 3.0 - 2019-02-18
 

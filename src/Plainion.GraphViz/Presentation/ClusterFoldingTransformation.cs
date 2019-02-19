@@ -267,42 +267,57 @@ namespace Plainion.GraphViz.Presentation
                 builder.TryAddNode(node);
             }
 
+            // "redirect" source/target in case source/target is inside folded cluster
+            string GetNodeId(Node node)
+            {
+                return nodesToClusterMap.TryGetValue(node.Id, out var clusterId) && myFoldedClusters.Contains(clusterId)
+                    ? GetClusterNodeId(clusterId)
+                    : node.Id;
+            }
+
             // add edges
             foreach (var edge in graph.Edges)
             {
-                var redirectedEdge = edge;
+                var sourceId = GetNodeId(edge.Source);
+                var targetId = GetNodeId(edge.Target);
 
-                // "redirect" source/target in case source/target is inside folded cluster
-
-                if (nodesToClusterMap.TryGetValue(edge.Source.Id, out var clusterId) && myFoldedClusters.Contains(clusterId))
+                // 1. Add all edges which are not folded (visibility of those is handled with masks)
+                //    Otherwise these edges are not "seen" when trying to extend the graph with "add" algorithms
+                if (sourceId == edge.Source.Id && targetId == edge.Target.Id)
                 {
-                    redirectedEdge = new Edge(builder.Graph.FindNode(GetClusterNodeId(clusterId)), redirectedEdge.Target);
+                    // edge between two unfolded nodes
+                    // -> add it
+                    builder.TryAddEdge(sourceId, targetId);
+
+                    // nothing more to be done with this edge
+                    continue;
                 }
 
-                if (nodesToClusterMap.TryGetValue(edge.Target.Id, out clusterId) && myFoldedClusters.Contains(clusterId))
-                {
-                    redirectedEdge = new Edge(redirectedEdge.Source, builder.Graph.FindNode(GetClusterNodeId(clusterId)));
-                }
-
-                // ignore self-edges
-                if (redirectedEdge.Source.Id == redirectedEdge.Target.Id)
+                // skip edges within a folded cluster
+                if (sourceId == targetId)
                 {
                     continue;
                 }
 
                 var isEdgeVisible = myPresentation.Picking.Pick(edge);
+
+                // 2. Only add redirected edges if original edge was visible
+                //    Otherwise we would draw an edge which should not exist based on actual node visibility.
+                //    This makes the folding respect node visibility.
                 if (isEdgeVisible)
                 {
-                    // only add visible nodes to the graph
-                    builder.TryAddEdge(redirectedEdge.Source.Id, redirectedEdge.Target.Id);
+                    // add redirected edge
+                    builder.TryAddEdge(sourceId,targetId);
                 }
 
-                if (redirectedEdge != edge)
+                // ALWAYS remember based on what we computed the redirected Remember "decision" for when visibility of nodes/edges changes so that
+                // we can check whether transformation has to be triggered again
                 {
-                    if (!myComputedEdges.TryGetValue(redirectedEdge.Id, out var originalEdges))
+                    var redirectedEdgeId = Edge.CreateId(sourceId, targetId);
+                    if (!myComputedEdges.TryGetValue(redirectedEdgeId, out var originalEdges))
                     {
                         originalEdges = new ComputedEdge();
-                        myComputedEdges.Add(redirectedEdge.Id, originalEdges);
+                        myComputedEdges.Add(redirectedEdgeId, originalEdges);
                     }
 
                     originalEdges.IsVisible |= isEdgeVisible;
