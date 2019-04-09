@@ -263,6 +263,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 return cluster;
             }
 
+            if (package.CreateClustersForAssemblies)
+            {
+                return new Cluster { Name = type.Assembly.GetName().Name, Id = Guid.NewGuid().ToString() };
+            }
+
             if (CreateClustersForNamespaces)
             {
                 return new Cluster { Name = type.Namespace, Id = Guid.NewGuid().ToString() };

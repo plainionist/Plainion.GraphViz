@@ -1,3 +1,7 @@
+## 3.2 - 2019-04-
+
+- CreateClustersForAssemblies attribute added to Package
+
 ## 3.1 - 2019-02-19
 
 - minor wording adjustments in graph context menu

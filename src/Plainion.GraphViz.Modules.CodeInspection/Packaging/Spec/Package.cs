@@ -12,6 +12,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
             Clusters = new List<Cluster>();
         }
 
+        [DefaultValue(false)]
+        public bool CreateClustersForAssemblies { get; set; }
+
         [DesignerSerializationVisibility( DesignerSerializationVisibility.Content )]
         public List<Cluster> Clusters { get; private set; }
     }
