@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -265,12 +266,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             if (package.CreateClustersForAssemblies)
             {
-                return new Cluster { Name = type.Assembly.GetName().Name, Id = Guid.NewGuid().ToString() };
+                // ID needs to be derived from assembly name to auto-magically match the next type 
+                // of the same assembly into this cluster later on when building the graph
+                return new Cluster { Name = type.Assembly.GetName().Name, Id = type.Assembly.FullName };
             }
 
             if (CreateClustersForNamespaces)
             {
-                return new Cluster { Name = type.Namespace, Id = Guid.NewGuid().ToString() };
+                // ID needs to be derived from namespace name to auto-magically match the next type 
+                // of the same namespace into this cluster later on when building the graph
+                return new Cluster { Name = type.Namespace, Id = type.Namespace };
             }
 
             return null;
