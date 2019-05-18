@@ -34,8 +34,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         public bool UsedTypesOnly { get; set; }
 
-        public bool AllEdges { get; set; }
-
         /// <summary>
         /// If no matching cluster was found for a node it will be put in a cluster for its namespace
         /// </summary>
@@ -172,22 +170,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             myCancellationToken.ThrowIfCancellationRequested();
 
-            var focusedPackageTypes = myPackageToTypesMap.Count > 1
-                ? null
-                : myPackageToTypesMap.Single().Value;
-
             return new Inspector(myAssemblyLoader, type).GetUsedTypes()
-                // if only one package is given we analyse the deps within the package - otherwise between the packages
-                .Where(edge => (AllEdges && myPackageToTypesMap.Any(e => e.Value.Contains(edge.To)))
-                   || (focusedPackageTypes != null ? focusedPackageTypes.Contains(edge.To) : IsForeignPackage(package, edge.To)))
+                .Where(edge => myPackageToTypesMap.Any(e => e.Value.Contains(edge.To)))
                 .Where(edge => !IsCompilerGenerated(edge.To))
                 .Select(edge => GraphUtils.Edge(edge))
                 .Where(edge => edge.From != edge.To);
-        }
-
-        private bool IsForeignPackage(Package package, Type dep)
-        {
-            return myPackageToTypesMap.Where(e => e.Key != package.Name).Any(entry => entry.Value.Contains(dep));
         }
 
         private AnalysisDocument GenerateDocument(IReadOnlyCollection<Reference> edges)

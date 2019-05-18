@@ -60,8 +60,6 @@
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0">
                     <CheckBox Content="Used types only" IsChecked="{Binding UsedTypesOnly}"
                               ToolTip="Types not used by any other type are not added to the graph"/>
-                    <CheckBox Content="All edges" IsChecked="{Binding AllEdges}"  Margin="10,0,0,0"
-                              ToolTip="Show inner package dependencies as well when analysing multiple packages"/>
                     <CheckBox Content="Create clusters for namespaces" IsChecked="{Binding CreateClustersForNamespaces}" Margin="10,0,0,0"
                               ToolTip="Types will be grouped into clusters per namespace"/>
                 </StackPanel>

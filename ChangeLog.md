@@ -1,6 +1,7 @@
-## 3.2 - 2019-04-
+## 3.2 - 2019-05-18
 
 - CreateClustersForAssemblies attribute added to Package
+- Package analysis: "All Edges" check box removed and behavior made default
 
 ## 3.1 - 2019-02-19
 

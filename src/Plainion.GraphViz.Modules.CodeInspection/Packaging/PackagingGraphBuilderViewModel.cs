@@ -34,7 +34,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private IEnumerable<ElementCompletionData> myCompletionData;
         private CancellationTokenSource myCTS;
         private bool myUsedTypesOnly;
-        private bool myAllEdges;
         private bool myCreateClustersForNamespaces;
         private readonly GraphToSpecSynchronizer myGraphToSpecSynchronizer;
         private IPresentationCreationService myPresentationCreationService;
@@ -211,7 +210,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 Spec = Document.Text,
                 PackagesToAnalyze = PackagesToAnalyze != null ? PackagesToAnalyze.ToArray() : null,
                 UsedTypesOnly = UsedTypesOnly,
-                AllEdges = AllEdges,
                 CreateClustersForNamespaces = CreateClustersForNamespaces
             };
 
@@ -356,12 +354,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             get { return myUsedTypesOnly; }
             set { SetProperty(ref myUsedTypesOnly, value); }
-        }
-
-        public bool AllEdges
-        {
-            get { return myAllEdges; }
-            set { SetProperty(ref myAllEdges, value); }
         }
 
         public bool CreateClustersForNamespaces

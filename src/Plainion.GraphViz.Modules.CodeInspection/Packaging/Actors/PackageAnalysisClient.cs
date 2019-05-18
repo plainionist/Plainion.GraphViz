@@ -20,7 +20,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                 PackagesToAnalyze = request.PackagesToAnalyze,
                 OutputFile = Path.GetTempFileName(),
                 UsedTypesOnly = request.UsedTypesOnly,
-                AllEdges = request.AllEdges,
                 CreateClustersForNamespaces = request.CreateClustersForNamespaces
             };
 

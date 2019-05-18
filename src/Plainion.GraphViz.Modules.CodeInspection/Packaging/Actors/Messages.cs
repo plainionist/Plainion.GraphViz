@@ -11,8 +11,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
         public bool UsedTypesOnly { get; set; }
 
         public bool CreateClustersForNamespaces { get; set; }
-
-        public bool AllEdges { get; set; }
     }
 
     class AnalysisMessage : AnalysisRequest
