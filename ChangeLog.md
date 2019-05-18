@@ -2,6 +2,8 @@
 
 - CreateClustersForAssemblies attribute added to Package
 - Package analysis: "All Edges" check box removed and behavior made default
+- Package analysis: create package spec from a ".dot" file modeling assembly dependencies by opening
+  the ".dot" file in the packaging dialog
 
 ## 3.1 - 2019-02-19
 

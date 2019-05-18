@@ -6,7 +6,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    public class BasicDocumentProcessor
+    class BasicDocumentProcessor
     {
         private IGraphPresentation myPresentation;
         private List<FailedItem> myFailedItems;

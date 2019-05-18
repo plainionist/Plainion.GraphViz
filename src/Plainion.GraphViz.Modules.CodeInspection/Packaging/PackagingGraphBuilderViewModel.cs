@@ -1,4 +1,8 @@
-﻿using System;
+﻿//-------------------------------------------------------------------------------------------------------------------
+// Restricted - Copyright (C) Siemens Healthcare GmbH, 2019. All rights reserved
+//-------------------------------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
@@ -39,13 +43,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private IPresentationCreationService myPresentationCreationService;
         private IStatusMessageService myStatusMessageService;
         private PackageAnalysisClient myAnalysisClient;
+        private IDocumentLoader myDocumentLoader;
 
         [ImportingConstructor]
-        public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient)
+        public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient, IDocumentLoader documentLoader)
         {
             myPresentationCreationService = presentationCreationService;
             myStatusMessageService = statusMessageService;
             myAnalysisClient = analysisClient;
+            myDocumentLoader = documentLoader;
 
             Document = new TextDocument();
             Document.Changed += Document_Changed;
@@ -168,30 +174,74 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             var notification = new OpenFileDialogNotification();
             notification.RestoreDirectory = true;
-            notification.Filter = "Packaging Spec (*.xaml)|*.xaml";
+            notification.Filter = "Packaging Spec (*.xaml)|*.xaml|Assembly Graph (*.dot)|*.dot";
             notification.FilterIndex = 0;
             notification.CheckFileExists = false;
 
             OpenFileRequest.Raise(notification,
                 n =>
                 {
-                    if (n.Confirmed)
+                    if (!n.Confirmed)
                     {
-                        if (File.Exists(n.FileName))
+                        return;
+                    }
+
+                    if (File.Exists(n.FileName))
+                    {
+                        if (Path.GetExtension(n.FileName).Equals(".xaml", StringComparison.OrdinalIgnoreCase))
                         {
                             using (var reader = new StreamReader(n.FileName, true))
                             {
                                 Document.Text = reader.ReadToEnd();
                             }
+                            Document.FileName = n.FileName;
                         }
                         else
                         {
-                            using (var stream = GetType().Assembly.GetManifestResourceStream("Plainion.GraphViz.Modules.CodeInspection.Resources.SystemPackagingTemplate.xaml"))
+                            var presentation = myDocumentLoader.Read(n.FileName);
+                            var captions = presentation.GetPropertySetFor<Caption>();
+
+                            var spec = new SystemPackaging();
+
+                            foreach (var cluster in presentation.Graph.Clusters)
                             {
-                                using (var reader = new StreamReader(stream))
+                                var caption = captions.Get(cluster.Id).DisplayText;
+
+                                var specCluster = new Spec.Cluster() { Name = caption };
+                                specCluster.Patterns.Add(new Include() { Pattern = "*" });
+
+                                var package = new Package() { Name = caption };
+                                package.Clusters.Add(specCluster);
+
+                                foreach (var node in cluster.Nodes)
                                 {
-                                    Document.Text = reader.ReadToEnd();
+                                    var assembly = node.Id;
+                                    if (!assembly.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        assembly += ".dll";
+                                    }
+
+                                    package.Patterns.Add(new Include { Pattern = assembly });
                                 }
+
+                                spec.Packages.Add(package);
+                            }
+
+                            var specFile = Path.Combine(Path.GetDirectoryName(n.FileName),Path.GetFileNameWithoutExtension(n.FileName) + ".xaml");
+                            var text = SpecUtils.Serialize(spec);
+                            File.WriteAllText(specFile, text);
+
+                            Document.Text = text;
+                            Document.FileName = specFile;
+                        }
+                    }
+                    else
+                    {
+                        using (var stream = GetType().Assembly.GetManifestResourceStream("Plainion.GraphViz.Modules.CodeInspection.Resources.SystemPackagingTemplate.xaml"))
+                        {
+                            using (var reader = new StreamReader(stream))
+                            {
+                                Document.Text = reader.ReadToEnd();
                             }
                         }
                         Document.FileName = n.FileName;

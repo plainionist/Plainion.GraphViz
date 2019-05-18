@@ -209,5 +209,16 @@ namespace Plainion.GraphViz.Modules.Documents
         {
             Open(filename);
         }
+
+        public IGraphPresentation Read(string filename)
+        {
+            var presentation = PresentationCreationService.CreatePresentation(Path.GetDirectoryName(filename));
+
+            var processor = new BasicDocumentProcessor(presentation);
+
+            processor.Process(filename);
+
+            return presentation;
+        }
     }
 }

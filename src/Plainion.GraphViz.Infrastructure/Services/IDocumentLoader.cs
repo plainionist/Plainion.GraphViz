@@ -1,4 +1,6 @@
 ﻿
+using Plainion.GraphViz.Presentation;
+
 namespace Plainion.GraphViz.Infrastructure.Services
 {
     public interface IDocumentLoader
@@ -6,5 +8,7 @@ namespace Plainion.GraphViz.Infrastructure.Services
         bool CanLoad(string filename);
 
         void Load(string filename);
+
+        IGraphPresentation Read(string filename);
     }
 }
