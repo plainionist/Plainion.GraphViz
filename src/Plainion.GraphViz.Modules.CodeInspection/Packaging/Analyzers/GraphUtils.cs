@@ -37,6 +37,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 nodeType = type;
             }
 
+            if (nodeType == null)
+            {
+                throw new InvalidOperationException($"Failed to determine node type for: {type}");
+            }
+
             return nodeType;
         }
     }
