@@ -88,8 +88,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                    {
                        try
                        {
-                           return asm.GetTypes()
-                               .Where(t => !IsCompilerGenerated(t));
+                           return asm.GetTypes();
                        }
                        catch (ReflectionTypeLoadException ex)
                        {
@@ -146,24 +145,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 .ToArray();
         }
 
-        private bool IsCompilerGenerated(Type type)
-        {
-            // do we want that?
-            //if (type.GetCustomAttribute(typeof(CompilerGeneratedAttribute), true) != null)
-            //{
-            //    return true;
-            //}
-
-            if (type.FullName.Contains("$", StringComparison.OrdinalIgnoreCase) || type.FullName.Contains("@", StringComparison.OrdinalIgnoreCase))
-            {
-                // TODO: log ignorance of these types
-                // here we ignore generated closures from FSharp
-                return true;
-            }
-
-            return false;
-        }
-
         private IEnumerable<Reference> Analyze(Package package, Type type)
         {
             Console.Write(".");
@@ -172,7 +153,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             return new Inspector(myAssemblyLoader, type).GetUsedTypes()
                 .Where(edge => myPackageToTypesMap.Any(e => e.Value.Contains(edge.To)))
-                .Where(edge => !IsCompilerGenerated(edge.To))
                 .Select(edge => GraphUtils.Edge(edge))
                 .Where(edge => edge.From != edge.To);
         }
@@ -208,7 +188,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 .Where(e => !UsedTypesOnly || nodesWithEdgesIndex.Contains(e.Type))
                 .Select(e => new
                 {
-                    Node = GraphUtils.Node(e.Type),
+                    Node = e.Type,
                     Cluster = GetCluster(e.Package, e.Type),
                     PackageIndex = e.PackageIndex
                 });
@@ -245,7 +225,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         private Cluster GetCluster(Package package, Type type)
         {
-            var cluster = package.Clusters.FirstOrDefault(c => c.Matches(type.FullName));
+            // if there is no namespace (compiler generated types with "<>") then "best match" would be the assembly name
+            // to get the clustering as good as possible
+            var fullName = type.Namespace != null ? type.FullName : type.Assembly.GetName().Name;
+
+            var cluster = package.Clusters.FirstOrDefault(c => c.Matches(fullName));
             if (cluster != null)
             {
                 return cluster;
@@ -262,14 +246,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             {
                 // ID needs to be derived from namespace name to auto-magically match the next type 
                 // of the same namespace into this cluster later on when building the graph
-                var id = type.Namespace;
-                if (id == null)
-                {
-                    // some compiler generated classes do not have a namespace
-                    id = "<CompilerGenerated>";
-                }
-
-                return new Cluster { Name = type.Namespace, Id = id };
+                var id = type.Namespace ?? type.AssemblyQualifiedName;
+                return new Cluster { Name = id, Id = id };
             }
 
             return null;

@@ -43,12 +43,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         internal void Add(Reference edge)
         {
-            myEdges.Add(Tuple.Create(edge.From.FullName, edge.To.FullName));
+            myEdges.Add(CreateEdge(edge));
         }
+
+        private string NodeId(Type t) => t.Namespace != null ? t.FullName : t.AssemblyQualifiedName;
+
+        private Tuple<string, string> CreateEdge(Reference edge) => Tuple.Create(NodeId(edge.From), NodeId(edge.To));
 
         internal void AddEdgeColor(Reference edge, string color)
         {
-            var edgeId = Model.Edge.CreateId(edge.From.FullName, edge.To.FullName);
+            var edgeId = Model.Edge.CreateId(NodeId(edge.From), NodeId(edge.To));
             if (!myEdgeStyles.ContainsKey(edgeId))
             {
                 myEdgeStyles.Add(edgeId, color);
@@ -57,11 +61,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         internal void Add(Type node)
         {
-            myNodes.Add(node.FullName);
+            var nodeId = NodeId(node);
 
-            if (!myCaptions.ContainsKey(node.FullName))
+            myNodes.Add(nodeId);
+
+            if (!myCaptions.ContainsKey(nodeId))
             {
-                myCaptions.Add(node.FullName, node.Name);
+                myCaptions.Add(nodeId, node.Name);
             }
         }
 
@@ -75,14 +81,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 myCaptions.Add(cluster.Id, cluster.Name);
             }
 
-            ((HashSet<string>)existing).Add(node.FullName);
+            ((HashSet<string>)existing).Add(NodeId(node));
         }
 
         internal void AddNodeColor(Type node, string fillColor)
         {
-            if (!myNodeStyles.ContainsKey(node.FullName))
+            var nodeId = NodeId(node);
+
+            if (!myNodeStyles.ContainsKey(nodeId))
             {
-                myNodeStyles.Add(node.FullName, fillColor);
+                myNodeStyles.Add(nodeId, fillColor);
             }
         }
     }

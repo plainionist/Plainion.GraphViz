@@ -1,3 +1,8 @@
+## 3.3 - 2019-07-16
+
+- Package analysis: Generating clusters from namespaces fixed
+- Package analysis: handling of compiler generated types improved
+
 ## 3.2 - 2019-05-18
 
 - CreateClustersForAssemblies attribute added to Package
