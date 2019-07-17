@@ -1,7 +1,8 @@
-## 3.3 - 2019-07-16
+## 3.3 - 2019-07-
 
 - Package analysis: Generating clusters from namespaces fixed
 - Package analysis: handling of compiler generated types improved
+- fixed exception when connecting with RDP
 
 ## 3.2 - 2019-05-18
 

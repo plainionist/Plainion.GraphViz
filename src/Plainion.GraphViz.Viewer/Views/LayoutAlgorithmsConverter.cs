@@ -10,6 +10,12 @@ namespace Plainion.GraphViz.Viewer.Views
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+            {
+                // this e.g. happens when graph is loaded and RDP connection is opened to this machine
+                return "Auto";
+            }
+
             var algo = (LayoutAlgorithm)value;
             if (algo == LayoutAlgorithm.Auto)
             {
