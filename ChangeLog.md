@@ -1,4 +1,4 @@
-## 3.3 - 2019-07-
+## 3.3 - 2019-07-18
 
 - Package analysis: Generating clusters from namespaces fixed
 - Package analysis: handling of compiler generated types improved
