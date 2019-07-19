@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
@@ -78,7 +79,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             {
                 existing = new HashSet<string>();
                 myClusters.Add(cluster.Id, existing);
-                myCaptions.Add(cluster.Id, cluster.Name);
+
+                // accept if already exists
+                myCaptions[cluster.Id] = cluster.Name;
             }
 
             ((HashSet<string>)existing).Add(NodeId(node));

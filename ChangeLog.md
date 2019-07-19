@@ -1,3 +1,7 @@
+## 3.4 - 2019-
+
+- Package analysis: fixed generating clusters for namespaces
+
 ## 3.3 - 2019-07-18
 
 - Package analysis: Generating clusters from namespaces fixed
