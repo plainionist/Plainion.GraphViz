@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="453219f3-0429-455e-8fa8-78371bc01369" Created="635401677769467879" LastModified="635408571817368902">
-  <Caption><![CDATA[MEF and Prism]]></Caption>
-  <Content><![CDATA[- we use MEF as well as Prism in core library
-- it makes code easier and integration in shell
-- if there is a strong reason later on to provide the core lib without
-  prism dependency we can do refactoring later on and see where the cut
-  is really required]]></Content>
-</Node>

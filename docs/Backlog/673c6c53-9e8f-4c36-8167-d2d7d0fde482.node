@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="673c6c53-9e8f-4c36-8167-d2d7d0fde482" Created="635421429374781106" LastModified="635421429763499974">
-  <Caption><![CDATA[InheritanceGraph does not work with generics]]></Caption>
-  <Content><![CDATA[as it works with "id" internally and Id of open generic type 
-and concrete generic type usage are different]]></Content>
-</Node>

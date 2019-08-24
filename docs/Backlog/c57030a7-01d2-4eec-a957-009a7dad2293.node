@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Node Id="c57030a7-01d2-4eec-a957-009a7dad2293" Created="635401685263279724" LastModified="635660827922934388">
-  <Caption><![CDATA[DotToolLayoutEngine]]></Caption>
-  <Content><![CDATA[ - unflatten parameters should be configurable
- - graph parameter should come from GraphModule
- - extract DotLangWriter
-]]></Content>
-</Node>
