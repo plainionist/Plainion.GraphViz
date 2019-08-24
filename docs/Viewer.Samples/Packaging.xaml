@@ -41,22 +41,10 @@
             <Cluster Id="82a0db00-61d5-4937-ac78-9b6c315383a9" Name="Documents">
                 <Include Pattern="*.Documents.*" />
             </Cluster>
+            <Cluster Id="8e6d2955-3235-49de-a6c3-d8617581189a" Name="Presentation" >
+                <Include Pattern="*.Presentation.*"/>
+            </Cluster>
         </Package.Clusters>
         <Include Pattern="Plainion.GraphViz.*dll" />
     </Package>
 </SystemPackaging>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
