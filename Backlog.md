@@ -1,0 +1,4 @@
+- update packages
+- migrate to Prism 7
+- get rid of all obsoletes
+- take over Rajeev's Inspector implementation
