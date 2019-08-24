@@ -26,6 +26,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
 
             cancellationToken.Register(() => actor.Tell(new CancelMessage()));
 
+            // In case this call does not return and nothing is happening "remotely" run the app with debugger attached
+            // and watch the output window - exceptions will be printed there
             var response = await actor.Ask(request);
 
             try
@@ -68,10 +70,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
             var config = ConfigurationFactory.ParseString(@"
                 akka {
                     actor {
-                        provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
+                        provider = remote
                     }
                     remote {
-                        helios.tcp {
+                        dot-netty.tcp {
                             port = 0
                             hostname = localhost
                             maximum-frame-size = 4000000b

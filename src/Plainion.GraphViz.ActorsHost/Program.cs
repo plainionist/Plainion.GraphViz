@@ -13,10 +13,10 @@ namespace Plainion.GraphViz.ActorsHost
             var config = ConfigurationFactory.ParseString(@"
                 akka {
                     actor {
-                        provider = ""Akka.Remote.RemoteActorRefProvider, Akka.Remote""
+                        provider = remote
                     }
                     remote {
-                        helios.tcp {
+                        dot-netty.tcp {
                             port = 2525
                             hostname = localhost
                             maximum-frame-size = 4000000b
@@ -27,9 +27,11 @@ namespace Plainion.GraphViz.ActorsHost
 
             try
             {
+                Console.WriteLine("==> Starting");
+
                 using (var system = ActorSystem.Create("CodeInspection", config))
                 {
-                    Console.WriteLine("...  running ...");
+                    Console.WriteLine("==> Running");
 
                     while (true) Thread.Sleep(1000);
                 }
