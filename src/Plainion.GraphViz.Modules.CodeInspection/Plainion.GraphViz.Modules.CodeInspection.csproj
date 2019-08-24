@@ -63,8 +63,8 @@
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Plainion.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Core.3.5.0\lib\NET45\Plainion.Core.dll</HintPath>
@@ -72,8 +72,8 @@
     <Reference Include="Plainion.Prism, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Prism.4.1.0\lib\NET45\Plainion.Prism.dll</HintPath>
     </Reference>
-    <Reference Include="Plainion.Windows, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Windows.2.5.0\lib\NET45\Plainion.Windows.dll</HintPath>
+    <Reference Include="Plainion.Windows, Version=2.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plainion.Windows.2.11.0\lib\NET45\Plainion.Windows.dll</HintPath>
     </Reference>
     <Reference Include="Plainion.Windows.Editors, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Windows.Editors.2.1.0\lib\NET45\Plainion.Windows.Editors.dll</HintPath>

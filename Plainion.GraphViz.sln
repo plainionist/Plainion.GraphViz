@@ -15,6 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Viewer", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CBE6C788-0BFF-476E-8C34-584844EA0837}"
 	ProjectSection(SolutionItems) = preProject
+		Backlog.md = Backlog.md
 		ChangeLog.md = ChangeLog.md
 		build\packager.msbuild = build\packager.msbuild
 		README.md = README.md

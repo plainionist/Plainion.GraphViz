@@ -26,8 +26,9 @@
     <Reference Include="Plainion.Prism, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Prism.4.1.0\lib\NET45\Plainion.Prism.dll</HintPath>
     </Reference>
-    <Reference Include="Plainion.Windows, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Windows.2.5.0\lib\NET45\Plainion.Windows.dll</HintPath>
+    <Reference Include="Plainion.Windows, Version=2.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plainion.Windows.2.11.0\lib\NET45\Plainion.Windows.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
