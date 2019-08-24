@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<SystemPackaging AssemblyRoot="." xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
+    <Package Name="Plainion.Foundations">
+        <Package.Clusters>
+            <Cluster Id="7eff6647-cf1d-448d-83f5-c52b61a29753" Name="UI">
+                <Include Pattern="Plainion.Windows.*" />
+            </Cluster>
+            <Cluster Id="7eff6647-cf1d-448d-83f5-c52b61a29754" Name="Core">
+                <Include Pattern="*" />
+                <Exclude Pattern="Plainion.Windows.*" />
+            </Cluster>
+        </Package.Clusters>
+        <Include Pattern="Plainion.Core.dll" />
+        <Include Pattern="Plainion.Windows.dll" />
+    </Package>
+</SystemPackaging>

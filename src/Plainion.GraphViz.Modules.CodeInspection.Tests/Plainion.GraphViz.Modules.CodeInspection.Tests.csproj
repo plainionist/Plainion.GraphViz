@@ -26,6 +26,7 @@
     <Compile Include="Inspect_CalledMethods_Tests.cs" />
     <Compile Include="MethodTests.cs" />
     <Compile Include="MethodCallTests.cs" />
+    <Compile Include="Packaging\ActorSystemSmokeTest.cs" />
     <Compile Include="ReferenceTests.cs" />
     <Compile Include="Packaging\Services\SpecUtilsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -48,6 +49,14 @@
       <Project>{8cc5c764-ace2-4af2-bca1-f78753e709aa}</Project>
       <Name>Plainion.GraphViz</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="TestData\Packaging.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

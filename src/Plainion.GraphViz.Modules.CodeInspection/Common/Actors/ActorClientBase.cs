@@ -15,6 +15,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
         private static ActorSystem mySystem;
         private static int myHostPid;
 
+        public bool HideHostWindow { get; set; }
+
         protected async Task<object> ProcessAsync<TRequest>(Type actorType, TRequest request, CancellationToken cancellationToken)
         {
             StartActorSystemOnDemand();
@@ -63,8 +65,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
 
             var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.ActorsHost.exe");
             var info = new ProcessStartInfo(executable);
-            //info.CreateNoWindow = true;
-            //info.UseShellExecute = false;
+            if (HideHostWindow)
+            {
+                info.CreateNoWindow = true;
+                info.UseShellExecute = false;
+            }
             myHostPid = Process.Start(info).Id;
 
             var config = ConfigurationFactory.ParseString(@"
