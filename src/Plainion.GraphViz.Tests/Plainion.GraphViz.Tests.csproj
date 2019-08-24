@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="..\..\build\Globals.msbuild" />
   <PropertyGroup>
     <ProjectGuid>{ED17823C-F627-457E-B2E1-7C80FB391F5D}</ProjectGuid>
@@ -7,10 +8,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Plainion.GraphViz.Tests</RootNamespace>
     <AssemblyName>Plainion.GraphViz.Tests</AssemblyName>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Plainion.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plainion.Core.3.5.0\lib\NET45\Plainion.Core.dll</HintPath>
@@ -49,4 +52,10 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
+  </Target>
 </Project>
