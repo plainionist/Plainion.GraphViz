@@ -12,6 +12,8 @@ namespace Plainion.GraphViz.Viewer
 {
     public class Bootstrapper : MefBootstrapper
     {
+        public bool Running { get; private set; }
+
         protected override DependencyObject CreateShell()
         {
             return Container.GetExportedValue<Shell>();
@@ -68,6 +70,8 @@ namespace Plainion.GraphViz.Viewer
 
             // we have to call this here in order to support regions which are provided by modules
             RegionManager.UpdateRegions();
+
+            Running = true;
         }
 
         protected virtual void OnShutdown(object sender, ExitEventArgs e)

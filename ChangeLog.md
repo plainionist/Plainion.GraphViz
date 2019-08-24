@@ -1,6 +1,7 @@
 ## 3.4 - 2019-
 
 - Package analysis: fixed generating clusters for namespaces
+- Ensure process is killed when exception is throw during startup
 
 ## 3.3 - 2019-07-18
 
