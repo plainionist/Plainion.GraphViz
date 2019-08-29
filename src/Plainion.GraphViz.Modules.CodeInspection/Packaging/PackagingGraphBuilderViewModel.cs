@@ -227,7 +227,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                                 spec.Packages.Add(package);
                             }
 
-                            var specFile = Path.Combine(Path.GetDirectoryName(n.FileName),Path.GetFileNameWithoutExtension(n.FileName) + ".xaml");
+                            var specFile = Path.Combine(Path.GetDirectoryName(n.FileName), Path.GetFileNameWithoutExtension(n.FileName) + ".xaml");
                             var text = SpecUtils.Serialize(spec);
                             File.WriteAllText(specFile, text);
 
@@ -391,13 +391,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
-            {
-                // reset only!
-                myGraphToSpecSynchronizer.Presentation = null;
-            }
+            // reset only!
+            myGraphToSpecSynchronizer.Presentation = null;
         }
 
         public bool UsedTypesOnly

@@ -70,36 +70,33 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         public ICommand AddCommand { get; private set; }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
+            if (myPresentation == Model.Presentation)
             {
-                if (myPresentation == Model.Presentation)
-                {
-                    return;
-                }
-
-                if (myPresentation != null)
-                {
-                    myPresentation.GetModule<INodeMaskModule>().CollectionChanged -= OnMasksChanged;
-                    myPresentation.GraphVisibilityChanged -= OnGraphVisibilityChanged;
-                }
-
-                myPresentation = Model.Presentation;
-
-                Filter = null;
-
-                if (myPresentation != null)
-                {
-                    myPresentation.GetModule<INodeMaskModule>().CollectionChanged += OnMasksChanged;
-                    myPresentation.GraphVisibilityChanged += OnGraphVisibilityChanged;
-
-                    OnGraphVisibilityChanged(null, EventArgs.Empty);
-                }
-
-                myPreviewNodes = null;
-                PreviewNodes.Refresh();
+                return;
             }
+
+            if (myPresentation != null)
+            {
+                myPresentation.GetModule<INodeMaskModule>().CollectionChanged -= OnMasksChanged;
+                myPresentation.GraphVisibilityChanged -= OnGraphVisibilityChanged;
+            }
+
+            myPresentation = Model.Presentation;
+
+            Filter = null;
+
+            if (myPresentation != null)
+            {
+                myPresentation.GetModule<INodeMaskModule>().CollectionChanged += OnMasksChanged;
+                myPresentation.GraphVisibilityChanged += OnGraphVisibilityChanged;
+
+                OnGraphVisibilityChanged(null, EventArgs.Empty);
+            }
+
+            myPreviewNodes = null;
+            PreviewNodes.Refresh();
         }
 
         private void OnMasksChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -180,19 +180,16 @@ namespace Plainion.GraphViz.Modules.Documents
             Debug.WriteLine(e.GetException().Dump());
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == PropertySupport.ExtractPropertyName(() => Model.Presentation))
+            if (myFileWatcher != null)
             {
-                if (myFileWatcher != null)
-                {
-                    myFileWatcher.Dispose();
-                    myFileWatcher = null;
-                }
-
-                // reset only!
-                myGraphToDotSynchronizer.Detach();
+                myFileWatcher.Dispose();
+                myFileWatcher = null;
             }
+
+            // reset only!
+            myGraphToDotSynchronizer.Detach();
         }
 
         public bool CanLoad(string filename)

@@ -128,12 +128,7 @@ namespace Plainion.GraphViz.Modules.Documents
             }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
-        {
-            PropertyChangedEventManager.AddHandler(Model, OnPresentationChanged, PropertySupport.ExtractPropertyName(() => Model.Presentation));
-        }
-
-        private void OnPresentationChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnPresentationChanged()
         {
             SaveDocumentCommand.RaiseCanExecuteChanged();
         }

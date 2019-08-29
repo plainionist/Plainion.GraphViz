@@ -129,10 +129,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
             IsReady = true;
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
-        {
-        }
-
         public string ConfigFile
         {
             get { return myConfigFile; }

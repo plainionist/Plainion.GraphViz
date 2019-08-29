@@ -208,42 +208,39 @@ namespace Plainion.GraphViz.Modules.Analysis
             set { SetProperty(ref mySelectedPreviewItem, value); }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
+            if (myPresentation == Model.Presentation)
             {
-                if (myPresentation == Model.Presentation)
-                {
-                    return;
-                }
-
-                if (myTransformationsObserver != null)
-                {
-                    myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
-                    myTransformationsObserver.Dispose();
-                }
-
-                myPresentation = Model.Presentation;
-
-                // first build tree - master for preview
-                BuildTree();
-
-                // rebuild preview
-                myPreviewNodes = null;
-                if (Filter == null)
-                {
-                    PreviewNodes.Refresh();
-                }
-                else
-                {
-                    Filter = null;
-                }
-
-                // register for updates only AFTER tree is built up completely to avoid getting notified by the built up process
-                var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
-                myTransformationsObserver = transformationModule.CreateObserver();
-                myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
+                return;
             }
+
+            if (myTransformationsObserver != null)
+            {
+                myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+                myTransformationsObserver.Dispose();
+            }
+
+            myPresentation = Model.Presentation;
+
+            // first build tree - master for preview
+            BuildTree();
+
+            // rebuild preview
+            myPreviewNodes = null;
+            if (Filter == null)
+            {
+                PreviewNodes.Refresh();
+            }
+            else
+            {
+                Filter = null;
+            }
+
+            // register for updates only AFTER tree is built up completely to avoid getting notified by the built up process
+            var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
+            myTransformationsObserver = transformationModule.CreateObserver();
+            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
         private void BuildTree()

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using System;
 using System.ComponentModel.Composition;
 using Plainion.Prism.Mvvm;
 
@@ -15,23 +15,17 @@ namespace Plainion.GraphViz.Infrastructure.ViewModel
             set
             {
                 myModel = value;
-                myModel.PropertyChanged += OnModelPropertyChanged;
+                myModel.PresentationChanged += OnPresentationChanged;
 
-                OnModelPropertyChanged( "Model" );
-
-                // to simplify usage by derived classes notify about the implicit changes here as well
-                foreach( var prop in Model.GetType().GetProperties() )
-                {
-                    OnModelPropertyChanged( prop.Name );
-                }
+                OnPresentationChanged();
             }
         }
 
-        private void OnModelPropertyChanged( object sender, PropertyChangedEventArgs e )
+        private void OnPresentationChanged(object sender, EventArgs e)
         {
-            OnModelPropertyChanged( e.PropertyName );
+            OnPresentationChanged();
         }
 
-        protected abstract void OnModelPropertyChanged( string propertyName );
+        protected virtual void OnPresentationChanged() { }
     }
 }

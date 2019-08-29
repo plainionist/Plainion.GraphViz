@@ -25,19 +25,16 @@ namespace Plainion.GraphViz.Modules.Analysis
             ApplyBookmarkCommand = new DelegateCommand(OnApplyBookmark);
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
+            if (myPresentation == Model.Presentation)
             {
-                if (myPresentation == Model.Presentation)
-                {
-                    return;
-                }
-
-                myPresentation = Model.Presentation;
-
-                Bookmarks.Clear();
+                return;
             }
+
+            myPresentation = Model.Presentation;
+
+            Bookmarks.Clear();
         }
 
         public string Caption

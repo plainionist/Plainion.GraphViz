@@ -317,31 +317,28 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
+            if (Presentation == Model.Presentation)
             {
-                if (Presentation == Model.Presentation)
-                {
-                    return;
-                }
-
-                Presentation = Model.Presentation;
-
-                Labels.Clear();
-
-                var converter = new GenericLabelConverter(ConversionSteps);
-                var captionModule = Presentation.GetPropertySetFor<Caption>();
-                foreach (var node in Presentation.Graph.Nodes)
-                {
-                    var label = new LabelViewModel(captionModule.Get(node.Id).Label);
-                    label.Commited = converter.Convert(label.Original);
-
-                    Labels.Add(label);
-                }
-
-                RaisePropertyChanged(nameof(Labels));
+                return;
             }
+
+            Presentation = Model.Presentation;
+
+            Labels.Clear();
+
+            var converter = new GenericLabelConverter(ConversionSteps);
+            var captionModule = Presentation.GetPropertySetFor<Caption>();
+            foreach (var node in Presentation.Graph.Nodes)
+            {
+                var label = new LabelViewModel(captionModule.Get(node.Id).Label);
+                label.Commited = converter.Convert(label.Original);
+
+                Labels.Add(label);
+            }
+
+            RaisePropertyChanged(nameof(Labels));
         }
 
         public Action FinishInteraction

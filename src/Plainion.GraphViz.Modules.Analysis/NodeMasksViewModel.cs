@@ -67,28 +67,25 @@ namespace Plainion.GraphViz.Modules.Analysis
             MoveMaskDownCommand = new DelegateCommand(OnMoveMaskDown);
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
+            if (myPresentation == Model.Presentation)
             {
-                if (myPresentation == Model.Presentation)
-                {
-                    return;
-                }
+                return;
+            }
 
-                if (myPresentation != null)
-                {
-                    myPresentation.GetModule<INodeMaskModule>().CollectionChanged -= OnMasksChanged;
-                }
+            if (myPresentation != null)
+            {
+                myPresentation.GetModule<INodeMaskModule>().CollectionChanged -= OnMasksChanged;
+            }
 
-                myPresentation = Model.Presentation;
+            myPresentation = Model.Presentation;
 
-                if (myPresentation != null)
-                {
-                    UpdateMasks();
+            if (myPresentation != null)
+            {
+                UpdateMasks();
 
-                    myPresentation.GetModule<INodeMaskModule>().CollectionChanged += OnMasksChanged;
-                }
+                myPresentation.GetModule<INodeMaskModule>().CollectionChanged += OnMasksChanged;
             }
         }
 

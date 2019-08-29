@@ -124,28 +124,25 @@ namespace Plainion.GraphViz.Viewer
             get { return myPresentation != null; }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
+            if (myPresentation == Model.Presentation)
             {
-                if (myPresentation == Model.Presentation)
-                {
-                    return;
-                }
-
-                myPresentation = Model.Presentation;
-
-                if (myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit)
-                {
-                    myPresentation.ToogleFoldingOfVisibleClusters();
-                }
-
-                var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();
-                graphLayoutModule.Algorithm = LayoutAlgorithm;
-                PropertyBinding.Bind(() => LayoutAlgorithm, () => graphLayoutModule.Algorithm);
-
-                RaisePropertyChanged(nameof(IsEnabled));
+                return;
             }
+
+            myPresentation = Model.Presentation;
+
+            if (myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit)
+            {
+                myPresentation.ToogleFoldingOfVisibleClusters();
+            }
+
+            var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();
+            graphLayoutModule.Algorithm = LayoutAlgorithm;
+            PropertyBinding.Bind(() => LayoutAlgorithm, () => graphLayoutModule.Algorithm);
+
+            RaisePropertyChanged(nameof(IsEnabled));
         }
 
         public Visibility StatusBarVisibility

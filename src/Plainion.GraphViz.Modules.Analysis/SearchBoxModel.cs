@@ -43,31 +43,28 @@ namespace Plainion.GraphViz.Modules.Analysis
                 .Select(n => new NodeWithCaption(n, captionModule.Get(n.Id).DisplayText));
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            if (propertyName == "Presentation")
+            if (myPresentation == Model.Presentation)
             {
-                if (myPresentation == Model.Presentation)
-                {
-                    return;
-                }
-
-                if (myPresentation != null)
-                {
-                    myPresentation.GraphVisibilityChanged -= OnGraphVisibilityChanged;
-                }
-
-                myPresentation = Model.Presentation;
-
-                if (myPresentation != null)
-                {
-                    myPresentation.GraphVisibilityChanged += OnGraphVisibilityChanged;
-
-                    OnGraphVisibilityChanged(null, EventArgs.Empty);
-                }
-
-                RaisePropertyChanged(nameof(IsEnabled));
+                return;
             }
+
+            if (myPresentation != null)
+            {
+                myPresentation.GraphVisibilityChanged -= OnGraphVisibilityChanged;
+            }
+
+            myPresentation = Model.Presentation;
+
+            if (myPresentation != null)
+            {
+                myPresentation.GraphVisibilityChanged += OnGraphVisibilityChanged;
+
+                OnGraphVisibilityChanged(null, EventArgs.Empty);
+            }
+
+            RaisePropertyChanged(nameof(IsEnabled));
         }
 
         private void OnGraphVisibilityChanged(object sender, EventArgs e)

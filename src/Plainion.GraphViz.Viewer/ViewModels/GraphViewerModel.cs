@@ -485,50 +485,47 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand<string> AddVisibleNodesOutsideClustersToClusterCommand { get; private set; }
 
-        protected override void OnModelPropertyChanged(string propertyName)
+        protected override void OnPresentationChanged()
         {
-            RaisePropertyChanged(propertyName);
+            RaisePropertyChanged(nameof(Presentation));
 
-            if (propertyName == "Presentation")
+            RemoveNodeCommand.RaiseCanExecuteChanged();
+            RemoveAllButCommand.RaiseCanExecuteChanged();
+            ShowCyclesCommand.RaiseCanExecuteChanged();
+            RemoveNodesWithoutSourcesCommand.RaiseCanExecuteChanged();
+            RemoveNodesWithoutTargetsCommand.RaiseCanExecuteChanged();
+            RemoveNodesWithoutSiblingsCommand.RaiseCanExecuteChanged();
+            ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
+            FoldUnfoldAllClustersCommand.RaiseCanExecuteChanged();
+            AddVisibleNodesOutsideClustersToClusterCommand.RaiseCanExecuteChanged();
+            ClearSelectionCommand.RaiseCanExecuteChanged();
+            InvertSelectionCommand.RaiseCanExecuteChanged();
+            HomeCommand.RaiseCanExecuteChanged();
+            InvalidateLayoutCommand.RaiseCanExecuteChanged();
+            PrintGraphCommand.RaiseCanExecuteChanged();
+
+            BuildClustersMenu();
+            BuildSelectedNodesMenu();
+
+            if (myTransformationsModuleObserver != null)
             {
-                RemoveNodeCommand.RaiseCanExecuteChanged();
-                RemoveAllButCommand.RaiseCanExecuteChanged();
-                ShowCyclesCommand.RaiseCanExecuteChanged();
-                RemoveNodesWithoutSourcesCommand.RaiseCanExecuteChanged();
-                RemoveNodesWithoutTargetsCommand.RaiseCanExecuteChanged();
-                RemoveNodesWithoutSiblingsCommand.RaiseCanExecuteChanged();
-                ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
-                FoldUnfoldAllClustersCommand.RaiseCanExecuteChanged();
-                AddVisibleNodesOutsideClustersToClusterCommand.RaiseCanExecuteChanged();
-                ClearSelectionCommand.RaiseCanExecuteChanged();
-                InvertSelectionCommand.RaiseCanExecuteChanged();
-                HomeCommand.RaiseCanExecuteChanged();
-                InvalidateLayoutCommand.RaiseCanExecuteChanged();
-                PrintGraphCommand.RaiseCanExecuteChanged();
+                mySelectionObserver.ModuleChanged -= OnSelectionChanged;
+                mySelectionObserver.Dispose();
+                mySelectionObserver = null;
 
-                BuildClustersMenu();
-                BuildSelectedNodesMenu();
+                myTransformationsModuleObserver.ModuleChanged -= OnTransformationsModuleChanged;
+                myTransformationsModuleObserver.Dispose();
+                myTransformationsModuleObserver = null;
+            }
 
-                if (myTransformationsModuleObserver != null)
-                {
-                    mySelectionObserver.ModuleChanged -= OnSelectionChanged;
-                    mySelectionObserver.Dispose();
-                    mySelectionObserver = null;
+            if (Presentation != null)
+            {
+                var transformations = Presentation.GetModule<ITransformationModule>();
+                myTransformationsModuleObserver = transformations.CreateObserver();
+                myTransformationsModuleObserver.ModuleChanged += OnTransformationsModuleChanged;
 
-                    myTransformationsModuleObserver.ModuleChanged -= OnTransformationsModuleChanged;
-                    myTransformationsModuleObserver.Dispose();
-                    myTransformationsModuleObserver = null;
-                }
-
-                if (Presentation != null)
-                {
-                    var transformations = Presentation.GetModule<ITransformationModule>();
-                    myTransformationsModuleObserver = transformations.CreateObserver();
-                    myTransformationsModuleObserver.ModuleChanged += OnTransformationsModuleChanged;
-
-                    mySelectionObserver = Presentation.GetPropertySetFor<Selection>().CreateObserver();
-                    mySelectionObserver.ModuleChanged += OnSelectionChanged;
-                }
+                mySelectionObserver = Presentation.GetPropertySetFor<Selection>().CreateObserver();
+                mySelectionObserver.ModuleChanged += OnSelectionChanged;
             }
         }
 

@@ -163,10 +163,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             IsReady = true;
         }
 
-        protected override void OnModelPropertyChanged(string propertyName)
-        {
-        }
-
         public string AssemblyToAnalyseLocation
         {
             get { return myAssemblyToAnalyseLocation; }
