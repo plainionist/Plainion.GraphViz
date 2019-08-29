@@ -1,11 +1,10 @@
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Printing;
 
 namespace Plainion.GraphViz
 {
-    public class GraphPaginator : DocumentPaginator
+    class GraphPaginator : DocumentPaginator
     {
         // margin 1.5 cm
         private const double Margin = 1.5 * 96 / 2.54;
@@ -17,7 +16,7 @@ namespace Plainion.GraphViz
         private int myPageCountX;  // Size of the printing in page units
         private int myPageCountY;
 
-        internal GraphPaginator( DrawingVisual source, Size printSize )
+        public GraphPaginator( DrawingVisual source, Size printSize )
         {
             PageSize = printSize;
 
@@ -99,12 +98,6 @@ namespace Plainion.GraphViz
         {
             get;
             set;
-        }
-
-        public PageOrientation PreferredOrientation
-        {
-            get;
-            internal set;
         }
 
         public override IDocumentPaginatorSource Source

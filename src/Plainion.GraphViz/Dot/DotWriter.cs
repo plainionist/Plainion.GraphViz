@@ -20,9 +20,9 @@ namespace Plainion.GraphViz.Dot
             Settings = DotPresets.Default;
         }
 
-        internal int? FastRenderingNodeCountLimit { get; set; }
+        public int? FastRenderingNodeCountLimit { get; set; }
 
-        internal bool IgnoreStyle { get; set; }
+        public bool IgnoreStyle { get; set; }
 
         public bool PrettyPrint { get; set; }
 

@@ -100,11 +100,6 @@ namespace Plainion.GraphViz.Dot
             }
         }
 
-        internal void Close()
-        {
-            myReader.Close();
-        }
-
         public void Dispose()
         {
             if( myReader != null )
