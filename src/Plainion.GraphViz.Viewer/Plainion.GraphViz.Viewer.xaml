@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Config xmlns="clr-namespace:Plainion.GraphViz.Viewer.Configuration;assembly=Plainion.GraphViz.Viewer" 
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Config.DotToolsHome></Config.DotToolsHome>
 </Config>
     

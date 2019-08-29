@@ -14,18 +14,11 @@ namespace Plainion.GraphViz.Viewer.Configuration
         private const string Filename = "Plainion.GraphViz.Viewer.xaml";
 
         private string myConfigFolder;
-        private string myDotToolsHome;
 
         public Config()
         {
             LabelConversion = new List<ILabelConversionStep>();
             NodeIdAsDefaultToolTip = true;
-        }
-
-        public string DotToolsHome
-        {
-            get { return myDotToolsHome; }
-            set { myDotToolsHome = value == null ? null : Path.GetFullPath( value ); }
         }
 
         public bool NodeIdAsDefaultToolTip { get; set; }

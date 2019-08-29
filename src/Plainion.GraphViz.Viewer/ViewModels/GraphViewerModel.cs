@@ -14,7 +14,8 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Prism.Events;
-
+using Plainion.GraphViz.Dot;
+using System.IO;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
@@ -193,6 +194,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             Clusters = new ObservableCollection<ClusterWithCaption>();
             SelectedNodes = new ObservableCollection<NodeWithCaption>();
+
+            // always take embedded graphviz distribution
+            LayoutEngine = new DotToolLayoutEngine(new DotToDotPlainConverter(Path.GetDirectoryName(GetType().Assembly.Location)));
         }
 
         private void OnRemoveAllBut(params Node[] nodes)
@@ -608,10 +612,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             get { return Model.Presentation; }
         }
 
-        public ILayoutEngine LayoutEngine
-        {
-            get { return Model.LayoutEngine; }
-        }
+        public ILayoutEngine LayoutEngine { get; private set; }
 
         public IGraphItem GraphItemForContextMenu
         {

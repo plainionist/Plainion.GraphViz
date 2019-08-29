@@ -3,6 +3,8 @@
 - Package analysis: fixed generating clusters for namespaces
 - Ensure process is killed when exception is throw during startup
 - Dependencies updated
+- Cleanup of APIs of modules
+- "dot.exe" home no longer read from config (always use embedded distribution)
 
 ## 3.3 - 2019-07-18
 

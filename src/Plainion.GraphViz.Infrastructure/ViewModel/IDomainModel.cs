@@ -9,7 +9,5 @@ namespace Plainion.GraphViz.Infrastructure.ViewModel
     public interface IDomainModel : INotifyPropertyChanged
     {
         IGraphPresentation Presentation { get; set; }
-
-        ILayoutEngine LayoutEngine { get; set; }
     }
 }

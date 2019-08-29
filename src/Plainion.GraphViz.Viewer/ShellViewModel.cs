@@ -23,16 +23,13 @@ namespace Plainion.GraphViz.Viewer
     {
         private IGraphPresentation myPresentation;
         private IStatusMessageService myStatusMessageService;
-        private ConfigurationService myConfigurationService;
         private LayoutAlgorithm myLayoutAlgorithm;
 
         [ImportingConstructor]
-        public ShellViewModel(IStatusMessageService statusMessageService, ConfigurationService configService)
+        public ShellViewModel(IStatusMessageService statusMessageService)
         {
             myStatusMessageService = statusMessageService;
             myStatusMessageService.Messages.CollectionChanged += OnStatusMessagesChanged;
-
-            myConfigurationService = configService;
 
             NodeMasksEditorRequest = new InteractionRequest<INotification>();
             OpenFilterEditor = new DelegateCommand(OnOpenFilterEditor);
@@ -48,34 +45,10 @@ namespace Plainion.GraphViz.Viewer
 
             ShowStatusMessagesRequest = new InteractionRequest<INotification>();
             ShowStatusMessagesCommand = new DelegateCommand(ShowStatusMessages);
-
-            myConfigurationService.ConfigChanged += OnConfigChanged;
         }
 
         [Import(AllowDefault = true)]
         public IDocumentLoader DocumentLoader { get; set; }
-
-        private void OnConfigChanged(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(myConfigurationService.Config.DotToolsHome) || !File.Exists(Path.Combine(myConfigurationService.Config.DotToolsHome, "dot.exe")))
-            {
-                myConfigurationService.Config.DotToolsHome = Path.GetDirectoryName(GetType().Assembly.Location);
-            }
-
-            if (File.Exists(Path.Combine(myConfigurationService.Config.DotToolsHome, "dot.exe")))
-            {
-                Model.LayoutEngine = new DotToolLayoutEngine(new DotToDotPlainConverter(myConfigurationService.Config.DotToolsHome));
-            }
-            else
-            {
-                // http://stackoverflow.com/questions/13026826/execute-command-after-view-is-loaded-wpf-mvvm
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
-              {
-                  // DotToolHome not set -> open settings editor
-                  OpenSettingsEditor.Execute(null);
-              }));
-            }
-        }
 
         private void OnOpenSettingsEditor()
         {
@@ -153,11 +126,7 @@ namespace Plainion.GraphViz.Viewer
 
         protected override void OnModelPropertyChanged(string propertyName)
         {
-            if (propertyName == "Model")
-            {
-                OnConfigChanged(this, EventArgs.Empty);
-            }
-            else if (propertyName == "Presentation")
+            if (propertyName == "Presentation")
             {
                 if (myPresentation == Model.Presentation)
                 {
