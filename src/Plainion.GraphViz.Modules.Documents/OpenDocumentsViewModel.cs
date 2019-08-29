@@ -19,7 +19,7 @@ namespace Plainion.GraphViz.Modules.Documents
 {
     [Export(typeof(IDocumentLoader))]
     [Export(typeof(OpenDocumentsViewModel))]
-    public class OpenDocumentsViewModel : ViewModelBase, IDocumentLoader
+    class OpenDocumentsViewModel : ViewModelBase, IDocumentLoader
     {
         private FileSystemWatcher myFileWatcher;
         private readonly GraphToDotLangSynchronizer myGraphToDotSynchronizer;

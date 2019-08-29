@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.Documents
 {
     [Export( typeof( OpenDocumentsView ) )]
-    public partial class OpenDocumentsView : UserControl
+    partial class OpenDocumentsView : UserControl
     {
         [ImportingConstructor]
         public OpenDocumentsView(OpenDocumentsViewModel model)

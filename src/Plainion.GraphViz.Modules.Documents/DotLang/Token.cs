@@ -1,7 +1,7 @@
 ﻿
 namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
-    public class Token
+    class Token
     {
         public Token( TokenType tokenType )
             : this( tokenType, null )
@@ -24,7 +24,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         }
     }
 
-    public enum TokenType
+    enum TokenType
     {
         Edge,
         Graph,

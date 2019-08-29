@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Plainion.GraphViz.Modules.Documents.DotLang
 {
-    public class TokenizableStreamBase<T>
+    class TokenizableStreamBase<T>
     {
         private T[] myItems;
         private Stack<int> mySnapshotIndexes;
@@ -69,7 +69,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
         }
     }
 
-    public class Tokenizer : TokenizableStreamBase<char>
+    class Tokenizer : TokenizableStreamBase<char>
     {
         public Tokenizer( string source )
             : base( () => source.ToCharArray() )

@@ -6,7 +6,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    public class ToolTipsDocument : IDocument
+    class ToolTipsDocument : IDocument
     {
         private List<ToolTipContent> myToolTips;
 

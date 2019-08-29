@@ -16,7 +16,7 @@ using Prism.Mvvm;
 namespace Plainion.GraphViz.Modules.Documents
 {
     [Export(typeof(SaveDocumentsViewModel))]
-    public class SaveDocumentsViewModel : ViewModelBase
+    class SaveDocumentsViewModel : ViewModelBase
     {
         [Import]
         public IPresentationCreationService PresentationCreationService { get; set; }
