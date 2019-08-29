@@ -16,7 +16,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             get { return mySkippedAssemblies; }
         }
 
-        internal AssemblyDefinition MonoLoad(Assembly assembly)
+        public AssemblyDefinition MonoLoad(Assembly assembly)
         {
             lock (myMonoCache)
             {
@@ -28,7 +28,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             }
         }
 
-        internal Type FindTypeByName(TypeReference typeRef)
+        public Type FindTypeByName(TypeReference typeRef)
         {
             // seems to be always the callers module
             //{

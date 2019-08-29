@@ -16,7 +16,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             To = to;
         }
 
-        public Method From { get; internal set; }
+        public Method From { get; private set; }
 
         public Method To { get; private set; }
 

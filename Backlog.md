@@ -1,3 +1,8 @@
 - migrate to Prism 7
+  - go for ctor injection
+  - switch to unity
+- update akka
+- change design to make it easier to add new algorithms to the UI
+  - consider splitting "model + presentation + algo" and "visualization"
 - get rid of all obsoletes
 - take over Rajeev's Inspector implementation

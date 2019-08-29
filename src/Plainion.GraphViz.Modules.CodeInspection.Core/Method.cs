@@ -15,7 +15,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             Name = name;
         }
 
-        public Type DeclaringType { get; internal set; }
+        public Type DeclaringType { get; private set; }
 
         public string Name { get; private set; }
 
