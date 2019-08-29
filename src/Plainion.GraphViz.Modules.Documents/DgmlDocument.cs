@@ -4,7 +4,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    public class DgmlDocument : AbstractGraphDocument, ICaptionDocument
+    class DgmlDocument : AbstractGraphDocument, ICaptionDocument
     {
         private List<Caption> myCaptions;
 

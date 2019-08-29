@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 namespace Plainion.GraphViz
 {
-    internal class ToolTipController
+    class ToolTipController
     {
         private object myCurrentContent;
         private string myCurrentDrawingId;

@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace Plainion.GraphViz
 {
-    internal class RubberbandAdorner : Adorner
+    class RubberbandAdorner : Adorner
     {
         private Point myStartPoint;
         private Point? myEndPoint;

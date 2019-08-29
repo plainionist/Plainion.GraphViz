@@ -11,7 +11,7 @@ namespace Plainion.GraphViz.Presentation
     /// That means "true" will be interpreted as "visible".
     /// implements a STACK of masks - LIFO
     /// </summary>
-    internal class NodeMaskModule : AbstractModule<INodeMask>, INodeMaskModule
+    class NodeMaskModule : AbstractModule<INodeMask>, INodeMaskModule
     {
         private ObservableCollection<INodeMask> myMasks;
 

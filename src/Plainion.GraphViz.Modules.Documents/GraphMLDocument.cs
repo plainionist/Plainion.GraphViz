@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    public class GraphMLDocument : AbstractGraphDocument
+    class GraphMLDocument : AbstractGraphDocument
     {
         protected override void Load()
         {

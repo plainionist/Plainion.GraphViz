@@ -9,7 +9,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Visuals
 {
-    internal class ClusterVisual : AbstractElementVisual
+    class ClusterVisual : AbstractElementVisual
     {
         private static Typeface myFont;
 

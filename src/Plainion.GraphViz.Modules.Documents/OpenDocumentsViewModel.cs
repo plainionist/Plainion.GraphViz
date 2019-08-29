@@ -25,7 +25,7 @@ namespace Plainion.GraphViz.Modules.Documents
         private readonly GraphToDotLangSynchronizer myGraphToDotSynchronizer;
 
         [Import]
-        internal IPresentationCreationService PresentationCreationService { get; set; }
+        public IPresentationCreationService PresentationCreationService { get; set; }
 
         [Import]
         public IStatusMessageService StatusMessageService { get; set; }

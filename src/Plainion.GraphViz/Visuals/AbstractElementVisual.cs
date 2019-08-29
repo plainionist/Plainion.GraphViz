@@ -5,7 +5,7 @@ using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Visuals
 {
-    internal abstract class AbstractElementVisual
+    abstract class AbstractElementVisual
     {
         private bool myIsSelected;
 

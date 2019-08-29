@@ -2,7 +2,7 @@
 
 namespace Plainion.GraphViz.Presentation
 {
-    internal class PropertySetComparer : IEqualityComparer<AbstractPropertySet>
+    class PropertySetComparer : IEqualityComparer<AbstractPropertySet>
     {
         public bool Equals( AbstractPropertySet x, AbstractPropertySet y )
         {

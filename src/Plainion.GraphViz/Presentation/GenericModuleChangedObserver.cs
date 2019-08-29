@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Plainion.GraphViz.Presentation
 {
-    internal class GenericModuleChangedObserver<T> : IModuleChangedObserver
+    class GenericModuleChangedObserver<T> : IModuleChangedObserver
     {
         private IModule<T> myModule;
 

@@ -19,7 +19,7 @@ namespace Plainion.GraphViz.Modules.Documents
     public class SaveDocumentsViewModel : ViewModelBase
     {
         [Import]
-        internal IPresentationCreationService PresentationCreationService { get; set; }
+        public IPresentationCreationService PresentationCreationService { get; set; }
 
         [Import]
         public IStatusMessageService StatusMessageService { get; set; }

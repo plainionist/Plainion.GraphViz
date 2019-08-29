@@ -7,7 +7,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Visuals
 {
-    internal class NodeVisual : AbstractElementVisual
+    class NodeVisual : AbstractElementVisual
     {
         private static Typeface myFont;
 

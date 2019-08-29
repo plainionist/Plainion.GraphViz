@@ -6,7 +6,7 @@ using Plainion.GraphViz.Presentation;
 namespace Plainion.GraphViz.Modules.Documents
 {
     // http://www.graphviz.org/doc/info/lang.html
-    public class DotPlainDocument : AbstractGraphDocument, IStyleDocument, ICaptionDocument, ILayoutDocument
+    class DotPlainDocument : AbstractGraphDocument, IStyleDocument, ICaptionDocument, ILayoutDocument
     {
         private List<NodeLayout> myNodeLayouts;
         private List<EdgeLayout> myEdgeLayouts;

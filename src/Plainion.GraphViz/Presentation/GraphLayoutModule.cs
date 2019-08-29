@@ -6,7 +6,7 @@ using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
-    internal class GraphLayoutModule : AbstractModule<AbstractPropertySet>, IGraphLayoutModule
+    class GraphLayoutModule : AbstractModule<AbstractPropertySet>, IGraphLayoutModule
     {
         private Dictionary<string, NodeLayout> myNodeLayouts;
         private Dictionary<string, EdgeLayout> myEdgeLayouts;

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Plainion.GraphViz.Presentation
 {
-    internal class GenericModuleChangedJournal<T> : IModuleChangedJournal<T>
+    class GenericModuleChangedJournal<T> : IModuleChangedJournal<T>
     {
         private IModule<T> myModule;
         private List<T> myEntries;

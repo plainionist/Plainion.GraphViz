@@ -3,7 +3,7 @@ using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
-    internal class GraphPicking : IGraphPicking
+    class GraphPicking : IGraphPicking
     {
         private IGraphPresentation myPresentation;
 

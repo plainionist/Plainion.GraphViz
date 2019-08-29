@@ -10,7 +10,7 @@ namespace Plainion.GraphViz.Presentation
 {
     public class BinaryPresentationReader : IDisposable
     {
-        internal static int Version = 1;
+        private static int Version = 1;
 
         private BinaryReader myReader;
         private BrushConverter myBrushConverter;

@@ -4,7 +4,7 @@ using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    public abstract class AbstractGraphDocument : IGraphDocument
+    abstract class AbstractGraphDocument : IGraphDocument
     {
         private RelaxedGraphBuilder myGraphBuilder;
         private IList<FailedItem> myFailedItems;
@@ -36,7 +36,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
         protected abstract void Load();
 
-        protected internal Node TryAddNode( string nodeId )
+        public Node TryAddNode( string nodeId )
         {
             var node = myGraphBuilder.TryAddNode( nodeId );
             if( node == null )
@@ -48,7 +48,7 @@ namespace Plainion.GraphViz.Modules.Documents
             return node;
         }
 
-        protected internal Edge TryAddEdge( string sourceNodeId, string targetNodeId )
+        public Edge TryAddEdge( string sourceNodeId, string targetNodeId )
         {
             var edge = myGraphBuilder.TryAddEdge( sourceNodeId, targetNodeId );
 
@@ -61,7 +61,7 @@ namespace Plainion.GraphViz.Modules.Documents
             return edge;
         }
 
-        protected internal Cluster TryAddCluster( string clusterId, IEnumerable<string> nodes )
+        public Cluster TryAddCluster( string clusterId, IEnumerable<string> nodes )
         {
             var cluster = myGraphBuilder.TryAddCluster( clusterId, nodes );
             if( cluster == null )

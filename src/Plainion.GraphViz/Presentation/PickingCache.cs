@@ -6,7 +6,7 @@ using Plainion;
 
 namespace Plainion.GraphViz.Presentation
 {
-    internal class PickingCache : IGraphPicking
+    class PickingCache : IGraphPicking
     {
         private IGraphPresentation myPresentation;
         private IGraphPicking myPicking;

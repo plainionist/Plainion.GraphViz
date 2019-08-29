@@ -8,7 +8,7 @@ using Plainion.GraphViz.Visuals;
 
 namespace Plainion.GraphViz
 {
-    internal class ToolTipAdorner : Adorner
+    class ToolTipAdorner : Adorner
     {
         private ToolTipController myToolTipController;
         private IVisualPicking myPicking;

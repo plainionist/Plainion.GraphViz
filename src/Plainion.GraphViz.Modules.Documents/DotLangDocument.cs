@@ -7,7 +7,7 @@ namespace Plainion.GraphViz.Modules.Documents
 {
     // http://www.graphviz.org/doc/info/lang.html
     // inspired by: https://github.com/devshorts/LanguageCreator
-    public class DotLangDocument : AbstractGraphDocument, ICaptionDocument, IStyleDocument
+    class DotLangDocument : AbstractGraphDocument, ICaptionDocument, IStyleDocument
     {
         private List<Caption> myCaptions;
         private List<NodeStyle> myNodeStyles;
@@ -36,22 +36,22 @@ namespace Plainion.GraphViz.Modules.Documents
             }
         }
 
-        protected internal void Add(Caption caption)
+        public void Add(Caption caption)
         {
             myCaptions.Add(caption);
         }
 
-        protected internal void Add(NodeStyle style)
+        public void Add(NodeStyle style)
         {
             myNodeStyles.Add(style);
         }
 
-        protected internal void Add(EdgeStyle style)
+        public void Add(EdgeStyle style)
         {
             myEdgeStyles.Add(style);
         }
 
-        internal void Read(TextReader reader)
+        public void Read(TextReader reader)
         {
             myCaptions = new List<Caption>();
             myNodeStyles = new List<NodeStyle>();
