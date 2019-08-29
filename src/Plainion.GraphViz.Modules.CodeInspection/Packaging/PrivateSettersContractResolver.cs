@@ -7,7 +7,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
-    public class PrivateSettersContractResolver : DefaultContractResolver
+    class PrivateSettersContractResolver : DefaultContractResolver
     {
         protected override IList<JsonProperty> CreateProperties( Type type, MemberSerialization memberSerialization )
         {

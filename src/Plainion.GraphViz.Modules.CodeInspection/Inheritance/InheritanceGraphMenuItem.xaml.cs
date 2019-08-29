@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
     [Export( typeof( InheritanceGraphMenuItem ) )]
-    public partial class InheritanceGraphMenuItem : MenuItem
+    partial class InheritanceGraphMenuItem : MenuItem
     {
         [ImportingConstructor]
         public InheritanceGraphMenuItem( InheritanceGraphMenuItemModel model )

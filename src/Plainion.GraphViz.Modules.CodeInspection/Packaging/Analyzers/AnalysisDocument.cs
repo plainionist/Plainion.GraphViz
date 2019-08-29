@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
@@ -42,7 +41,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         public IReadOnlyDictionary<string, string> EdgeStyles { get { return myEdgeStyles; } }
 
-        internal void Add(Reference edge)
+        public void Add(Reference edge)
         {
             myEdges.Add(CreateEdge(edge));
         }
@@ -51,7 +50,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         private Tuple<string, string> CreateEdge(Reference edge) => Tuple.Create(NodeId(edge.From), NodeId(edge.To));
 
-        internal void AddEdgeColor(Reference edge, string color)
+        public void AddEdgeColor(Reference edge, string color)
         {
             var edgeId = Model.Edge.CreateId(NodeId(edge.From), NodeId(edge.To));
             if (!myEdgeStyles.ContainsKey(edgeId))
@@ -60,7 +59,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             }
         }
 
-        internal void Add(Type node)
+        public void Add(Type node)
         {
             var nodeId = NodeId(node);
 
@@ -72,7 +71,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             }
         }
 
-        internal void AddToCluster(Type node, Cluster cluster)
+        public void AddToCluster(Type node, Cluster cluster)
         {
             IEnumerable<string> existing;
             if (!myClusters.TryGetValue(cluster.Id, out existing))
@@ -87,7 +86,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             ((HashSet<string>)existing).Add(NodeId(node));
         }
 
-        internal void AddNodeColor(Type node, string fillColor)
+        public void AddNodeColor(Type node, string fillColor)
         {
             var nodeId = NodeId(node);
 

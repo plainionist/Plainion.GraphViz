@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
 {
     [Export( typeof(CallTreeMenuItem) )]
-    public partial class CallTreeMenuItem : MenuItem
+    partial class CallTreeMenuItem : MenuItem
     {
         [ImportingConstructor]
         public CallTreeMenuItem(CallTreeMenuItemModel model )

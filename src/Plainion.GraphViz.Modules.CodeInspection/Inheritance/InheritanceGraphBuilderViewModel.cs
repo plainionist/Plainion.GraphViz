@@ -151,7 +151,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
             }
         }
 
-        internal void OnClosed()
+        private void OnClosed()
         {
             AssemblyToAnalyseLocation = null;
 

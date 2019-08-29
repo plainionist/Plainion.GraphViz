@@ -7,10 +7,10 @@ using System.Windows.Documents;
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
     [Export( typeof( PackagingGraphBuilderView ) )]
-    public partial class PackagingGraphBuilderView : UserControl
+    partial class PackagingGraphBuilderView : UserControl
     {
         [ImportingConstructor]
-        internal PackagingGraphBuilderView( PackagingGraphBuilderViewModel model )
+        public PackagingGraphBuilderView( PackagingGraphBuilderViewModel model )
         {
             InitializeComponent();
 

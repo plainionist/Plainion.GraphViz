@@ -7,7 +7,7 @@ using Prism.Mvvm;
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
     [Export( typeof( InheritanceGraphMenuItemModel ) )]
-    public class InheritanceGraphMenuItemModel : BindableBase
+    class InheritanceGraphMenuItemModel : BindableBase
     {
         public InheritanceGraphMenuItemModel()
         {

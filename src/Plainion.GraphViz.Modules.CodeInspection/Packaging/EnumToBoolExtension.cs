@@ -8,7 +8,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
     //https://zamjad.wordpress.com/2014/03/01/radio-button-in-mvvm/
     [ValueConversion( typeof( bool ), typeof( Enum ) )]
-    public class EnumToBoolExtension : MarkupExtension, IValueConverter
+    class EnumToBoolExtension : MarkupExtension, IValueConverter
     {
         public object Convert( object value, Type targetType, object parameter, CultureInfo culture )
         {

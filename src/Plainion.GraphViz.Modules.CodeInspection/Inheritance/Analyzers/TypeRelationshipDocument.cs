@@ -26,7 +26,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 
         public IEnumerable<Tuple<string, string, ReferenceType>> Edges { get { return myEdges; } }
 
-        internal void AddEdge(TypeDescriptor source, TypeDescriptor target, ReferenceType refType)
+        public void AddEdge(TypeDescriptor source, TypeDescriptor target, ReferenceType refType)
         {
             if (!myDescriptors.ContainsKey(source.Id))
             {
@@ -43,7 +43,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
             myEdgeCount = myEdges.Count;
         }
 
-        internal void AddFailedItem(FailedItem item)
+        public void AddFailedItem(FailedItem item)
         {
             myFailedItems.Add(item);
         }

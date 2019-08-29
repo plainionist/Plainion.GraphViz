@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
     /// </summary>
     class DocumentSerializer
     {
-        internal byte[] Serialize<T>(T doc)
+        public byte[] Serialize<T>(T doc)
         {
             using (var stream = new MemoryStream())
             {
@@ -20,7 +20,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
             }
         }
 
-        internal void Serialize<T>(T doc, string file)
+        public void Serialize<T>(T doc, string file)
         {
             using (var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write))
             {
@@ -29,7 +29,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
             }
         }
 
-        internal T Deserialize<T>(byte[] blob)
+        public T Deserialize<T>(byte[] blob)
         {
             using (var stream = new MemoryStream(blob))
             {
@@ -38,7 +38,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
             }
         }
 
-        internal T Deserialize<T>(string file)
+        public T Deserialize<T>(string file)
         {
             using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
             {

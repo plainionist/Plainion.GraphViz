@@ -7,7 +7,7 @@ using Prism.Mvvm;
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
 {
     [Export]
-    public class CallTreeMenuItemModel : BindableBase
+    class CallTreeMenuItemModel : BindableBase
     {
         public CallTreeMenuItemModel()
         {

@@ -117,7 +117,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
             }
         }
 
-        internal void OnClosed()
+        private void OnClosed()
         {
             ConfigFile = null;
 

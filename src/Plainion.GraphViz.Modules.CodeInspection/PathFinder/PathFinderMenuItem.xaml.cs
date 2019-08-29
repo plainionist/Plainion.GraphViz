@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
 {
     [Export( typeof(PathFinderMenuItem) )]
-    public partial class PathFinderMenuItem : MenuItem
+    partial class PathFinderMenuItem : MenuItem
     {
         [ImportingConstructor]
         public PathFinderMenuItem(PathFinderMenuItemModel model )

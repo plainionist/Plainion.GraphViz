@@ -6,10 +6,10 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
 {
     [Export]
-    public partial class PathFinderView : UserControl
+    partial class PathFinderView : UserControl
     {
         [ImportingConstructor]
-        internal PathFinderView( PathFinderViewModel model )
+        public PathFinderView( PathFinderViewModel model )
         {
             InitializeComponent();
 

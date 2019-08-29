@@ -7,7 +7,7 @@ using Prism.Mvvm;
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
     [Export(typeof(PackagingGraphMenuItemModel))]
-    public class PackagingGraphMenuItemModel : BindableBase
+    class PackagingGraphMenuItemModel : BindableBase
     {
         public PackagingGraphMenuItemModel()
         {

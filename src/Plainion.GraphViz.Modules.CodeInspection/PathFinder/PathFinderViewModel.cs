@@ -115,7 +115,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
             }
         }
 
-        internal void OnClosed()
+        private void OnClosed()
         {
             ConfigFile = null;
 

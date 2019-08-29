@@ -367,7 +367,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             IsReady = true;
         }
 
-        internal void OnClosed()
+        private void OnClosed()
         {
             Save();
             Document.Text = string.Empty;

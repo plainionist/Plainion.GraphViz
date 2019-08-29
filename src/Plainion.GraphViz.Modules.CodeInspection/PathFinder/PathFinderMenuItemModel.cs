@@ -7,7 +7,7 @@ using Prism.Mvvm;
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
 {
     [Export]
-    public class PathFinderMenuItemModel : BindableBase
+    class PathFinderMenuItemModel : BindableBase
     {
         public PathFinderMenuItemModel()
         {
