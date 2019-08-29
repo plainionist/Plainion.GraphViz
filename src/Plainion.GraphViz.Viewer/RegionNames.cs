@@ -1,7 +1,7 @@
 ﻿
 namespace Plainion.GraphViz.Viewer
 {
-    public static class RegionNames
+    static class RegionNames
     {
         public static readonly string GraphViewer = "Region.GraphViewer";
         public static readonly string SettingsEditor = "Region.Settings.Editor";

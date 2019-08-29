@@ -6,7 +6,7 @@ using System.Windows.Documents;
 namespace Plainion.GraphViz.Viewer
 {
     [Export( typeof( Shell ) )]
-    public partial class Shell : Window
+    partial class Shell : Window
     {
         [ImportingConstructor]
         public Shell( ShellViewModel model )

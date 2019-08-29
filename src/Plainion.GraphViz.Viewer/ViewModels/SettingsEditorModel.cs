@@ -16,7 +16,7 @@ using Plainion.Prism.Mvvm;
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
     [Export(typeof(SettingsEditorModel))]
-    public class SettingsEditorModel : ViewModelBase, IInteractionRequestAware
+    class SettingsEditorModel : ViewModelBase, IInteractionRequestAware
     {
         private ConfigurationService myConfigService;
         private string myMatchingText;
@@ -284,7 +284,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
         }
 
-        internal void ConvertTemporarily(ILabelConversionStep convertion)
+        private void ConvertTemporarily(ILabelConversionStep convertion)
         {
             TemporalConversionStep = convertion;
 
@@ -299,7 +299,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
         }
 
-        internal void ResetTemporalLabels()
+        private void ResetTemporalLabels()
         {
             foreach (var label in Labels)
             {
@@ -307,7 +307,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             }
         }
 
-        internal void CommitTemporalLabels()
+        private void CommitTemporalLabels()
         {
             ConversionSteps.Add(TemporalConversionStep);
 

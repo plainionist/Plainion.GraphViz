@@ -4,7 +4,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Viewer.Configuration
 {
-    public class RegexConversion : ILabelConversionStep
+    class RegexConversion : ILabelConversionStep
     {
         public string Matching
         {

@@ -5,7 +5,7 @@ using Plainion.GraphViz.Viewer.Configuration;
 namespace Plainion.GraphViz.Viewer.Services
 {
     [Export( typeof( ConfigurationService ) )]
-    public class ConfigurationService
+    class ConfigurationService
     {
         public Config Config { get; private set; }
 
@@ -14,7 +14,7 @@ namespace Plainion.GraphViz.Viewer.Services
             Config = Config.LoadDefaults();
         }
 
-        internal void Update( string dataRoot )
+        public void Update( string dataRoot )
         {
             Config = Config.Load( dataRoot );
 

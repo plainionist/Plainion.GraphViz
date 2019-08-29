@@ -10,7 +10,7 @@ using System;
 
 namespace Plainion.GraphViz.Viewer
 {
-    public class Bootstrapper : MefBootstrapper
+    class Bootstrapper : MefBootstrapper
     {
         public bool Running { get; private set; }
 

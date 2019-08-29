@@ -5,10 +5,10 @@ using Plainion.GraphViz.Viewer.ViewModels;
 namespace Plainion.GraphViz.Viewer.Views
 {
     [Export( typeof( GraphViewer ) )]
-    public partial class GraphViewer : UserControl
+    partial class GraphViewer : UserControl
     {
         [ImportingConstructor]
-        internal GraphViewer( GraphViewerModel model )
+        public GraphViewer( GraphViewerModel model )
         {
             InitializeComponent();
 

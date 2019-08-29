@@ -8,6 +8,7 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Viewer.Configuration
 {
+    // needs to be public in order to be serializable/deserializable with Xaml serializer
     public class Config
     {
         private const string Filename = "Plainion.GraphViz.Viewer.xaml";
@@ -32,7 +33,7 @@ namespace Plainion.GraphViz.Viewer.Configuration
         [DesignerSerializationVisibility( DesignerSerializationVisibility.Content )]
         public List<ILabelConversionStep> LabelConversion { get; private set; }
 
-        internal static Config Load( string dataRoot )
+        public static Config Load( string dataRoot )
         {
             var configFile = Path.Combine( dataRoot, Filename );
             if( File.Exists( configFile ) )
@@ -54,7 +55,7 @@ namespace Plainion.GraphViz.Viewer.Configuration
             return config;
         }
 
-        internal static Config LoadDefaults()
+        public static Config LoadDefaults()
         {
             var binFolder = Path.GetDirectoryName( typeof( Config ).Assembly.Location );
             var configFile = Path.Combine( binFolder, Filename );
@@ -66,7 +67,7 @@ namespace Plainion.GraphViz.Viewer.Configuration
             throw new InvalidOperationException( "Could not find config file" );
         }
 
-        internal void Save()
+        public void Save()
         {
             XamlWriter.Save( this, XmlWriter.Create( Path.Combine( myConfigFolder, Filename ) ) );
         }

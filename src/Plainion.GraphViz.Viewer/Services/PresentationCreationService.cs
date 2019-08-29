@@ -6,10 +6,10 @@ using Plainion.GraphViz.Presentation;
 namespace Plainion.GraphViz.Viewer.Services
 {
     [Export( typeof( IPresentationCreationService ) )]
-    public class PresentationCreationService : IPresentationCreationService
+    class PresentationCreationService : IPresentationCreationService
     {
         [Import]
-        internal ConfigurationService ConfigurationService { get; set; }
+        public ConfigurationService ConfigurationService { get; set; }
 
         /// <summary>
         /// Optional path can be specified to check for "context related" configuration.

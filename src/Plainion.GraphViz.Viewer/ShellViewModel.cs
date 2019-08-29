@@ -6,9 +6,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
-using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
@@ -16,11 +13,13 @@ using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Services;
 using Plainion.Windows;
 using Plainion.Windows.Interactivity.DragDrop;
+using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Viewer
 {
     [Export(typeof(ShellViewModel))]
-    public class ShellViewModel : ViewModelBase, IDropable
+    class ShellViewModel : ViewModelBase, IDropable
     {
         private IGraphPresentation myPresentation;
         private IStatusMessageService myStatusMessageService;

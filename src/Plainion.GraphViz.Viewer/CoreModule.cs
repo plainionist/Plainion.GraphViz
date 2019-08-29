@@ -7,7 +7,7 @@ using Prism.Regions;
 namespace Plainion.GraphViz.Viewer
 {
     [ModuleExport( typeof( CoreModule ) )]
-    public class CoreModule : IModule
+    class CoreModule : IModule
     {
         private IRegionManager myRegionManager;
 

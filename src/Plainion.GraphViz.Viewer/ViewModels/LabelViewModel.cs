@@ -2,7 +2,7 @@
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
-    public class LabelViewModel : BindableBase
+    class LabelViewModel : BindableBase
     {
         private string myCommited;
         private string myTemporal;
