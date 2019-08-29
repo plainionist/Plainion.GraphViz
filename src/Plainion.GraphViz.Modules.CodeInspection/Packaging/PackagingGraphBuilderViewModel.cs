@@ -46,7 +46,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private IDocumentLoader myDocumentLoader;
 
         [ImportingConstructor]
-        public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient, IDocumentLoader documentLoader)
+        public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient, IDocumentLoader documentLoader, IDomainModel model)
+            : base(model)
         {
             myPresentationCreationService = presentationCreationService;
             myStatusMessageService = statusMessageService;

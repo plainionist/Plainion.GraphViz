@@ -27,7 +27,8 @@ namespace Plainion.GraphViz.Modules.Documents
         private IStatusMessageService myStatusMessageService;
 
         [ImportingConstructor]
-        public OpenDocumentsViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService)
+        public OpenDocumentsViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, IDomainModel model)
+            : base(model)
         {
             myPresentationCreationService = presentationCreationService;
             myStatusMessageService = statusMessageService;

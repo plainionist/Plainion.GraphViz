@@ -25,7 +25,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private ILabelConversionStep mySelectedConversionStep;
 
         [ImportingConstructor]
-        public SettingsEditorModel(ConfigurationService configService)
+        public SettingsEditorModel(ConfigurationService configService, IDomainModel model)
+             : base(model)
         {
             myConfigService = configService;
             myConfigService.ConfigChanged += myConfigService_ConfigChanged;

@@ -17,7 +17,9 @@ namespace Plainion.GraphViz.Modules.Documents
     [Export(typeof(SaveDocumentsViewModel))]
     class SaveDocumentsViewModel : ViewModelBase
     {
-        public SaveDocumentsViewModel()
+        [ImportingConstructor]
+        public SaveDocumentsViewModel(IDomainModel model)
+            : base(model)
         {
             SaveDocumentCommand = new DelegateCommand(OnSave, CanSave);
             SaveFileRequest = new InteractionRequest<SaveFileDialogNotification>();

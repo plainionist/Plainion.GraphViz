@@ -28,7 +28,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private bool mySelectionMenuUpdatePending;
 
         [ImportingConstructor]
-        public GraphViewerModel(IEventAggregator eventAggregator)
+        public GraphViewerModel(IEventAggregator eventAggregator, IDomainModel model)
+            : base(model)
         {
             RemoveNodeCommand = new DelegateCommand<Node>(
                 n => Presentation.Masks().Push(new AddRemoveNodes(Presentation).Compute(GetSelectedNodes(n))),

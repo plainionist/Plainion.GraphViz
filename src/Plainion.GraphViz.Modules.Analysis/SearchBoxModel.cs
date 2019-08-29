@@ -20,7 +20,8 @@ namespace Plainion.GraphViz.Modules.Analysis
         private NodeWithCaption mySelectedItem;
 
         [ImportingConstructor]
-        public SearchBoxModel(IEventAggregator eventAggregator)
+        public SearchBoxModel(IEventAggregator eventAggregator, IDomainModel model)
+            : base(model)
         {
             VisibleNodes = new ObservableCollection<NodeWithCaption>();
             ItemFilter = OnFilterItem;

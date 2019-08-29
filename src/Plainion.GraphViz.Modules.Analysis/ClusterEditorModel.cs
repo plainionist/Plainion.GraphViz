@@ -36,7 +36,8 @@ namespace Plainion.GraphViz.Modules.Analysis
         private bool myTreeShowId;
 
         [ImportingConstructor]
-        public ClusterEditorModel()
+        public ClusterEditorModel(IDomainModel model)
+            : base(model)
         {
             AddButtonCaption = "Add ...";
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);

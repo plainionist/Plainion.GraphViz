@@ -16,7 +16,8 @@ namespace Plainion.GraphViz.Modules.Analysis
         private string myCaption;
 
         [ImportingConstructor]
-        public BookmarksViewModel()
+        public BookmarksViewModel(IDomainModel model)
+            : base(model)
         {
             Bookmarks = new ObservableCollection<Bookmark>();
 

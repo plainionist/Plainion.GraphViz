@@ -26,7 +26,8 @@ namespace Plainion.GraphViz.Viewer
         private LayoutAlgorithm myLayoutAlgorithm;
 
         [ImportingConstructor]
-        public ShellViewModel(IStatusMessageService statusMessageService)
+        public ShellViewModel(IStatusMessageService statusMessageService, IDomainModel model)
+            : base(model)
         {
             myStatusMessageService = statusMessageService;
             myStatusMessageService.Messages.CollectionChanged += OnStatusMessagesChanged;

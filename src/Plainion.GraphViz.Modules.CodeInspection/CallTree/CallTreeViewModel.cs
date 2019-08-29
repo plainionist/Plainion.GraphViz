@@ -24,7 +24,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
         private IDocumentLoader myDocumentLoader;
 
         [ImportingConstructor]
-        public CallTreeViewModel(IPresentationCreationService presentationCreationService, IDocumentLoader documentLoader, CallTreeClient client)
+        public CallTreeViewModel(IPresentationCreationService presentationCreationService, IDocumentLoader documentLoader, CallTreeClient client, IDomainModel model)
+            :base(model)
         {
             myPresentationCreationService = presentationCreationService;
             myDocumentLoader = documentLoader;

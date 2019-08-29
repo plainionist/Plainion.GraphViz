@@ -24,7 +24,9 @@ namespace Plainion.GraphViz.Modules.Analysis
         private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
 
-        public NodeMasksEditorModel()
+        [ImportingConstructor]
+        public NodeMasksEditorModel(IDomainModel model)
+             : base(model)
         {
             myPreviewVisibleNodesOnly = true;
 

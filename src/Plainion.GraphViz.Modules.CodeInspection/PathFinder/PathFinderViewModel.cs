@@ -23,7 +23,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
         private IDocumentLoader myDocumentLoader;
 
         [ImportingConstructor]
-        public PathFinderViewModel(IPresentationCreationService presentationCreationService, IDocumentLoader documentLoader, PathFinderClient client)
+        public PathFinderViewModel(IPresentationCreationService presentationCreationService, IDocumentLoader documentLoader, PathFinderClient client, IDomainModel model)
+            : base(model)
         {
             myPresentationCreationService = presentationCreationService;
             myDocumentLoader = documentLoader;

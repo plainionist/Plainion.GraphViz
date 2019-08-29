@@ -58,7 +58,9 @@ namespace Plainion.GraphViz.Modules.Analysis
         private IGraphPresentation myPresentation;
         private Entry mySelectedItem;
 
-        public NodeMasksViewModel()
+        [ImportingConstructor]
+        public NodeMasksViewModel(IDomainModel model)
+            : base(model)
         {
             Masks = new ObservableCollection<Entry>();
 

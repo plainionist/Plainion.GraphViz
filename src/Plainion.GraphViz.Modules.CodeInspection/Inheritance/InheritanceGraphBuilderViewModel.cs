@@ -37,7 +37,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         private InheritanceClient myInheritanceClient;
 
         [ImportingConstructor]
-        public InheritanceGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, InheritanceClient inheritanceClient)
+        public InheritanceGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, InheritanceClient inheritanceClient, IDomainModel model)
+            : base(model)
         {
             myPresentationCreationService = presentationCreationService;
             myStatusMessageService = statusMessageService;

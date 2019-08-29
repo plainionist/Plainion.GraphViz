@@ -6,20 +6,13 @@ namespace Plainion.GraphViz.Infrastructure.ViewModel
 {
     public abstract class ViewModelBase : ValidatableBindableBase
     {
-        private IDomainModel myModel;
-
-        [Import]
-        public IDomainModel Model
+        protected ViewModelBase(IDomainModel model)
         {
-            get { return myModel; }
-            set
-            {
-                myModel = value;
-                myModel.PresentationChanged += OnPresentationChanged;
-
-                OnPresentationChanged();
-            }
+            Model = model;
+            Model.PresentationChanged += OnPresentationChanged;
         }
+
+        public IDomainModel Model { get; private set; }
 
         private void OnPresentationChanged(object sender, EventArgs e)
         {
