@@ -11,9 +11,9 @@ using Plainion.GraphViz.Presentation;
 namespace Plainion.GraphViz.Modules.Analysis
 {
     [Export(typeof(NodeMasksViewModel))]
-    internal class NodeMasksViewModel : ViewModelBase
+    class NodeMasksViewModel : ViewModelBase
     {
-        internal class Entry
+        public class Entry
         {
             private IGraphPresentation myPresentation;
 

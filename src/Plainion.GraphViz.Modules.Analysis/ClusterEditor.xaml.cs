@@ -4,10 +4,10 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.Analysis
 {
     [Export( typeof( ClusterEditor ) )]
-    public partial class ClusterEditor : UserControl
+    partial class ClusterEditor : UserControl
     {
         [ImportingConstructor]
-        internal ClusterEditor( ClusterEditorModel model )
+        public ClusterEditor( ClusterEditorModel model )
         {
             InitializeComponent();
 

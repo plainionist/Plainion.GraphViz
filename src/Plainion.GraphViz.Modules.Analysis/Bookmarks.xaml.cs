@@ -4,10 +4,10 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.Analysis
 {
     [Export( typeof(Bookmarks) )]
-    public partial class Bookmarks : UserControl
+    partial class Bookmarks : UserControl
     {
         [ImportingConstructor]
-        internal Bookmarks(BookmarksViewModel model )
+        public Bookmarks(BookmarksViewModel model )
         {
             InitializeComponent();
 

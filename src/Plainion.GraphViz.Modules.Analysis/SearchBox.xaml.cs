@@ -4,10 +4,10 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.Analysis
 {
     [Export( typeof( SearchBox ) )]
-    public partial class SearchBox : UserControl
+    partial class SearchBox : UserControl
     {
         [ImportingConstructor]
-        internal SearchBox( SearchBoxModel model )
+        public SearchBox( SearchBoxModel model )
         {
             InitializeComponent();
 

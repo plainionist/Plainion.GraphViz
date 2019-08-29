@@ -14,7 +14,7 @@ using Prism.Events;
 namespace Plainion.GraphViz.Modules.Analysis
 {
     [Export(typeof(SearchBoxModel))]
-    public class SearchBoxModel : ViewModelBase
+    class SearchBoxModel : ViewModelBase
     {
         private IGraphPresentation myPresentation;
         private NodeWithCaption mySelectedItem;

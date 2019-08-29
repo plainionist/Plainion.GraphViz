@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace Plainion.GraphViz.Modules.Analysis
 {
     [Export( typeof( NodeMasksView ) )]
-    public partial class NodeMasksView : UserControl
+    partial class NodeMasksView : UserControl
     {
         public NodeMasksView()
             : this( new NodeMasksViewModel() )
@@ -12,7 +12,7 @@ namespace Plainion.GraphViz.Modules.Analysis
         }
 
         [ImportingConstructor]
-        internal NodeMasksView( NodeMasksViewModel model )
+        public NodeMasksView( NodeMasksViewModel model )
         {
             InitializeComponent();
 

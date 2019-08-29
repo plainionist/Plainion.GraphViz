@@ -14,7 +14,7 @@ using Prism.Commands;
 namespace Plainion.GraphViz.Modules.Analysis
 {
     [Export(typeof(NodeMasksEditorModel))]
-    public class NodeMasksEditorModel : ViewModelBase
+    class NodeMasksEditorModel : ViewModelBase
     {
         private string myFilter;
         private bool myFilterOnId;

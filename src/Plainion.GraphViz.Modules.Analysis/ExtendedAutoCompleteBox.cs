@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    public class ExtendedAutoCompleteBox : AutoCompleteBox
+    class ExtendedAutoCompleteBox : AutoCompleteBox
     {
         protected override void OnKeyUp(KeyEventArgs e)
         {
