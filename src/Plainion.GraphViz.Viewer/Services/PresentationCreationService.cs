@@ -8,8 +8,13 @@ namespace Plainion.GraphViz.Viewer.Services
     [Export( typeof( IPresentationCreationService ) )]
     class PresentationCreationService : IPresentationCreationService
     {
-        [Import]
-        public ConfigurationService ConfigurationService { get; set; }
+        private ConfigurationService myConfigurationService;
+
+        [ImportingConstructor]
+        public PresentationCreationService(ConfigurationService configurationService)
+        {
+            myConfigurationService = configurationService;
+        }
 
         /// <summary>
         /// Optional path can be specified to check for "context related" configuration.
@@ -19,17 +24,17 @@ namespace Plainion.GraphViz.Viewer.Services
         {
             if ( !string.IsNullOrEmpty( dataRoot ) )
             {
-                ConfigurationService.Update( dataRoot );
+                myConfigurationService.Update( dataRoot );
             }
 
             var presentation = new GraphPresentation();
 
-            if ( ConfigurationService.Config.NodeIdAsDefaultToolTip )
+            if ( myConfigurationService.Config.NodeIdAsDefaultToolTip )
             {
                 presentation.GetPropertySetFor<ToolTipContent>().DefaultProvider = id => new ToolTipContent( id, new TextBlock { Text = id } );
             }
 
-            presentation.GetModule<CaptionModule>().LabelConverter = new GenericLabelConverter( ConfigurationService.Config.LabelConversion );
+            presentation.GetModule<CaptionModule>().LabelConverter = new GenericLabelConverter( myConfigurationService.Config.LabelConversion );
 
             return presentation;
         }

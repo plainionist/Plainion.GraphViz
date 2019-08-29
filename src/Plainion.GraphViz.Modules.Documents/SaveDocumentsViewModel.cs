@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using Plainion.GraphViz.Dot;
-using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
@@ -18,12 +17,6 @@ namespace Plainion.GraphViz.Modules.Documents
     [Export(typeof(SaveDocumentsViewModel))]
     class SaveDocumentsViewModel : ViewModelBase
     {
-        [Import]
-        public IPresentationCreationService PresentationCreationService { get; set; }
-
-        [Import]
-        public IStatusMessageService StatusMessageService { get; set; }
-
         public SaveDocumentsViewModel()
         {
             SaveDocumentCommand = new DelegateCommand(OnSave, CanSave);

@@ -23,15 +23,15 @@ namespace Plainion.GraphViz.Modules.Documents
     {
         private FileSystemWatcher myFileWatcher;
         private readonly GraphToDotLangSynchronizer myGraphToDotSynchronizer;
+        private IPresentationCreationService myPresentationCreationService;
+        private IStatusMessageService myStatusMessageService;
 
-        [Import]
-        public IPresentationCreationService PresentationCreationService { get; set; }
-
-        [Import]
-        public IStatusMessageService StatusMessageService { get; set; }
-
-        public OpenDocumentsViewModel()
+        [ImportingConstructor]
+        public OpenDocumentsViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService)
         {
+            myPresentationCreationService = presentationCreationService;
+            myStatusMessageService = statusMessageService;
+
             OpenDocumentCommand = new DelegateCommand(OpenDocument);
             OpenFileRequest = new InteractionRequest<OpenFileDialogNotification>();
 
@@ -85,7 +85,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
         private void OpenDocument(string path)
         {
-            var presentation = PresentationCreationService.CreatePresentation(Path.GetDirectoryName(path));
+            var presentation = myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(path));
 
             var processor = new BasicDocumentProcessor(presentation);
 
@@ -100,7 +100,7 @@ namespace Plainion.GraphViz.Modules.Documents
                 {
                     sb.AppendLine(string.Format("{0}: {1}", item.FailureReason, item.Item));
                 }
-                StatusMessageService.Publish(new StatusMessage(sb.ToString()));
+                myStatusMessageService.Publish(new StatusMessage(sb.ToString()));
             }
 
             Model.Presentation = presentation;
@@ -212,7 +212,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
         public IGraphPresentation Read(string filename)
         {
-            var presentation = PresentationCreationService.CreatePresentation(Path.GetDirectoryName(filename));
+            var presentation = myPresentationCreationService.CreatePresentation(Path.GetDirectoryName(filename));
 
             var processor = new BasicDocumentProcessor(presentation);
 
