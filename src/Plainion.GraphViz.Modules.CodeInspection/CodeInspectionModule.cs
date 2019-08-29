@@ -12,22 +12,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection
     [ModuleExport(typeof(CodeInspectionModule))]
     public class CodeInspectionModule : IModule
     {
-        [Import]
-        public IRegionManager RegionManager { get; set; }
+        private IRegionManager myRegionManager;
+
+        [ImportingConstructor]
+        public CodeInspectionModule(IRegionManager regionManager)
+        {
+            myRegionManager = regionManager;
+        }
 
         public void Initialize()
         {
-            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(InheritanceGraphMenuItem));
-            RegionManager.RegisterViewWithRegion(RegionNames.InheritanceGraphBuilder, typeof(InheritanceGraphBuilderView));
+            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(InheritanceGraphMenuItem));
+            myRegionManager.RegisterViewWithRegion(RegionNames.InheritanceGraphBuilder, typeof(InheritanceGraphBuilderView));
 
-            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PackagingGraphMenuItem));
-            RegionManager.RegisterViewWithRegion(RegionNames.PackagingGraphBuilder, typeof(PackagingGraphBuilderView));
+            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PackagingGraphMenuItem));
+            myRegionManager.RegisterViewWithRegion(RegionNames.PackagingGraphBuilder, typeof(PackagingGraphBuilderView));
 
-            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PathFinderMenuItem));
-            RegionManager.RegisterViewWithRegion(RegionNames.PathFinder, typeof(PathFinderView));
+            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PathFinderMenuItem));
+            myRegionManager.RegisterViewWithRegion(RegionNames.PathFinder, typeof(PathFinderView));
 
-            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(CallTreeMenuItem));
-            RegionManager.RegisterViewWithRegion(RegionNames.CallTree, typeof(CallTreeView));
+            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(CallTreeMenuItem));
+            myRegionManager.RegisterViewWithRegion(RegionNames.CallTree, typeof(CallTreeView));
         }
     }
 }

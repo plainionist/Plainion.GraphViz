@@ -8,13 +8,18 @@ namespace Plainion.GraphViz.Modules.Documents
     [ModuleExport( typeof( DocumentsModule ) )]
     public class DocumentsModule : IModule
     {
-        [Import]
-        public IRegionManager RegionManager { get; set; }
+        private IRegionManager myRegionManager;
+
+        [ImportingConstructor]
+        public DocumentsModule(IRegionManager regionManager)
+        {
+            myRegionManager = regionManager;
+        }
 
         public void Initialize()
         {
-            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.OpenDocuments, typeof(OpenDocumentsView));
-            RegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.SaveDocuments, typeof(SaveDocumentsView));
+            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.OpenDocuments, typeof(OpenDocumentsView));
+            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.SaveDocuments, typeof(SaveDocumentsView));
         }
     }
 }

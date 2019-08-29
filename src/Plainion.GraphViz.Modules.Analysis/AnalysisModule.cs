@@ -8,16 +8,21 @@ namespace Plainion.GraphViz.Modules.Analysis
     [ModuleExport(typeof(AnalysisModule))]
     public class AnalysisModule : IModule
     {
-        [Import]
-        public IRegionManager RegionManager { get; set; }
+        private IRegionManager myRegionManager;
+
+        [ImportingConstructor]
+        public AnalysisModule(IRegionManager regionManager)
+        {
+            myRegionManager = regionManager;
+        }
 
         public void Initialize()
         {
-            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.SearchBox, typeof(SearchBox));
-            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
-            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksView, typeof(NodeMasksView));
-            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.ClusterEditor, typeof(ClusterEditor));
-            RegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.Bookmarks, typeof(Bookmarks));
+            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.SearchBox, typeof(SearchBox));
+            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
+            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksView, typeof(NodeMasksView));
+            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.ClusterEditor, typeof(ClusterEditor));
+            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.Bookmarks, typeof(Bookmarks));
         }
     }
 }
