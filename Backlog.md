@@ -1,6 +1,9 @@
 - migrate to Prism 7
-  - switch to unity
+- migrate to dialogservice
+  - do we need plainion prism anylonger?
 - update akka
+  - without downloading whole .net core
+- how to switch to new project structure still targeting .net fw?
 - change design to make it easier to add new algorithms to the UI
   - consider splitting "model + presentation + algo" and "visualization"
 - get rid of all obsoletes
