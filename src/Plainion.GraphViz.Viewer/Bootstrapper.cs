@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using Microsoft.Practices.Unity;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Viewer.Services;
@@ -11,6 +10,8 @@ using Prism.Modularity;
 using Prism.Regions;
 using Prism.Regions.Behaviors;
 using Prism.Unity;
+using Unity;
+using Unity.Lifetime;
 
 namespace Plainion.GraphViz.Viewer
 {

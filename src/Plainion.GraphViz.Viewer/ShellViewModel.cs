@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Practices.Unity;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
@@ -12,6 +11,7 @@ using Plainion.Windows;
 using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
+using Unity;
 
 namespace Plainion.GraphViz.Viewer
 {

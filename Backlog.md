@@ -1,4 +1,5 @@
-- migrate to Prism 7
+- ensure that actor host is closed on main app close
+  - dispose of unity
 - migrate to dialogservice
   - do we need plainion prism anylonger?
 - update akka

@@ -3,13 +3,12 @@ using Plainion.GraphViz.Modules.CodeInspection.CallTree;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging;
 using Plainion.GraphViz.Modules.CodeInspection.PathFinder;
-using Prism.Mef.Modularity;
+using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
 namespace Plainion.GraphViz.Modules.CodeInspection
 {
-    [ModuleExport(typeof(CodeInspectionModule))]
     public class CodeInspectionModule : IModule
     {
         private IRegionManager myRegionManager;
@@ -20,7 +19,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection
             myRegionManager = regionManager;
         }
 
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(InheritanceGraphMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.InheritanceGraphBuilder, typeof(InheritanceGraphBuilderView));
@@ -33,6 +32,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection
 
             myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(CallTreeMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.CallTree, typeof(CallTreeView));
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
         }
     }
 }

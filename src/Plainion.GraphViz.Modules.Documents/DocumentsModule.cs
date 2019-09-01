@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.Composition;
-using Microsoft.Practices.Unity;
 using Plainion.GraphViz.Infrastructure.Services;
-using Prism.Mef.Modularity;
+using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
+using Unity;
+using Unity.Lifetime;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    [ModuleExport(typeof(DocumentsModule))]
     public class DocumentsModule : IModule
     {
         private IRegionManager myRegionManager;
@@ -20,12 +20,16 @@ namespace Plainion.GraphViz.Modules.Documents
             myContainer = container;
         }
 
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.OpenDocuments, typeof(OpenDocumentsView));
             myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.SaveDocuments, typeof(SaveDocumentsView));
 
             myContainer.RegisterType<IDocumentLoader, OpenDocumentsViewModel>(new ContainerControlledLifetimeManager());
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
         }
     }
 }

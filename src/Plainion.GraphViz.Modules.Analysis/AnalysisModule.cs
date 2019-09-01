@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.Composition;
-using Prism.Mef.Modularity;
+using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [ModuleExport(typeof(AnalysisModule))]
     public class AnalysisModule : IModule
     {
         private IRegionManager myRegionManager;
@@ -16,13 +15,17 @@ namespace Plainion.GraphViz.Modules.Analysis
             myRegionManager = regionManager;
         }
 
-        public void Initialize()
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.SearchBox, typeof(SearchBox));
             myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
             myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksView, typeof(NodeMasksView));
             myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.ClusterEditor, typeof(ClusterEditor));
             myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.Bookmarks, typeof(Bookmarks));
+        }
+
+        public void OnInitialized(IContainerProvider containerProvider)
+        {
         }
     }
 }
