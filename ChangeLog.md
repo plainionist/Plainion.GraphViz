@@ -5,6 +5,7 @@
 - Dependencies updated
 - Cleanup of APIs of modules
 - "dot.exe" home no longer read from config (always use embedded distribution)
+- Switched to Unity as MEF is no longer supported in Prism 7
 
 ## 3.3 - 2019-07-18
 

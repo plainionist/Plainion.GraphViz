@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using Plainion.Prism.Mvvm;
 
 namespace Plainion.GraphViz.Infrastructure.ViewModel
@@ -8,6 +7,8 @@ namespace Plainion.GraphViz.Infrastructure.ViewModel
     {
         protected ViewModelBase(IDomainModel model)
         {
+            Contract.RequiresNotNull(model, nameof(model));
+
             Model = model;
             Model.PresentationChanged += OnPresentationChanged;
         }

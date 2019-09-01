@@ -1,5 +1,4 @@
 - migrate to Prism 7
-  - go for ctor injection
   - switch to unity
 - update akka
 - change design to make it easier to add new algorithms to the UI

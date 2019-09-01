@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using Plainion.GraphViz.Presentation;
-using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Infrastructure.ViewModel
 {

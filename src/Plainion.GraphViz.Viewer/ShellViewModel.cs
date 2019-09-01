@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
+using Microsoft.Practices.Unity;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
-using Plainion.GraphViz.Viewer.Services;
 using Plainion.Windows;
 using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Commands;
@@ -49,6 +46,7 @@ namespace Plainion.GraphViz.Viewer
         }
 
         [Import(AllowDefault = true)]
+        [OptionalDependency]
         public IDocumentLoader DocumentLoader { get; set; }
 
         private void OnOpenSettingsEditor()

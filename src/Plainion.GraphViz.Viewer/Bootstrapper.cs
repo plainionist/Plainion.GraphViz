@@ -1,22 +1,30 @@
-﻿using System.ComponentModel.Composition.Hosting;
+﻿using System;
 using System.IO;
 using System.Windows;
+using Microsoft.Practices.Unity;
+using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
-using Prism.Interactivity;
-using Prism.Regions;
+using Plainion.GraphViz.Viewer.Services;
 using Plainion.Prism.Interactivity;
-using Prism.Mef;
-using System;
+using Prism.Interactivity;
+using Prism.Modularity;
+using Prism.Regions;
+using Prism.Regions.Behaviors;
+using Prism.Unity;
 
 namespace Plainion.GraphViz.Viewer
 {
-    class Bootstrapper : MefBootstrapper
+    class Bootstrapper : UnityBootstrapper
     {
         public bool Running { get; private set; }
 
         protected override DependencyObject CreateShell()
         {
-            return Container.GetExportedValue<Shell>();
+            // workaround to get all module classes added to container before shell is resolved
+            // this is needed e.g. for "IDocumentLoader"
+            InitializeModules();
+
+            return Container.Resolve<Shell>();
         }
 
         protected override void InitializeShell()
@@ -27,38 +35,38 @@ namespace Plainion.GraphViz.Viewer
             App.Current.MainWindow.Show();
         }
 
-        protected override void ConfigureAggregateCatalog()
+        protected override IModuleCatalog CreateModuleCatalog()
         {
-            base.ConfigureAggregateCatalog();
+            var catalog = new DirectoryModuleCatalog();
 
-            // Prism automatically loads the module with that line
-            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(GetType().Assembly));
-
-            // add all the assemblies which are no modules
-            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(PopupWindowActionRegionAdapter).Assembly));
-            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(GraphView).Assembly));
-            AggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(IDomainModel).Assembly));
+            // explicitly add core module which is not found by the DirectoryModuleCatalog as it only searches for ".dll"
+            catalog.AddModule(new ModuleInfo(typeof(CoreModule).FullName, typeof(CoreModule).AssemblyQualifiedName));
 
             // with ".Location" property we sometimes got strange error message that loading from
             // remote location is not allows
-            var moduleRoot = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
-            try
-            {
-                foreach (var moduleFile in Directory.GetFiles(moduleRoot, "Plainion.GraphViz.Modules.*.dll"))
-                {
-                    AggregateCatalog.Catalogs.Add(new AssemblyCatalog(moduleFile));
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(string.Format("Loding from '{0}' failed", moduleRoot), ex);
-            }
+            catalog.ModulePath = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
+
+            return catalog;
+        }
+
+        protected override void ConfigureContainer()
+        {
+            base.ConfigureContainer();
+
+            Container.RegisterType<IStatusMessageService, StatusMessageService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IPresentationCreationService, PresentationCreationService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ConfigurationService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<DelayedRegionCreationBehavior, KeepAliveDelayedRegionCreationBehavior>(new TransientLifetimeManager());
+
+            Container.RegisterType<IDomainModel, DefaultDomainModel>(new ContainerControlledLifetimeManager());
         }
 
         protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
         {
             var mappings = base.ConfigureRegionAdapterMappings();
-            mappings.RegisterMapping(typeof(PopupWindowAction), Container.GetExportedValue<PopupWindowActionRegionAdapter>());
+
+            mappings.RegisterMapping(typeof(PopupWindowAction), Container.Resolve<PopupWindowActionRegionAdapter>());
+
             return mappings;
         }
 
