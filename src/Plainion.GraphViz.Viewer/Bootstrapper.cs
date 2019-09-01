@@ -83,7 +83,7 @@ namespace Plainion.GraphViz.Viewer
             Running = true;
         }
 
-        protected virtual void OnShutdown(object sender, ExitEventArgs e)
+        private void OnShutdown(object sender, ExitEventArgs e)
         {
             Container.Dispose();
         }
