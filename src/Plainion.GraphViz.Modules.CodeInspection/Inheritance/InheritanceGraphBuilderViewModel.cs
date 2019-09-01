@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,7 +21,6 @@ using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
 {
-    [Export(typeof(InheritanceGraphBuilderViewModel))]
     class InheritanceGraphBuilderViewModel : ViewModelBase
     {
         private string myAssemblyToAnalyseLocation;
@@ -36,7 +33,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance
         private IStatusMessageService myStatusMessageService;
         private InheritanceClient myInheritanceClient;
 
-        [ImportingConstructor]
         public InheritanceGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, InheritanceClient inheritanceClient, IDomainModel model)
             : base(model)
         {

@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Input;
-using Prism.Commands;
-using Prism.Mvvm;
 using Plainion.Collections;
-using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Infrastructure.ViewModel;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Mvvm;
 using Plainion.Windows.Controls.Tree;
 using Plainion.Windows.Interactivity.DragDrop;
+using Prism.Commands;
+using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [Export(typeof(ClusterEditorModel))]
     class ClusterEditorModel : ViewModelBase, IDropable
     {
         private string myFilter;
@@ -35,7 +31,6 @@ namespace Plainion.GraphViz.Modules.Analysis
         private Dictionary<string, string> myNodeToClusterCache;
         private bool myTreeShowId;
 
-        [ImportingConstructor]
         public ClusterEditorModel(IDomainModel model)
             : base(model)
         {

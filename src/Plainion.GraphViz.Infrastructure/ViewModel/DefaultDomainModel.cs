@@ -1,11 +1,8 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Infrastructure.ViewModel
 {
-    [PartCreationPolicy(CreationPolicy.Shared)]
-    [Export(typeof(IDomainModel))]
     public class DefaultDomainModel : IDomainModel
     {
         private IGraphPresentation myPresentation;

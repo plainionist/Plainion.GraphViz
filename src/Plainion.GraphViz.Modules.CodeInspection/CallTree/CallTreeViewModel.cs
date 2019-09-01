@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Windows;
 using Plainion.GraphViz.Infrastructure.Services;
@@ -11,7 +10,6 @@ using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
 {
-    [Export]
     class CallTreeViewModel : ViewModelBase
     {
         private string myConfigFile;
@@ -23,7 +21,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
         private CallTreeClient myClient;
         private IDocumentLoader myDocumentLoader;
 
-        [ImportingConstructor]
         public CallTreeViewModel(IPresentationCreationService presentationCreationService, IDocumentLoader documentLoader, CallTreeClient client, IDomainModel model)
             :base(model)
         {

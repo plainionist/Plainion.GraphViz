@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Plainion.GraphViz.Viewer.Views;
+﻿using Plainion.GraphViz.Viewer.Views;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -10,7 +9,6 @@ namespace Plainion.GraphViz.Viewer
     {
         private IRegionManager myRegionManager;
 
-        [ImportingConstructor]
         public CoreModule(IRegionManager regionManager)
         {
             myRegionManager = regionManager;

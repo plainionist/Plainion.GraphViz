@@ -1,10 +1,8 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using Plainion.GraphViz.Viewer.Configuration;
 
 namespace Plainion.GraphViz.Viewer.Services
 {
-    [Export( typeof( ConfigurationService ) )]
     class ConfigurationService
     {
         public Config Config { get; private set; }

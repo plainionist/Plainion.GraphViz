@@ -1,10 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using Plainion.GraphViz.Infrastructure.Services;
 
 namespace Plainion.GraphViz.Viewer.Services
 {
-    [Export( typeof( IStatusMessageService ) )]
     class StatusMessageService : IStatusMessageService
     {
         public StatusMessageService()

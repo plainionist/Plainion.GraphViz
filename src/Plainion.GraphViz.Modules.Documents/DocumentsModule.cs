@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Plainion.GraphViz.Infrastructure.Services;
+﻿using Plainion.GraphViz.Infrastructure.Services;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -13,7 +12,6 @@ namespace Plainion.GraphViz.Modules.Documents
         private IRegionManager myRegionManager;
         private IUnityContainer myContainer;
 
-        [ImportingConstructor]
         public DocumentsModule(IRegionManager regionManager, IUnityContainer container)
         {
             myRegionManager = regionManager;

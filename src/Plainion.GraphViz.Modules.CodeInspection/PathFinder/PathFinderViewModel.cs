@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Windows;
 using Plainion.GraphViz.Infrastructure.Services;
@@ -11,7 +10,6 @@ using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
 {
-    [Export]
     class PathFinderViewModel : ViewModelBase
     {
         private string myConfigFile;
@@ -22,7 +20,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
         private PathFinderClient myClient;
         private IDocumentLoader myDocumentLoader;
 
-        [ImportingConstructor]
         public PathFinderViewModel(IPresentationCreationService presentationCreationService, IDocumentLoader documentLoader, PathFinderClient client, IDomainModel model)
             : base(model)
         {

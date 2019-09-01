@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
@@ -10,7 +9,6 @@ using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [Export(typeof(NodeMasksViewModel))]
     class NodeMasksViewModel : ViewModelBase
     {
         public class Entry
@@ -58,7 +56,6 @@ namespace Plainion.GraphViz.Modules.Analysis
         private IGraphPresentation myPresentation;
         private Entry mySelectedItem;
 
-        [ImportingConstructor]
         public NodeMasksViewModel(IDomainModel model)
             : base(model)
         {

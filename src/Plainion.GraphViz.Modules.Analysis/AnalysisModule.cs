@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Prism.Ioc;
+﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
@@ -9,7 +8,6 @@ namespace Plainion.GraphViz.Modules.Analysis
     {
         private IRegionManager myRegionManager;
 
-        [ImportingConstructor]
         public AnalysisModule(IRegionManager regionManager)
         {
             myRegionManager = regionManager;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -13,12 +12,9 @@ using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
-using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    [Export(typeof(IDocumentLoader))]
-    [Export(typeof(OpenDocumentsViewModel))]
     class OpenDocumentsViewModel : ViewModelBase, IDocumentLoader
     {
         private FileSystemWatcher myFileWatcher;
@@ -26,7 +22,6 @@ namespace Plainion.GraphViz.Modules.Documents
         private IPresentationCreationService myPresentationCreationService;
         private IStatusMessageService myStatusMessageService;
 
-        [ImportingConstructor]
         public OpenDocumentsViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, IDomainModel model)
             : base(model)
         {

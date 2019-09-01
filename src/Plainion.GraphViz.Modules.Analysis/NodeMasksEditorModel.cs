@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
@@ -13,7 +12,6 @@ using Prism.Commands;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [Export(typeof(NodeMasksEditorModel))]
     class NodeMasksEditorModel : ViewModelBase
     {
         private string myFilter;
@@ -24,7 +22,6 @@ namespace Plainion.GraphViz.Modules.Analysis
         private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
 
-        [ImportingConstructor]
         public NodeMasksEditorModel(IDomainModel model)
              : base(model)
         {

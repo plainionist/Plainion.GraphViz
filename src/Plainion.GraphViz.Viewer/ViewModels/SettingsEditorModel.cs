@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -15,7 +14,6 @@ using Plainion.Prism.Mvvm;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
-    [Export(typeof(SettingsEditorModel))]
     class SettingsEditorModel : ViewModelBase, IInteractionRequestAware
     {
         private ConfigurationService myConfigService;
@@ -24,7 +22,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private bool myAddConversionEnabled;
         private ILabelConversionStep mySelectedConversionStep;
 
-        [ImportingConstructor]
         public SettingsEditorModel(ConfigurationService configService, IDomainModel model)
              : base(model)
         {

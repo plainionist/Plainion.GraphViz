@@ -1,16 +1,13 @@
-﻿using System.ComponentModel.Composition;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Viewer.Services
 {
-    [Export( typeof( IPresentationCreationService ) )]
     class PresentationCreationService : IPresentationCreationService
     {
         private ConfigurationService myConfigurationService;
 
-        [ImportingConstructor]
         public PresentationCreationService(ConfigurationService configurationService)
         {
             myConfigurationService = configurationService;

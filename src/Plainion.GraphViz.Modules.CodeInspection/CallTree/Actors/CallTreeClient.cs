@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.Composition;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 {
-    [Export]
     class CallTreeClient : ActorClientBase
     {
         public async Task<string> AnalyzePathAsync(string configFile, bool assemblyReferencesOnly, bool strictCallsOnly, CancellationToken cancellationToken)

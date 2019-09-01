@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.Composition;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
 {
-    [Export]
     class PathFinderMenuItemModel : BindableBase
     {
         public PathFinderMenuItemModel()

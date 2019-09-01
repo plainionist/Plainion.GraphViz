@@ -1,14 +1,11 @@
-using System.ComponentModel.Composition;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
 namespace Plainion.GraphViz.Viewer
 {
-    [Export( typeof( Shell ) )]
     partial class Shell : Window
     {
-        [ImportingConstructor]
         public Shell( ShellViewModel model )
         {
             InitializeComponent();

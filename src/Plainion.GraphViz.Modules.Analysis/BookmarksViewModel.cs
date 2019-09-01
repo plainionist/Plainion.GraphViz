@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows.Input;
 using Plainion.GraphViz.Infrastructure.ViewModel;
@@ -8,14 +7,12 @@ using Prism.Commands;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [Export(typeof(BookmarksViewModel))]
     class BookmarksViewModel : ViewModelBase
     {
         private IGraphPresentation myPresentation;
         private Bookmark myBookmark;
         private string myCaption;
 
-        [ImportingConstructor]
         public BookmarksViewModel(IDomainModel model)
             : base(model)
         {

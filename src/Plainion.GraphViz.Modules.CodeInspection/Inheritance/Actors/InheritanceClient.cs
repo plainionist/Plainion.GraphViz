@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
@@ -7,7 +6,6 @@ using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 {
-    [Export]
     class InheritanceClient : ActorClientBase
     {
         public async Task<IEnumerable<TypeDescriptor>> GetAllTypesAsync(string assemblyLocation, CancellationToken cancellationToken)

@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,7 +29,6 @@ using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
-    [Export(typeof(PackagingGraphBuilderViewModel))]
     class PackagingGraphBuilderViewModel : ViewModelBase
     {
         private bool myIsReady;
@@ -45,7 +43,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private PackageAnalysisClient myAnalysisClient;
         private IDocumentLoader myDocumentLoader;
 
-        [ImportingConstructor]
         public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient, IDocumentLoader documentLoader, IDomainModel model)
             : base(model)
         {

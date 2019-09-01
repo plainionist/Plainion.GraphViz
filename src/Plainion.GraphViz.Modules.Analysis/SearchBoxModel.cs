@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,13 +12,11 @@ using Prism.Events;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {
-    [Export(typeof(SearchBoxModel))]
     class SearchBoxModel : ViewModelBase
     {
         private IGraphPresentation myPresentation;
         private NodeWithCaption mySelectedItem;
 
-        [ImportingConstructor]
         public SearchBoxModel(IEventAggregator eventAggregator, IDomainModel model)
             : base(model)
         {

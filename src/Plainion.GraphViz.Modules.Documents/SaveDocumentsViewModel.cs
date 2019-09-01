@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -14,10 +12,8 @@ using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
-    [Export(typeof(SaveDocumentsViewModel))]
     class SaveDocumentsViewModel : ViewModelBase
     {
-        [ImportingConstructor]
         public SaveDocumentsViewModel(IDomainModel model)
             : base(model)
         {

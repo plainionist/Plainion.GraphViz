@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -19,7 +18,6 @@ using System.IO;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {
-    [Export(typeof(GraphViewerModel))]
     class GraphViewerModel : ViewModelBase
     {
         private IModuleChangedObserver myTransformationsModuleObserver;
@@ -27,7 +25,6 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private IGraphItem myGraphItemForContextMenu;
         private bool mySelectionMenuUpdatePending;
 
-        [ImportingConstructor]
         public GraphViewerModel(IEventAggregator eventAggregator, IDomainModel model)
             : base(model)
         {

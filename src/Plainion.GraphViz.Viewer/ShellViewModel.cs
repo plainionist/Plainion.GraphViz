@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -15,14 +14,12 @@ using Unity;
 
 namespace Plainion.GraphViz.Viewer
 {
-    [Export(typeof(ShellViewModel))]
     class ShellViewModel : ViewModelBase, IDropable
     {
         private IGraphPresentation myPresentation;
         private IStatusMessageService myStatusMessageService;
         private LayoutAlgorithm myLayoutAlgorithm;
 
-        [ImportingConstructor]
         public ShellViewModel(IStatusMessageService statusMessageService, IDomainModel model)
             : base(model)
         {
@@ -45,7 +42,6 @@ namespace Plainion.GraphViz.Viewer
             ShowStatusMessagesCommand = new DelegateCommand(ShowStatusMessages);
         }
 
-        [Import(AllowDefault = true)]
         [OptionalDependency]
         public IDocumentLoader DocumentLoader { get; set; }
 
