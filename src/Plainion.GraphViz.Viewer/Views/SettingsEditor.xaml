@@ -15,10 +15,6 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
-        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
-            <TextBlock DockPanel.Dock="Left"  Text="DOT tools home" Margin="5"/>
-            <TextBox Margin="5" Text="{Binding Path=Config.DotToolsHome, Mode=TwoWay}"/>
-        </DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" FlowDirection="RightToLeft">
             <Button Content="Cancel" Margin="5" HorizontalAlignment="Right" Command="{Binding CancelCommand}"/>
             <Button Content="Ok" Margin="5" HorizontalAlignment="Right" Command="{Binding OkCommand}"/>
