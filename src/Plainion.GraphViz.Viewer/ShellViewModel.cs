@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -40,6 +41,13 @@ namespace Plainion.GraphViz.Viewer
 
             ShowStatusMessagesRequest = new InteractionRequest<INotification>();
             ShowStatusMessagesCommand = new DelegateCommand(ShowStatusMessages);
+
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                // need to wait until initialization of UI is done
+                Application.Current.Dispatcher.BeginInvoke(new Action(() => DocumentLoader.Load(args[1])));
+            }
         }
 
         [OptionalDependency]
