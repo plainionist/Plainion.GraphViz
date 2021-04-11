@@ -16,8 +16,8 @@ namespace Plainion.GraphViz.Model
             Nodes = nodes.ToList();
         }
 
-        public string Id { get; private set; }
+        public string Id { get; }
 
-        public IReadOnlyCollection<Node> Nodes { get; private set; }
+        public IReadOnlyCollection<Node> Nodes { get; }
     }
 }
