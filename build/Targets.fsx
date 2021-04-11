@@ -27,6 +27,7 @@ Target.create "Deploy" (fun _ ->
     Shell.cleanDir releaseDir
 
     let zip = PZip.GetReleaseFile()
+
     Zip.unzip releaseDir zip
 )
 
