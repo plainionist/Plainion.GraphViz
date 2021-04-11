@@ -129,6 +129,9 @@
                     <MenuItem Header="Not connected with outside" Command="{Binding RemoveNodesNotConnectedWithOutsideCommand}" CommandParameter="{Binding GraphItemForContextMenu}"
                               ToolTip="Removes all nodes from the cluster which are not connected with outside the cluster"/>
                 </MenuItem>
+                <MenuItem Header="Select">
+                    <MenuItem Header="Visible" Command="{Binding SelectNodesOfClusterCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Copy caption of all visible nodes" Command="{Binding CopyAllCaptionsToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />
                 <MenuItem Header="Copy identifier of all visible nodes" Command="{Binding CopyAllIdentifiersToClipboardCommand}" CommandParameter="{Binding GraphItemForContextMenu}" />

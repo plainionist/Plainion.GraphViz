@@ -126,6 +126,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             RemoveNodesNotReachingOutsideCommand = new DelegateCommand<Cluster>(
                 c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation) { SiblingsType = SiblingsType.Targets }.Compute(c)));
 
+            SelectNodesOfClusterCommand = new DelegateCommand<Cluster>(
+                c => SelectVisibleNodesFrom(c));
+
             CopyAllCaptionsToClipboardCommand = new DelegateCommand<Cluster>(
                 c => Clipboard.SetDataObject(GetCaptionsOfAllVisibleNodesFrom(c)));
 
@@ -295,6 +298,18 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private string GetCaptionFromNode(Node n)
         {
             return Presentation.GetModule<ICaptionModule>().Get(n.Id).DisplayText;
+        }
+
+        private void SelectVisibleNodesFrom(Cluster c)
+        {
+            var visibleNodes = c.Nodes
+                .Where(n => Presentation.Picking.Pick(n));
+
+            var selection = Presentation.GetPropertySetFor<Selection>();
+            foreach (var n in visibleNodes)
+            {
+                selection.Get(n.Id).IsSelected = true;
+            }
         }
 
         private string GetCaptionsOfAllVisibleNodesFrom(Cluster c)
@@ -482,6 +497,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ICommand CaptionToClipboardCommand { get; private set; }
 
         public ICommand CopyAllCaptionsToClipboardCommand { get; private set; }
+
+        public ICommand SelectNodesOfClusterCommand { get; private set; }
 
         public ICommand CopyAllIdentifiersToClipboardCommand { get; private set; }
 
