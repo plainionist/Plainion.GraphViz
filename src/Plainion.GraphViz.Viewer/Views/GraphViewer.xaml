@@ -34,9 +34,9 @@
                     <MenuItem Header="Targets" Command="{Binding RemoveTargetsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <MenuItem Header="Siblings" Command="{Binding RemoveSiblingsCommand}" CommandParameter="{Binding GraphItemForContextMenu}"/>
                     <Separator/>
-                    <MenuItem Header="Not reachable" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                    <MenuItem Header="Nodes not reachable" Command="{Binding RemoveUnreachableNodesCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
                               ToolTip="Removes all nodes which cannot be reached from this node"/>
-                    <MenuItem Header="Not reachable from selection" Command="{Binding RemoveUnreachableNodesCommand}" 
+                    <MenuItem Header=" reachable targets from selection" Command="{Binding RemoveUnreachableNodesCommand}" 
                               ToolTip="Removes all nodes which cannot be reached from selected nodes"/>
                 </MenuItem>
                 <MenuItem Header="Add">
@@ -71,6 +71,10 @@
                               ToolTip="Selects all nodes which can be reached from this node"/>
                     <MenuItem Header="Reachables of selection" Command="{Binding SelectReachablesCommand}" 
                               ToolTip="Selects all nodes which can be reached from selected nodes"/>
+                    <MenuItem Header="Reaching sources" Command="{Binding SelectReachingCommand}" CommandParameter="{Binding GraphItemForContextMenu}" 
+                              ToolTip="Selects all nodes which can reach this node"/>
+                    <MenuItem Header="Reaching sources of selection" Command="{Binding SelectReachingCommand}" 
+                              ToolTip="Selects all nodes which can reach selected nodes"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Trace">

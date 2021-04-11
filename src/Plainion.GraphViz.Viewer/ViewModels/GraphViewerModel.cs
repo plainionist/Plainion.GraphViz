@@ -99,6 +99,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             SelectReachablesCommand = new DelegateCommand<Node>(
                 n => SelectReachables(GetSelectedNodes(n)));
 
+            SelectReachingCommand = new DelegateCommand<Node>(
+                n => SelectReaching(GetSelectedNodes(n)));
+
             CaptionToClipboardCommand = new DelegateCommand<Node>(
                 n => Clipboard.SetText(GetCaptionFromNode(n)));
 
@@ -251,6 +254,29 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         {
             // pass "Add = false" as we want the transitive hull of the visible nodes
             var mask = new AddRemoveTransitiveHull(Presentation) { Add = false }.Compute(nodes);
+
+            var selection = Presentation.GetPropertySetFor<Selection>();
+            var edges = Presentation.GetModule<ITransformationModule>().Graph.Edges
+                .Where(Presentation.Picking.Pick)
+                // check for "false" as we have a "hide" mask
+                .Where(e => mask.IsSet(e.Source) == false && mask.IsSet(e.Target) == false);
+
+            foreach (var e in edges)
+            {
+                selection.Get(e.Id).IsSelected = true;
+                selection.Get(e.Source.Id).IsSelected = true;
+                selection.Get(e.Target.Id).IsSelected = true;
+            }
+        }
+
+        private void SelectReaching(IReadOnlyCollection<Node> nodes)
+        {
+            // pass "Add = false" as we want the transitive hull of the visible nodes
+            var mask = new AddRemoveTransitiveHull(Presentation)
+            {
+                Add = false,
+                Reverse = true
+            }.Compute(nodes);
 
             var selection = Presentation.GetPropertySetFor<Selection>();
             var edges = Presentation.GetModule<ITransformationModule>().Graph.Edges
@@ -450,6 +476,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         public ICommand SelectNodeWithSiblingsCommand { get; private set; }
 
         public ICommand SelectReachablesCommand { get; private set; }
+
+        public ICommand SelectReachingCommand { get; private set; }
 
         public ICommand CaptionToClipboardCommand { get; private set; }
 
