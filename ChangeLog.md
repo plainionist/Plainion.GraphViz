@@ -1,4 +1,10 @@
-## 3.4 - 2019-
+## 3.5 - 2021-04-11
+
+- Context menus added
+  - "Select reaching sources"
+  - "Select visible" of cluster
+
+## 3.4 - 2019-07-18
 
 - Package analysis: fixed generating clusters for namespaces
 - Ensure process is killed when exception is throw during startup
