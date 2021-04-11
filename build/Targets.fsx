@@ -1,33 +1,38 @@
 // load dependencies from source folder to allow bootstrapping
-#r "/bin/Plainion.CI/FAKE/FakeLib.dll"
-#load "/bin/Plainion.CI/bits/PlainionCI.fsx"
+#r "/bin/Plainion.CI/Fake.Core.Target.dll"
+#r "/bin/Plainion.CI/Fake.IO.FileSystem.dll"
+#r "/bin/Plainion.CI/Fake.IO.Zip.dll"
+#r "/bin/Plainion.CI/Plainion.CI.Tasks.dll"
 
-open Fake
-open PlainionCI
+open Fake.Core
+open Fake.IO
+open Fake.IO.FileSystemOperators
+open Fake.IO.Globbing.Operators
+open Plainion.CI
 
-Target "CreatePackage" (fun _ ->
+Target.create "CreatePackage" (fun _ ->
     !! ( outputPath </> "*.*Tests.*" )
     ++ ( outputPath </> "*nunit*" )
     ++ ( outputPath </> "*Moq*" )
     ++ ( outputPath </> "TestResult.xml" )
     ++ ( outputPath </> "**/*.pdb" )
-    |> DeleteFiles
+    |> File.deleteAll
 
     PZip.PackRelease()
 )
 
-Target "Deploy" (fun _ ->
+Target.create "Deploy" (fun _ ->
     let releaseDir = @"\bin\Plainion.GraphViz"
 
-    CleanDir releaseDir
+    Shell.cleanDir releaseDir
 
     let zip = PZip.GetReleaseFile()
-    Unzip releaseDir zip
+    Zip.unzip releaseDir zip
 )
 
-Target "Publish" (fun _ ->
+Target.create "Publish" (fun _ ->
     let zip = PZip.GetReleaseFile()
     PGitHub.Release [ zip ]
 )
 
-RunTarget()
+Target.runOrDefault ""
