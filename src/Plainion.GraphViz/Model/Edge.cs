@@ -16,10 +16,10 @@ namespace Plainion.GraphViz.Model
             Id = CreateId(source.Id, target.Id);
         }
 
-        public string Id { get; private set; }
+        public string Id { get; }
 
-        public Node Source { get; private set; }
-        public Node Target { get; private set; }
+        public Node Source { get; }
+        public Node Target { get; }
 
         public static string CreateId(string sourceId, string targetId)
         {
