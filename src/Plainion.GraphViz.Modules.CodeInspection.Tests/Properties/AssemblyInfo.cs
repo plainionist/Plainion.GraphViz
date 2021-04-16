@@ -6,15 +6,15 @@ using System.Reflection;
 [assembly: AssemblyProduct("Plainion.GraphViz")]
 [assembly: AssemblyDescription("Plainion.GraphViz")]
 [assembly: AssemblyCopyright("Copyright @ 2021")]
-[assembly: AssemblyVersion("3.5")]
-[assembly: AssemblyFileVersion("3.5")]
+[assembly: AssemblyVersion("3.6")]
+[assembly: AssemblyFileVersion("3.6")]
 namespace System {
     internal static class AssemblyVersionInformation {
         internal const System.String AssemblyTitle = "Plainion.GraphViz.Modules.CodeInspection.Tests";
         internal const System.String AssemblyProduct = "Plainion.GraphViz";
         internal const System.String AssemblyDescription = "Plainion.GraphViz";
         internal const System.String AssemblyCopyright = "Copyright @ 2021";
-        internal const System.String AssemblyVersion = "3.5";
-        internal const System.String AssemblyFileVersion = "3.5";
+        internal const System.String AssemblyVersion = "3.6";
+        internal const System.String AssemblyFileVersion = "3.6";
     }
 }

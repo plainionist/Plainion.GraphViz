@@ -6,8 +6,8 @@ open System.Reflection
 [<assembly: AssemblyProductAttribute("Plainion.GraphViz")>]
 [<assembly: AssemblyDescriptionAttribute("Plainion.GraphViz")>]
 [<assembly: AssemblyCopyrightAttribute("Copyright @ 2021")>]
-[<assembly: AssemblyVersionAttribute("3.5")>]
-[<assembly: AssemblyFileVersionAttribute("3.5")>]
+[<assembly: AssemblyVersionAttribute("3.6")>]
+[<assembly: AssemblyFileVersionAttribute("3.6")>]
 do ()
 
 module internal AssemblyVersionInformation =
@@ -15,5 +15,5 @@ module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyProduct = "Plainion.GraphViz"
     let [<Literal>] AssemblyDescription = "Plainion.GraphViz"
     let [<Literal>] AssemblyCopyright = "Copyright @ 2021"
-    let [<Literal>] AssemblyVersion = "3.5"
-    let [<Literal>] AssemblyFileVersion = "3.5"
+    let [<Literal>] AssemblyVersion = "3.6"
+    let [<Literal>] AssemblyFileVersion = "3.6"

@@ -246,7 +246,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             {
                 // ID needs to be derived from namespace name to auto-magically match the next type 
                 // of the same namespace into this cluster later on when building the graph
-                var id = type.Namespace ?? type.AssemblyQualifiedName;
+                var id = type.Namespace ?? type.Assembly.FullName;
                 return new Cluster { Name = id, Id = id };
             }
 

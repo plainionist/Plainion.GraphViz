@@ -1,3 +1,8 @@
+## 3.6 - 2021-04
+
+- Fix: Packaging: generating clusters from namespaces in case namespace is null take
+  assembly name
+
 ## 3.5 - 2021-04-11
 
 - Context menus added
