@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Plainion.GraphViz.Modules.Documents.DotLang
@@ -19,18 +17,18 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
         public List<MatchKeyword> SpecialCharacters { get; set; }
 
-        public MatchKeyword( TokenType type, string match )
+        public MatchKeyword(TokenType type, string match)
         {
             Match = match;
             myTokenType = type;
             AllowAsSubString = true;
         }
 
-        protected override Token IsMatchImpl( Tokenizer tokenizer )
+        protected override Token IsMatchImpl(Tokenizer tokenizer)
         {
-            foreach( var character in Match )
+            foreach (var character in Match)
             {
-                if( tokenizer.Current == character )
+                if (tokenizer.Current == character)
                 {
                     tokenizer.Consume();
                 }
@@ -42,20 +40,20 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
             bool found;
 
-            if( !AllowAsSubString )
+            if (!AllowAsSubString)
             {
                 var next = tokenizer.Current;
 
-                found = char.IsWhiteSpace( next ) || SpecialCharacters.Any( character => character.Match.Length == 1 && character.Match[ 0 ] == next );
+                found = char.IsWhiteSpace(next) || SpecialCharacters.Any(character => character.Match.Length == 1 && character.Match[0] == next);
             }
             else
             {
                 found = true;
             }
 
-            if( found )
+            if (found)
             {
-                return new Token( myTokenType, Match );
+                return new Token(myTokenType, Match);
             }
 
             return null;
