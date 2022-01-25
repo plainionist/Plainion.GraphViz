@@ -147,7 +147,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             var edges = typeDependencies
                 .Select(r => (TryCreateNode(r.From), TryCreateNode(r.To)))
                 .Where(x => x.Item1 == null || x.Item2 == null || x.Item1 == x.Item2 ? false : true)
-                // ignore those - generate to much wrong differences as namespace is often missing
+                // ignore those - would generate too much false-positives as namespace is often missing
                 .Where(x => !x.Item1.myDisplayname.StartsWith("<>f__AnonymousType") && !x.Item2.myDisplayname.StartsWith("<>f__AnonymousType"))
                 .Where(x => KeepInnerAssemblyDependencies || x.Item1.myAssemblyName != x.Item2.myAssemblyName)
                 .ToList();

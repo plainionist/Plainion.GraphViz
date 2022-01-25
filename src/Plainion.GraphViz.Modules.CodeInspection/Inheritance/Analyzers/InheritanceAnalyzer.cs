@@ -28,8 +28,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 
         public TypeRelationshipDocument Execute(string assemblyLocation, TypeDescriptor type, CancellationToken cancellationToken)
         {
+            // find all assemblies at the given location
             var assemblyHome = Path.GetDirectoryName(assemblyLocation);
-            var assemblyName = AssemblyName.GetAssemblyName(assemblyLocation).ToString();
 
             Console.Write(".");
 
@@ -44,37 +44,47 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 
             cancellationToken.ThrowIfCancellationRequested();
 
+            // analyse all assemblies
+            var assemblyName = AssemblyName.GetAssemblyName(assemblyLocation).ToString();
             var document = new TypeRelationshipDocument();
-
-
             foreach (var assemblyFile in assemblies)
             {
-                ProcessAssembly(assemblyName, document, assemblyFile);
+                var failedItem = ProcessAssembly(assemblyName, assemblyFile);
+                if (failedItem != null)
+                {
+                    document.AddFailedItem(failedItem);
+                }
 
                 Console.Write(".");
 
                 cancellationToken.ThrowIfCancellationRequested();
             }
 
+            // select the "siblings" (base + derived classes, as well as interfaces 
+            // and interface implementations of the type for which this relationship 
+            // analysis was requested)
             var visitedTypes = new HashSet<TypeDescriptor>();
             TakeSiblingsOf(document, visitedTypes, myIdToTypeMap[type.Id]);
 
             return document;
         }
 
-        private void ProcessAssembly(string assemblyName, TypeRelationshipDocument document, string assemblyFile)
+        private FailedItem ProcessAssembly(string assemblyName, string assemblyFile)
         {
             try
             {
                 var assembly = Assembly.LoadFrom(assemblyFile);
-                if (assembly.GetName().ToString() == assemblyName
-                    || assembly.GetReferencedAssemblies().Any(r => r.ToString() == assemblyName))
+                // only process the assembly of the type to be analyzed and all assemblies 
+                // referencing this assembly
+                if (assembly.GetName().ToString() == assemblyName || assembly.GetReferencedAssemblies().Any(r => r.ToString() == assemblyName))
                 {
                     foreach (var type in assembly.GetTypes())
                     {
                         ProcessType(type);
                     }
                 }
+
+                return null;
             }
             catch (ReflectionTypeLoadException ex)
             {
@@ -89,7 +99,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
                     sb.AppendLine(loaderEx.Message);
                 }
 
-                document.AddFailedItem(new FailedItem(assemblyFile, sb.ToString().Trim()));
+                return new FailedItem(assemblyFile, sb.ToString().Trim());
             }
             catch (Exception ex)
             {
@@ -97,7 +107,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
                 sb.Append("Failed to load assembly: ");
                 sb.Append(ex.Message);
 
-                document.AddFailedItem(new FailedItem(assemblyFile, sb.ToString()));
+                return new FailedItem(assemblyFile, sb.ToString());
             }
         }
 
@@ -118,6 +128,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
             myBuilder.TryAddNode(typeDesc.Id);
             myIdToTypeMap[typeDesc.Id] = typeDesc;
 
+            // does the type have a relevant base type?
             if (type.BaseType != null && !IsPrimitive(type.BaseType) && !IgnoreType(type.BaseType))
             {
                 var baseDesc = TypeDescriptor.Create(type.BaseType);
@@ -127,11 +138,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
                 myEdgeTypes.Add(edge.Id, ReferenceType.DerivesFrom);
             }
 
+            // add interface implementations
             var interfaces = type.GetInterfaces();
             if (type.BaseType != null)
             {
                 interfaces = interfaces.Except(type.BaseType.GetInterfaces()).ToArray();
             }
+
             foreach (var iface in interfaces)
             {
                 if (IgnoreType(iface))
@@ -154,20 +167,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
             }
         }
 
-        private bool IgnoreType(Type type)
-        {
-            if (IgnoreDotNetTypes)
-            {
-                return type.Namespace == "System" || type.Namespace.StartsWith("System.");
-            }
+        private bool IgnoreType(Type type) =>
+            IgnoreDotNetTypes ? type.Namespace == "System" || type.Namespace.StartsWith("System.") : false;
 
-            return false;
-        }
-
-        private bool IsPrimitive(Type type)
-        {
-            return type == typeof(object) || type == typeof(ValueType) || type == typeof(Enum);
-        }
+        private bool IsPrimitive(Type type) =>
+            type == typeof(object) || type == typeof(ValueType) || type == typeof(Enum);
 
         private void TakeSiblingsOf(TypeRelationshipDocument document, HashSet<TypeDescriptor> visitedTypes, params TypeDescriptor[] roots)
         {
@@ -190,14 +194,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
                     document.AddEdge(source, root, myEdgeTypes[edge.Id]);
                     typesToFollow.Add(source);
                 }
-
-                // TODO: down only - otherwise we need a "MaxDepth"
-                //foreach( var edge in node.Out )
-                //{
-                //    var target = myIdToTypeMap[ edge.Target.Id ];
-                //    document.AddEdge( root, target );
-                //    typesToFollow.Add( target );
-                //}
             }
 
             typesToFollow.ExceptWith(visitedTypes);
