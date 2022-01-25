@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using Plainion.GraphViz.Presentation;
-using System;
-using Plainion;
 
 namespace Plainion.GraphViz.Dot
 {
@@ -10,9 +9,9 @@ namespace Plainion.GraphViz.Dot
     {
         private DotPlainReader myReader;
 
-        public DotPlainParser( DotPlainReader reader )
+        public DotPlainParser(DotPlainReader reader)
         {
-            Contract.RequiresNotNull( reader, "reader" );
+            Contract.RequiresNotNull(reader, "reader");
 
             myReader = reader;
         }
@@ -21,7 +20,7 @@ namespace Plainion.GraphViz.Dot
 
         public void Open()
         {
-            if( MoveNextEntry( "graph" ) )
+            if (MoveNextEntry("graph"))
             {
                 Header = new DotGraphHeader();
                 Header.Scale = myReader.ReadInt();
@@ -30,24 +29,24 @@ namespace Plainion.GraphViz.Dot
             }
             else
             {
-                throw new InvalidOperationException( "First line should start with 'graph'" );
+                throw new InvalidOperationException("First line should start with 'graph'");
             }
         }
 
-        public bool MoveNextEntry( string tag )
+        public bool MoveNextEntry(string tag)
         {
-            return myReader.ReadLine( tag );
+            return myReader.ReadLine(tag);
         }
 
         public Point ReadPoint()
         {
             // the dot coordinate origin is in the lower left, wpf is in the upper left
-            return new Point( myReader.ReadDouble(), Header.Height - myReader.ReadDouble() );
+            return new Point(myReader.ReadDouble(), Header.Height - myReader.ReadDouble());
         }
 
-        public NodeLayout ReadNodeLayout( string nodeId )
+        public NodeLayout ReadNodeLayout(string nodeId)
         {
-            var layout = new NodeLayout( nodeId );
+            var layout = new NodeLayout(nodeId);
 
             layout.Center = ReadPoint();
             layout.Width = myReader.ReadDouble() / 2;
@@ -56,19 +55,19 @@ namespace Plainion.GraphViz.Dot
             return layout;
         }
 
-        public Caption ReadLabel( string nodeId )
+        public Caption ReadLabel(string nodeId)
         {
             var label = myReader.ReadString();
-            return new Caption( nodeId, label );
+            return new Caption(nodeId, label);
         }
 
-        public NodeStyle ReadNodeStyle( string nodeId )
+        public NodeStyle ReadNodeStyle(string nodeId)
         {
-            var style = new NodeStyle( nodeId );
+            var style = new NodeStyle(nodeId);
             style.Style = myReader.ReadString();
             style.Shape = myReader.ReadString();
-            style.BorderColor = StyleConverter.GetBrush( myReader.ReadString() );
-            style.FillColor = StyleConverter.GetBrush( myReader.ReadString() );
+            style.BorderColor = StyleConverter.GetBrush(myReader.ReadString());
+            style.FillColor = StyleConverter.GetBrush(myReader.ReadString());
 
             return style;
         }
@@ -78,26 +77,26 @@ namespace Plainion.GraphViz.Dot
             return myReader.ReadString();
         }
 
-        public EdgeLayout ReadEdgeLayout( string edgeId )
+        public EdgeLayout ReadEdgeLayout(string edgeId)
         {
             int pointCount = myReader.ReadInt();
             var points = new List<Point>();
-            for( int i = 0; i < pointCount; ++i )
+            for (int i = 0; i < pointCount; ++i)
             {
-                points.Add( ReadPoint() );
+                points.Add(ReadPoint());
             }
 
-            var layout = new EdgeLayout( edgeId );
+            var layout = new EdgeLayout(edgeId);
             layout.Points = points;
 
             return layout;
         }
 
-        public EdgeStyle ReadEdgeStyle( string edgeId )
+        public EdgeStyle ReadEdgeStyle(string edgeId)
         {
-            var style = new EdgeStyle( edgeId );
+            var style = new EdgeStyle(edgeId);
             style.Style = myReader.ReadString();
-            style.Color = StyleConverter.GetBrush( myReader.ReadString() );
+            style.Color = StyleConverter.GetBrush(myReader.ReadString());
 
             return style;
         }
