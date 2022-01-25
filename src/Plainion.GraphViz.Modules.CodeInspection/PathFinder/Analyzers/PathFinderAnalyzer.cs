@@ -37,8 +37,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             }
         }
 
-        private AssemblyLoader myLoader;
-        private MonoLoader myMonoLoader;
+        private readonly AssemblyLoader myLoader;
+        private readonly MonoLoader myMonoLoader;
 
         public PathFinderAnalyzer()
         {
@@ -102,10 +102,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             var t2 = t.GetCustomAttributesData().Any(d => d.AttributeType == typeof(CompilerGeneratedAttribute)) || t.IsGenericParameter ? t.DeclaringType : t;
 
             // can be null for generated code (e.g. ResourceManager)
-            var nodeType = t2 != null ? t2 : t;
+            var nodeType = t2 ?? t;
 
             var id = R.TypeFullName(nodeType);
 
+            // ignore CLR internals
             if (id.Contains("$") || id.Contains("@") || id.Contains("<PrivateImplementationDetails>"))
             {
                 return null;

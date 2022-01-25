@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
@@ -49,8 +48,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
         }
 
-        private AssemblyLoader myLoader;
-        private MonoLoader myMonoLoader;
+        private readonly AssemblyLoader myLoader;
+        private readonly MonoLoader myMonoLoader;
 
         public CallTreeAnalyzer()
         {
