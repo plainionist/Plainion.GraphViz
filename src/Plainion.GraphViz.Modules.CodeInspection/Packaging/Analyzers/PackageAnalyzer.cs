@@ -102,6 +102,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         private IEnumerable<Assembly> Load(Package package)
         {
+            Contract.Requires(!string.IsNullOrEmpty(package.Name), "Package requires a name");
+
             Console.WriteLine("Assembly root {0}", Path.GetFullPath(myConfig.AssemblyRoot));
             Console.WriteLine("Loading package {0}", package.Name);
 
