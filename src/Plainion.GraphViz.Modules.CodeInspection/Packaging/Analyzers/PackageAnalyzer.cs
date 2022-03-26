@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -109,9 +108,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             return package.Includes
                 .SelectMany(i => Directory.GetFiles(myConfig.AssemblyRoot, i.Pattern))
                 .Where(file => !package.Excludes.Any(e => e.Matches(file)))
+                .Where(IsAssembly)
                 .Select(Load)
                 .Where(asm => asm != null)
                 .ToList();
+        }
+
+        private static bool IsAssembly(string path)
+        {
+            var ext = Path.GetExtension(path);
+            return ".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase);
         }
 
         private static Assembly Load(string path)
@@ -122,9 +128,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
                 return Assembly.LoadFrom(path);
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("ERROR: failed to load assembly {0}", path);
+                Console.WriteLine($"ERROR: failed to load assembly {path}{Environment.NewLine}{ex.Message}");
                 return null;
             }
         }

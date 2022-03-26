@@ -7,3 +7,5 @@
 /Plainion.GraphViz.gc.*
 /build/.fake
 *.suo
+/.ionide
+/.vscode
