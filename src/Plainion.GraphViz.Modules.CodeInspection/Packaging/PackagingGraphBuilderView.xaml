@@ -29,15 +29,25 @@
     </i:Interaction.Triggers>
     <Grid Background="#FDFDF5" Margin="5">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <pn:XmlEditor Grid.Row="0" Document="{Binding Document}" CompletionData="{Binding CompletionData}"/>
+        <Grid Grid.Row="0" Margin="0,5,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Filename: "/>
+            <TextBox Grid.Column="1" Text="{Binding FileName, Mode=TwoWay}" Margin="5,0,0,0"/>
+        </Grid>
 
-        <GroupBox Grid.Row="1" Header="Options">
+        <pn:XmlEditor Grid.Row="1" Document="{Binding Document}" CompletionData="{Binding CompletionData}" />
+
+        <GroupBox Grid.Row="2" Header="Options">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -67,7 +77,7 @@
             </Grid>
         </GroupBox>
 
-        <Grid Grid.Row="2" Margin="0,5,0,5">
+        <Grid Grid.Row="3" Margin="0,5,0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>

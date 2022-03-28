@@ -42,6 +42,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private IStatusMessageService myStatusMessageService;
         private PackageAnalysisClient myAnalysisClient;
         private IDocumentLoader myDocumentLoader;
+        private string myFileName;
 
         public PackagingGraphBuilderViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, PackageAnalysisClient analysisClient, IDocumentLoader documentLoader, IDomainModel model)
             : base(model)
@@ -138,6 +139,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             set { SetProperty(ref myDocument, value); }
         }
 
+        public string FileName
+        {
+            get { return myFileName; }
+            set
+            {
+                SetProperty(ref myFileName, value);
+                Document.FileName = myFileName;
+            }
+        }
+
         public IEnumerable<ElementCompletionData> CompletionData
         {
             get { return myCompletionData; }
@@ -192,7 +203,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                             {
                                 Document.Text = reader.ReadToEnd();
                             }
-                            Document.FileName = n.FileName;
+                            FileName = n.FileName;
                         }
                         else
                         {
@@ -230,7 +241,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                             File.WriteAllText(specFile, text);
 
                             Document.Text = text;
-                            Document.FileName = specFile;
+                            FileName = specFile;
                         }
                     }
                     else
@@ -242,7 +253,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                                 Document.Text = reader.ReadToEnd();
                             }
                         }
-                        Document.FileName = n.FileName;
+                        FileName = n.FileName;
                     }
                 });
         }
@@ -380,9 +391,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         private void Save()
         {
-            if (Document.FileName != null)
+            if (FileName != null)
             {
-                using (var writer = new StreamWriter(Document.FileName, false, Encoding.UTF8))
+                using (var writer = new StreamWriter(FileName, false, Encoding.UTF8))
                 {
                     writer.WriteLine(Document.Text);
                 }
