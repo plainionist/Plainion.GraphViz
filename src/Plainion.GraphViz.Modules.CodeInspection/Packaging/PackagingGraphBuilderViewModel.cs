@@ -53,6 +53,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             myDocumentLoader = documentLoader;
 
             Document = new TextDocument();
+            SetInitialTemplate(Document);
             Document.Changed += Document_Changed;
 
             Packages = new ObservableCollection<string>();
@@ -83,6 +84,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 });
 
             IsReady = true;
+        }
+
+        private void SetInitialTemplate(TextDocument document)
+        {
+            document.Text = 
+                @"<SystemPackaging AssemblyRoot=""ASSEMBLY_ROOT_UNDEFINED"" xmlns=""http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec"">
+    <Package Name=""System"">
+        <Package.Clusters>
+            <Cluster Name=""System"">
+                <Include Pattern=""*"" />
+            </Cluster>
+        </Package.Clusters>
+        <Include Pattern=""*.dll"" />
+    </Package>
+</SystemPackaging>
+";
         }
 
         private void Document_Changed(object sender, DocumentChangeEventArgs e)
