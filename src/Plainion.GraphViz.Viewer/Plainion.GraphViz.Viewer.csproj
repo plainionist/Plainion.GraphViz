@@ -59,7 +59,7 @@
     <Resource Include="Resources\StatusMessages.png" />
   </ItemGroup>
 
-  <Target Name="AfterBuild">
+  <Target Name="DeployGraphVizTools" AfterTargets="Build">
     <ItemGroup>
       <GraphViz Include="..\..\Extern\GraphViz\*.*" />
     </ItemGroup>
