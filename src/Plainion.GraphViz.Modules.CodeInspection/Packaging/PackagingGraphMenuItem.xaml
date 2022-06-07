@@ -9,7 +9,7 @@
              xmlns:v="clr-namespace:Plainion.GraphViz.Modules.CodeInspection"
              xmlns:pn="http://github.com/ronin4net/plainion"
              mc:Ignorable="d" 
-             Header="Packaging dependency graph ..."
+             Header="Packages dependency graph ..."
              Command="{Binding OpenPackagingGraphBuilderCommand}">
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding PackagingGraphBuilderRequest, Mode=OneWay}">

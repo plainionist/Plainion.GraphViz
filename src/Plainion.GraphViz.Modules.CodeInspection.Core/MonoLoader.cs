@@ -8,13 +8,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
     public class MonoLoader
     {
-        private Dictionary<string, AssemblyDefinition> myMonoCache = new Dictionary<string, AssemblyDefinition>();
-        private List<string> mySkippedAssemblies = new List<string>();
+        private readonly Dictionary<string, AssemblyDefinition> myMonoCache;
+        private readonly List<string> mySkippedAssemblies;
 
-        public IReadOnlyCollection<string> SkippedAssemblies
+        public MonoLoader()
         {
-            get { return mySkippedAssemblies; }
+            myMonoCache = new Dictionary<string, AssemblyDefinition>();
+            mySkippedAssemblies = new List<string>();
         }
+
+        public IReadOnlyCollection<string> SkippedAssemblies => mySkippedAssemblies;
 
         public AssemblyDefinition MonoLoad(Assembly assembly)
         {

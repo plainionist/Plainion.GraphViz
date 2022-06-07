@@ -22,7 +22,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
     class AssemblyLoader
     {
-        private HashSet<string> myBaseDirs;
+        private readonly HashSet<string> myBaseDirs;
 
         public AssemblyLoader()
         {

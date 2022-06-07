@@ -1,4 +1,11 @@
-## 3.6 - 2021-04
+
+## 4.0 - 2022-06-
+
+- Packages dependency graph
+  - loaded file name shown
+  - editor starts with template
+
+## 3.6 - 2021-04-28
 
 - Fix: Packaging: generating clusters from namespaces in case namespace is null take
   assembly name
