@@ -1,68 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
-  <Import Project="..\..\build\Globals.msbuild" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{E4BFFD9B-E252-4628-8B92-4B388EB6FE2D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Plainion.GraphViz.Modules.CodeInspection.Tests</RootNamespace>
-    <AssemblyName>Plainion.GraphViz.Modules.CodeInspection.Tests</AssemblyName>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>net48</TargetFramework>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>618,672,1030</WarningsNotAsErrors>
+    <NoWarn>1591</NoWarn>
+    <LangVersion>9.0</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <!-- do not optimize otherwise the reflector tests will fail because the compiler optimizes dead code away -->
-    <Optimize>false</Optimize>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
+    <PackageReference Include="nunit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Inspect_HardcodedStrings_Tests.cs" />
-    <Compile Include="Inspect_CalledMethods_Tests.cs" />
-    <Compile Include="MethodTests.cs" />
-    <Compile Include="MethodCallTests.cs" />
-    <Compile Include="Packaging\ActorSystemSmokeTest.cs" />
-    <Compile Include="ReferenceTests.cs" />
-    <Compile Include="Packaging\Services\SpecUtilsTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Inspect_TypeUsage_Tests.cs" />
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj">
-      <Project>{eb61222b-b3d5-4901-a42d-7386e4ae08d6}</Project>
-      <Name>Plainion.GraphViz.Modules.CodeInspection.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj">
-      <Project>{21cc39c6-6535-4f17-aba3-82af9f49fe0c}</Project>
-      <Name>Plainion.GraphViz.Modules.CodeInspection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj">
-      <Project>{8cc5c764-ace2-4af2-bca1-f78753e709aa}</Project>
-      <Name>Plainion.GraphViz</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="TestData\Packaging.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-  </Target>
+
 </Project>

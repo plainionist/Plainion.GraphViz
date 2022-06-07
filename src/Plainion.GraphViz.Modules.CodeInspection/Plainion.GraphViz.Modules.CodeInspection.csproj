@@ -1,269 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\build\Globals.msbuild" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProjectGuid>{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}</ProjectGuid>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <RootNamespace>Plainion.GraphViz.Modules.CodeInspection</RootNamespace>
-    <AssemblyName>Plainion.GraphViz.Modules.CodeInspection</AssemblyName>
-    <OutputType>Library</OutputType>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFramework>net48</TargetFramework>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>618,672,1030</WarningsNotAsErrors>
+    <NoWarn>1591</NoWarn>
+    <LangVersion>9.0</LangVersion>
+    <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Akka, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Akka.1.3.0\lib\net45\Akka.dll</HintPath>
-    </Reference>
-    <Reference Include="Akka.Remote, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Akka.Remote.1.3.0\lib\net45\Akka.Remote.dll</HintPath>
-    </Reference>
-    <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommonServiceLocator.2.0.4\lib\net47\CommonServiceLocator.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Buffers, Version=0.4.6.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DotNetty.Buffers.0.4.6\lib\net45\DotNetty.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Codecs, Version=0.4.6.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DotNetty.Codecs.0.4.6\lib\net45\DotNetty.Codecs.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Common, Version=0.4.6.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DotNetty.Common.0.4.6\lib\net45\DotNetty.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Handlers, Version=0.4.6.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DotNetty.Handlers.0.4.6\lib\net45\DotNetty.Handlers.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetty.Transport, Version=0.4.6.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DotNetty.Transport.0.4.6\lib\net45\DotNetty.Transport.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Protobuf, Version=3.3.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Google.Protobuf.3.3.0\lib\net45\Google.Protobuf.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.0\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Logging.1.1.1\lib\netstandard1.1\Microsoft.Extensions.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Extensions.Logging.Abstractions.1.1.1\lib\netstandard1.1\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Plainion.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=11fdbc7b87b9a0de, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Core.3.5.0\lib\NET45\Plainion.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Plainion.Prism, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Prism.5.0.0\lib\NET45\Plainion.Prism.dll</HintPath>
-    </Reference>
-    <Reference Include="Plainion.Windows, Version=2.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Windows.2.11.0\lib\NET45\Plainion.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="Plainion.Windows.Editors, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Plainion.Windows.Editors.2.1.0\lib\NET45\Plainion.Windows.Editors.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="Prism, Version=7.2.0.1367, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Prism.Core.7.2.0.1367\lib\net45\Prism.dll</HintPath>
-    </Reference>
-    <Reference Include="Prism.Wpf, Version=7.2.0.1367, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Prism.Wpf.7.2.0.1367\lib\net45\Prism.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.AppContext, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.AppContext.4.3.0\lib\net463\System.AppContext.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Console">
-      <HintPath>..\..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Prism.Wpf.7.2.0.1367\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WPFToolkit.3.5.50211.1\lib\WPFToolkit.dll</HintPath>
-    </Reference>
+    <Page Remove="Resources\SystemPackagingTemplate.xaml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="CallTree\Actors\Messages.cs" />
-    <Compile Include="CallTree\Actors\CallTreeActor.cs" />
-    <Compile Include="CallTree\Actors\CallTreeClient.cs" />
-    <Compile Include="CallTree\Analyzers\CallTreeAnalyzer.cs" />
-    <Compile Include="CallTree\Analyzers\InterfaceImplementationsMap.cs" />
-    <Compile Include="CallTree\CallTreeMenuItem.xaml.cs">
-      <DependentUpon>CallTreeMenuItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CallTree\CallTreeMenuItemModel.cs" />
-    <Compile Include="CallTree\CallTreeView.xaml.cs">
-      <DependentUpon>CallTreeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CallTree\CallTreeViewModel.cs" />
-    <Compile Include="Common\Actors\Messages.cs" />
-    <Compile Include="Common\Actors\ActorClientBase.cs" />
-    <Compile Include="Common\Actors\ActorsBase.cs" />
-    <Compile Include="Common\Analyzers\AssemblyDependencyAnalyzer.cs" />
-    <Compile Include="Common\Analyzers\AssemblyLoader.cs" />
-    <Compile Include="Common\GraphUtils.cs" />
-    <Compile Include="Common\Shell.cs" />
-    <Compile Include="Inheritance\Actors\Messages.cs" />
-    <Compile Include="Common\Actors\DocumentSerializer.cs" />
-    <Compile Include="Inheritance\InheritanceGraphMenuItem.xaml.cs">
-      <DependentUpon>InheritanceGraphMenuItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Inheritance\InheritanceGraphMenuItemModel.cs" />
-    <Compile Include="Packaging\EnumToBoolExtension.cs" />
-    <Compile Include="Packaging\PrivateSettersContractResolver.cs" />
-    <Compile Include="Packaging\Analyzers\AnalysisDocument.cs" />
-    <Compile Include="Packaging\Analyzers\PackageAnalyzer.cs" />
-    <Compile Include="Packaging\Actors\Messages.cs" />
-    <Compile Include="Packaging\Analyzers\GraphUtils.cs" />
-    <Compile Include="Packaging\Actors\PackageAnalysisActor.cs" />
-    <Compile Include="Packaging\PackagingGraphBuilderView.xaml.cs">
-      <DependentUpon>PackagingGraphBuilderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Packaging\PackagingGraphBuilderViewModel.cs" />
-    <Compile Include="Packaging\PackagingGraphMenuItem.xaml.cs">
-      <DependentUpon>PackagingGraphMenuItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Packaging\PackagingGraphMenuItemModel.cs" />
-    <Compile Include="PathFinder\Actors\PathFinderActor.cs" />
-    <Compile Include="PathFinder\Actors\PathFinderClient.cs" />
-    <Compile Include="PathFinder\Actors\Messages.cs" />
-    <Compile Include="PathFinder\Analyzers\PathFinderAnalyzer.cs" />
-    <Compile Include="PathFinder\PathFinderView.xaml.cs">
-      <DependentUpon>PathFinderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PathFinder\PathFinderViewModel.cs" />
-    <Compile Include="PathFinder\PathFinderMenuItem.xaml.cs">
-      <DependentUpon>PathFinderMenuItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PathFinder\PathFinderMenuItemModel.cs" />
-    <Compile Include="Packaging\Actors\PackageAnalysisClient.cs" />
-    <Compile Include="Packaging\Spec\SpecUtils.cs" />
-    <Compile Include="Packaging\GraphToSpecSynchronizer.cs" />
-    <Compile Include="Packaging\Spec\Cluster.cs" />
-    <Compile Include="Packaging\Spec\SystemPackaging.cs" />
-    <Compile Include="Packaging\Spec\Exclude.cs" />
-    <Compile Include="Packaging\Spec\Include.cs" />
-    <Compile Include="Packaging\Spec\Package.cs" />
-    <Compile Include="Packaging\Spec\PackageBase.cs" />
-    <Compile Include="Packaging\Spec\Wildcard.cs" />
-    <Compile Include="Properties\AssemblyDefs.cs" />
-    <Compile Include="RegionNames.cs" />
-    <Compile Include="Inheritance\Actors\InheritanceClient.cs" />
-    <Compile Include="Inheritance\Analyzers\AssemblyUtils.cs" />
-    <Compile Include="Inheritance\Actors\AllTypesActor.cs" />
-    <Compile Include="Inheritance\Actors\InheritanceActor.cs" />
-    <Compile Include="Inheritance\Analyzers\InheritanceAnalyzer.cs" />
-    <Compile Include="Inheritance\InheritanceGraphBuilderView.xaml.cs">
-      <DependentUpon>InheritanceGraphBuilderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Inheritance\InheritanceGraphBuilderViewModel.cs" />
-    <Compile Include="CodeInspectionModule.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Inheritance\Analyzers\TypeDescriptor.cs" />
-    <Compile Include="Inheritance\Analyzers\TypeRelationshipDocument.cs" />
+    <EmbeddedResource Include="Resources\SystemPackagingTemplate.xaml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <PackageReference Include="Akka" Version="1.4.39" />
+    <PackageReference Include="Akka.Remote" Version="1.4.39" />
+    <PackageReference Include="Plainion.Prism" Version="5.0.0" />
+    <PackageReference Include="Plainion.Windows.Editors" Version="2.1.0" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
+    <PackageReference Include="WPFToolkits" Version="3.5.50211.1" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj">
-      <Project>{FC787D39-FC3E-4031-BD87-D6971F3006FA}</Project>
-      <Name>Plainion.GraphViz.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj">
-      <Project>{eb61222b-b3d5-4901-a42d-7386e4ae08d6}</Project>
-      <Name>Plainion.GraphViz.Modules.CodeInspection.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj">
-      <Project>{8CC5C764-ACE2-4AF2-BCA1-F78753E709AA}</Project>
-      <Name>Plainion.GraphViz</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj" />
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="CallTree\CallTreeMenuItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CallTree\CallTreeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Inheritance\InheritanceGraphMenuItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Packaging\PackagingGraphBuilderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Packaging\PackagingGraphMenuItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Inheritance\InheritanceGraphBuilderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="PathFinder\PathFinderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="PathFinder\PathFinderMenuItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <EmbeddedResource Include="Resources\SystemPackagingTemplate.xaml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="ReadMe.md" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>
