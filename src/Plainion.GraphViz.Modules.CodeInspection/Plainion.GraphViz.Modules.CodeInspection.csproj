@@ -23,10 +23,10 @@
   <ItemGroup>
     <PackageReference Include="Akka" Version="1.4.39" />
     <PackageReference Include="Akka.Remote" Version="1.4.39" />
+    <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
     <PackageReference Include="Plainion.Prism" Version="5.0.0" />
     <PackageReference Include="Plainion.Windows.Editors" Version="2.1.0" />
     <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
-    <PackageReference Include="WPFToolkits" Version="3.5.50211.1" />
   </ItemGroup>
 
   <ItemGroup>
