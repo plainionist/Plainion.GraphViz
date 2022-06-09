@@ -22,39 +22,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
     class AssemblyLoader
     {
-        private readonly HashSet<string> myBaseDirs;
-
-        public AssemblyLoader()
-        {
-            myBaseDirs = new HashSet<string>();
-            myBaseDirs.Add(AppDomain.CurrentDomain.BaseDirectory);
-
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomain_ReflectionOnlyAssemblyResolve;
-        }
-
-        private Assembly CurrentDomain_ReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            // do not call "GetTypes()" here because we cannot cause another load of referenced assemblies from within the event handler
-
-            // netstandard.dll references "System 0.0.0.0" 
-            // -> therefore calling ApplyPolicy to resolve the actual version number
-            // (see also: https://github.com/dotnet/standard/issues/446)
-
-            var name = new AssemblyName(AppDomain.CurrentDomain.ApplyPolicy(args.Name));
-            return TryReflectionOnlyLoadByName(name);
-        }
-
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            return AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(asm => String.Equals(asm.FullName, args.Name, StringComparison.OrdinalIgnoreCase));
-        }
-
-        private Assembly ReflectionOnlyLoadFrom(string file)
+        private Assembly ReflectionOnlyLoadFrom(MetadataLoadContext ctx, string file)
         {
             try
             {
-                return Assembly.ReflectionOnlyLoadFrom(file);
+                return ctx.LoadFromAssemblyPath(file);
             }
             catch (BadImageFormatException)
             {
@@ -63,21 +35,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
         }
 
-        private string TryGetAssemblyLocation(AssemblyName name)
+        private string TryGetAssemblyLocation(IEnumerable<string> paths, AssemblyName name)
         {
             var assemblyExtensions = new[] { ".dll", ".exe" };
 
-            return myBaseDirs
+            return paths
                 .SelectMany(baseDir => assemblyExtensions.Select(ext => Path.Combine(baseDir, name.Name + ext)))
                 .FirstOrDefault(file => File.Exists(file));
         }
 
-        private Assembly TryLoadFromGAC(AssemblyName name)
+        private Assembly TryLoadFromGAC(MetadataLoadContext ctx, AssemblyName name)
         {
             try
             {
                 // e.g. .NET assemblies, assemblies from GAC
-                return Assembly.ReflectionOnlyLoad(name.FullName);
+                return ctx.LoadFromAssemblyName(name.FullName);
             }
             catch
             {
@@ -87,37 +59,30 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
         }
 
-        private Assembly ReflectionOnlyLoad(AssemblyName name)
+        private Assembly ReflectionOnlyLoad(IEnumerable<string> paths, MetadataLoadContext ctx, AssemblyName name)
         {
-            var location = TryGetAssemblyLocation(name);
+            var location = TryGetAssemblyLocation(paths, name);
             if (location != null)
             {
-                return ReflectionOnlyLoadFrom(location);
+                return ReflectionOnlyLoadFrom(ctx, location);
             }
             else
             {
-                return TryLoadFromGAC(name);
+                return TryLoadFromGAC(ctx, name);
             }
         }
 
-        private Assembly TryReflectionOnlyLoadByName(AssemblyName name)
+        private Assembly TryReflectionOnlyLoadByName(IEnumerable<string> paths, MetadataLoadContext ctx, AssemblyName name)
         {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(asm => String.Equals(asm.FullName, name.FullName, StringComparison.OrdinalIgnoreCase));
+            var assembly = ctx.GetAssemblies().SingleOrDefault(asm => String.Equals(asm.FullName, name.FullName, StringComparison.OrdinalIgnoreCase));
             if (assembly != null)
             {
                 // don't try to load the given assembly because we cannot load the same assembly twice from different locations
                 // instead just load the already "linked" assembly (e.g. Fsharp.Core) with reflection only again
-                return Assembly.ReflectionOnlyLoad(assembly.FullName);
+                return ctx.LoadFromAssemblyName(assembly.FullName);
             }
 
-            assembly = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies().SingleOrDefault(asm => String.Equals(asm.FullName, name.FullName, StringComparison.OrdinalIgnoreCase));
-            return assembly != null ? assembly : ReflectionOnlyLoad(name);
-        }
-
-        private Assembly ReflectionOnlyLoadAssemblyFrom(string file)
-        {
-            myBaseDirs.Add(Path.GetDirectoryName(file));
-            return ReflectionOnlyLoadFrom(file);
+            return assembly ?? ReflectionOnlyLoad(paths, ctx, name);
         }
 
         private void ForceLoadDependencies(Assembly asm)
@@ -138,11 +103,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         {
             try
             {
-                var assembly = TryReflectionOnlyLoadByName(name);
+                var paths = new[] { AppDomain.CurrentDomain.BaseDirectory };
+                var resolver = new PathAssemblyResolver(paths);
+                using (var ctx = new MetadataLoadContext(resolver))
+                {
+                    var assembly = TryReflectionOnlyLoadByName(paths, ctx, name);
 
-                ForceLoadDependencies(assembly);
+                    ForceLoadDependencies(assembly);
 
-                return assembly;
+                    return assembly;
+                }
             }
             catch (Exception ex)
             {
@@ -155,11 +125,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         {
             try
             {
-                var assembly = ReflectionOnlyLoadAssemblyFrom(file);
+                var resolver = new PathAssemblyResolver(new[] { AppDomain.CurrentDomain.BaseDirectory, Path.GetDirectoryName(file) });
+                using (var ctx = new MetadataLoadContext(resolver))
+                {
+                    var assembly = ReflectionOnlyLoadFrom(ctx, file);
 
-                ForceLoadDependencies(assembly);
+                    ForceLoadDependencies(assembly);
 
-                return assembly;
+                    return assembly;
+                }
             }
             catch (Exception ex)
             {

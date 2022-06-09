@@ -4,6 +4,7 @@
 - Packages dependency graph
   - loaded file name shown
   - editor starts with template
+- Migrated to .Net 6
 
 ## 3.6 - 2021-04-28
 

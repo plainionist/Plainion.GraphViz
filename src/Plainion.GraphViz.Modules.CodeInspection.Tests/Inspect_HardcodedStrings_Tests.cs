@@ -17,7 +17,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void FromStaticMethod()
         {
-            Verify(typeof(SomeClass), nameof(SomeClass.Main), "main");
+            Verify(typeof(SomeClass), nameof(SomeClass.MainDummy), "main");
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             myValue = "default";
         }
 
-        public static void Main()
+        public static void MainDummy()
         {
             myValue = "main";
         }

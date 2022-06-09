@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>618,672,1030</WarningsNotAsErrors>
-    <NoWarn>1591</NoWarn>
+    <WarningsNotAsErrors>618,672,1030,SYSLIB0011</WarningsNotAsErrors>
+    <NoWarn>1591,8032</NoWarn>
     <LangVersion>9.0</LangVersion>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Plainion.Prism" Version="5.0.0" />
-    <PackageReference Include="Prism.Wpf" Version="7.2.0.1367" />
+    <PackageReference Include="Plainion.Prism" Version="7.0.0" />
+    <PackageReference Include="Prism.Wpf" Version="7.2.0.1422" />
     <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
 

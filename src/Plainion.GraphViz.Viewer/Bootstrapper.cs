@@ -45,7 +45,7 @@ namespace Plainion.GraphViz.Viewer
 
             // with ".Location" property we sometimes got strange error message that loading from
             // remote location is not allows
-            catalog.ModulePath = Path.GetDirectoryName(new Uri(GetType().Assembly.CodeBase).LocalPath);
+            catalog.ModulePath = Path.GetDirectoryName(GetType().Assembly.Location);
 
             return catalog;
         }

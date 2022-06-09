@@ -11,19 +11,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void CallOfInstanceMethod()
         {
-            Verify(typeof(Caller), nameof(Caller.Main), typeof(Callee), nameof(Callee.InstanceMethod));
+            Verify(typeof(Caller), nameof(Caller.MainDummy), typeof(Callee), nameof(Callee.InstanceMethod));
         }
 
         [Test]
         public void CallOfStaticMethod()
         {
-            Verify(typeof(Caller), nameof(Caller.Main), typeof(Callee), nameof(Callee.StaticMethod));
+            Verify(typeof(Caller), nameof(Caller.MainDummy), typeof(Callee), nameof(Callee.StaticMethod));
         }
 
         [Test]
         public void CallOfBaseClassMethod()
         {
-            Verify(typeof(Caller), nameof(Caller.Main), typeof(CalleeBase), nameof(Callee.BaseMethod));
+            Verify(typeof(Caller), nameof(Caller.MainDummy), typeof(CalleeBase), nameof(Callee.BaseMethod));
         }
 
         [Test(Description = "We always get the 'declaring' type - not the one the method is finally called on")]
@@ -47,13 +47,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void CallOfVirtualMethod()
         {
-            Verify(typeof(Caller), nameof(Caller.Main), typeof(Callee), nameof(Callee.VirtualMethod));
+            Verify(typeof(Caller), nameof(Caller.MainDummy), typeof(Callee), nameof(Callee.VirtualMethod));
         }
 
         [Test]
         public void CallOfExtensionMethod()
         {
-            Verify(typeof(Caller), nameof(Caller.Main), typeof(CalleeExtensions), nameof(CalleeExtensions.ExtensionMethod));
+            Verify(typeof(Caller), nameof(Caller.MainDummy), typeof(CalleeExtensions), nameof(CalleeExtensions.ExtensionMethod));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void CallOfEvent()
         {
-            Verify(typeof(Caller), nameof(Caller.Main), typeof(CalleeExtensions), nameof(CalleeExtensions.ExtensionMethod));
+            Verify(typeof(Caller), nameof(Caller.MainDummy), typeof(CalleeExtensions), nameof(CalleeExtensions.ExtensionMethod));
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             set { new Callee().InstanceMethod(); }
         }
 
-        public static void Main()
+        public static void MainDummy()
         {
             new Callee().InstanceMethod();
             Callee.StaticMethod();
