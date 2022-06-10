@@ -9,6 +9,7 @@
     <LangVersion>9.0</LangVersion>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
     <UserSecretsId>e296d988-18da-4122-8dea-555d46c9bc2e</UserSecretsId>
   </PropertyGroup>

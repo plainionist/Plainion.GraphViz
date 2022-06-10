@@ -8,6 +8,7 @@
     <NoWarn>1591,8032</NoWarn>
     <LangVersion>9.0</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
