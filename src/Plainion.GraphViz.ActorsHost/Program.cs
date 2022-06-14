@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.ActorsHost
 {
@@ -28,16 +29,20 @@ namespace Plainion.GraphViz.ActorsHost
 
         private static void Main(string[] args)
         {
+            LoggerFactory.AddSink(new ConsoleLoggingSink());
+            LoggerFactory.LogLevel = LogLevel.Notice;
+
+            var logger = LoggerFactory.GetLogger(typeof(Program));
 
             try
             {
-                Console.WriteLine("==> Starting");
+                logger.Notice("==> Starting");
 
-                Console.WriteLine("Loading modules");
+                logger.Notice("Loading modules");
 
-                LoadModules();
+                LoadModules(logger);
 
-                Console.WriteLine("Creating actor system");
+                logger.Notice("Creating actor system");
 
                 using (var system = ActorSystem.Create("CodeInspection", ActorSystemConfig))
                 {
@@ -48,13 +53,13 @@ namespace Plainion.GraphViz.ActorsHost
             }
             catch
             {
-                Console.WriteLine(" === DEAD === ");
+                logger.Error(" === DEAD === ");
             }
         }
 
         // load all relevant assemblyies so that akka/newtonsoft.json can easily 
         // find types during deserialization
-        private static void LoadModules()
+        private static void LoadModules(ILogger logger)
         {
             var moduleAssemblies = Directory.EnumerateFiles(Path.GetDirectoryName(typeof(Program).Assembly.Location), "*.dll")
                 .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("Plainion.GraphViz.Modules.", StringComparison.OrdinalIgnoreCase))
@@ -65,11 +70,12 @@ namespace Plainion.GraphViz.ActorsHost
             {
                 try
                 {
-                    Assembly.LoadFrom(file);
+                    // fetching types to force loading dependencies
+                    Assembly.LoadFrom(file).GetTypes();
                 }
-                catch
+                catch(Exception ex)
                 {
-                    Console.WriteLine($"Warning: failed to load module: {file}");
+                    logger.Error($"Failed to load module '{file}' with {Environment.NewLine}{ex}");
                 }
             }
         }
