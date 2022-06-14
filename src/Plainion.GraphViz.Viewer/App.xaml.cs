@@ -116,5 +116,10 @@ namespace PlainionGraphViz.Viewer
 
             base.OnStartup(e);
         }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            ((UnityContainerExtension)Container).Instance.Dispose();
+        }
     }
 }
