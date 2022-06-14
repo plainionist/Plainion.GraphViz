@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
@@ -7,9 +11,7 @@ namespace Plainion.GraphViz.ActorsHost
 {
     class Program
     {
-        private static void Main(string[] args)
-        {
-            var config = ConfigurationFactory.ParseString(@"
+        private static readonly Config ActorSystemConfig = ConfigurationFactory.ParseString(@"
                 akka {
                     actor {
                         provider = remote
@@ -24,11 +26,20 @@ namespace Plainion.GraphViz.ActorsHost
                 }
                 ");
 
+        private static void Main(string[] args)
+        {
+
             try
             {
                 Console.WriteLine("==> Starting");
 
-                using (var system = ActorSystem.Create("CodeInspection", config))
+                Console.WriteLine("Loading modules");
+
+                LoadModules();
+
+                Console.WriteLine("Creating actor system");
+
+                using (var system = ActorSystem.Create("CodeInspection", ActorSystemConfig))
                 {
                     Console.WriteLine("==> Running");
 
@@ -38,6 +49,28 @@ namespace Plainion.GraphViz.ActorsHost
             catch
             {
                 Console.WriteLine(" === DEAD === ");
+            }
+        }
+
+        // load all relevant assemblyies so that akka/newtonsoft.json can easily 
+        // find types during deserialization
+        private static void LoadModules()
+        {
+            var moduleAssemblies = Directory.EnumerateFiles(Path.GetDirectoryName(typeof(Program).Assembly.Location), "*.dll")
+                .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("Plainion.GraphViz.Modules.", StringComparison.OrdinalIgnoreCase))
+                .Where(x => Path.GetExtension(x).Equals(".dll", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            foreach (var file in moduleAssemblies)
+            {
+                try
+                {
+                    Assembly.LoadFrom(file);
+                }
+                catch
+                {
+                    Console.WriteLine($"Warning: failed to load module: {file}");
+                }
             }
         }
     }
