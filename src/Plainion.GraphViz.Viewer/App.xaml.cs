@@ -93,6 +93,8 @@ namespace PlainionGraphViz.Viewer
             RegionManager.UpdateRegions();
 
             myRunning = true;
+
+            base.OnInitialized();
         }
 
         private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
