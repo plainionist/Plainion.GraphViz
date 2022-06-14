@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 using Plainion.GraphViz.Algorithms;
+using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
+using Plainion.Prism.Interactivity.InteractionRequest;
+using Prism.Commands;
 using Prism.Events;
-using Plainion.GraphViz.Dot;
-using System.IO;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {

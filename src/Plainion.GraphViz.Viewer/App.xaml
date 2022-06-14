@@ -1,5 +1,6 @@
-﻿<Application x:Class="Plainion.GraphViz.Viewer.App"
+﻿<prism:PrismApplication x:Class="PlainionGraphViz.Viewer.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="http://prismlibrary.com/"
     DispatcherUnhandledException="OnUnhandledException">
-</Application>
+</prism:PrismApplication>

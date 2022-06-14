@@ -25,7 +25,6 @@ using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Windows.Editors.Xml;
 using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {

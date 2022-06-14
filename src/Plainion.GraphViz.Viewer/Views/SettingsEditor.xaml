@@ -3,7 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:Plainion.GraphViz.Viewer"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:pn="http://github.com/ronin4net/plainion"
         xmlns:prism="http://www.codeplex.com/prism"
         Width="600" Height="600" x:Name="_this">

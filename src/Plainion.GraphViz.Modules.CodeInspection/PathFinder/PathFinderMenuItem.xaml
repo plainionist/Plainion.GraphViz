@@ -12,8 +12,8 @@
              Header="PathFinder ..."
              Command="{Binding OpenPathFinderCommand}">
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding PathFinderRequest, Mode=OneWay}">
-            <prism:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.PathFinder}"/>
-        </prism:InteractionRequestTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding PathFinderRequest, Mode=OneWay}">
+            <pn:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.PathFinder}"/>
+        </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 </MenuItem>

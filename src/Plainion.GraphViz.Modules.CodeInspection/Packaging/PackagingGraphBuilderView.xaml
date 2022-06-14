@@ -23,9 +23,9 @@
         <i:EventTrigger EventName="Unloaded">
             <i:InvokeCommandAction Command="{Binding ClosedCommand}"/>
         </i:EventTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
+        <pn:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
             <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
-        </prism:InteractionRequestTrigger>
+        </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <Grid Background="#FDFDF5" Margin="5">
         <Grid.RowDefinitions>

@@ -14,7 +14,7 @@
         Icon="Resources/GraphIcon.png"
         Title="Plainion GraphViz Viewer" MinWidth="640" MinHeight="480" Height="768" Width="1024" WindowStartupLocation="CenterScreen" Background="#FDFDF5">
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding NodeMasksEditorRequest, Mode=OneWay}">
+        <pn:InteractionRequestTrigger SourceObject="{Binding NodeMasksEditorRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.NodeMasksEditor}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
@@ -23,8 +23,8 @@
                     </Style>
                 </pn:PopupViewAction.WindowStyle>
             </pn:PopupViewAction>
-        </prism:InteractionRequestTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding ClusterEditorRequest, Mode=OneWay}">
+        </pn:InteractionRequestTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding ClusterEditorRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.ClusterEditor}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
@@ -33,8 +33,8 @@
                     </Style>
                 </pn:PopupViewAction.WindowStyle>
             </pn:PopupViewAction>
-        </prism:InteractionRequestTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding BookmarksRequest, Mode=OneWay}">
+        </pn:InteractionRequestTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding BookmarksRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static inf:RegionNames.Bookmarks}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
@@ -43,11 +43,11 @@
                     </Style>
                 </pn:PopupViewAction.WindowStyle>
             </pn:PopupViewAction>
-        </prism:InteractionRequestTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding SettingsEditorRequest, Mode=OneWay}">
-            <prism:PopupWindowAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.SettingsEditor}"/>
-        </prism:InteractionRequestTrigger>
-        <prism:InteractionRequestTrigger SourceObject="{Binding ShowStatusMessagesRequest, Mode=OneWay}">
+        </pn:InteractionRequestTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding SettingsEditorRequest, Mode=OneWay}">
+            <pn:PopupWindowAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.SettingsEditor}"/>
+        </pn:InteractionRequestTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding ShowStatusMessagesRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.StatusMessagesViewer}">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
@@ -56,7 +56,7 @@
                     </Style>
                 </pn:PopupViewAction.WindowStyle>
             </pn:PopupViewAction>
-        </prism:InteractionRequestTrigger>
+        </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 
     <i:Interaction.Behaviors>

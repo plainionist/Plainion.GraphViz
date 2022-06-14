@@ -12,8 +12,8 @@
              Header="Inheritance graph ..."
              Command="{Binding OpenInheritanceGraphBuilderCommand}">
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding InheritanceGraphBuilderRequest, Mode=OneWay}">
-            <prism:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.InheritanceGraphBuilder}"/>
-        </prism:InteractionRequestTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding InheritanceGraphBuilderRequest, Mode=OneWay}">
+            <pn:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.InheritanceGraphBuilder}"/>
+        </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 </MenuItem>

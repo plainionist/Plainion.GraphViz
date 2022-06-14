@@ -6,7 +6,6 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
 {

@@ -13,9 +13,9 @@
         <KeyBinding Modifiers="Control" Key="O" Command="{Binding OpenDocumentCommand}"/>
     </UserControl.InputBindings>
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
+        <pn:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
             <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
-        </prism:InteractionRequestTrigger>
+        </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <i:Interaction.Behaviors>
         <pn:PropagateInputBindingsToWindowBehavior/>

@@ -14,9 +14,9 @@
                  GraphItemForContextMenu="{Binding GraphItemForContextMenu, Mode=OneWayToSource}"
                  Navigation="{Binding Navigation, Mode=OneWayToSource}" Name="myGraphView">
         <i:Interaction.Triggers>
-            <prism:InteractionRequestTrigger SourceObject="{Binding PrintGraphRequest, Mode=OneWay}">
+            <pn:InteractionRequestTrigger SourceObject="{Binding PrintGraphRequest, Mode=OneWay}">
                 <pn:PopupPrintDialogAction/>
-            </prism:InteractionRequestTrigger>
+            </pn:InteractionRequestTrigger>
         </i:Interaction.Triggers>
 
         <r:GraphView.Resources>

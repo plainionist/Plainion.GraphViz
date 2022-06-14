@@ -4,7 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-            xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:prism="http://www.codeplex.com/prism"
              xmlns:pn="http://github.com/ronin4net/plainion"
              xmlns:v="clr-namespace:Plainion.GraphViz.Modules.CodeInspection"
@@ -12,8 +12,8 @@
              Header="CallTree ..."
              Command="{Binding OpenCallTreeCommand}">
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding CallTreeRequest, Mode=OneWay}">
-            <prism:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.CallTree}"/>
-        </prism:InteractionRequestTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding CallTreeRequest, Mode=OneWay}">
+            <pn:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.CallTree}"/>
+        </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 </MenuItem>

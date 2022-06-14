@@ -8,9 +8,9 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Configuration;
 using Plainion.GraphViz.Viewer.Services;
-using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
+using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Prism.Mvvm;
+using Prism.Commands;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {

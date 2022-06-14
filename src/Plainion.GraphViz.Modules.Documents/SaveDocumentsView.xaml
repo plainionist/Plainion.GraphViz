@@ -13,9 +13,9 @@
         <KeyBinding Modifiers="Control" Key="S" Command="{Binding SaveDocumentCommand}"/>
     </UserControl.InputBindings>
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest, Mode=OneWay}">
+        <pn:InteractionRequestTrigger SourceObject="{Binding SaveFileRequest, Mode=OneWay}">
             <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:SaveFileDialog}"/>
-        </prism:InteractionRequestTrigger>
+        </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <i:Interaction.Behaviors>
         <pn:PropagateInputBindingsToWindowBehavior/>
