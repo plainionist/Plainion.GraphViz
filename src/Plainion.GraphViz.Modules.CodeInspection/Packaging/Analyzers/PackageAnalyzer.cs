@@ -6,13 +6,16 @@ using System.Reflection;
 using System.Threading;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
     class PackageAnalyzer
     {
-        private static string[] Colors = { "LightBlue", "LightGreen", "LightCoral", "Brown", "DarkTurquoise", "MediumAquamarine", "Orange",
+        private static readonly string[] Colors = { "LightBlue", "LightGreen", "LightCoral", "Brown", "DarkTurquoise", "MediumAquamarine", "Orange",
                                            "LawnGreen","DarkKhaki","BurlyWood","SteelBlue","Goldenrod", "Tomato","Crimson","CadetBlue" };
+
+        private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
 
         private SystemPackaging myConfig;
         private CancellationToken myCancellationToken;
@@ -53,25 +56,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             Load();
 
-            Console.WriteLine("Analyzing ...");
+            myLogger.Info("Analyzing ...");
 
             var edges = Analyze()
                 .Distinct()
                 .ToList();
 
-            Console.WriteLine();
-
             if (myAssemblyLoader.SkippedAssemblies.Any())
             {
-                Console.WriteLine("Skipped assemblies:");
+                myLogger.Notice("Skipped assemblies:");
                 foreach (var asm in myAssemblyLoader.SkippedAssemblies)
                 {
-                    Console.WriteLine("  {0}", asm);
+                    myLogger.Notice("  {0}", asm);
                 }
-                Console.WriteLine();
             }
 
-            Console.WriteLine("Building Graph ...");
+            myLogger.Info("Building Graph ...");
 
             return GenerateDocument(edges);
         }
@@ -83,29 +83,57 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 myCancellationToken.ThrowIfCancellationRequested();
 
                 myPackageToTypesMap[package.Name] = Load(package)
-                    .SelectMany(asm =>
-                   {
-                       try
-                       {
-                           return asm.GetTypes();
-                       }
-                       catch (ReflectionTypeLoadException ex)
-                       {
-                           Console.WriteLine("WARNING: not all types could be loaded from assembly {0}. Error: {1}{2}", asm.Location,
-                               Environment.NewLine, ex.Dump());
-                           return ex.Types.Where(t => t != null);
-                       }
-                   })
+                    .SelectMany(GetTypes)
                     .ToList();
             }
+        }
+
+        private IEnumerable<Type> GetTypes(Assembly assembly)
+        {
+            IEnumerable<Type> TryGetAllTypes(Assembly assembly)
+            {
+                try
+                {
+                    return assembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    myLogger.Warning("Not all types could be loaded from assembly {0}. Error: {1}{2}",
+                        assembly.Location, Environment.NewLine, ex.Dump());
+
+                    return ex.Types
+                        .Where(t => t != null);
+                }
+            }
+
+            bool IsAnalyzable(Type type)
+            {
+                try
+                {
+                    // even if we get a type from "Assembly.GetTypes" or from
+                    // "ReflectionTypeLoadException.Types" it might still not be analyzable 
+                    // as it throws exception when accessing e.g. Namespace property
+                    return type != null && type.Namespace != null;
+                }
+                catch
+                {
+                    // for some strange reason, in such a case, we can safely access "FullName" but
+                    // will get exception from "Namespace"
+                    myLogger.Warning($"Failed to load '{type.FullName}'");
+                    return false;
+                }
+            }
+
+            return TryGetAllTypes(assembly)
+                .Where(IsAnalyzable);
         }
 
         private IEnumerable<Assembly> Load(Package package)
         {
             Contract.Requires(!string.IsNullOrEmpty(package.Name), "Package requires a name");
 
-            Console.WriteLine("Assembly root {0}", Path.GetFullPath(myConfig.AssemblyRoot));
-            Console.WriteLine("Loading package {0}", package.Name);
+            myLogger.Info("Assembly root {0}", Path.GetFullPath(myConfig.AssemblyRoot));
+            myLogger.Info("Loading package {0}", package.Name);
 
             return package.Includes
                 .SelectMany(i => Directory.GetFiles(myConfig.AssemblyRoot, i.Pattern))
@@ -122,38 +150,45 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             return ".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static Assembly Load(string path)
+        private Assembly Load(string path)
         {
             try
             {
-                Console.WriteLine("Loading {0}", path);
+                myLogger.Info("Loading {0}", path);
 
                 return Assembly.LoadFrom(path);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"ERROR: failed to load assembly {path}{Environment.NewLine}{ex.Message}");
+                myLogger.Error($"failed to load assembly {path}{Environment.NewLine}{ex.Message}");
                 return null;
             }
         }
 
         private Reference[] Analyze()
         {
-            return myRelevantPackages
-                .SelectMany(p => myPackageToTypesMap[p.Name]
-                   .Select(t => new
-                   {
-                       Package = p,
-                       Type = t
-                   })
-                )
-                .AsParallel()
-                .WithCancellation(myCancellationToken)
-                .SelectMany(e => Analyze(e.Package, e.Type))
-                .ToArray();
+            try
+            {
+                return myRelevantPackages
+                    .SelectMany(p => myPackageToTypesMap[p.Name]
+                       .Select(t => new
+                       {
+                           Package = p,
+                           Type = t
+                       })
+                    )
+                    .AsParallel()
+                    .WithCancellation(myCancellationToken)
+                    .SelectMany(e => Analyze(e.Type))
+                    .ToArray();
+            }
+            finally
+            {
+                Console.WriteLine();
+            }
         }
 
-        private IEnumerable<Reference> Analyze(Package package, Type type)
+        private IEnumerable<Reference> Analyze(Type type)
         {
             Console.Write(".");
 

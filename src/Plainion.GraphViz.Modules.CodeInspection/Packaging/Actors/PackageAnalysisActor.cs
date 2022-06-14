@@ -5,6 +5,7 @@ using Plainion.Collections;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {
@@ -12,50 +13,52 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
     {
         protected override void Ready()
         {
+            LoggerFactory.LogLevel = LogLevel.Info;
+
             Receive<AnalysisMessage>(r =>
-           {
-               Console.WriteLine("WORKING");
+                {
+                   Console.WriteLine("WORKING");
 
-                var self = Self;
-               var sender = Sender;
+                   var self = Self;
+                   var sender = Sender;
 
-               Task.Run<AnalysisDocument>(() =>
-               {
-                   var analyzer = new PackageAnalyzer();
-                   analyzer.UsedTypesOnly = r.UsedTypesOnly;
-                   analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
-
-                   if (r.PackagesToAnalyze != null)
+                   Task.Run<AnalysisDocument>(() =>
                    {
-                       analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
-                   }
+                       var analyzer = new PackageAnalyzer();
+                       analyzer.UsedTypesOnly = r.UsedTypesOnly;
+                       analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
 
-                   var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
-                   return analyzer.Execute(spec, CancellationToken);
-               }, CancellationToken)
-               .ContinueWith<object>(x =>
-               {
-                   if (x.IsCanceled)
+                       if (r.PackagesToAnalyze != null)
+                       {
+                           analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
+                       }
+
+                       var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
+                       return analyzer.Execute(spec, CancellationToken);
+                   }, CancellationToken)
+                   .ContinueWith<object>(x =>
                    {
-                       return new CanceledMessage();
-                   }
+                       if (x.IsCanceled)
+                       {
+                           return new CanceledMessage();
+                       }
 
-                   if (x.IsFaulted)
-                   {
-                        return new FailedMessage { Error = x.Exception.Dump() };
-                   }
+                       if (x.IsFaulted)
+                       {
+                           return new FailedMessage { Error = x.Exception.Dump() };
+                       }
 
-                   Console.WriteLine("Writing response ...");
+                       Console.WriteLine("Writing response ...");
 
-                   var serializer = new DocumentSerializer();
-                   serializer.Serialize(x.Result, r.OutputFile);
+                       var serializer = new DocumentSerializer();
+                       serializer.Serialize(x.Result, r.OutputFile);
 
-                   return new AnalysisResponse { File = r.OutputFile };
-               }, TaskContinuationOptions.ExecuteSynchronously)
-               .PipeTo(self, sender);
+                       return new AnalysisResponse { File = r.OutputFile };
+                   }, TaskContinuationOptions.ExecuteSynchronously)
+                   .PipeTo(self, sender);
 
-               Become(Working);
-           });
+                   Become(Working);
+               });
         }
     }
 }
