@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Plainion;
@@ -32,16 +35,39 @@ namespace PlainionGraphViz.Viewer
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            var catalog = new DirectoryModuleCatalog();
+            var catalog = new ModuleCatalog();
 
             // explicitly add core module which is not found by the DirectoryModuleCatalog as it only searches for ".dll"
             catalog.AddModule(new ModuleInfo(typeof(CoreModule).FullName, typeof(CoreModule).AssemblyQualifiedName));
 
-            // with ".Location" property we sometimes got strange error message that loading from
-            // remote location is not allows
-            catalog.ModulePath = Path.GetDirectoryName(GetType().Assembly.Location);
+            var moduleAssemblies = Directory.EnumerateFiles(Path.GetDirectoryName(GetType().Assembly.Location), "*.dll")
+                .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("Plainion.GraphViz.Modules.", StringComparison.OrdinalIgnoreCase))
+                .Where(x => Path.GetExtension(x).Equals(".dll", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            var modules = moduleAssemblies
+                .SelectMany(TryLoadModules)
+                .ToList();
+            foreach (var module in modules)
+            {
+                catalog.AddModule(module);
+            }
 
             return catalog;
+        }
+
+        private IEnumerable<Type> TryLoadModules(string file)
+        {
+            try
+            {
+                return Assembly.LoadFrom(file).GetTypes()
+                    .Where(x => typeof(IModule).IsAssignableFrom(x))
+                    .Where(x => !x.IsAbstract);
+            }
+            catch
+            {
+                return Enumerable.Empty<Type>();
+            }
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

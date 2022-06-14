@@ -28,3 +28,5 @@ to see how to integrate plug-ins into Plainion.GraphViz. Inside the custom plug-
 - add optional meta information (e.g. edge colors, tooltips)
 - pass it to the viewer
 
+Plug-in assembly names need to match the following pattern: "Plainion.GraphViz.Modules.*.dll" and need to be placed
+into the Plainion.GraphViz installation folder.

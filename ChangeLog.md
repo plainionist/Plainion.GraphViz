@@ -5,6 +5,8 @@
   - loaded file name shown
   - editor starts with template
 - Migrated to .Net 6
+- Migrated to Prism 8
+- other dependencies updated
 
 ## 3.6 - 2021-04-28
 
