@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
@@ -10,7 +9,7 @@ using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
-    class PackageAnalyzer
+    partial class PackageAnalyzer
     {
         private static readonly string[] Colors = { "LightBlue", "LightGreen", "LightCoral", "Brown", "DarkTurquoise", "MediumAquamarine", "Orange",
                                            "LawnGreen","DarkKhaki","BurlyWood","SteelBlue","Goldenrod", "Tomato","Crimson","CadetBlue" };
@@ -22,11 +21,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         private readonly MonoLoader myAssemblyLoader;
         private Dictionary<string, List<Type>> myPackageToTypesMap;
         private List<Package> myRelevantPackages;
+        private TypesLoader myTypesLoader;
 
         public PackageAnalyzer()
         {
             myAssemblyLoader = new MonoLoader();
             PackagesToAnalyze = new List<string>();
+            myTypesLoader = new TypesLoader();
         }
 
         /// <summary>
@@ -54,7 +55,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             myPackageToTypesMap = new Dictionary<string, List<Type>>();
 
-            Load();
+            foreach (var package in myRelevantPackages)
+            {
+                myCancellationToken.ThrowIfCancellationRequested();
+
+                myPackageToTypesMap[package.Name] = Load(package).ToList();
+            }
 
             myLogger.Info("Analyzing ...");
 
@@ -76,59 +82,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             return GenerateDocument(edges);
         }
 
-        private void Load()
-        {
-            foreach (var package in myRelevantPackages)
-            {
-                myCancellationToken.ThrowIfCancellationRequested();
-
-                myPackageToTypesMap[package.Name] = Load(package)
-                    .SelectMany(GetTypes)
-                    .ToList();
-            }
-        }
-
-        private IEnumerable<Type> GetTypes(Assembly assembly)
-        {
-            IEnumerable<Type> TryGetAllTypes(Assembly assembly)
-            {
-                try
-                {
-                    return assembly.GetTypes();
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    myLogger.Warning("Not all types could be loaded from assembly {0}. Error: {1}{2}",
-                        assembly.Location, Environment.NewLine, ex.Dump());
-
-                    return ex.Types
-                        .Where(t => t != null);
-                }
-            }
-
-            bool IsAnalyzable(Type type)
-            {
-                try
-                {
-                    // even if we get a type from "Assembly.GetTypes" or from
-                    // "ReflectionTypeLoadException.Types" it might still not be analyzable 
-                    // as it throws exception when accessing e.g. Namespace property
-                    return type != null && type.Namespace != null;
-                }
-                catch
-                {
-                    // for some strange reason, in such a case, we can safely access "FullName" but
-                    // will get exception from "Namespace"
-                    myLogger.Warning($"Failed to load '{type.FullName}'");
-                    return false;
-                }
-            }
-
-            return TryGetAllTypes(assembly)
-                .Where(IsAnalyzable);
-        }
-
-        private IEnumerable<Assembly> Load(Package package)
+        private IEnumerable<Type> Load(Package package)
         {
             Contract.Requires(!string.IsNullOrEmpty(package.Name), "Package requires a name");
 
@@ -138,31 +92,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             return package.Includes
                 .SelectMany(i => Directory.GetFiles(myConfig.AssemblyRoot, i.Pattern))
                 .Where(file => !package.Excludes.Any(e => e.Matches(file)))
-                .Where(IsAssembly)
-                .Select(Load)
-                .Where(asm => asm != null)
+                .SelectMany(file => myTypesLoader.TryLoadAllTypes(file))
                 .ToList();
-        }
-
-        private static bool IsAssembly(string path)
-        {
-            var ext = Path.GetExtension(path);
-            return ".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private Assembly Load(string path)
-        {
-            try
-            {
-                myLogger.Info("Loading {0}", path);
-
-                return Assembly.LoadFrom(path);
-            }
-            catch (Exception ex)
-            {
-                myLogger.Error($"failed to load assembly {path}{Environment.NewLine}{ex.Message}");
-                return null;
-            }
         }
 
         private Reference[] Analyze()
