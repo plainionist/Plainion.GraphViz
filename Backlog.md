@@ -9,6 +9,8 @@
 - which are not in bin folder (yet, as "publish" was not called)
 - how to know where to search?
 - analyze deps.json?
+- https://stackoverflow.com/questions/59284307/manually-loading-of-assemblies-and-dependencies-at-runtime-nuget-dependencies
+- https://mikelimasierra.net/index.php/2020/07/23/resolving-cached-nuget-packages-at-runtime/
 
 # Tests for CodeInspection 
 

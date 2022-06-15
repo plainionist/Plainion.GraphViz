@@ -26,7 +26,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                     return Enumerable.Empty<Type>();
                 }
 
-                return GetTypes(assembly);
+                try
+                {
+                    AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+                    return GetTypes(assembly);
+                }
+                finally
+                {
+                    AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
+                }
+            }
+
+            private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+            {
+                myLogger.Info($"Trying to resolve: {args.Name}");
+                return null;
             }
 
             private static bool IsAssembly(string path)
