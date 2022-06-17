@@ -21,13 +21,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         private readonly MonoLoader myAssemblyLoader;
         private Dictionary<string, List<Type>> myPackageToTypesMap;
         private List<Package> myRelevantPackages;
-        private TypesLoader myTypesLoader;
+        private readonly TypesLoader myTypesLoader;
 
-        public PackageAnalyzer()
+        public PackageAnalyzer(TypesLoader typesLoader)
         {
+            myTypesLoader = typesLoader;
+
             myAssemblyLoader = new MonoLoader();
             PackagesToAnalyze = new List<string>();
-            myTypesLoader = new TypesLoader();
         }
 
         /// <summary>

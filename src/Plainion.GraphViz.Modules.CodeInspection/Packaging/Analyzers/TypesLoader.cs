@@ -3,106 +3,142 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Nuclear.Assemblies;
+using Nuclear.Assemblies.Factories;
+using Nuclear.Assemblies.Resolvers;
+using Nuclear.Creation;
 using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
-    partial class PackageAnalyzer
+    class TypesLoader : IDisposable
     {
-        class TypesLoader
+        private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
+
+        public TypesLoader()
         {
-            private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
+            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+        }
 
-            public IEnumerable<Type> TryLoadAllTypes(string path)
+        public void Dispose()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
+        }
+
+        public IEnumerable<Type> TryLoadAllTypes(string path)
+        {
+            if (!IsAssembly(path))
             {
-                if (!IsAssembly(path))
-                {
-                    return Enumerable.Empty<Type>();
-                }
+                return Enumerable.Empty<Type>();
+            }
 
-                var assembly = TryLoadAssembly(path);
-                if (assembly == null)
-                {
-                    return Enumerable.Empty<Type>();
-                }
+            var assembly = TryLoadAssembly(path);
+            if (assembly == null)
+            {
+                return Enumerable.Empty<Type>();
+            }
 
-                try
+            return GetTypes(assembly);
+        }
+
+        private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            myLogger.Info($"Trying to resolve: {args.Name}");
+
+            {
+                Factory.Instance.DefaultResolver().Create(out var resolver, VersionMatchingStrategies.Strict, SearchOption.AllDirectories);
+
+                if (resolver.TryResolve(args, out var result))
                 {
-                    AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-                    return GetTypes(assembly);
-                }
-                finally
-                {
-                    AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
+                    foreach (var item in result)
+                    {
+                        if (AssemblyHelper.TryLoadFrom(item.File, out Assembly assembly))
+                        {
+                            return assembly;
+                        }
+                    }
                 }
             }
 
-            private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
             {
-                myLogger.Info($"Trying to resolve: {args.Name}");
+                Factory.Instance.NugetResolver().Create(out var resolver, VersionMatchingStrategies.Strict, VersionMatchingStrategies.Strict);
+
+                if (resolver.TryResolve(args, out var result))
+                {
+                    foreach (var item in result)
+                    {
+                        if (AssemblyHelper.TryLoadFrom(item.File, out Assembly assembly))
+                        {
+                            return assembly;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static bool IsAssembly(string path)
+        {
+            var ext = Path.GetExtension(path);
+            return ".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private Assembly TryLoadAssembly(string path)
+        {
+            try
+            {
+                myLogger.Info("Loading {0}", path);
+
+                return Assembly.LoadFrom(path);
+            }
+            catch (Exception ex)
+            {
+                myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}{ex.Message}");
                 return null;
             }
+        }
 
-            private static bool IsAssembly(string path)
-            {
-                var ext = Path.GetExtension(path);
-                return ".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase);
-            }
-
-            private Assembly TryLoadAssembly(string path)
+        private IEnumerable<Type> GetTypes(Assembly assembly)
+        {
+            IEnumerable<Type> TryGetAllTypes(Assembly assembly)
             {
                 try
                 {
-                    myLogger.Info("Loading {0}", path);
-
-                    return Assembly.LoadFrom(path);
+                    return assembly.GetTypes();
                 }
-                catch (Exception ex)
+                catch (ReflectionTypeLoadException ex)
                 {
-                    myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}{ex.Message}");
-                    return null;
+                    myLogger.Warning("Not all types could be loaded from assembly {0}. Error: {1}{2}",
+                        assembly.Location, Environment.NewLine, ex.Dump());
+
+                    return ex.Types
+                        .Where(t => t != null);
                 }
             }
 
-            private IEnumerable<Type> GetTypes(Assembly assembly)
+            bool IsAnalyzable(Type type)
             {
-                IEnumerable<Type> TryGetAllTypes(Assembly assembly)
+                try
                 {
-                    try
-                    {
-                        return assembly.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException ex)
-                    {
-                        myLogger.Warning("Not all types could be loaded from assembly {0}. Error: {1}{2}",
-                            assembly.Location, Environment.NewLine, ex.Dump());
-
-                        return ex.Types
-                            .Where(t => t != null);
-                    }
+                    // even if we get a type from "Assembly.GetTypes" or from
+                    // "ReflectionTypeLoadException.Types" it might still not be analyzable 
+                    // as it throws exception when accessing e.g. Namespace property
+                    return type != null && type.Namespace != null;
                 }
-
-                bool IsAnalyzable(Type type)
+                catch
                 {
-                    try
-                    {
-                        // even if we get a type from "Assembly.GetTypes" or from
-                        // "ReflectionTypeLoadException.Types" it might still not be analyzable 
-                        // as it throws exception when accessing e.g. Namespace property
-                        return type != null && type.Namespace != null;
-                    }
-                    catch
-                    {
-                        // for some strange reason, in such a case, we can safely access "FullName" but
-                        // will get exception from "Namespace"
-                        myLogger.Warning($"Failed to load '{type.FullName}'");
-                        return false;
-                    }
+                    // for some strange reason, in such a case, we can safely access "FullName" but
+                    // will get exception from "Namespace"
+                    myLogger.Warning($"Failed to load '{type.FullName}'");
+                    return false;
                 }
-
-                return TryGetAllTypes(assembly)
-                    .Where(IsAnalyzable);
             }
+
+            return TryGetAllTypes(assembly)
+                .Where(IsAnalyzable);
         }
     }
 }
+
+

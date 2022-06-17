@@ -17,48 +17,52 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
             Receive<AnalysisMessage>(r =>
                 {
-                   Console.WriteLine("WORKING");
+                    Console.WriteLine("WORKING");
 
-                   var self = Self;
-                   var sender = Sender;
+                    var self = Self;
+                    var sender = Sender;
 
-                   Task.Run<AnalysisDocument>(() =>
-                   {
-                       var analyzer = new PackageAnalyzer();
-                       analyzer.UsedTypesOnly = r.UsedTypesOnly;
-                       analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
+                    Task.Run<AnalysisDocument>(() =>
+                    {
+                        using (var loader = new TypesLoader())
+                        {
+                            var analyzer = new PackageAnalyzer(loader);
 
-                       if (r.PackagesToAnalyze != null)
-                       {
-                           analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
-                       }
+                            analyzer.UsedTypesOnly = r.UsedTypesOnly;
+                            analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
 
-                       var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
-                       return analyzer.Execute(spec, CancellationToken);
-                   }, CancellationToken)
-                   .ContinueWith<object>(x =>
-                   {
-                       if (x.IsCanceled)
-                       {
-                           return new CanceledMessage();
-                       }
+                            if (r.PackagesToAnalyze != null)
+                            {
+                                analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
+                            }
 
-                       if (x.IsFaulted)
-                       {
-                           return new FailedMessage { Error = x.Exception.Dump() };
-                       }
+                            var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
+                            return analyzer.Execute(spec, CancellationToken);
+                        }
+                    }, CancellationToken)
+                    .ContinueWith<object>(x =>
+                    {
+                        if (x.IsCanceled)
+                        {
+                            return new CanceledMessage();
+                        }
 
-                       Console.WriteLine("Writing response ...");
+                        if (x.IsFaulted)
+                        {
+                            return new FailedMessage { Error = x.Exception.Dump() };
+                        }
 
-                       var serializer = new DocumentSerializer();
-                       serializer.Serialize(x.Result, r.OutputFile);
+                        Console.WriteLine("Writing response ...");
 
-                       return new AnalysisResponse { File = r.OutputFile };
-                   }, TaskContinuationOptions.ExecuteSynchronously)
-                   .PipeTo(self, sender);
+                        var serializer = new DocumentSerializer();
+                        serializer.Serialize(x.Result, r.OutputFile);
 
-                   Become(Working);
-               });
+                        return new AnalysisResponse { File = r.OutputFile };
+                    }, TaskContinuationOptions.ExecuteSynchronously)
+                    .PipeTo(self, sender);
+
+                    Become(Working);
+                });
         }
     }
 }
