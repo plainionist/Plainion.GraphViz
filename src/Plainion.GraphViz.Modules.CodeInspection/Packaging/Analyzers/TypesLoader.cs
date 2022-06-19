@@ -3,27 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Nuclear.Assemblies;
-using Nuclear.Assemblies.Factories;
-using Nuclear.Assemblies.Resolvers;
-using Nuclear.Creation;
 using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
-    class TypesLoader : IDisposable
+    class TypesLoader
     {
-        private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
-
-        public TypesLoader()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-        }
-
-        public void Dispose()
-        {
-            AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
-        }
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
 
         public IEnumerable<Type> TryLoadAllTypes(string path)
         {
@@ -39,43 +25,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             }
 
             return GetTypes(assembly);
-        }
-
-        private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            myLogger.Info($"Trying to resolve: {args.Name}");
-
-            {
-                Factory.Instance.DefaultResolver().Create(out var resolver, VersionMatchingStrategies.Strict, SearchOption.AllDirectories);
-
-                if (resolver.TryResolve(args, out var result))
-                {
-                    foreach (var item in result)
-                    {
-                        if (AssemblyHelper.TryLoadFrom(item.File, out Assembly assembly))
-                        {
-                            return assembly;
-                        }
-                    }
-                }
-            }
-
-            {
-                Factory.Instance.NugetResolver().Create(out var resolver, VersionMatchingStrategies.Strict, VersionMatchingStrategies.Strict);
-
-                if (resolver.TryResolve(args, out var result))
-                {
-                    foreach (var item in result)
-                    {
-                        if (AssemblyHelper.TryLoadFrom(item.File, out Assembly assembly))
-                        {
-                            return assembly;
-                        }
-                    }
-                }
-            }
-
-            return null;
         }
 
         private static bool IsAssembly(string path)

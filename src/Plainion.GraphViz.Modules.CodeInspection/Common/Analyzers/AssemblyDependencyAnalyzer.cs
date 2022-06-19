@@ -17,8 +17,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             public Assembly myDependency;
         }
 
-        private IEnumerable<Wildcard> myRelevantAssemblies;
-        private AssemblyLoader myLoader;
+        private readonly IEnumerable<Wildcard> myRelevantAssemblies;
+        private readonly AssemblyLoader myLoader;
 
         public AssemblyDependencyAnalyzer(IEnumerable<string> relevantAssemblies)
         {

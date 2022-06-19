@@ -24,8 +24,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
                     Task.Run<AnalysisDocument>(() =>
                     {
-                        using (var loader = new TypesLoader())
+                        using (var resolver = new AssemblyResolver())
                         {
+                            var loader = new TypesLoader();
                             var analyzer = new PackageAnalyzer(loader);
 
                             analyzer.UsedTypesOnly = r.UsedTypesOnly;
