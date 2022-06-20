@@ -12,12 +12,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestData\Packaging.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestData\Packaging.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="nunit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz.ActorsHost\Plainion.GraphViz.ActorsHost.csproj" />
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj" />
   </ItemGroup>
 
