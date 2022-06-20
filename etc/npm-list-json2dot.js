@@ -5,9 +5,8 @@ const json = JSON.parse(fs.readFileSync(file, 'utf8'))
 
 function visit(source, deps) {
     Object.getOwnPropertyNames(deps).forEach( key => {
-        if (source) {
-            console.log(`  "${source}" -> "${key}"`)
-        }
+        console.log(`  "${source}" -> "${key}"`)
+
         if (deps[key].dependencies) {
             visit(key, deps[key].dependencies)
         }
@@ -15,10 +14,10 @@ function visit(source, deps) {
 }
 
 
-console.log("digraph {")
+console.log('digraph {')
 
-visit(null, json.dependencies)
+visit('PROJECT', json.dependencies)
 
-console.log("}")
+console.log('}')
 
 
