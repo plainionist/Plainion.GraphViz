@@ -12,6 +12,13 @@ with following analyzers
 - calltree
 - pathfinder
 
+
+test setup:
+- 2 assemblies depending on each other
+- API usage as well as inheritance
+- require nuget dependency
+
+
 Once tests available consider using AssemblyLoader everywhere
 
 # Unsorted
