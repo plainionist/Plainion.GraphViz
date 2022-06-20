@@ -37,36 +37,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             }
         }
 
-        private readonly AssemblyLoader myLoader;
-        private readonly MonoLoader myMonoLoader;
-
-        public PathFinderAnalyzer()
-        {
-            myLoader = new AssemblyLoader();
-            myMonoLoader = new MonoLoader();
-        }
-
         public bool KeepInnerAssemblyDependencies { get; set; }
         public bool KeepSourceAssemblyClusters { get; set; }
         public bool KeepTargetAssemblyClusters { get; set; }
         public bool AssemblyReferencesOnly { get; set; }
 
-        private IEnumerable<Reference> GetUsedTypes(Type t)
+        private IEnumerable<Reference> GetUsedTypes(MonoLoader monoLoader, Type t)
         {
             Console.Write(".");
 
-            var inspector = new Inspector(myMonoLoader, t);
+            var inspector = new Inspector(monoLoader, t);
             return inspector.GetUsedTypes();
         }
 
-        private List<(Node, List<Reference>)> FindDependencies(Func<Type, bool> isRelevantType, List<(Node, List<Reference>)> analyzed, Node node)
+        private List<(Node, List<Reference>)> FindDependencies(MonoLoader monoLoader, Func<Type, bool> isRelevantType, List<(Node, List<Reference>)> analyzed, Node node)
         {
-            var asm = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies()
+            var asm = monoLoader.Assemblies
                 .Single(x => R.AssemblyName(x) == node.Id);
 
             var directDeps = asm.GetTypes()
                 .AsParallel()
-                .SelectMany(t => GetUsedTypes(t))
+                .SelectMany(t => GetUsedTypes(monoLoader, t))
                 .Where(r => isRelevantType(r.To))
                 .ToList();
 
@@ -81,7 +72,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             var indirectDeps = node.Out
                 .Select(e => e.Target)
                 .Where(d => !analyzedNodes.Contains(d.Id))
-                .Aggregate(newAnalyzed, (acc, n) => FindDependencies(isRelevantType, acc, n))
+                .Aggregate(newAnalyzed, (acc, n) => FindDependencies(monoLoader, isRelevantType, acc, n))
                 .ToList();
 
             indirectDeps.Add((node, directDeps));
@@ -89,10 +80,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             return indirectDeps;
         }
 
-        private List<Reference> AnalyzeTypeDependencies(Func<Type, bool> isRelevantType, List<Node> sourceNodes)
+        private List<Reference> AnalyzeTypeDependencies(MonoLoader monoLoader, Func<Type, bool> isRelevantType, List<Node> sourceNodes)
         {
             return sourceNodes
-                .Aggregate(new List<(Node, List<Reference>)>(), (acc, n) => FindDependencies(isRelevantType, acc, n))
+                .Aggregate(new List<(Node, List<Reference>)>(), (acc, n) => FindDependencies(monoLoader, isRelevantType, acc, n))
                 .SelectMany(x => x.Item2)
                 .ToList();
         }
@@ -130,15 +121,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 
             var relevantAssemblies = new HashSet<string>(relevantNodes.Select(n => n.Id));
 
+            var monoLoader = new MonoLoader(sources.Concat(targets));
             var sourceNodeIds = new HashSet<string>(sources.Select(s => R.AssemblyName(s)));
             var typeDependencies = AnalyzeTypeDependencies(
+                monoLoader,
                 t => relevantAssemblies.Contains(R.AssemblyName(t.Assembly)),
                 relevantNodes.Where(n => sourceNodeIds.Contains(n.Id)).ToList());
 
             Console.WriteLine();
             Console.WriteLine("NOT analyzed assemblies:");
 
-            foreach (var asm in myMonoLoader.SkippedAssemblies)
+            foreach (var asm in monoLoader.SkippedAssemblies)
             {
                 Shell.Warn("  " + asm);
             }
@@ -206,7 +199,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             return presentation;
         }
 
-        public void Execute(IEnumerable<string> sourceAssemblies, IEnumerable<string> targetAssemblies, IEnumerable<string> relevantAssemblies, string outputFile)
+        private void Execute(AssemblyLoader loader, IEnumerable<string> sourceAssemblies, IEnumerable<string> targetAssemblies, IEnumerable<string> relevantAssemblies, string outputFile)
         {
             Console.WriteLine("Source assemblies:");
             foreach (var asm in sourceAssemblies)
@@ -221,11 +214,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             }
 
             Console.WriteLine("Loading assemblies ...");
-            var sources = sourceAssemblies.Select(asm => myLoader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
-            var targets = targetAssemblies.Select(asm => myLoader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
+            var sources = sourceAssemblies.Select(asm => loader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
+            var targets = targetAssemblies.Select(asm => loader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
 
             Console.WriteLine("Analyzing assembly dependencies ...");
-            var analyzer = new AssemblyDependencyAnalyzer(relevantAssemblies);
+            var analyzer = new AssemblyDependencyAnalyzer(loader, relevantAssemblies);
             var assemblyGraphPresentation = analyzer.CreateAssemblyGraph(sources, targets);
 
             if (AssemblyReferencesOnly)
@@ -266,7 +259,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
                 KeepTargetAssemblyClusters = config.KeepTargetAssemblyClusters;
                 AssemblyReferencesOnly = assemblyReferencesOnly;
 
-                Execute(sources, targets, config.RelevantAssemblies, outputFile);
+                using (var loader = new AssemblyLoader(sources.Concat(targets)))
+                {
+                    Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
+                }
             }
         }
     }

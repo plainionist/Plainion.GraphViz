@@ -80,7 +80,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type code, Type usedType, ReferenceType edgeType)
         {
-            var reflector = new Inspector(new MonoLoader(), code);
+            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), code);
 
             var edges = reflector.GetUsedTypes();
 

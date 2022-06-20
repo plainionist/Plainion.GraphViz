@@ -11,6 +11,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
 
+        private readonly List<Assembly> myAssemblies;
+
+        public TypesLoader()
+        {
+            myAssemblies = new List<Assembly>();
+        }
+
+        public IReadOnlyCollection<Assembly> Assemblies => myAssemblies;
+
         public IEnumerable<Type> TryLoadAllTypes(string path)
         {
             if (!IsAssembly(path))

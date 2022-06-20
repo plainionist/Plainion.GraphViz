@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Plainion.GraphViz.Algorithms;
@@ -17,13 +18,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             public Assembly myDependency;
         }
 
-        private readonly IEnumerable<Wildcard> myRelevantAssemblies;
         private readonly AssemblyLoader myLoader;
+        private readonly IEnumerable<Wildcard> myRelevantAssemblies;
 
-        public AssemblyDependencyAnalyzer(IEnumerable<string> relevantAssemblies)
+        public AssemblyDependencyAnalyzer(AssemblyLoader loader, IEnumerable<string> relevantAssemblies)
         {
+            myLoader = loader;
             myRelevantAssemblies = relevantAssemblies.Select(p => new Wildcard(p)).ToList();
-            myLoader = new AssemblyLoader();
         }
 
         /// <summary>

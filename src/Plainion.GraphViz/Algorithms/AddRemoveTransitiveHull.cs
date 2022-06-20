@@ -42,7 +42,11 @@ namespace Plainion.GraphViz.Algorithms
 
             mask.Set(connectedNodes);
 
-            if (nodes.Count == 1)
+            if (nodes.Count == 0)
+            {
+                mask.Label = "<empty>";
+            }
+            else if (nodes.Count == 1)
             {
                 var caption = Presentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
                 mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption.DisplayText;

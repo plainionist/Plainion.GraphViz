@@ -85,7 +85,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void FromPrivatMethod()
         {
-            var reflector = new Inspector(new MonoLoader(), typeof(Caller));
+            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), typeof(Caller));
 
             var calls = reflector.GetCalledMethods();
 
@@ -111,7 +111,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type callerType, string callerMethod, Type callingType, string callingMethod)
         {
-            var reflector = new Inspector(new MonoLoader(), callerType);
+            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), callerType);
 
             var calls = reflector.GetCalledMethods();
 

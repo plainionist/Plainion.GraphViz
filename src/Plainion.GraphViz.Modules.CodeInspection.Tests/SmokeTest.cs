@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using Plainion.Diagnostics;
+using Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
 
@@ -92,6 +93,44 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                     .Select(x => $"{RemoveId(x.Item1)} -> {RemoveId(x.Item2)}")
                     .ToList();
                 Assert.That(edges, Contains.Item("DummyProject.Builder -> DummyProject.Lib.AbstractBuilder"));
+            }
+        }
+
+        [TestCaseSource(nameof(TargetFrameworks))]
+        public void AnalyzeCallTree(string targetFramework)
+        {
+            using (var client = new CallTreeClient())
+            {
+                client.HideHostWindow = true;
+
+                var assemblyLocation = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", targetFramework);
+
+                var configFile = Path.Combine(Path.GetTempPath(), "GraphViz.AnalyzeCallTree.json");
+                File.WriteAllText(configFile, @"
+                    {
+                        ""binFolder"": """ + assemblyLocation.Replace('\\', '/') + @""",
+                        ""sources"": [ ""DummyProject.dll"" ],
+                        ""targets"": [
+                            {
+                                ""assembly"": ""DummyProject.Lib.dll"",
+                                ""type"": ""DummyProject.Lib.IBuilder"",
+                                ""method"": ""Build""
+                            }
+                        ],
+                        ""relevantAssemblies"": [ ""DummyProject*"" ]
+                    }");
+
+                var responseFile = client.AnalyzeAsync(new CallTreeRequest
+                {
+                    ConfigFile = configFile,
+                    AssemblyReferencesOnly = false,
+                    StrictCallsOnly = true
+                }, CancellationToken.None).Result;
+
+                var response = File.ReadAllText(responseFile);
+
+                Assert.That(response, Is.Not.Empty);
+                Assert.That(response, Contains.Substring(@"""DummyProject.Component.Init"" -> ""DummyProject.Lib.IBuilder.Build"""));
             }
         }
     }

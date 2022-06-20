@@ -48,23 +48,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
         }
 
-        private readonly AssemblyLoader myLoader;
-        private readonly MonoLoader myMonoLoader;
-
-        public CallTreeAnalyzer()
-        {
-            myLoader = new AssemblyLoader();
-            myMonoLoader = new MonoLoader();
-        }
-
         public bool AssemblyReferencesOnly { get; set; }
         public bool StrictCallsOnly { get; set; }
 
-        private IEnumerable<MethodCall> GetCalledMethods(Type t)
+        private IEnumerable<MethodCall> GetCalledMethods(MonoLoader monoLoader, Type t)
         {
             Console.Write(".");
 
-            var inspector = new Inspector(myMonoLoader, t);
+            var inspector = new Inspector(monoLoader, t);
             return inspector.GetCalledMethods();
         }
 
@@ -131,11 +122,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             };
         }
 
-        private List<MethodCall> Analyze(IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<Type> analyzed, List<Type> callers)
+        private List<MethodCall> Analyze(MonoLoader monoLoader, IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<Type> analyzed, List<Type> callers)
         {
             var calls = callers.AsParallel()
                 .SelectMany(t =>
-                    GetCalledMethods(t)
+                    GetCalledMethods(monoLoader, t)
                         .Where(r => CoveredByAssemblyGraph(relevantNodes, r.To.DeclaringType))
                         .SelectMany(x => interfaceImplementationsMap.ResolveInterface(x)))
                 .ToList();
@@ -153,20 +144,20 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
             else
             {
-                var children = Analyze(relevantNodes, interfaceImplementationsMap, callers.Concat(analyzed).Distinct().ToList(), unknownTypes);
+                var children = Analyze(monoLoader, relevantNodes, interfaceImplementationsMap, callers.Concat(analyzed).Distinct().ToList(), unknownTypes);
                 return calls.Concat(children).ToList();
             }
         }
 
         // traces from the given source nodes all calls within the assembly graph
-        private List<MethodCall> TraceCalles(IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<MethodDesc> targets, IEnumerable<Assembly> sources)
+        private List<MethodCall> TraceCalles(MonoLoader monoLoader, IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<MethodDesc> targets, IEnumerable<Assembly> sources)
         {
             var targetTypes = targets
                 .Select(m => m.myDeclaringType)
                 .Distinct()
                 .ToList();
 
-            return Analyze(relevantNodes, interfaceImplementationsMap, targetTypes,
+            return Analyze(monoLoader, relevantNodes, interfaceImplementationsMap, targetTypes,
                 sources.SelectMany(x => x.GetTypes()).ToList())
                 .Distinct()
                 .ToList();
@@ -178,15 +169,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .Where(n => assemblyGraphPresentation.Picking.Pick(n))
                 .ToList();
 
-            var interfaceImplementationsMap = new InterfaceImplementationsMap();
+            var interfaceImplementationsMap = new InterfaceImplementationsMap(
+                sources.Concat(targets.Select(x => x.myDeclaringType.Assembly)).Distinct());
             interfaceImplementationsMap.Build(relevantNodes, targets.Select(t => t.myDeclaringType));
 
-            var calls = TraceCalles(relevantNodes, interfaceImplementationsMap, targets, sources);
+            var monoLoader = new MonoLoader(sources.Concat(targets.Select(x => x.myDeclaringType.Assembly)));
+            var calls = TraceCalles(monoLoader, relevantNodes, interfaceImplementationsMap, targets, sources);
 
             Console.WriteLine();
             Console.WriteLine("NOT analyzed assemblies:");
 
-            foreach (var x in myMonoLoader.SkippedAssemblies)
+            foreach (var x in monoLoader.SkippedAssemblies)
             {
                 Shell.Warn($"    {x}");
             }
@@ -319,7 +312,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             return presentation;
         }
 
-        public void Execute(IEnumerable<string> sourceAssemblies, IEnumerable<TargetDescriptor> targetDescriptors, IEnumerable<string> relevantAssemblies, string outputFile)
+        private void Execute(AssemblyLoader loader, IEnumerable<string> sourceAssemblies, IEnumerable<TargetDescriptor> targetDescriptors, IEnumerable<string> relevantAssemblies, string outputFile)
         {
             Console.WriteLine("Source assemblies:");
             foreach (var asm in sourceAssemblies)
@@ -329,7 +322,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             Console.WriteLine("Loading assemblies ...");
             var sources = sourceAssemblies
-                .Select(asm => myLoader.LoadAssemblyFrom(asm))
+                .Select(asm => loader.LoadAssemblyFrom(asm))
                 .Where(x => x != null)
                 .ToList();
 
@@ -337,7 +330,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 targetDescriptors
                     .Select(target =>
                     {
-                        var asm = myLoader.LoadAssemblyFrom(target.Assembly);
+                        var asm = loader.LoadAssemblyFrom(target.Assembly);
                         return (asm, GetMethod(asm, target.Type, target.Method));
                     })
                     .ToList());
@@ -348,7 +341,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 Console.WriteLine($"  {R.AssemblyName(t.Item1)}/{t.Item2.myDeclaringType}.{t.Item2.myName}");
             }
 
-            var analyzer = new AssemblyDependencyAnalyzer(relevantAssemblies);
+            var analyzer = new AssemblyDependencyAnalyzer(loader, relevantAssemblies);
             var assemblyGraphPresentation = Shell.Profile("Analyzing assemblies dependencies ...", () =>
                 analyzer.CreateAssemblyGraph(sources, targets.Select(x => x.Item1)));
 
@@ -427,7 +420,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 AssemblyReferencesOnly = assemblyReferencesOnly;
                 StrictCallsOnly = strictCallsOnly;
 
-                Execute(sources, targets, config.RelevantAssemblies, outputFile);
+                using (var loader = new AssemblyLoader(sources.Concat(targets.Select(x => x.Assembly))))
+                {
+                    Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
+                }
             }
         }
     }

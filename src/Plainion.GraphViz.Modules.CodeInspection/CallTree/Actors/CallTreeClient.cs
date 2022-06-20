@@ -6,16 +6,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 {
     class CallTreeClient : ActorClientBase
     {
-        public async Task<string> AnalyzePathAsync(string configFile, bool assemblyReferencesOnly, bool strictCallsOnly, CancellationToken cancellationToken)
+        public async Task<string> AnalyzeAsync(CallTreeRequest request, CancellationToken cancellationToken)
         {
-            var msg = new CallTreeRequest
-            {
-                ConfigFile = configFile,
-                AssemblyReferencesOnly = assemblyReferencesOnly,
-                StrictCallsOnly = strictCallsOnly
-            };
-
-            var response = await this.ProcessAsync(typeof(CallTreeActor), msg, cancellationToken);
+            var response = await this.ProcessAsync(typeof(CallTreeActor), request, cancellationToken);
 
             if (response is CallTreeResponse m)
             {

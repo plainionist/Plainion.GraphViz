@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Common;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
@@ -13,12 +12,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {
     class InterfaceImplementationsMap
     {
-        private Regex myTypeParameterPattern;
-        private Dictionary<string, IReadOnlyCollection<Type>> myMap;
+        private readonly IReadOnlyCollection<Assembly> myAssemblies;
+        private readonly Regex myTypeParameterPattern;
+        private readonly Dictionary<string, IReadOnlyCollection<Type>> myMap;
         private List<Type> myTargetTypes;
 
-        public InterfaceImplementationsMap()
+        public InterfaceImplementationsMap(IEnumerable<Assembly> assemblies)
         {
+            myAssemblies = assemblies.ToList();
             myTypeParameterPattern = new Regex(@"\[\[.*\]\]");
             myMap = new Dictionary<string, IReadOnlyCollection<Type>>();
         }
@@ -28,7 +29,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             myTargetTypes = targetTypes.ToList();
 
             var interfaceImplMap = relevantNodes
-                .SelectMany(n => AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies().Single(x => R.AssemblyName(x) == n.Id).GetTypes())
+                .SelectMany(n => myAssemblies.Single(x => R.AssemblyName(x) == n.Id).GetTypes())
                 .SelectMany(t => t.GetInterfaces().Select(GetInterfaceId).Where(iface => iface != null).Select(iface => (iface, t)))
                 .ToList();
 

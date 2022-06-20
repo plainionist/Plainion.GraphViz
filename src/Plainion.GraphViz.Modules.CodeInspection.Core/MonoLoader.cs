@@ -11,11 +11,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
         private readonly Dictionary<string, AssemblyDefinition> myMonoCache;
         private readonly List<string> mySkippedAssemblies;
 
-        public MonoLoader()
+        public MonoLoader(IEnumerable<Assembly> assemblies)
         {
+            Assemblies = assemblies.ToList();
             myMonoCache = new Dictionary<string, AssemblyDefinition>();
             mySkippedAssemblies = new List<string>();
         }
+
+        public IReadOnlyCollection<Assembly> Assemblies { get; }
 
         public IReadOnlyCollection<string> SkippedAssemblies => mySkippedAssemblies;
 
@@ -73,14 +76,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                 return null;
             }
 
-            var asm = AppDomain.CurrentDomain.GetAssemblies()
-                .SingleOrDefault(x => x.FullName.Equals(assemblyFullName, StringComparison.OrdinalIgnoreCase));
-
-            if (asm == null)
-            {
-                asm = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies()
-                    .SingleOrDefault(x => x.FullName.Equals(assemblyFullName, StringComparison.OrdinalIgnoreCase));
-            }
+            var asm = Assemblies.SingleOrDefault(x => x.FullName.Equals(assemblyFullName, StringComparison.OrdinalIgnoreCase));
 
             if (asm == null)
             {

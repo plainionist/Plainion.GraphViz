@@ -21,7 +21,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
         private IDocumentLoader myDocumentLoader;
 
         public CallTreeViewModel(IPresentationCreationService presentationCreationService, IDocumentLoader documentLoader, CallTreeClient client, IDomainModel model)
-            :base(model)
+            : base(model)
         {
             myPresentationCreationService = presentationCreationService;
             myDocumentLoader = documentLoader;
@@ -98,7 +98,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
             {
                 myCTS = new CancellationTokenSource();
 
-                var dotFile = await myClient.AnalyzePathAsync(ConfigFile, AssemblyReferencesOnly, StrictDependenciesOnly,myCTS.Token);
+                var dotFile = await myClient.AnalyzeAsync(new CallTreeRequest
+                {
+                    ConfigFile = ConfigFile,
+                    AssemblyReferencesOnly = AssemblyReferencesOnly,
+                    StrictCallsOnly = StrictDependenciesOnly
+                }, myCTS.Token);
 
                 myCTS.Dispose();
                 myCTS = null;

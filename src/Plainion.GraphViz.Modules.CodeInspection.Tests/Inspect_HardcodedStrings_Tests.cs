@@ -34,7 +34,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type callerType, string callerMethod, string hardcodedString)
         {
-            var reflector = new Inspector(new MonoLoader(), callerType);
+            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), callerType);
 
             var strings = reflector.GetHardcodedStrings();
 

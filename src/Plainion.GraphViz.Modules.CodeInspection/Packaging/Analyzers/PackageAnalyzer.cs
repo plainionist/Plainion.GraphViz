@@ -18,7 +18,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         private SystemPackaging myConfig;
         private CancellationToken myCancellationToken;
-        private readonly MonoLoader myAssemblyLoader;
         private Dictionary<string, List<Type>> myPackageToTypesMap;
         private List<Package> myRelevantPackages;
         private readonly TypesLoader myTypesLoader;
@@ -27,7 +26,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         {
             myTypesLoader = typesLoader;
 
-            myAssemblyLoader = new MonoLoader();
             PackagesToAnalyze = new List<string>();
         }
 
@@ -65,14 +63,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             myLogger.Info("Analyzing ...");
 
-            var edges = Analyze()
+            var monoLoader = new MonoLoader(myTypesLoader.Assemblies);
+
+            var edges = Analyze(monoLoader)
                 .Distinct()
                 .ToList();
 
-            if (myAssemblyLoader.SkippedAssemblies.Any())
+            if (monoLoader.SkippedAssemblies.Any())
             {
                 myLogger.Notice("Skipped assemblies:");
-                foreach (var asm in myAssemblyLoader.SkippedAssemblies)
+                foreach (var asm in monoLoader.SkippedAssemblies)
                 {
                     myLogger.Notice("  {0}", asm);
                 }
@@ -97,7 +97,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 .ToList();
         }
 
-        private Reference[] Analyze()
+        private Reference[] Analyze(MonoLoader monoLoader)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                     )
                     .AsParallel()
                     .WithCancellation(myCancellationToken)
-                    .SelectMany(e => Analyze(e.Type))
+                    .SelectMany(e => Analyze(monoLoader, e.Type))
                     .ToArray();
             }
             finally
@@ -120,13 +120,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             }
         }
 
-        private IEnumerable<Reference> Analyze(Type type)
+        private IEnumerable<Reference> Analyze(MonoLoader monoLoader, Type type)
         {
             Console.Write(".");
 
             myCancellationToken.ThrowIfCancellationRequested();
 
-            return new Inspector(myAssemblyLoader, type).GetUsedTypes()
+            return new Inspector(monoLoader, type).GetUsedTypes()
                 .Where(edge => myPackageToTypesMap.Any(e => e.Value.Contains(edge.To)))
                 .Select(edge => GraphUtils.Edge(edge))
                 .Where(edge => edge.From != edge.To);
