@@ -65,11 +65,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
 
             var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.ActorsHost.exe");
             var info = new ProcessStartInfo(executable);
+
             if (HideHostWindow)
             {
                 info.CreateNoWindow = true;
                 info.UseShellExecute = false;
             }
+            
             myHostPid = Process.Start(info).Id;
 
             var config = ConfigurationFactory.ParseString(@"
