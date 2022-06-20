@@ -96,7 +96,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder
             {
                 myCTS = new CancellationTokenSource();
 
-                var dotFile = await myClient.AnalyzePathAsync(ConfigFile, AssemblyReferencesOnly, myCTS.Token);
+                var dotFile = await myClient.AnalyzeAsync(new PathFinderRequest
+                {
+                    ConfigFile = ConfigFile,
+                    AssemblyReferencesOnly = AssemblyReferencesOnly
+                }, myCTS.Token);
 
                 myCTS.Dispose();
                 myCTS = null;

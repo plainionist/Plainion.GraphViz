@@ -6,15 +6,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors
 {
     class PathFinderClient : ActorClientBase
     {
-        public async Task<string> AnalyzePathAsync(string configFile, bool assemblyReferencesOnly, CancellationToken cancellationToken)
+        public async Task<string> AnalyzeAsync(PathFinderRequest request, CancellationToken cancellationToken)
         {
-            var msg = new PathFinderRequest
-            {
-                ConfigFile = configFile,
-                AssemblyReferencesOnly = assemblyReferencesOnly
-            };
-
-            var response = await this.ProcessAsync(typeof(PathFinderActor), msg, cancellationToken);
+            var response = await this.ProcessAsync(typeof(PathFinderActor), request, cancellationToken);
 
             if (response is PathFinderResponse m)
             {

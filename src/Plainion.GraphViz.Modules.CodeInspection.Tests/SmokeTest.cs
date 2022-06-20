@@ -8,6 +8,7 @@ using Plainion.Diagnostics;
 using Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {
@@ -131,6 +132,40 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
                 Assert.That(response, Is.Not.Empty);
                 Assert.That(response, Contains.Substring(@"""DummyProject.Component.Init"" -> ""DummyProject.Lib.IBuilder.Build"""));
+            }
+        }
+
+        [TestCaseSource(nameof(TargetFrameworks))]
+        public void AnalyzePath(string targetFramework)
+        {
+            using (var client = new PathFinderClient())
+            {
+                client.HideHostWindow = true;
+
+                var assemblyLocation = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", targetFramework);
+
+                var configFile = Path.Combine(Path.GetTempPath(), "GraphViz.AnalyzeCallTree.json");
+                File.WriteAllText(configFile, @"
+                    {
+                        ""binFolder"": """ + assemblyLocation.Replace('\\', '/') + @""",
+                        ""keepInnerAssemblyDependencies"": true,
+                        ""keepSourceAssemblyClusters"": true,
+                        ""keepTargetAssemblyClusters"": true,
+                        ""sources"": [ ""DummyProject.dll"" ],
+                        ""targets"": [ ""DummyProject.Lib.dll"" ],
+                        ""relevantAssemblies"": [ ""DummyProject*"" ]
+                    }");
+
+                var responseFile = client.AnalyzeAsync(new PathFinderRequest
+                {
+                    ConfigFile = configFile,
+                    AssemblyReferencesOnly = false
+                }, CancellationToken.None).Result;
+
+                var response = File.ReadAllText(responseFile);
+
+                Assert.That(response, Is.Not.Empty);
+                Assert.That(response, Contains.Substring(@"""DummyProject.Component"" -> ""DummyProject.Lib.IBuilder"""));
             }
         }
     }
