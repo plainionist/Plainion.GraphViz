@@ -2,7 +2,13 @@
 #r "System.Core.dll"
 #r "nuget: Newtonsoft.Json" 
 
-// usage   : fsi <full-path-to-this-script> <path-to-(app).deps.json>
+//
+// usage:
+// when building a Asp.Net Core application a file called <app-name.deps.json>
+// from "Developer Command prompt" run "fsi <full-path-to-this-script> <app-name.deps.json>"
+// (if you don't have the "Developer Command prompt" use the full path to the F# installation)
+// load the created file (location printed to console) into Plainion.GraphViz
+//
 
 open System.IO
 open Newtonsoft.Json.Linq
