@@ -30,7 +30,13 @@ namespace Plainion.GraphViz.Modules.Documents
 
         protected override void Load()
         {
-            using (var reader = new StreamReader(Filename))
+            var options = new FileStreamOptions
+            {
+                Mode = FileMode.Open,
+                Access = FileAccess.Read
+            };
+
+            using (var reader = new StreamReader(Filename, options))
             {
                 Read(reader);
             }

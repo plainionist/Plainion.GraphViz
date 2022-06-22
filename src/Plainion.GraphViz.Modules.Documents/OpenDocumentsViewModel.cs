@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Infrastructure.Services;
@@ -167,7 +168,28 @@ namespace Plainion.GraphViz.Modules.Documents
 
         private void OnCurrentFileChanged(object sender, FileSystemEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() => Open(e.FullPath)));
+            Application.Current.Dispatcher.BeginInvoke(new Action(() => HotReOpen(e.FullPath, 3)));
+        }
+
+        // hot reloading the document while it is edited with notpad works but 
+        // when trying the same with VS Code we get "file is use by another process"
+        // so lets apply some tolerance
+        private void HotReOpen(string file, int remainingRetries)
+        {
+            for (int i = 0; i < 3; ++i)
+            {
+                try
+                {
+                    Open(file);
+                }
+                catch
+                {
+                    if (remainingRetries > 0)
+                    {
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() => HotReOpen(file, --remainingRetries)));
+                    }
+                }
+            }
         }
 
         private void OnFileWatcherError(object sender, ErrorEventArgs e)

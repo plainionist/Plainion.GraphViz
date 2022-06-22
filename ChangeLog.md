@@ -1,4 +1,8 @@
 
+## 4.1 - 2022-06-22
+
+- hot reload of graph documents made more robust
+
 ## 4.0 - 2022-06-20
 
 - Packages dependency graph
