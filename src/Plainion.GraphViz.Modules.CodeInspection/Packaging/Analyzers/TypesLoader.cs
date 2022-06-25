@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
     class TypesLoader
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(TypesLoader));
 
         private readonly List<Assembly> myAssemblies;
 

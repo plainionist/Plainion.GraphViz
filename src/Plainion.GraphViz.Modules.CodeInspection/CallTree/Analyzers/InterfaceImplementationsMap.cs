@@ -17,9 +17,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
         private readonly Dictionary<string, IReadOnlyCollection<Type>> myMap;
         private List<Type> myTargetTypes;
 
-        public InterfaceImplementationsMap(IEnumerable<Assembly> assemblies)
+        public InterfaceImplementationsMap()
         {
-            myAssemblies = assemblies.ToList();
+            myAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             myTypeParameterPattern = new Regex(@"\[\[.*\]\]");
             myMap = new Dictionary<string, IReadOnlyCollection<Type>>();
         }

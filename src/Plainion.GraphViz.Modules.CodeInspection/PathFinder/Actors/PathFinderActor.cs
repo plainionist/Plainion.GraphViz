@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors
@@ -20,10 +21,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors
 
                 Task.Run<string>(() =>
                 {
-                    var outputFile = Path.GetTempFileName() + ".dot";
-                    var analyzer = new PathFinderAnalyzer();
-                    analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, outputFile);
-                    return outputFile;
+                    using (var resolver = new AssemblyResolver())
+                    {
+                        var outputFile = Path.GetTempFileName() + ".dot";
+                        var analyzer = new PathFinderAnalyzer();
+                        analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, outputFile);
+                        return outputFile;
+                    }
                 }, CancellationToken)
                 .ContinueWith<object>(x =>
                 {

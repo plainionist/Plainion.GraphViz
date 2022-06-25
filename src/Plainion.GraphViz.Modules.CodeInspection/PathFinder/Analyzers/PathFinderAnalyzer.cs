@@ -259,10 +259,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
                 KeepTargetAssemblyClusters = config.KeepTargetAssemblyClusters;
                 AssemblyReferencesOnly = assemblyReferencesOnly;
 
-                using (var loader = new AssemblyLoader(sources.Concat(targets)))
-                {
-                    Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
-                }
+                var loader = new AssemblyLoader();
+                Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }
     }

@@ -8,11 +8,11 @@ using Nuclear.Assemblies.Resolvers;
 using Nuclear.Creation;
 using Plainion.Logging;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
     class AssemblyResolver : IDisposable
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(AssemblyResolver));
 
         private readonly IDefaultResolver myDefaultResolver;
         private readonly INugetResolver myNuGetResolver;

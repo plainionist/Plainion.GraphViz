@@ -169,8 +169,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .Where(n => assemblyGraphPresentation.Picking.Pick(n))
                 .ToList();
 
-            var interfaceImplementationsMap = new InterfaceImplementationsMap(
-                sources.Concat(targets.Select(x => x.myDeclaringType.Assembly)).Distinct());
+            var interfaceImplementationsMap = new InterfaceImplementationsMap();
             interfaceImplementationsMap.Build(relevantNodes, targets.Select(t => t.myDeclaringType));
 
             var monoLoader = new MonoLoader(sources.Concat(targets.Select(x => x.myDeclaringType.Assembly)));
@@ -407,10 +406,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 AssemblyReferencesOnly = assemblyReferencesOnly;
                 StrictCallsOnly = strictCallsOnly;
 
-                using (var loader = new AssemblyLoader(sources.Concat(targets.Select(x => x.Assembly))))
-                {
-                    Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
-                }
+                var loader = new AssemblyLoader();
+                Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }
     }

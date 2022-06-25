@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 {
@@ -20,10 +21,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 
                 Task.Run<string>(() =>
                 {
-                    var outputFile = Path.GetTempFileName() + ".dot";
-                    var analyzer = new CallTreeAnalyzer();
-                    analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, r.StrictCallsOnly, outputFile);
-                    return outputFile;
+                    using (var resolver = new AssemblyResolver())
+                    {
+                        var outputFile = Path.GetTempFileName() + ".dot";
+                        var analyzer = new CallTreeAnalyzer();
+                        analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, r.StrictCallsOnly, outputFile);
+                        return outputFile;
+                    }
                 }, CancellationToken)
                 .ContinueWith<object>(x =>
                 {

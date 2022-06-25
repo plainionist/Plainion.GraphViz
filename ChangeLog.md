@@ -1,7 +1,8 @@
 
 ## 4.2 - 2022-06-25
 
-- CallTree fixed and tool added to dialog
+- CallTree: tooltip added to dialog
+- CallTree: assembly loading improved
 
 ## 4.1 - 2022-06-22
 

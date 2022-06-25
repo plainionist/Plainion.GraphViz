@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
@@ -22,10 +23,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 
                 Task.Run<IEnumerable<TypeDescriptor>>(() =>
                 {
-                    var assembly = Assembly.LoadFrom(r.AssemblyLocation);
-                    return assembly.GetTypes()
-                        .Select(t => TypeDescriptor.Create(t))
-                        .ToList();
+                    using (var resolver = new AssemblyResolver())
+                    {
+                        var assembly = Assembly.LoadFrom(r.AssemblyLocation);
+                        return assembly.GetTypes()
+                            .Select(t => TypeDescriptor.Create(t))
+                            .ToList();
+                    }
                 }, CancellationToken)
                 .ContinueWith<object>(x =>
                 {
