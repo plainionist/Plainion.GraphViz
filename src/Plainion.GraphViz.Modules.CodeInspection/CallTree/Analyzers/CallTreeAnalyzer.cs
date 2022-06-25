@@ -362,15 +362,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                         GraphUtils.Serialize(outputFile, p);
                         return 0;
                     });
-
-                    Console.WriteLine(" Note:");
-                    Console.WriteLine(" The 'strict' graph only considers direct call paths from one method to another.");
-                    Console.WriteLine(" Dependencies between classes caused indirectly will later be removed, e.g.");
-                    Console.WriteLine(" A.DoIt() -> B.DoIt() and B.DoItDifferently() -> C.Done()");
-                    Console.WriteLine(" In this case the indirect dependency between A and C will be removed again.");
-                    Console.WriteLine(" Due to the way how this removal is done the edge B.DoItDifferently() -> C.Done()");
-                    Console.WriteLine(" will remain in the graph, which might be unexpected");
-                    Console.WriteLine("");
                 }
                 else
                 {
@@ -380,10 +371,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                         GraphUtils.Serialize(outputFile, p);
                         return 0;
                     });
-
-                    Console.WriteLine(" Note:");
-                    Console.WriteLine(" The 'relaxed' graph INCLUDES the indirect dependencies mentioned above.");
-                    Console.WriteLine("");
                 }
             }
         }

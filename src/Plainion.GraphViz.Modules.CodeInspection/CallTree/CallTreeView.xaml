@@ -36,7 +36,7 @@
         </Grid>
         <StackPanel DockPanel.Dock="Top">
             <CheckBox Content="Assembly references only" Margin="5,5,5,0" IsChecked="{Binding Path=AssemblyReferencesOnly}" IsEnabled="{Binding IsReady}"/>
-            <CheckBox Content="Strict dependencies only" Margin="5,5,5,0" IsChecked="{Binding Path=StrictDependenciesOnly}" IsEnabled="{Binding IsReady}"/>
+            <CheckBox Content="Strict dependencies only" Margin="5,5,5,0" IsChecked="{Binding Path=StrictDependenciesOnly}" IsEnabled="{Binding IsReady}" ToolTip="The 'strict' graph only considers direct call paths from one method to another.&#x0a;Dependencies between classes caused indirectly will later be removed, e.g. 'A.DoIt() ->B.DoIt()' and 'B.DoItDifferently() -> C.Done()'.&#x0a;In this case the indirect dependency between A and C will be removed again. Due to the way how this removal is done the edge&#x0a;'B.DoItDifferently() -> C.Done()' will remain in the graph, which might be unexpected."/>
             <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5">
                 <Button Content="Cancel" Margin="0,0,5,0" Command="{Binding Path=CancelCommand}" />
                 <Button Content="Create graph" Command="{Binding Path=CreateGraphCommand}"/>

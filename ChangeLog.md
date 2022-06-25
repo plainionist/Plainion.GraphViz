@@ -1,4 +1,8 @@
 
+## 4.2 - 2022-06-25
+
+- CallTree fixed and tool added to dialog
+
 ## 4.1 - 2022-06-22
 
 - hot reload of graph documents made more robust

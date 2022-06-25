@@ -36,7 +36,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree
 
             IsReady = true;
             AssemblyReferencesOnly = false;
-            StrictDependenciesOnly = false;
+            StrictDependenciesOnly = true;
         }
 
         private void OnCancel()
