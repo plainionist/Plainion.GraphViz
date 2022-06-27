@@ -15,6 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GraphIcon.ico" />
     <None Remove="Resources\Bookmarks.png" />
     <None Remove="Resources\Clusters.png" />
     <None Remove="Resources\Filter.png" />
@@ -50,6 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="GraphIcon.ico" />
     <Resource Include="Resources\Bookmarks.png" />
     <Resource Include="Resources\Clusters.png" />
     <Resource Include="Resources\Filter.png" />

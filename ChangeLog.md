@@ -1,4 +1,8 @@
 
+## 4.3 - 2022-06-27
+
+- Application Icon fixed
+
 ## 4.2 - 2022-06-25
 
 - CallTree: tooltip added to dialog
