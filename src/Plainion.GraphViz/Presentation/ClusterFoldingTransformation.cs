@@ -15,6 +15,7 @@ namespace Plainion.GraphViz.Presentation
         private readonly HashSet<string> myFoldedClusters;
         private IModuleChangedObserver myNodeMaskModuleObserver;
         private bool myChangeNotified;
+        private IModuleChangedJournal<Caption> myCaptionsJournal;
 
         // we remember the most recent input graph so that we can figure out
         // later which nodes where in which cluster BEFORE folding
@@ -41,8 +42,27 @@ namespace Plainion.GraphViz.Presentation
             myNodeMaskModuleObserver = myPresentation.GetModule<INodeMaskModule>().CreateObserver();
             myNodeMaskModuleObserver.ModuleChanged += OnGraphVisibilityChanged;
 
+            myCaptionsJournal = myPresentation.GetPropertySetFor<Caption>().CreateJournal();
+            myCaptionsJournal.ModuleChanged += OnCaptionChanged;
+
             myFoldedClusters = new HashSet<string>();
             myComputedEdges = new Dictionary<string, ComputedEdge>();
+        }
+
+        private void OnCaptionChanged(object sender, EventArgs e)
+        {
+            var captions = myPresentation.GetPropertySetFor<Caption>();
+
+            foreach (var entry in myCaptionsJournal.Entries)
+            {
+                var clusterNodeId = GetClusterNodeId(entry.OwnerId);
+
+                var caption = captions.TryGet(clusterNodeId);
+                if (caption != null)
+                {
+                    caption.DisplayText = "[" + entry.DisplayText + "]";
+                }
+            }
         }
 
         // If visibility of nodes/edges of a folded cluster changes that way that 
@@ -87,6 +107,9 @@ namespace Plainion.GraphViz.Presentation
                 myNodeMaskModuleObserver.Dispose();
                 myNodeMaskModuleObserver = null;
             }
+
+            myCaptionsJournal?.Dispose();
+            myCaptionsJournal = null;
         }
 
         public IEnumerable<string> Clusters
@@ -307,7 +330,7 @@ namespace Plainion.GraphViz.Presentation
                 if (isEdgeVisible)
                 {
                     // add redirected edge
-                    builder.TryAddEdge(sourceId,targetId);
+                    builder.TryAddEdge(sourceId, targetId);
                 }
 
                 // ALWAYS remember based on what we computed the redirected Remember "decision" for when visibility of nodes/edges changes so that

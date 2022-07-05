@@ -1,4 +1,8 @@
 
+## 4.4 - 2022-07-
+
+- rename of clusters in the cluster editor will be immediately reflected in rendered graph
+
 ## 4.3 - 2022-06-27
 
 - Application Icon fixed

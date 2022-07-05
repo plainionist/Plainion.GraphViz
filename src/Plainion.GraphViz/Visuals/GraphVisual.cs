@@ -20,6 +20,7 @@ namespace Plainion.GraphViz.Visuals
         private IModuleChangedJournal<Selection> mySelectionJournal;
         private IModuleChangedJournal<INodeMask> myNodeMaskJournal;
         private IModuleChangedJournal<IGraphTransformation> myTransformationsJournal;
+        private IModuleChangedJournal<Caption> myCaptionJournal;
 
         private double myOldScaling;
         private double myCurrentScaling;
@@ -52,6 +53,7 @@ namespace Plainion.GraphViz.Visuals
                     mySelectionJournal.Dispose();
                     myNodeMaskJournal.Dispose();
                     myTransformationsJournal.Dispose();
+                    myCaptionJournal.Dispose();
 
                     myDrawingElements.Clear();
                 }
@@ -63,6 +65,7 @@ namespace Plainion.GraphViz.Visuals
                     mySelectionJournal = myPresentation.GetPropertySetFor<Selection>().CreateJournal();
                     myNodeMaskJournal = myPresentation.GetModule<INodeMaskModule>().CreateJournal();
                     myTransformationsJournal = myPresentation.GetModule<ITransformationModule>().CreateJournal();
+                    myCaptionJournal = myPresentation.GetPropertySetFor<Caption>().CreateJournal();
                 }
             }
         }
@@ -80,6 +83,7 @@ namespace Plainion.GraphViz.Visuals
 
             var layoutModule = Presentation.GetModule<IGraphLayoutModule>();
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            var clusterFolding = myPresentation.ClusterFolding();
 
             // current assumption: it is enough to check the nodes as we would not render edges independent from nodes
 
@@ -187,6 +191,7 @@ namespace Plainion.GraphViz.Visuals
                 myTransformationsJournal.Clear();
                 myNodeMaskJournal.Clear();
                 mySelectionJournal.Clear();
+                myCaptionJournal.Clear();
 
                 InvalidateMeasure();
 
@@ -198,8 +203,7 @@ namespace Plainion.GraphViz.Visuals
                 {
                     foreach (var node in transformationModule.Graph.Nodes)
                     {
-                        AbstractElementVisual visual;
-                        if (myDrawingElements.TryGetValue(node.Id, out visual))
+                        if (myDrawingElements.TryGetValue(node.Id, out var visual))
                         {
                             SetVisibility((NodeVisual)visual,
                                 Presentation.Picking.Pick(node),
@@ -209,8 +213,7 @@ namespace Plainion.GraphViz.Visuals
 
                     foreach (var edge in transformationModule.Graph.Edges)
                     {
-                        AbstractElementVisual visual;
-                        if (myDrawingElements.TryGetValue(edge.Id, out visual))
+                        if (myDrawingElements.TryGetValue(edge.Id, out var visual))
                         {
                             SetVisibility((EdgeVisual)visual,
                                 Presentation.Picking.Pick(edge),
@@ -236,8 +239,7 @@ namespace Plainion.GraphViz.Visuals
                         }
                         else
                         {
-                            AbstractElementVisual visual;
-                            if (myDrawingElements.TryGetValue(cluster.Id, out visual))
+                            if (myDrawingElements.TryGetValue(cluster.Id, out var visual))
                             {
                                 myDrawingElements.Remove(cluster.Id);
 
@@ -255,8 +257,7 @@ namespace Plainion.GraphViz.Visuals
                     var selectionModule = Presentation.GetPropertySetFor<Selection>();
                     foreach (var e in mySelectionJournal.Entries)
                     {
-                        AbstractElementVisual visual;
-                        if (myDrawingElements.TryGetValue(e.OwnerId, out visual))
+                        if (myDrawingElements.TryGetValue(e.OwnerId, out var visual))
                         {
                             // for each change apply new status
                             visual.Select(selectionModule.TryGet(e.OwnerId)?.IsSelected ?? false);
@@ -264,6 +265,46 @@ namespace Plainion.GraphViz.Visuals
                     }
 
                     mySelectionJournal.Clear();
+                    InvalidateVisual();
+                }
+
+                if (!myCaptionJournal.IsEmpty)
+                {
+                    foreach (var e in myCaptionJournal.Entries)
+                    {
+                        if (myDrawingElements.TryGetValue(e.OwnerId, out var visual))
+                        {
+                            // node captions indirectly change if a cluster is folded then the "cluster node" caption
+                            // will change when the cluster gets renamed
+
+                            if (visual is NodeVisual nodeVisual)
+                            {
+                                // only need to handle visual part of the canvas 
+                                if (nodeVisual.Visual != null && myDrawing.Children.Contains(nodeVisual.Visual))
+                                {
+                                    myDrawing.Children.Remove(nodeVisual.Visual);
+
+                                    nodeVisual.Draw(layoutModule.GetLayout(nodeVisual.Owner));
+
+                                    myDrawing.Children.Add(nodeVisual.Visual);
+                                }
+                            }
+                            else if (visual is ClusterVisual clusterVisual)
+                            {
+                                // only need to handle visual part of the canvas 
+                                if (visual.Visual != null && myDrawing.Children.Contains(visual.Visual))
+                                {
+                                    myDrawing.Children.Remove(visual.Visual);
+
+                                    clusterVisual.Draw(myDrawingElements);
+
+                                    myDrawing.Children.Add(visual.Visual);
+                                }
+                            }
+                        }
+                    }
+
+                    myCaptionJournal.Clear();
                     InvalidateVisual();
                 }
 
