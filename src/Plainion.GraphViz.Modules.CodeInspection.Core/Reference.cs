@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
+    [DebuggerDisplay("{From.FullName} -> {To.FullName}")]
     public class Reference : IEquatable<Reference>
     {
         public Reference(Type from, Type to, ReferenceType type)

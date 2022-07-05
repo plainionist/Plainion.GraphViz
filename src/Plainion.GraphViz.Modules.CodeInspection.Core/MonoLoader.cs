@@ -13,7 +13,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 
         public MonoLoader(IEnumerable<Assembly> assemblies)
         {
-            Assemblies = assemblies.ToList();
+            Assemblies = assemblies.Distinct().ToList();
             myMonoCache = new Dictionary<string, AssemblyDefinition>();
             mySkippedAssemblies = new List<string>();
         }

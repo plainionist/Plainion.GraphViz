@@ -46,13 +46,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void GetUsedTypes_HardCast_Found()
         {
-            Verify(typeof(CastClass), typeof(ShowCycles));
+            Verify(typeof(HardCastClass), typeof(ShowCycles));
         }
 
         [Test]
         public void GetUsedTypes_AsCast_Found()
         {
-            Verify(typeof(CastClass), typeof(RemoveClusters));
+            Verify(typeof(AsCastClass), typeof(RemoveClusters));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type code, Type usedType, ReferenceType edgeType)
         {
-            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), code);
+            var reflector = new Inspector(new MonoLoader(new[] { code.Assembly, usedType.Assembly }), code);
 
             var edges = reflector.GetUsedTypes();
 
@@ -89,16 +89,23 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                 .Select(e => e.To)
                 .Distinct();
 
-            Assert.That(types, Contains.Item(usedType));
+            Assert.That(types, Contains.Item(usedType), $"No edge found from {code.Name} to {usedType.Name}");
         }
     }
 
-    class CastClass
+    class HardCastClass
     {
-        public void Init(object arg)
+        public object Init(object arg)
         {
-            var ignore = (ShowCycles)arg;
-            var ignore2 = arg as RemoveClusters;
+            return (ShowCycles)arg;
+        }
+    }
+
+    class AsCastClass
+    {
+        public object Init(object arg)
+        {
+            return (arg as RemoveClusters)?.Compute();
         }
     }
 
