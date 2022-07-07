@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Plainion.Logging;
@@ -11,10 +10,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(TypesLoader));
 
+        private readonly AssemblyLoader myAssemblyLoader;
         private readonly HashSet<Assembly> myAssemblies;
 
         public TypesLoader()
         {
+            myAssemblyLoader = new AssemblyLoader(false);
             myAssemblies = new HashSet<Assembly>();
         }
 
@@ -22,12 +23,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         public IEnumerable<Type> TryLoadAllTypes(string path)
         {
-            if (!IsAssembly(path))
-            {
-                return Enumerable.Empty<Type>();
-            }
-
-            var assembly = TryLoadAssembly(path);
+            var assembly = myAssemblyLoader.TryLoadAssembly(path);
             if (assembly == null)
             {
                 return Enumerable.Empty<Type>();
@@ -36,27 +32,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             myAssemblies.Add(assembly);
 
             return GetTypes(assembly);
-        }
-
-        private static bool IsAssembly(string path)
-        {
-            var ext = Path.GetExtension(path);
-            return ".dll".Equals(ext, StringComparison.OrdinalIgnoreCase) || ".exe".Equals(ext, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private Assembly TryLoadAssembly(string path)
-        {
-            try
-            {
-                myLogger.Info("Loading {0}", path);
-
-                return Assembly.LoadFrom(path);
-            }
-            catch (Exception ex)
-            {
-                myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}{ex.Message}");
-                return null;
-            }
         }
 
         private IEnumerable<Type> GetTypes(Assembly assembly)
