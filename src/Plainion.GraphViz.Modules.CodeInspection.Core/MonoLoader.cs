@@ -9,13 +9,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
     public class MonoLoader
     {
         private readonly Dictionary<string, AssemblyDefinition> myMonoCache;
-        private readonly List<string> mySkippedAssemblies;
+        private readonly HashSet<string> mySkippedAssemblies;
 
         public MonoLoader(IEnumerable<Assembly> assemblies)
         {
             Assemblies = assemblies.Distinct().ToList();
             myMonoCache = new Dictionary<string, AssemblyDefinition>();
-            mySkippedAssemblies = new List<string>();
+            mySkippedAssemblies = new HashSet<string>();
         }
 
         public IReadOnlyCollection<Assembly> Assemblies { get; }
@@ -84,10 +84,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                 // -> skip it
                 lock (mySkippedAssemblies)
                 {
-                    if (!mySkippedAssemblies.Contains(assemblyFullName))
-                    {
-                        mySkippedAssemblies.Add(assemblyFullName);
-                    }
+                    mySkippedAssemblies.Add(assemblyFullName);
                 }
                 return null;
             }

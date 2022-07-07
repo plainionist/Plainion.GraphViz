@@ -11,11 +11,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(TypesLoader));
 
-        private readonly List<Assembly> myAssemblies;
+        private readonly HashSet<Assembly> myAssemblies;
 
         public TypesLoader()
         {
-            myAssemblies = new List<Assembly>();
+            myAssemblies = new HashSet<Assembly>();
         }
 
         public IReadOnlyCollection<Assembly> Assemblies => myAssemblies;
@@ -32,6 +32,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             {
                 return Enumerable.Empty<Type>();
             }
+
+            myAssemblies.Add(assembly);
 
             return GetTypes(assembly);
         }
