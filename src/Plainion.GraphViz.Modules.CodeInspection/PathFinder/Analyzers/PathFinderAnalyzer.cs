@@ -214,8 +214,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             }
 
             Console.WriteLine("Loading assemblies ...");
-            var sources = sourceAssemblies.Select(asm => loader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
-            var targets = targetAssemblies.Select(asm => loader.LoadAssemblyFrom(asm)).Where(x => x != null).ToList();
+            var sources = sourceAssemblies.Select(asm => loader.TryLoadAssembly(asm)).Where(x => x != null).ToList();
+            var targets = targetAssemblies.Select(asm => loader.TryLoadAssembly(asm)).Where(x => x != null).ToList();
 
             Console.WriteLine("Analyzing assembly dependencies ...");
             var analyzer = new AssemblyDependencyAnalyzer(loader, relevantAssemblies);

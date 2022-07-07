@@ -8,7 +8,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(AssemblyLoader));
 
-        public Assembly LoadAssembly(AssemblyName name)
+        public Assembly TryLoadAssembly(AssemblyName name)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
         }
 
-        public Assembly LoadAssemblyFrom(string file)
+        public Assembly TryLoadAssembly(string file)
         {
             try
             {

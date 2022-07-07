@@ -321,7 +321,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             Console.WriteLine("Loading assemblies ...");
             var sources = sourceAssemblies
-                .Select(asm => loader.LoadAssemblyFrom(asm))
+                .Select(asm => loader.TryLoadAssembly(asm))
                 .Where(x => x != null)
                 .ToList();
 
@@ -329,7 +329,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 targetDescriptors
                     .Select(target =>
                     {
-                        var asm = loader.LoadAssemblyFrom(target.Assembly);
+                        var asm = loader.TryLoadAssembly(target.Assembly);
                         return (asm, GetMethod(asm, target.Type, target.Method));
                     })
                     .ToList());
