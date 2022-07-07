@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.Logging;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Plainion.Logging;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
     class TypesLoader
     {

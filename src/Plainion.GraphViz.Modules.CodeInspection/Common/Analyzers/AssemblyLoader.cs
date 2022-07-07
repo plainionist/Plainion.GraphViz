@@ -4,19 +4,6 @@ using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
-    class R
-    {
-        public static string AssemblyName(Assembly asm)
-        {
-            return asm.GetName().Name;
-        }
-
-        public static string TypeFullName(Type t)
-        {
-            return t.FullName != null ? t.FullName : $"{t.Namespace}.{t.Name}";
-        }
-    }
-
     class AssemblyLoader 
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(AssemblyLoader));
