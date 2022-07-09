@@ -1,5 +1,5 @@
 
-## 4.4 - 2022-07-
+## 4.4 - 2022-07-09
 
 - rename of clusters in the cluster editor will be immediately reflected in rendered graph
 - Package Analysis: reporting skipped assemblies fixed
