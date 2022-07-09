@@ -1,4 +1,8 @@
 
+## 4.5 - 2022-07-
+
+- renaming clusters in cluster editor fixed
+
 ## 4.4 - 2022-07-09
 
 - rename of clusters in the cluster editor will be immediately reflected in rendered graph
