@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2008
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz", "src\Plainion.GraphViz\Plainion.GraphViz.csproj", "{8CC5C764-ACE2-4AF2-BCA1-F78753E709AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz", "src\Plainion.GraphViz\Plainion.GraphViz.csproj", "{8CC5C764-ACE2-4AF2-BCA1-F78753E709AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Infrastructure", "src\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj", "{FC787D39-FC3E-4031-BD87-D6971F3006FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Infrastructure", "src\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj", "{FC787D39-FC3E-4031-BD87-D6971F3006FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.Analysis", "src\Plainion.GraphViz.Modules.Analysis\Plainion.GraphViz.Modules.Analysis.csproj", "{1E0DFA4E-2952-4B64-93A9-DB0A9829A773}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Analysis", "src\Plainion.GraphViz.Modules.Analysis\Plainion.GraphViz.Modules.Analysis.csproj", "{1E0DFA4E-2952-4B64-93A9-DB0A9829A773}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.Documents", "src\Plainion.GraphViz.Modules.Documents\Plainion.GraphViz.Modules.Documents.csproj", "{9105DE30-DE66-403C-A89C-C261E99C4C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Documents", "src\Plainion.GraphViz.Modules.Documents\Plainion.GraphViz.Modules.Documents.csproj", "{9105DE30-DE66-403C-A89C-C261E99C4C05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Viewer", "src\Plainion.GraphViz.Viewer\Plainion.GraphViz.Viewer.csproj", "{0F4FA89D-B2F4-40F5-BB4A-21C4BDB98C8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Viewer", "src\Plainion.GraphViz.Viewer\Plainion.GraphViz.Viewer.csproj", "{0F4FA89D-B2F4-40F5-BB4A-21C4BDB98C8B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CBE6C788-0BFF-476E-8C34-584844EA0837}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,19 +22,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build\Targets.fsx = build\Targets.fsx
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.Documents.Tests", "src\Plainion.GraphViz.Modules.Documents.Tests\Plainion.GraphViz.Modules.Documents.Tests.csproj", "{D03FE809-E508-406F-B48A-EE9432DEC4B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Documents.Tests", "src\Plainion.GraphViz.Modules.Documents.Tests\Plainion.GraphViz.Modules.Documents.Tests.csproj", "{D03FE809-E508-406F-B48A-EE9432DEC4B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.ActorsHost", "src\Plainion.GraphViz.ActorsHost\Plainion.GraphViz.ActorsHost.csproj", "{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.ActorsHost", "src\Plainion.GraphViz.ActorsHost\Plainion.GraphViz.ActorsHost.csproj", "{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.CodeInspection", "src\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj", "{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.CodeInspection", "src\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj", "{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.CodeInspection.Tests", "src\Plainion.GraphViz.Modules.CodeInspection.Tests\Plainion.GraphViz.Modules.CodeInspection.Tests.csproj", "{E4BFFD9B-E252-4628-8B92-4B388EB6FE2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.CodeInspection.Tests", "src\Plainion.GraphViz.Modules.CodeInspection.Tests\Plainion.GraphViz.Modules.CodeInspection.Tests.csproj", "{E4BFFD9B-E252-4628-8B92-4B388EB6FE2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Tests", "src\Plainion.GraphViz.Tests\Plainion.GraphViz.Tests.csproj", "{ED17823C-F627-457E-B2E1-7C80FB391F5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Tests", "src\Plainion.GraphViz.Tests\Plainion.GraphViz.Tests.csproj", "{ED17823C-F627-457E-B2E1-7C80FB391F5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plainion.GraphViz.Modules.CodeInspection.Core", "src\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj", "{EB61222B-B3D5-4901-A42D-7386E4AE08D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.CodeInspection.Core", "src\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj", "{EB61222B-B3D5-4901-A42D-7386E4AE08D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "docs", "docs\docs.csproj", "{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "docs", "docs\docs.csproj", "{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.VsProjects", "src\Plainion.GraphViz.Modules.VsProjects\Plainion.GraphViz.Modules.VsProjects.csproj", "{345817BA-84E4-4882-B022-03C0DC094500}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +92,10 @@ Global
 		{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{345817BA-84E4-4882-B022-03C0DC094500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{345817BA-84E4-4882-B022-03C0DC094500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{345817BA-84E4-4882-B022-03C0DC094500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{345817BA-84E4-4882-B022-03C0DC094500}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
