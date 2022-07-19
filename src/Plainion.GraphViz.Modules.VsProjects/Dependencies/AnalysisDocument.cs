@@ -1,6 +1,10 @@
-﻿namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
+﻿using System.Collections.Generic;
+
+namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
 {
-    internal class AnalysisDocument
+    class AnalysisDocument
     {
+        public IList<VsProject> Projects { get; } = new List<VsProject>();
+        public IList<FailedProject> FailedItems { get; } = new List<FailedProject>();
     }
 }

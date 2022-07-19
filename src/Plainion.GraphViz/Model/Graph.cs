@@ -21,75 +21,75 @@ namespace Plainion.GraphViz.Model
         public IEnumerable<Edge> Edges { get { return myEdges.Values; } }
         public IEnumerable<Cluster> Clusters { get { return myClusters.Values; } }
 
-        public bool TryAdd( Node node )
+        public bool TryAdd(Node node)
         {
-            Contract.RequiresNotNull( node, "node" );
+            Contract.RequiresNotNull(node, "node");
 
             Contract.Invariant(!IsFrozen, "Graph is frozen and cannot be modified");
 
-            if( myNodes.ContainsKey( node.Id ) )
+            if (myNodes.ContainsKey(node.Id))
             {
                 return false;
             }
 
-            myNodes.Add( node.Id, node );
+            myNodes.Add(node.Id, node);
 
             return true;
         }
 
-        public void Add( Node node )
+        public void Add(Node node)
         {
-            if( !TryAdd( node ) )
+            if (!TryAdd(node))
             {
-                throw new ArgumentException( "Node already exists: " + node.Id );
+                throw new ArgumentException("Node already exists: " + node.Id);
             }
         }
 
-        public bool TryAdd( Edge edge )
+        public bool TryAdd(Edge edge)
         {
-            Contract.RequiresNotNull( edge, "edge" );
+            Contract.RequiresNotNull(edge, "edge");
 
             Contract.Invariant(!IsFrozen, "Graph is frozen and cannot be modified");
 
-            if ( myEdges.ContainsKey( edge.Id ) )
+            if (myEdges.ContainsKey(edge.Id))
             {
                 return false;
             }
 
-            myEdges.Add( edge.Id, edge );
+            myEdges.Add(edge.Id, edge);
 
             return true;
         }
 
-        public void Add( Edge edge )
+        public void Add(Edge edge)
         {
-            if( !TryAdd( edge ) )
+            if (!TryAdd(edge))
             {
-                throw new ArgumentException( "Edge already exists: " + edge.Id );
+                throw new ArgumentException("Edge already exists: " + edge.Id);
             }
         }
 
-        public bool TryAdd( Cluster cluster )
+        public bool TryAdd(Cluster cluster)
         {
-            Contract.RequiresNotNull( cluster, "cluster" );
+            Contract.RequiresNotNull(cluster, "cluster");
 
             Contract.Invariant(!IsFrozen, "Graph is frozen and cannot be modified");
 
-            if ( myClusters.ContainsKey( cluster.Id ) )
+            if (myClusters.ContainsKey(cluster.Id))
             {
                 return false;
             }
 
-            myClusters.Add( cluster.Id, cluster );
+            myClusters.Add(cluster.Id, cluster);
 
             return true;
         }
 
-        public void Add( Cluster cluster )
+        public void Add(Cluster cluster)
         {
-            if( !TryAdd( cluster ) )
+            if (!TryAdd(cluster))
             {
-                throw new ArgumentException( "Cluster already exists: " + cluster.Id );
+                throw new ArgumentException("Cluster already exists: " + cluster.Id);
             }
         }
 

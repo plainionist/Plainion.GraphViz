@@ -27,11 +27,11 @@ namespace Plainion.GraphViz.Model
             myGraph.Freeze();
         }
 
-        public Node TryAddNode( string nodeId )
+        public Node TryAddNode(string nodeId)
         {
-            var node = new Node( nodeId );
+            var node = new Node(nodeId);
 
-            if( !myGraph.TryAdd( node ) )
+            if (!myGraph.TryAdd(node))
             {
                 return null;
             }
@@ -39,41 +39,41 @@ namespace Plainion.GraphViz.Model
             return node;
         }
 
-        public Edge TryAddEdge( string sourceNodeId, string targetNodeId )
+        public Edge TryAddEdge(string sourceNodeId, string targetNodeId)
         {
-            var sourceNode = GetOrCreateNode( sourceNodeId );
-            var targetNode = GetOrCreateNode( targetNodeId );
+            var sourceNode = GetOrCreateNode(sourceNodeId);
+            var targetNode = GetOrCreateNode(targetNodeId);
 
-            var edge = new Edge( sourceNode, targetNode );
+            var edge = new Edge(sourceNode, targetNode);
 
-            if( !myGraph.TryAdd( edge ) )
+            if (!myGraph.TryAdd(edge))
             {
                 return null;
             }
 
-            edge.Source.Out.Add( edge );
-            edge.Target.In.Add( edge );
+            edge.Source.Out.Add(edge);
+            edge.Target.In.Add(edge);
 
             return edge;
         }
 
-        private Node GetOrCreateNode( string nodeId )
+        private Node GetOrCreateNode(string nodeId)
         {
-            var node = Graph.FindNode( nodeId );
-            if( node == null )
+            var node = Graph.FindNode(nodeId);
+            if (node == null)
             {
-                node = new Node( nodeId );
-                myGraph.TryAdd( node );
+                node = new Node(nodeId);
+                myGraph.TryAdd(node);
             }
 
             return node;
         }
 
-        public Cluster TryAddCluster( string clusterId, IEnumerable<string> nodeIds )
+        public Cluster TryAddCluster(string clusterId, IEnumerable<string> nodeIds)
         {
-            var cluster = new Cluster( clusterId, nodeIds.Select( GetOrCreateNode ) );
+            var cluster = new Cluster(clusterId, nodeIds.Select(GetOrCreateNode));
 
-            if( !myGraph.TryAdd( cluster ) )
+            if (!myGraph.TryAdd(cluster))
             {
                 return null;
             }

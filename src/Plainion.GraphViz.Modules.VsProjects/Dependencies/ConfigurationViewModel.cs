@@ -1,15 +1,12 @@
-﻿using System.Collections.ObjectModel;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
-using Plainion.Collections;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
@@ -115,7 +112,7 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
 
                 if (doc != null)
                 {
-                    OnInheritanceGraphCompleted(doc);
+                    OnAnalysisCompleted(doc);
                 }
             }
             finally
@@ -136,52 +133,82 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
             IsReady = true;
         }
 
-        private void OnInheritanceGraphCompleted(AnalysisDocument document)
+        private void OnAnalysisCompleted(AnalysisDocument document)
         {
-            //if (!document.Edges.Any())
-            //{
-            //    MessageBox.Show("No nodes found");
-            //    return;
-            //}
+            if (!document.Projects.Any())
+            {
+                MessageBox.Show("No projects found");
+                return;
+            }
 
-            //var presentation = myPresentationCreationService.CreatePresentation(FolderToAnalyze);
+            var presentation = myPresentationCreationService.CreatePresentation(FolderToAnalyze);
 
-            //var captionModule = presentation.GetPropertySetFor<Caption>();
-            //var tooltipModule = presentation.GetPropertySetFor<ToolTipContent>();
-            //var edgeStyleModule = presentation.GetPropertySetFor<EdgeStyle>();
+            var captionModule = presentation.GetPropertySetFor<Caption>();
+            var tooltipModule = presentation.GetPropertySetFor<ToolTipContent>();
+            var edgeStyleModule = presentation.GetPropertySetFor<EdgeStyle>();
 
-            //var builder = new RelaxedGraphBuilder();
-            //foreach (var edge in document.Edges)
-            //{
-            //    var e = builder.TryAddEdge(edge.Item1, edge.Item2);
-            //    edgeStyleModule.Add(new EdgeStyle(e.Id)
-            //    {
-            //        Color = edge.Item3 == ReferenceType.DerivesFrom ? Brushes.Black : Brushes.Blue
-            //    });
-            //}
+            var projectsByAssembly = document.Projects
+                .ToDictionary(x => x.Assembly, StringComparer.OrdinalIgnoreCase);
 
-            //presentation.Graph = builder.Graph;
+            var builder = new RelaxedGraphBuilder();
+            foreach (var project in document.Projects)
+            {
+                captionModule.Add(new Caption(project.FullPath, project.Name));
+                tooltipModule.Add(new ToolTipContent(project.FullPath, project.FullPath));
 
-            //foreach (var desc in document.Descriptors)
-            //{
-            //    captionModule.Add(new Caption(desc.Id, desc.Name));
-            //    tooltipModule.Add(new ToolTipContent(desc.Id, desc.FullName));
-            //}
+                // ProjectReferences cannot be third party as those are part of the
+                // analyzed code base
+                foreach (var reference in project.ProjectReferences)
+                {
+                    var e = builder.TryAddEdge(project.FullPath, reference);
+                    edgeStyleModule.Add(new EdgeStyle(e.Id)
+                    {
+                        Color = Brushes.Blue
+                    });
+                }
 
-            //if (document.FailedItems.Any())
-            //{
-            //    foreach (var item in document.FailedItems)
-            //    {
-            //        var sb = new StringBuilder();
-            //        sb.AppendLine("Loading failed");
-            //        sb.AppendFormat("Item: {0}", item.Item);
-            //        sb.AppendLine();
-            //        sb.AppendFormat("Reason: {0}", item.FailureReason);
-            //        myStatusMessageService.Publish(new StatusMessage(sb.ToString()));
-            //    }
-            //}
+                // Assembly references might belong to the code base or might
+                // be third party 
+                foreach (var reference in project.References)
+                {
+                    projectsByAssembly.TryGetValue(reference, out var referencedProject);
 
-            //Model.Presentation = presentation;
+                    if (IgnoreThirdPartyReferences && referencedProject == null)
+                    {
+                        continue;
+                    }
+
+                    var targetId = referencedProject != null ? referencedProject.FullPath : reference;
+                    var e = builder.TryAddEdge(project.FullPath, targetId);
+                    edgeStyleModule.Add(new EdgeStyle(e.Id)
+                    {
+                        Color = Brushes.Green
+                    });
+                }
+
+                // PackageReferences are considered to be third party always
+                if (!IgnoreThirdPartyReferences)
+                {
+                    foreach (var reference in project.PackageReferences)
+                    {
+                        var e = builder.TryAddEdge(project.FullPath, reference);
+                        edgeStyleModule.Add(new EdgeStyle(e.Id)
+                        {
+                            Color = Brushes.Brown
+                        });
+                    }
+                }
+            }
+
+            presentation.Graph = builder.Graph;
+
+            foreach (var item in document.FailedItems)
+            {
+                var msg = new StatusMessage($"Failed to analyze '{item.FullPath}' with {item.Exception}");
+                myStatusMessageService.Publish(msg);
+            }
+
+            Model.Presentation = presentation;
         }
     }
 }

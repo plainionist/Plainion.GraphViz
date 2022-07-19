@@ -10,7 +10,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
     {
         private HashSet<Tuple<string, string, ReferenceType>> myEdges;
         private Dictionary<string, TypeDescriptor> myDescriptors;
-        private int myEdgeCount;
         private List<FailedItem> myFailedItems;
 
         public TypeRelationshipDocument()
@@ -39,8 +38,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
             }
 
             myEdges.Add(Tuple.Create(source.Id, target.Id, refType));
-
-            myEdgeCount = myEdges.Count;
         }
 
         public void AddFailedItem(FailedItem item)
