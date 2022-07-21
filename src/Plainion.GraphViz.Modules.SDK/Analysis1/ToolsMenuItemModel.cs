@@ -3,7 +3,7 @@ using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 using Prism.Mvvm;
 
-namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
+namespace Plainion.GraphViz.Modules.SDK.Analysis1
 {
     class ToolsMenuItemModel : BindableBase
     {
@@ -16,7 +16,7 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
         private void OnStartAnalysis()
         {
             var notification = new Notification();
-            notification.Title = "Visual Studio Project Dependencies";
+            notification.Title = "Analysis SDK";
 
             StartAnalysisRequest.Raise(notification, c => { });
         }

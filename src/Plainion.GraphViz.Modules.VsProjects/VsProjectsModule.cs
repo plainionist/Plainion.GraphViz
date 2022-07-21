@@ -4,11 +4,11 @@ using Prism.Regions;
 
 namespace Plainion.GraphViz.Modules.VsProjects
 {
-    public class Module : IModule
+    public class VsProjectsModule : IModule
     {
         private readonly IRegionManager myRegionManager;
 
-        public Module(IRegionManager regionManager)
+        public VsProjectsModule(IRegionManager regionManager)
         {
             myRegionManager = regionManager;
         }
