@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj" />
-    <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj" />
   </ItemGroup>
 
 </Project>
