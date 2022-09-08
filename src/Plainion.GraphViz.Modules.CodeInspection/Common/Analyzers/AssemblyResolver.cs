@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
-using Akka.Util;
 using Nuclear.Assemblies;
 using Nuclear.Assemblies.Factories;
 using Nuclear.Assemblies.ResolverData;
@@ -55,10 +53,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             return null;
         }
 
-        public Assembly TryResolve(AssemblyName name) =>
-            TryResolve(myDefaultResolver, name) ?? TryResolve(myNuGetResolver, name);
-
-        private Assembly TryResolve<T>(IAssemblyResolver<T> resolver, AssemblyName args) where T : IAssemblyResolverData =>
-            resolver.TryResolve(args, out var result) ? TryLoad(result) : null;
+        public Assembly TryResolve(Assembly requestingAssembly, AssemblyName name)
+        {
+            var args = new ResolveEventArgs(name.FullName, requestingAssembly);
+            return TryResolve(myDefaultResolver, args) ?? TryResolve(myNuGetResolver, args);
+        }
     }
 }

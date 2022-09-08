@@ -47,7 +47,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         private List<AssemblyReference> Analyze(List<AssemblyReference> analyzed, Assembly asm)
         {
             var dependencies = asm.GetReferencedAssemblies()
-                .Select(x => myLoader.TryLoadAssembly(x))
+                .Select(x => myLoader.TryLoadDependency(asm, x))
                 .Where(x => x != null && FollowAssembly(x))
                 .ToList();
 

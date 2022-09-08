@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Plainion.Logging;
 
@@ -17,13 +16,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         public bool ForceLoadDependencies { get; }
 
-        public Assembly TryLoadAssembly(AssemblyName name)
+        public Assembly TryLoadDependency(Assembly requestingAssembly, AssemblyName dependency)
         {
             try
             {
                 var resolve = new AssemblyResolver();
 
-                var assembly = resolve.TryResolve(name);
+                var assembly = resolve.TryResolve(requestingAssembly, dependency);
                 if (assembly != null)
                 {
                     ForceLoadDependenciesIfRequested(assembly);
@@ -33,7 +32,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
             catch (Exception ex)
             {
-                myLogger.Error($"Failed to load assembly {name}{Environment.NewLine}{ex.Message}");
+                myLogger.Error($"Failed to load assembly {dependency}{Environment.NewLine}{ex.Message}");
                 return null;
             }
         }

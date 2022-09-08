@@ -1,7 +1,8 @@
 
-## 4.5 - 2022-07-
+## 4.5 - 2022-09-
 
 - renaming clusters in cluster editor fixed
+- AssemblyLoader improve to explicitly resolve assemblies and not rely purely on .Net probing path
 
 ## 4.4 - 2022-07-09
 
