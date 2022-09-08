@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
+using Akka.Util;
 using Nuclear.Assemblies;
 using Nuclear.Assemblies.Factories;
 using Nuclear.Assemblies.ResolverData;
@@ -37,21 +40,25 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             return TryResolve(myDefaultResolver, args) ?? TryResolve(myNuGetResolver, args);
         }
 
-        private Assembly TryResolve<T>(IAssemblyResolver<T> resolver, ResolveEventArgs args) where T : IAssemblyResolverData
+        private Assembly TryResolve<T>(IAssemblyResolver<T> resolver, ResolveEventArgs args) where T : IAssemblyResolverData =>
+            resolver.TryResolve(args, out var result) ? TryLoad(result) : null;
+
+        private Assembly TryLoad<T>(IEnumerable<T> result) where T : IAssemblyResolverData
         {
-            if (resolver.TryResolve(args, out var result))
+            foreach (var item in result)
             {
-                foreach (var item in result)
+                if (AssemblyHelper.TryLoadFrom(item.File, out Assembly assembly))
                 {
-                    if (AssemblyHelper.TryLoadFrom(item.File, out Assembly assembly))
-                    {
-                        return assembly;
-                    }
+                    return assembly;
                 }
             }
-
             return null;
         }
 
+        public Assembly TryResolve(AssemblyName name) =>
+            TryResolve(myDefaultResolver, name) ?? TryResolve(myNuGetResolver, name);
+
+        private Assembly TryResolve<T>(IAssemblyResolver<T> resolver, AssemblyName args) where T : IAssemblyResolverData =>
+            resolver.TryResolve(args, out var result) ? TryLoad(result) : null;
     }
 }

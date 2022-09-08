@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
-    class AssemblyLoader 
+    class AssemblyLoader
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(AssemblyLoader));
 
@@ -20,9 +21,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         {
             try
             {
-                var assembly = Assembly.Load(name);
+                var resolve = new AssemblyResolver();
 
-                ForceLoadDependenciesIfRequested(assembly);
+                var assembly = resolve.TryResolve(name);
+                if (assembly != null)
+                {
+                    ForceLoadDependenciesIfRequested(assembly);
+                }
 
                 return assembly;
             }
@@ -68,15 +73,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 return;
             }
 
-            try
-            {
-                // get all types to ensure that all relevant assemblies are loaded
-                asm.GetTypes();
-            }
-            catch (Exception ex)
-            {
-                myLogger.Error($"Failed to load assembly {asm.FullName}{Environment.NewLine}{ex.Message}");
-            }
+            // get all types to ensure that all relevant assemblies are loaded while possible AssemblyResolve
+            // event handlers are still registered.
+            // no purpose in catching exception here - it will anyhow fail later on again when we try
+            // to get the types for working with those.
+            asm.GetTypes();
         }
     }
 }
