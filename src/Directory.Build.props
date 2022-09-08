@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <WarningsNotAsErrors>618,672,1030</WarningsNotAsErrors>
+    <NoWarn>1591,8032</NoWarn>
+    <LangVersion>Latest</LangVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+
+</Project>
