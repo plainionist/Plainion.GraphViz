@@ -2,15 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>618,672,1030,SYSLIB0011</WarningsNotAsErrors>
-    <NoWarn>1591,8032</NoWarn>
-    <LangVersion>9.0</LangVersion>
     <UseWPF>true</UseWPF>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
