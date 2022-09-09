@@ -31,7 +31,8 @@ To start spanning a call tre load a configuration file of the following schema:
 - "binFolder" specifies the folder where all assemblies are located
 - "sources" specifies the source assemblies. Wildcards supported.
 - "targets" specifies the target API by assembly, type and method. "Method" can also be the getter/setter method
-  of a property or add/remove method of an event. 
+  of a property or add/remove method of an event. When using "*" as "Method", all public, internal and protected 
+  methods are considered as targets.
 - "relevantAssemblies" can be used to limit the assemblies to be analyzed.
 
 When clicking "Create graph" you will get a graph showing all possible call paths from the source assemblies to the
