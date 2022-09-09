@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Navigation;
 using Newtonsoft.Json;
+using Nuclear.Extensions;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Common;
@@ -101,25 +103,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .ToList();
         }
 
-        private MethodDesc GetMethod(Assembly assembly, string typeName, string methodName)
+        private IEnumerable<MethodDesc> GetMethods(Assembly assembly, string typeName, string methodName)
         {
             var declaringType = assembly.GetTypes().Single(t => t.FullName == typeName);
 
-            var method = GetAllMethods(declaringType)
-                .Where(name => name == methodName)
-                .Distinct()
-                .FirstOrDefault();
+            var methods = GetAllMethods(declaringType).Distinct();
 
-            if (method == null)
+            if (!methodName.Equals("*"))
+            {
+                methods = methods.Where(name => name == methodName);
+            }
+
+            if (methods == null || methods.Count() == 0)
             {
                 throw new InvalidOperationException($"Method not found {typeName}.{methodName} in {assembly.FullName}");
             }
 
-            return new MethodDesc
+            return methods.Select(method => new MethodDesc
             {
                 myDeclaringType = declaringType,
-                myName = methodName
-            };
+                myName = method
+            });
         }
 
         private List<MethodCall> Analyze(MonoLoader monoLoader, IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<Type> analyzed, List<Type> callers)
@@ -325,14 +329,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .Where(x => x != null)
                 .ToList();
 
-            var targets = Shell.Profile("Loading target methods ...", () =>
+            var nestedTargets = Shell.Profile("Loading target methods ...", () =>
                 targetDescriptors
                     .Select(target =>
                     {
                         var asm = loader.TryLoadAssembly(target.Assembly);
-                        return (asm, GetMethod(asm, target.Type, target.Method));
+                        return (asm, GetMethods(asm, target.Type, target.Method));
                     })
                     .ToList());
+
+            var targets = nestedTargets.SelectMany(t => t.Item2
+                .Select(method => {
+                    return (t.Item1, method);
+                }).ToList());
 
             Console.WriteLine("Targets:");
             foreach (var t in targets)
