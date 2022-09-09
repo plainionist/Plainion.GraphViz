@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Plainion.Logging;
@@ -9,31 +10,42 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(AssemblyLoader));
 
-        public AssemblyLoader(bool forceLoadDependencies = true)
+        private readonly Dictionary<string, Assembly> myAssemblyCache;
+
+        public AssemblyLoader()
         {
-            ForceLoadDependencies = forceLoadDependencies;
+            myAssemblyCache = new Dictionary<string, Assembly>();
         }
 
-        public bool ForceLoadDependencies { get; }
+        public bool ForceLoadDependencies { get; set; }
 
         public Assembly TryLoadDependency(Assembly requestingAssembly, AssemblyName dependency)
         {
-            try
+            lock (myAssemblyCache)
             {
-                var resolve = new AssemblyResolver();
-
-                var assembly = resolve.TryResolve(requestingAssembly, dependency);
-                if (assembly != null)
+                if (myAssemblyCache.TryGetValue(dependency.FullName, out Assembly assembly))
                 {
-                    ForceLoadDependenciesIfRequested(assembly);
+                    return assembly;
                 }
 
+                try
+                {
+                    var resolve = new AssemblyResolver();
+
+                    assembly = resolve.TryResolve(requestingAssembly, dependency);
+                    if (assembly != null)
+                    {
+                        ForceLoadDependenciesIfRequested(assembly);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    myLogger.Error($"Failed to load assembly {dependency}{Environment.NewLine}{ex.Message}");
+                }
+
+                myAssemblyCache[dependency.FullName] = assembly;
+
                 return assembly;
-            }
-            catch (Exception ex)
-            {
-                myLogger.Error($"Failed to load assembly {dependency}{Environment.NewLine}{ex.Message}");
-                return null;
             }
         }
 
@@ -44,18 +56,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 return null;
             }
 
-            try
+            lock (myAssemblyCache)
             {
-                var assembly = Assembly.LoadFrom(path);
+                if (myAssemblyCache.TryGetValue(path, out Assembly assembly))
+                {
+                    return assembly;
+                }
 
-                ForceLoadDependenciesIfRequested(assembly);
+                try
+                {
+                    assembly = Assembly.LoadFrom(path);
+
+                    ForceLoadDependenciesIfRequested(assembly);
+                }
+                catch (Exception ex)
+                {
+                    myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}{ex.Message}");
+                }
+
+                myAssemblyCache[path] = assembly;
 
                 return assembly;
-            }
-            catch (Exception ex)
-            {
-                myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}{ex.Message}");
-                return null;
             }
         }
 

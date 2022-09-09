@@ -339,7 +339,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                     .ToList());
 
             var targets = nestedTargets.SelectMany(t => t.Item2
-                .Select(method => {
+                .Select(method =>
+                {
                     return (t.Item1, method);
                 }).ToList());
 

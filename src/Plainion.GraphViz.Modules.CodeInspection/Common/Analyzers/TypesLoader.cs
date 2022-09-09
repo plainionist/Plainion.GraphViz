@@ -15,7 +15,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         public TypesLoader()
         {
-            myAssemblyLoader = new AssemblyLoader(false);
+            myAssemblyLoader = new AssemblyLoader();
             myAssemblies = new HashSet<Assembly>();
         }
 

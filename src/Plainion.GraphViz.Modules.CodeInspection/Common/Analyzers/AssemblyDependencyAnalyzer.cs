@@ -32,20 +32,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         /// </summary>
         public GraphPresentation CreateAssemblyGraph(IEnumerable<Assembly> sources, IEnumerable<Assembly> targets)
         {
-            var deps = sources.Aggregate(new List<AssemblyReference>(), AnalyzeAssemblies);
+            var deps = sources.Aggregate(new List<AssemblyReference>(), (acc, asm) => Analyze(acc, asm, false));
 
             return CreateAssemblyRelationshipGraph(sources.ToList(), targets.ToList(), deps.ToList());
         }
 
-        private List<AssemblyReference> AnalyzeAssemblies(List<AssemblyReference> analyzedAssemblies, Assembly asm)
+        private List<AssemblyReference> Analyze(List<AssemblyReference> analyzed, Assembly asm, bool isSource)
         {
-            Console.WriteLine($"  {asm.FullName}");
+            var pad = isSource ? "  " : "    ";
+            Console.WriteLine($"{pad}{asm.FullName}");
 
-            return Analyze(analyzedAssemblies, asm);
-        }
-
-        private List<AssemblyReference> Analyze(List<AssemblyReference> analyzed, Assembly asm)
-        {
             var dependencies = asm.GetReferencedAssemblies()
                 .Select(x => myLoader.TryLoadDependency(asm, x))
                 .Where(x => x != null && FollowAssembly(x))
@@ -62,7 +58,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             var indirectDeps = dependencies
                 .Where(x => analyzedAssemblies.Any(a => a.FullName != x.FullName))
                 .Where(FollowAssembly)
-                .Aggregate(initialAcc, Analyze);
+                .Aggregate(initialAcc, (acc, asm) => Analyze(acc, asm, false));
 
             return dependencies
                 .Select(x => new AssemblyReference { myAssembly = asm, myDependency = x })
