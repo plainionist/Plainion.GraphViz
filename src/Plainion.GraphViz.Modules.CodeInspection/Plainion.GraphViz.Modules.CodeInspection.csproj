@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka" Version="1.4.39" />
+    <PackageReference Include="Akka" Version="1.4.46" />
     <PackageReference Include="Akka.Remote" Version="1.4.39" />
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
     <PackageReference Include="Nuclear.Assemblies" Version="1.2.0" />
