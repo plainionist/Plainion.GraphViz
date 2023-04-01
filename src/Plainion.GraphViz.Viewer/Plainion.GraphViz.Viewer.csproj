@@ -4,6 +4,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <OutputType>WinExe</OutputType>
+    <ApplicationIcon>GraphIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="GraphIcon.ico" />
     <Content Include="Plainion.GraphViz.Viewer.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -43,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="GraphIcon.ico" />
+    <EmbeddedResource Include="GraphIcon.ico" />
     <Resource Include="Resources\Bookmarks.png" />
     <Resource Include="Resources\Clusters.png" />
     <Resource Include="Resources\Filter.png" />
