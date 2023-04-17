@@ -6,7 +6,6 @@ using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
-using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {
@@ -14,8 +13,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
     {
         protected override void Ready()
         {
-            LoggerFactory.LogLevel = LogLevel.Info;
-
             Receive<AnalysisMessage>(r =>
                 {
                     Console.WriteLine("WORKING");

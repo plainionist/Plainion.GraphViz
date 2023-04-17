@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,7 +29,7 @@ namespace Plainion.GraphViz.ActorsHost
         private static void Main(string[] args)
         {
             LoggerFactory.AddSink(new ConsoleLoggingSink());
-            LoggerFactory.LogLevel = LogLevel.Notice;
+            LoggerFactory.LogLevel = LogLevel.Debug;
 
             var logger = LoggerFactory.GetLogger(typeof(Program));
 

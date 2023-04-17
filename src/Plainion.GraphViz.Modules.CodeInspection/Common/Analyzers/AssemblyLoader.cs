@@ -17,6 +17,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             myAssemblyCache = new Dictionary<string, Assembly>();
         }
 
+        public void Dispose()
+        {
+            myAssemblyCache.Clear();
+        }
+
         public bool ForceLoadDependencies { get; set; }
 
         public Assembly TryLoadDependency(Assembly requestingAssembly, AssemblyName dependency)

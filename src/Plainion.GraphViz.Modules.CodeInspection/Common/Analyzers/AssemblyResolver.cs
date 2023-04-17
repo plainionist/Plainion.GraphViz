@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Nuclear.Assemblies;
 using Nuclear.Assemblies.Factories;
@@ -57,6 +58,37 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         {
             var args = new ResolveEventArgs(name.FullName, requestingAssembly);
             return TryResolve(myDefaultResolver, args) ?? TryResolve(myNuGetResolver, args);
+        }
+
+        public IReadOnlyCollection<FileInfo> TryResolveOnly(Assembly requestingAssembly, AssemblyName name)
+        {
+            var args = new ResolveEventArgs(name.FullName, requestingAssembly);
+
+            IEnumerable<T> TryResolveOnly<T>(IAssemblyResolver<T> resolver) where T : IAssemblyResolverData =>
+                resolver.TryResolve(args, out var result) ? result : new List<T>();
+
+            var results = TryResolveOnly(myDefaultResolver);
+            var files = results
+                .Select(x => x.File)
+                .Concat(TryResolveOnly(myNuGetResolver).Select(x => x.File))
+                .ToList();
+
+            if (name.Name == "mscorlib" && name.Version == new Version(4, 0, 0, 0))
+            {
+                // C:\Windows\Microsoft.NET\Framework\v4.0.30319
+                var netFwRoot = name.ProcessorArchitecture == ProcessorArchitecture.Amd64
+                    ? @"%systemroot%\Microsoft.NET\Framework64"
+                    : @"%systemroot%\Microsoft.NET\Framework";
+                netFwRoot = Environment.ExpandEnvironmentVariables(netFwRoot);
+                var version = Directory.GetDirectories(netFwRoot, "v4.0.*")
+                    .Select(Path.GetFileName)
+                    .OrderBy(x => x)
+                    .Last();
+
+                return new[] { new FileInfo(Path.Combine(netFwRoot, version, "mscorlib.dll")) };
+            }
+
+            return files;
         }
     }
 }
