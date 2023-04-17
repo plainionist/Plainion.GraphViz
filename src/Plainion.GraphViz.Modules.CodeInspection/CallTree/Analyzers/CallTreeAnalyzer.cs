@@ -315,7 +315,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             return presentation;
         }
 
-        private void Execute(AssemblyLoader loader, IEnumerable<string> sourceAssemblies, IEnumerable<TargetDescriptor> targetDescriptors, IEnumerable<string> relevantAssemblies, string outputFile)
+        private void Execute(IAssemblyLoader loader, IEnumerable<string> sourceAssemblies, IEnumerable<TargetDescriptor> targetDescriptors, IEnumerable<string> relevantAssemblies, string outputFile)
         {
             Console.WriteLine("Source assemblies:");
             foreach (var asm in sourceAssemblies)
@@ -416,7 +416,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 AssemblyReferencesOnly = assemblyReferencesOnly;
                 StrictCallsOnly = strictCallsOnly;
 
-                var loader = new AssemblyLoader();
+                var loader = AssemblyLoaderFactory.Create();
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }

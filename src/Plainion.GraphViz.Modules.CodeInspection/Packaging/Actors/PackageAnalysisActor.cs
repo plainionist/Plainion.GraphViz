@@ -27,7 +27,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                     {
                         using (var resolver = new AssemblyResolver())
                         {
-                            var loader = new TypesLoader();
+                            var loader = new TypesLoader(AssemblyLoaderFactory.Create());
                             var analyzer = new PackageAnalyzer(loader);
 
                             analyzer.UsedTypesOnly = r.UsedTypesOnly;

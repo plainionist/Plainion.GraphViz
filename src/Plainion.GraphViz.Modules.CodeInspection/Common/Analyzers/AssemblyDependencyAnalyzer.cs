@@ -17,10 +17,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             public Assembly myDependency;
         }
 
-        private readonly AssemblyLoader myLoader;
+        private readonly IAssemblyLoader myLoader;
         private readonly IEnumerable<Wildcard> myRelevantAssemblies;
 
-        public AssemblyDependencyAnalyzer(AssemblyLoader loader, IEnumerable<string> relevantAssemblies)
+        public AssemblyDependencyAnalyzer(IAssemblyLoader loader, IEnumerable<string> relevantAssemblies)
         {
             myLoader = loader;
             myRelevantAssemblies = relevantAssemblies.Select(p => new Wildcard(p)).ToList();

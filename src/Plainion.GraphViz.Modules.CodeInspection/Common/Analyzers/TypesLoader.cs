@@ -10,12 +10,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
     {
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(TypesLoader));
 
-        private readonly AssemblyLoader myAssemblyLoader;
+        private readonly IAssemblyLoader myAssemblyLoader;
         private readonly HashSet<Assembly> myAssemblies;
 
-        public TypesLoader()
+        public TypesLoader(IAssemblyLoader loader)
         {
-            myAssemblyLoader = new AssemblyLoader();
+            myAssemblyLoader = loader;
             myAssemblies = new HashSet<Assembly>();
         }
 

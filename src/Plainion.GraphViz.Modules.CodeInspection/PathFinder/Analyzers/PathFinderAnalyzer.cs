@@ -199,7 +199,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             return presentation;
         }
 
-        private void Execute(AssemblyLoader loader, IEnumerable<string> sourceAssemblies, IEnumerable<string> targetAssemblies, IEnumerable<string> relevantAssemblies, string outputFile)
+        private void Execute(IAssemblyLoader loader, IEnumerable<string> sourceAssemblies, IEnumerable<string> targetAssemblies, IEnumerable<string> relevantAssemblies, string outputFile)
         {
             Console.WriteLine("Source assemblies:");
             foreach (var asm in sourceAssemblies)
@@ -259,7 +259,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
                 KeepTargetAssemblyClusters = config.KeepTargetAssemblyClusters;
                 AssemblyReferencesOnly = assemblyReferencesOnly;
 
-                var loader = new AssemblyLoader();
+                var loader = AssemblyLoaderFactory.Create();
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }

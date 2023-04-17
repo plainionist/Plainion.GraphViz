@@ -6,13 +6,13 @@ using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
-    class AssemblyLoader
+    class FullAssemblyLoader : IAssemblyLoader
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(AssemblyLoader));
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(FullAssemblyLoader));
 
         private readonly Dictionary<string, Assembly> myAssemblyCache;
 
-        public AssemblyLoader()
+        public FullAssemblyLoader()
         {
             myAssemblyCache = new Dictionary<string, Assembly>();
         }
