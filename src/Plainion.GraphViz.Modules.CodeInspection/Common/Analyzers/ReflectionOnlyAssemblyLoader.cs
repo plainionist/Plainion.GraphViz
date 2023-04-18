@@ -17,30 +17,81 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         public ReflectionOnlyAssemblyLoader()
         {
-            var coreAssembly = typeof(object).Assembly;
-            myResolver = new CustomAssemblyResolver(new string[] { coreAssembly.Location });
-            myContext = new MetadataLoadContext(myResolver, coreAssemblyName: coreAssembly.GetName().Name);
+            myResolver = new CustomAssemblyResolver(typeof(object).Assembly);
+            myContext = new MetadataLoadContext(myResolver, typeof(object).Assembly.GetName().Name);
 
             myAssemblyCache = new Dictionary<string, Assembly>();
             ForceLoadDependencies = true;
 
-            //System.Diagnostics.Debugger.Launch();
+            System.Diagnostics.Debugger.Launch();
         }
 
         private class CustomAssemblyResolver : MetadataAssemblyResolver
         {
             private readonly HashSet<string> myFolders;
-            private readonly HashSet<string> myAssemblies;
+            // we must not add same assembly from different paths to PathAssemblyResolver.
+            // it will fail with exception if version isnt exactly same
+            private readonly Dictionary<string, string> myAssemblies;
 
-            public CustomAssemblyResolver(IEnumerable<string> paths)
+            public CustomAssemblyResolver(Assembly coreAssembly)
             {
-                myAssemblies = new HashSet<string>(paths, StringComparer.OrdinalIgnoreCase);
+                myAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 myFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                myAssemblies.Add(Path.GetFileName(coreAssembly.Location), coreAssembly.Location);
             }
 
             public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
             {
-                return new PathAssemblyResolver(myAssemblies).Resolve(context, assemblyName);
+                var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);
+                if (assembly != null)
+                {
+                    return assembly;
+                }
+
+                if (assemblyName.Name == "mscorlib" && assemblyName.Version == new Version(4, 0, 0, 0))
+                {
+                    var netFwRoot = assemblyName.ProcessorArchitecture == ProcessorArchitecture.Amd64
+                        ? @"%systemroot%\Microsoft.NET\Framework64"
+                        : @"%systemroot%\Microsoft.NET\Framework";
+                    netFwRoot = Environment.ExpandEnvironmentVariables(netFwRoot);
+                    var version = Directory.GetDirectories(netFwRoot, "v4.0.*")
+                        .Select(Path.GetFileName)
+                        .OrderBy(x => x)
+                        .Last();
+
+                    AddAssembliesFromFolder(Path.Combine(netFwRoot, version));
+
+                    // .Net FW detected - add reference assemblies as well
+                    AddAssembliesFromFolder(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8");
+
+                    return context.LoadFromAssemblyPath(Path.Combine(netFwRoot, version, "mscorlib.dll"));
+                }
+
+                // try resolve .NET Core/6 and NuGet
+
+                var resolve = new AssemblyResolver();
+
+                var files = resolve.TryResolveOnly(assemblyName);
+
+                if (files.Count == 0)
+                {
+                    myLogger.Warning($"Dependency not found '{assemblyName}'");
+                    return null;
+                }
+
+                if (files.Count > 1)
+                {
+                    myLogger.Warning($"Multiple matching assemblies found for '{assemblyName}':");
+                    foreach (var file in files)
+                    {
+                        myLogger.Warning($"  {file.FullName}");
+                    }
+                }
+
+                AddAssembliesFromFolders(files);
+
+                return context.LoadFromAssemblyPath(files.First().FullName);
             }
 
             internal void AddAssembliesFromFolder(string folder)
@@ -54,13 +105,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 AddPaths(Directory.GetFiles(folder, "*.exe"));
 
                 myFolders.Add(folder);
-            }
 
-            private void AddPaths(IEnumerable<string> paths)
-            {
-                foreach (var path in paths)
+                void AddPaths(IEnumerable<string> paths)
                 {
-                    myAssemblies.Add(path);
+                    foreach (var path in paths)
+                    {
+                        var key = Path.GetFileName(path);
+                        if (!myAssemblies.ContainsKey(key))
+                        {
+                            myAssemblies[key] = path;
+                        }
+                    }
                 }
             }
 
@@ -96,28 +151,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 {
                     myResolver.AddAssembliesFromFolder(Path.GetDirectoryName(requestingAssembly.Location));
 
-                    var resolve = new AssemblyResolver();
-
-                    var files = resolve.TryResolveOnly(requestingAssembly, dependency);
-
-                    if (files.Count == 0)
-                    {
-                        myLogger.Warning($"Dependency not found '{dependency}':");
-                        return null;
-                    }
-
-                    if (files.Count > 1)
-                    {
-                        myLogger.Warning($"Multiple matching assemblies found for '{dependency}':");
-                        foreach (var file in files)
-                        {
-                            myLogger.Warning($"  {file.FullName}");
-                        }
-                    }
-
-                    myResolver.AddAssembliesFromFolders(files);
-
-                    assembly = TryLoadAssembly(files.First().FullName);
+                    assembly = myContext.LoadFromAssemblyName(dependency);
                     myAssemblyCache[dependency.FullName] = assembly;
 
                     if (assembly != null)
