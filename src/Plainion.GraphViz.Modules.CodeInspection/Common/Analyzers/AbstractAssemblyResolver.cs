@@ -13,7 +13,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             myAssemblyMatchingStrategy = assemblyMatchingStrategy;
         }
 
-        public abstract IReadOnlyCollection<T> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly = null);
+        public abstract IReadOnlyCollection<T> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly);
 
         protected static bool IsSupportedArchitecture(AssemblyName assemblyName) =>
             assemblyName.ProcessorArchitecture == ProcessorArchitecture.MSIL ||

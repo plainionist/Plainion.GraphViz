@@ -30,11 +30,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
         }
 
-        public override IReadOnlyCollection<NugetAssemblyResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly = null)
+        public override IReadOnlyCollection<NugetAssemblyResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly)
         {
             Contract.RequiresNotNull(assemblyName, nameof(assemblyName));
+            Contract.RequiresNotNull(requestingAssembly, nameof(requestingAssembly));
 
-            var frameworkVersion = DotNetFrameworkVersion.TryParse(requestingAssembly ?? Assembly.GetEntryAssembly());
+            var frameworkVersion = DotNetFrameworkVersion.TryParse(requestingAssembly);
             if (frameworkVersion == null)
             {
                 return new List<NugetAssemblyResolutionResult>();

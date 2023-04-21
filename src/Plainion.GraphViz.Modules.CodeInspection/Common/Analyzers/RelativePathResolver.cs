@@ -15,11 +15,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             mySearchOption = searchOption;
         }
 
-        public override IReadOnlyCollection<AssemblyResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly = null)
+        public override IReadOnlyCollection<AssemblyResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly)
         {
             Contract.RequiresNotNull(assemblyName, nameof(assemblyName));
-
-            requestingAssembly ??= Assembly.GetEntryAssembly();
+            Contract.RequiresNotNull(requestingAssembly, nameof(requestingAssembly));
 
             var searchDir = new FileInfo(requestingAssembly.Location).Directory;
 

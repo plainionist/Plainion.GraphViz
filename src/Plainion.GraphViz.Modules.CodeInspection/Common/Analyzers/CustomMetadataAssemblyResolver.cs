@@ -38,7 +38,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
 
             var mscorlibResolver = new MscorlibResolver();
-            var mscorlibFile = mscorlibResolver.TryResolve(assemblyName)
+            var mscorlibFile = mscorlibResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
                 .OrderByDescending(x => x.AssemblyName.Version)
                 .Select(x => x.File)
                 .FirstOrDefault();
@@ -55,9 +55,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
             // try resolve .NET Core/6 and NuGet
 
-            var files = myRelativePathResolver.TryResolve(assemblyName)
+            var files = myRelativePathResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
                 .Select(x => x.File)
-                .Concat(myNuGetResolver.TryResolve(assemblyName).Select(x => x.File))
+                .Concat(myNuGetResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly()).Select(x => x.File))
                 .ToList();
 
             if (files.Count == 0)

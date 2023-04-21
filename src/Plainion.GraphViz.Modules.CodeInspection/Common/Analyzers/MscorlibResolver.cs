@@ -13,7 +13,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         {
         }
 
-        public override IReadOnlyCollection<AssemblyResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly = null)
+        public override IReadOnlyCollection<AssemblyResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly)
         {
             if (assemblyName.Name == "mscorlib" && assemblyName.Version == new Version(4, 0, 0, 0))
             {
