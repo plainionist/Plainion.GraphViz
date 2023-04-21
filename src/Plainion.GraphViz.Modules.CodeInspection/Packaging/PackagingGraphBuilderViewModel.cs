@@ -1,7 +1,4 @@
-﻿//-------------------------------------------------------------------------------------------------------------------
-// Restricted - Copyright (C) Siemens Healthcare GmbH, 2019. All rights reserved
-//-------------------------------------------------------------------------------------------------------------------
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

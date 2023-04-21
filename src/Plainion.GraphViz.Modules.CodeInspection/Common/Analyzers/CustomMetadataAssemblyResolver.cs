@@ -37,28 +37,28 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 return assembly;
             }
 
-            if (assemblyName.Name == "mscorlib" && assemblyName.Version == new Version(4, 0, 0, 0))
-            {
-                var netFwRoot = assemblyName.ProcessorArchitecture == ProcessorArchitecture.Amd64
-                    ? @"%systemroot%\Microsoft.NET\Framework64"
-                    : @"%systemroot%\Microsoft.NET\Framework";
-                netFwRoot = Environment.ExpandEnvironmentVariables(netFwRoot);
-                var version = Directory.GetDirectories(netFwRoot, "v4.0.*")
-                    .Select(Path.GetFileName)
-                    .OrderBy(x => x)
-                    .Last();
+            var mscorlibResolver = new MscorlibResolver();
+            var mscorlibFile = mscorlibResolver.TryResolve(assemblyName)
+                .OrderByDescending(x => x.AssemblyName.Version)
+                .Select(x => x.File)
+                .FirstOrDefault();
 
-                AddAssembliesFromFolder(Path.Combine(netFwRoot, version));
+            if (mscorlibFile != null)
+            {
+                AddAssembliesFromFolder(mscorlibFile);
 
                 // .Net FW detected - add reference assemblies as well
                 AddAssembliesFromFolder(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8");
 
-                return context.LoadFromAssemblyPath(Path.Combine(netFwRoot, version, "mscorlib.dll"));
+                return context.LoadFromAssemblyPath(mscorlibFile.FullName);
             }
 
             // try resolve .NET Core/6 and NuGet
 
-            var files = TryResolveOnly(assemblyName);
+            var files = myRelativePathResolver.TryResolve(assemblyName)
+                .Select(x => x.File)
+                .Concat(myNuGetResolver.TryResolve(assemblyName).Select(x => x.File))
+                .ToList();
 
             if (files.Count == 0)
             {
@@ -80,17 +80,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             return context.LoadFromAssemblyPath(files.First().FullName);
         }
 
-        private IReadOnlyCollection<FileInfo> TryResolveOnly(AssemblyName name)
-        {
-            IEnumerable<T> TryResolveOnly<T>(AbstractAssemblyResolver<T> resolver) where T : AssemblyResolutionResult =>
-                resolver.TryResolve(name);
-
-            var results = TryResolveOnly(myRelativePathResolver);
-            return results
-                .Select(x => x.File)
-                .Concat(TryResolveOnly(myNuGetResolver).Select(x => x.File))
-                .ToList();
-        }
+        internal void AddAssembliesFromFolder(FileInfo file) =>
+            AddAssembliesFromFolder(file.Directory.FullName);
 
         internal void AddAssembliesFromFolder(string folder)
         {

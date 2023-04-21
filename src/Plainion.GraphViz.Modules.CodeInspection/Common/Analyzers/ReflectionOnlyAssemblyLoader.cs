@@ -12,7 +12,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(ReflectionOnlyAssemblyLoader));
 
         private readonly Dictionary<string, Assembly> myAssemblyCache;
-        private CustomMetadataAssemblyResolver myResolver;
+        private readonly CustomMetadataAssemblyResolver myResolver;
         private MetadataLoadContext myContext;
 
         public ReflectionOnlyAssemblyLoader()
