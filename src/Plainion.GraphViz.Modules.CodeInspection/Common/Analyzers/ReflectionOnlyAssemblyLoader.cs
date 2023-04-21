@@ -23,7 +23,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             myAssemblyCache = new Dictionary<string, Assembly>();
             ForceLoadDependencies = true;
 
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
         }
 
         private class CustomAssemblyResolver : MetadataAssemblyResolver
