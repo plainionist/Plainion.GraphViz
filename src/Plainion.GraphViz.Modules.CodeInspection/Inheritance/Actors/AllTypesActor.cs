@@ -23,13 +23,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 
                 Task.Run<IEnumerable<TypeDescriptor>>(() =>
                 {
-                    using (var resolver = new AssemblyResolver())
-                    {
-                        var assembly = Assembly.LoadFrom(r.AssemblyLocation);
-                        return assembly.GetTypes()
-                            .Select(t => TypeDescriptor.Create(t))
-                            .ToList();
-                    }
+                    var assembly = Assembly.LoadFrom(r.AssemblyLocation);
+                    return assembly.GetTypes()
+                        .Select(t => TypeDescriptor.Create(t))
+                        .ToList();
                 }, CancellationToken)
                 .ContinueWith<object>(x =>
                 {

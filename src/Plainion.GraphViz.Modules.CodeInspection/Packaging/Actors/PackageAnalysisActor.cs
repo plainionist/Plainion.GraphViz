@@ -22,22 +22,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
                     Task.Run<AnalysisDocument>(() =>
                     {
-                        using (var resolver = new AssemblyResolver())
+                        var loader = new TypesLoader(AssemblyLoaderFactory.Create());
+                        var analyzer = new PackageAnalyzer(loader);
+
+                        analyzer.UsedTypesOnly = r.UsedTypesOnly;
+                        analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
+
+                        if (r.PackagesToAnalyze != null)
                         {
-                            var loader = new TypesLoader(AssemblyLoaderFactory.Create());
-                            var analyzer = new PackageAnalyzer(loader);
-
-                            analyzer.UsedTypesOnly = r.UsedTypesOnly;
-                            analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
-
-                            if (r.PackagesToAnalyze != null)
-                            {
-                                analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
-                            }
-
-                            var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
-                            return analyzer.Execute(spec, CancellationToken);
+                            analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
                         }
+
+                        var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
+                        return analyzer.Execute(spec, CancellationToken);
                     }, CancellationToken)
                     .ContinueWith<object>(x =>
                     {

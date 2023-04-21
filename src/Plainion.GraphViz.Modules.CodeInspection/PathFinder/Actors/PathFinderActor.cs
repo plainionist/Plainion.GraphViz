@@ -21,13 +21,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors
 
                 Task.Run<string>(() =>
                 {
-                    using (var resolver = new AssemblyResolver())
-                    {
-                        var outputFile = Path.GetTempFileName() + ".dot";
-                        var analyzer = new PathFinderAnalyzer();
-                        analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, outputFile);
-                        return outputFile;
-                    }
+                    var outputFile = Path.GetTempFileName() + ".dot";
+                    var analyzer = new PathFinderAnalyzer();
+                    analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, outputFile);
+                    return outputFile;
                 }, CancellationToken)
                 .ContinueWith<object>(x =>
                 {

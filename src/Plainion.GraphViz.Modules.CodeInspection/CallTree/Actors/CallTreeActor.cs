@@ -21,13 +21,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 
                 Task.Run<string>(() =>
                 {
-                    using (var resolver = new AssemblyResolver())
-                    {
-                        var outputFile = Path.GetTempFileName() + ".dot";
-                        var analyzer = new CallTreeAnalyzer();
-                        analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, r.StrictCallsOnly, outputFile);
-                        return outputFile;
-                    }
+                    var outputFile = Path.GetTempFileName() + ".dot";
+                    var analyzer = new CallTreeAnalyzer();
+                    analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, r.StrictCallsOnly, outputFile);
+                    return outputFile;
                 }, CancellationToken)
                 .ContinueWith<object>(x =>
                 {

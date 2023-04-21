@@ -20,12 +20,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 
                 Task.Run<TypeRelationshipDocument>(() =>
                 {
-                    using (var resolver = new AssemblyResolver())
-                    {
-                        var analyzer = new InheritanceAnalyzer();
-                        analyzer.IgnoreDotNetTypes = r.IgnoreDotNetTypes;
-                        return analyzer.Execute(r.AssemblyLocation, r.TypeToAnalyze, CancellationToken);
-                    }
+                    var analyzer = new InheritanceAnalyzer();
+                    analyzer.IgnoreDotNetTypes = r.IgnoreDotNetTypes;
+                    return analyzer.Execute(r.AssemblyLocation, r.TypeToAnalyze, CancellationToken);
                 }, CancellationToken)
                 .ContinueWith<object>(x =>
                 {
