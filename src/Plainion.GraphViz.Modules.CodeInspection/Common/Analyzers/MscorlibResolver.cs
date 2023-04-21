@@ -6,14 +6,14 @@ using System.Reflection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
-    internal class MscorlibResolver : AbstractAssemblyResolver<AssemblyResolutionResult>
+    internal class MscorlibResolver : AbstractAssemblyResolver<MscorlibResolutionResult>
     {
         public MscorlibResolver()
             : base(VersionMatchingStrategy.Exact)
         {
         }
 
-        public override IReadOnlyCollection<AssemblyResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly)
+        public override IReadOnlyCollection<MscorlibResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly)
         {
             if (assemblyName.Name == "mscorlib" && assemblyName.Version == new Version(4, 0, 0, 0))
             {
@@ -28,10 +28,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                     .OrderBy(x => x)
                     .Last();
 
-                return new[] { new AssemblyResolutionResult(new FileInfo(Path.Combine(netFwRoot, version, "mscorlib.dll"))) };
+                var result = new MscorlibResolutionResult(
+                    new FileInfo(Path.Combine(netFwRoot, version, "mscorlib.dll")),
+                    @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8");
+
+                return new[] { result };
             }
 
-            return Array.Empty<AssemblyResolutionResult>();
+            return Array.Empty<MscorlibResolutionResult>();
         }
     }
 }

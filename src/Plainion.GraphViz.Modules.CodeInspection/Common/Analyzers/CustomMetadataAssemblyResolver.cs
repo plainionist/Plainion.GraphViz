@@ -9,8 +9,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
     class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(CustomMetadataAssemblyResolver));
-
         private readonly HashSet<string> myFolders;
         // we must not add same assembly from different paths to PathAssemblyResolver.
         // it will fail with exception if version isnt exactly same
@@ -38,19 +36,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
 
             var mscorlibResolver = new MscorlibResolver();
-            var mscorlibFile = mscorlibResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
+            var mscorlibResult = mscorlibResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
                 .OrderByDescending(x => x.AssemblyName.Version)
-                .Select(x => x.File)
                 .FirstOrDefault();
 
-            if (mscorlibFile != null)
+            if (mscorlibResult != null)
             {
-                AddAssembliesFromFolder(mscorlibFile);
+                AddAssembliesFromFolder(mscorlibResult.File);
 
-                // .Net FW detected - add reference assemblies as well
-                AddAssembliesFromFolder(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8");
+                AddAssembliesFromFolder(mscorlibResult.ReferenceAssemblies);
 
-                return context.LoadFromAssemblyPath(mscorlibFile.FullName);
+                return context.LoadFromAssemblyPath(mscorlibResult.File.FullName);
             }
 
             // try resolve .NET Core/6 and NuGet
@@ -83,6 +79,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         internal void AddAssembliesFromFolder(FileInfo file) =>
             AddAssembliesFromFolder(file.Directory.FullName);
+
+        internal void AddAssembliesFromFolder(DirectoryInfo file) =>
+            AddAssembliesFromFolder(file.FullName);
 
         internal void AddAssembliesFromFolder(string folder)
         {
