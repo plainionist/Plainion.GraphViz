@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Plainion.Logging;
 
@@ -54,18 +53,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         {
             var args = new ResolveEventArgs(name.FullName, requestingAssembly);
             return TryResolve(myRelativePathResolver, args) ?? TryResolve(myNuGetResolver, args);
-        }
-
-        public IReadOnlyCollection<FileInfo> TryResolveOnly(AssemblyName name)
-        {
-            IEnumerable<T> TryResolveOnly<T>(AbstractAssemblyResolver<T> resolver) where T : AssemblyResolutionResult =>
-                resolver.TryResolve(name);
-
-            var results = TryResolveOnly(myRelativePathResolver);
-            return results
-                .Select(x => x.File)
-                .Concat(TryResolveOnly(myNuGetResolver).Select(x => x.File))
-                .ToList();
         }
     }
 }

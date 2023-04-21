@@ -15,6 +15,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         // we must not add same assembly from different paths to PathAssemblyResolver.
         // it will fail with exception if version isnt exactly same
         private readonly Dictionary<string, string> myAssemblies;
+        private readonly RelativePathResolver myRelativePathResolver;
+        private readonly NugetResolver myNuGetResolver;
 
         public CustomMetadataAssemblyResolver(Assembly coreAssembly)
         {
@@ -22,6 +24,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             myFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             myAssemblies.Add(Path.GetFileName(coreAssembly.Location), coreAssembly.Location);
+
+            myRelativePathResolver = new RelativePathResolver(VersionMatchingStrategy.Exact, SearchOption.AllDirectories);
+            myNuGetResolver = new NugetResolver(VersionMatchingStrategy.Exact, VersionMatchingStrategy.Exact);
         }
 
         public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
@@ -53,9 +58,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
             // try resolve .NET Core/6 and NuGet
 
-            var resolve = new AssemblyResolver();
-
-            var files = resolve.TryResolveOnly(assemblyName);
+            var files = TryResolveOnly(assemblyName);
 
             if (files.Count == 0)
             {
@@ -75,6 +78,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             AddAssembliesFromFolders(files);
 
             return context.LoadFromAssemblyPath(files.First().FullName);
+        }
+
+        private IReadOnlyCollection<FileInfo> TryResolveOnly(AssemblyName name)
+        {
+            IEnumerable<T> TryResolveOnly<T>(AbstractAssemblyResolver<T> resolver) where T : AssemblyResolutionResult =>
+                resolver.TryResolve(name);
+
+            var results = TryResolveOnly(myRelativePathResolver);
+            return results
+                .Select(x => x.File)
+                .Concat(TryResolveOnly(myNuGetResolver).Select(x => x.File))
+                .ToList();
         }
 
         internal void AddAssembliesFromFolder(string folder)
