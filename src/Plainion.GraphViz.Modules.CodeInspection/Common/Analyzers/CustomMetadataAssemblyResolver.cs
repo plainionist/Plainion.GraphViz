@@ -42,7 +42,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
             if (mscorlibResult != null)
             {
-                AddAssembliesFromFolder(mscorlibResult.File);
+                AddAssembliesFromFolder(mscorlibResult.File.Directory);
 
                 AddAssembliesFromFolder(mscorlibResult.ReferenceAssemblies);
 
@@ -57,7 +57,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 .FirstOrDefault();
             if (file != null)
             {
-                AddAssembliesFromFolder(file);
+                AddAssembliesFromFolder(file.Directory);
 
                 return context.LoadFromAssemblyPath(file.FullName);
             }
@@ -69,7 +69,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
             if (file != null)
             {
-                AddAssembliesFromFolder(file);
+                AddAssembliesFromFolder(file.Directory);
 
                 return context.LoadFromAssemblyPath(file.FullName);
             }
@@ -77,23 +77,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             return null;
         }
 
-        internal void AddAssembliesFromFolder(FileInfo file) =>
-            AddAssembliesFromFolder(file.Directory.FullName);
-
-        internal void AddAssembliesFromFolder(DirectoryInfo file) =>
-            AddAssembliesFromFolder(file.FullName);
-
-        internal void AddAssembliesFromFolder(string folder)
+        internal void AddAssembliesFromFolder(DirectoryInfo folder)
         {
-            if (myFolders.Contains(folder))
+            if (myFolders.Contains(folder.FullName))
             {
                 return;
             }
 
-            AddPaths(Directory.GetFiles(folder, "*.dll"));
-            AddPaths(Directory.GetFiles(folder, "*.exe"));
+            AddPaths(folder.GetFiles("*.dll").Select(x => x.FullName));
+            AddPaths(folder.GetFiles("*.exe").Select(x => x.FullName));
 
-            myFolders.Add(folder);
+            myFolders.Add(folder.FullName);
 
             void AddPaths(IEnumerable<string> paths)
             {

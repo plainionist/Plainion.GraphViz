@@ -47,7 +47,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
                 try
                 {
-                    myResolver.AddAssembliesFromFolder(Path.GetDirectoryName(requestingAssembly.Location));
+                    myResolver.AddAssembliesFromFolder(new FileInfo(requestingAssembly.Location).Directory);
 
                     assembly = myContext.LoadFromAssemblyName(dependency);
                     myAssemblyCache[dependency.FullName] = assembly;
@@ -89,7 +89,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 {
                     myLogger.Debug($"Loading {path}");
 
-                    myResolver.AddAssembliesFromFolder(Path.GetDirectoryName(path));
+                    myResolver.AddAssembliesFromFolder(new FileInfo(path).Directory);
 
                     assembly = ReflectionOnlyLoadFrom(path);
                     myAssemblyCache[path] = assembly;
