@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 {
@@ -43,18 +42,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             if (mscorlibResult != null)
             {
                 AddAssembliesFromFolder(mscorlibResult.File.Directory);
-
                 AddAssembliesFromFolder(mscorlibResult.ReferenceAssemblies);
 
                 return context.LoadFromAssemblyPath(mscorlibResult.File.FullName);
             }
 
-            // try resolve .NET Core/6 and NuGet
-
             var file = myRelativePathResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
                 .OrderByDescending(x => x.AssemblyName.Version)
                 .Select(x => x.File)
                 .FirstOrDefault();
+
             if (file != null)
             {
                 AddAssembliesFromFolder(file.Directory);
