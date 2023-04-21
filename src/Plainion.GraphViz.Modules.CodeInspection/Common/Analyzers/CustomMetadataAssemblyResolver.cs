@@ -14,9 +14,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         private readonly Dictionary<string, string> myAssemblies;
         private readonly RelativePathResolver myRelativePathResolver;
         private readonly NugetResolver myNuGetResolver;
+        private readonly Func<Assembly> myTryGetRequestingAssembly;
 
-        public CustomMetadataAssemblyResolver(Assembly coreAssembly)
+        public CustomMetadataAssemblyResolver(Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly)
         {
+            Contract.RequiresNotNull(tryGetRequestingAssembly, nameof(tryGetRequestingAssembly));   
+
+            myTryGetRequestingAssembly = tryGetRequestingAssembly;
             myAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             myFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -28,6 +32,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
         {
+            var requestingAssembly = myTryGetRequestingAssembly() ?? Assembly.GetEntryAssembly();
+
             var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);
             if (assembly != null)
             {
@@ -35,7 +41,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             }
 
             var mscorlibResolver = new MscorlibResolver();
-            var mscorlibResult = mscorlibResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
+            var mscorlibResult = mscorlibResolver.TryResolve(assemblyName, requestingAssembly)
                 .OrderByDescending(x => x.AssemblyName.Version)
                 .FirstOrDefault();
 
@@ -47,7 +53,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 return context.LoadFromAssemblyPath(mscorlibResult.File.FullName);
             }
 
-            var file = myRelativePathResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
+            var file = myRelativePathResolver.TryResolve(assemblyName, requestingAssembly)
                 .OrderByDescending(x => x.AssemblyName.Version)
                 .Select(x => x.File)
                 .FirstOrDefault();
@@ -59,7 +65,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 return context.LoadFromAssemblyPath(file.FullName);
             }
 
-            file = myNuGetResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
+            file = myNuGetResolver.TryResolve(assemblyName, requestingAssembly)
                 .OrderByDescending(x => x.AssemblyName.Version)
                 .Select(x => x.File)
                 .FirstOrDefault();

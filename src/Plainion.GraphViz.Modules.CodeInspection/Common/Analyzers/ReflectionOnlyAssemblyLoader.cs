@@ -14,10 +14,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         private readonly Dictionary<string, Assembly> myAssemblyCache;
         private readonly CustomMetadataAssemblyResolver myResolver;
         private MetadataLoadContext myContext;
+        private Assembly myRequestingAssembly;
 
         public ReflectionOnlyAssemblyLoader()
         {
-            myResolver = new CustomMetadataAssemblyResolver(typeof(object).Assembly);
+            myResolver = new CustomMetadataAssemblyResolver(() => myRequestingAssembly, typeof(object).Assembly);
             myContext = new MetadataLoadContext(myResolver, typeof(object).Assembly.GetName().Name);
 
             myAssemblyCache = new Dictionary<string, Assembly>();
@@ -45,8 +46,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                     return assembly;
                 }
 
+                var oldRequestingAssembly = myRequestingAssembly;
                 try
                 {
+                    myRequestingAssembly = requestingAssembly;
+
                     myResolver.AddAssembliesFromFolder(new FileInfo(requestingAssembly.Location).Directory);
 
                     assembly = myContext.LoadFromAssemblyName(dependency);
@@ -67,6 +71,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                     myAssemblyCache[dependency.FullName] = null;
 
                     return null;
+                }
+                finally
+                {
+                    myRequestingAssembly = oldRequestingAssembly;
                 }
             }
         }
