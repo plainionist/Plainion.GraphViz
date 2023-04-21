@@ -55,29 +55,30 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
             // try resolve .NET Core/6 and NuGet
 
-            var files = myRelativePathResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
+            var file = myRelativePathResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
+                .OrderByDescending(x => x.AssemblyName.Version)
                 .Select(x => x.File)
-                .Concat(myNuGetResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly()).Select(x => x.File))
-                .ToList();
-
-            if (files.Count == 0)
+                .FirstOrDefault();
+            if (file != null)
             {
-                myLogger.Warning($"Dependency not found '{assemblyName}'");
-                return null;
+                AddAssembliesFromFolder(file);
+
+                return context.LoadFromAssemblyPath(file.FullName);
             }
 
-            if (files.Count > 1)
+            file = myNuGetResolver.TryResolve(assemblyName, Assembly.GetExecutingAssembly())
+                .OrderByDescending(x => x.AssemblyName.Version)
+                .Select(x => x.File)
+                .FirstOrDefault();
+
+            if (file != null)
             {
-                myLogger.Warning($"Multiple matching assemblies found for '{assemblyName}':");
-                foreach (var file in files)
-                {
-                    myLogger.Warning($"  {file.FullName}");
-                }
+                AddAssembliesFromFolder(file);
+
+                return context.LoadFromAssemblyPath(file.FullName);
             }
 
-            AddAssembliesFromFolders(files);
-
-            return context.LoadFromAssemblyPath(files.First().FullName);
+            return null;
         }
 
         internal void AddAssembliesFromFolder(FileInfo file) =>
@@ -105,14 +106,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                         myAssemblies[key] = path;
                     }
                 }
-            }
-        }
-
-        internal void AddAssembliesFromFolders(IReadOnlyCollection<FileInfo> files)
-        {
-            foreach (var dir in files.Select(x => x.DirectoryName))
-            {
-                AddAssembliesFromFolder(dir);
             }
         }
     }
