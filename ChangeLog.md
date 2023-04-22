@@ -1,4 +1,8 @@
 
+## 5.0 - 2023-04-22
+
+- loading assemblies for "CodeInspection" completely reworked to support NetCoreApp and NetFramework in a clean way
+
 ## 4.5 - 2022-09-09
 
 - renaming clusters in cluster editor fixed

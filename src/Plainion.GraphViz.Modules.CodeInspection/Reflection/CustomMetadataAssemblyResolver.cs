@@ -21,7 +21,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
         private readonly NugetResolver myNuGetResolver;
         private readonly Func<Assembly> myTryGetRequestingAssembly;
 
-        public CustomMetadataAssemblyResolver(Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly)
+        public CustomMetadataAssemblyResolver(Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly, DotNetRuntime dotnetRuntime)
         {
             Contract.RequiresNotNull(tryGetRequestingAssembly, nameof(tryGetRequestingAssembly));
 
@@ -31,12 +31,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 
             myAssemblies.Add(Path.GetFileName(coreAssembly.Location), coreAssembly.Location);
 
-            myMscorlibResolver = new MscorlibResolver();
+            myMscorlibResolver = new MscorlibResolver(dotnetRuntime);
             myRelativePathResolver = new RelativePathResolver(VersionMatchingStrategy.SemanticVersion, SearchOption.AllDirectories);
             myGacResolver = new GacResolver();
             myNuGetResolver = new NugetResolver(VersionMatchingStrategy.SemanticVersion);
-
-            System.Diagnostics.Debugger.Launch();
         }
 
         public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
@@ -47,7 +45,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
         }
 
         private Assembly ResolveCore(MetadataLoadContext context, AssemblyName assemblyName)
-        { 
+        {
             var requestingAssembly = myTryGetRequestingAssembly() ?? Assembly.GetEntryAssembly();
 
             var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);
@@ -62,8 +60,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 
             if (mscorlibResult != null)
             {
+                // add "reference assemblies" first because in case of .NET 6 we have "windows desktop" assemblies
+                // location from there and we need to load e.g. windowsbase.dll from there as in ".net core app" 
+                // there is only a "proxy" assembly
+                foreach (var dir in mscorlibResult.ReferenceAssemblies)
+                {
+                    AddAssembliesFromFolder(dir);
+                }
+
                 AddAssembliesFromFolder(mscorlibResult.File.Directory);
-                AddAssembliesFromFolder(mscorlibResult.ReferenceAssemblies);
 
                 return context.LoadFromAssemblyPath(mscorlibResult.File.FullName);
             }
@@ -122,7 +127,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
                     var key = Path.GetFileName(path);
                     if (!myAssemblies.ContainsKey(key))
                     {
-                        myAssemblies[key] = path;
+                        myAssemblies.Add(key, path);
                     }
                 }
             }

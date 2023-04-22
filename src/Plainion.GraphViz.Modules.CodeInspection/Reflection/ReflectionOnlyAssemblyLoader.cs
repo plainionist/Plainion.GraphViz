@@ -16,15 +16,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
         private MetadataLoadContext myContext;
         private Assembly myRequestingAssembly;
 
-        public ReflectionOnlyAssemblyLoader()
+        public ReflectionOnlyAssemblyLoader(DotNetRuntime dotnetRuntime)
         {
-            myResolver = new CustomMetadataAssemblyResolver(() => myRequestingAssembly, typeof(object).Assembly);
+            myResolver = new CustomMetadataAssemblyResolver(() => myRequestingAssembly, typeof(object).Assembly, dotnetRuntime);
             myContext = new MetadataLoadContext(myResolver, typeof(object).Assembly.GetName().Name);
 
             myAssemblyCache = new Dictionary<string, Assembly>();
             ForceLoadDependencies = true;
-
-            //System.Diagnostics.Debugger.Launch();
         }
 
         public void Dispose()

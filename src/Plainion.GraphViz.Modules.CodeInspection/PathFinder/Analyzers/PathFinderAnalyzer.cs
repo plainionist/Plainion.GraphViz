@@ -241,6 +241,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
         {
             var definition = new
             {
+                NetFramework = false,
                 BinFolder = "",
                 KeepInnerAssemblyDependencies = true,
                 KeepSourceAssemblyClusters = false,
@@ -262,7 +263,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
                 KeepTargetAssemblyClusters = config.KeepTargetAssemblyClusters;
                 AssemblyReferencesOnly = assemblyReferencesOnly;
 
-                var loader = AssemblyLoaderFactory.Create();
+                var loader = AssemblyLoaderFactory.Create(config.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core);
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }

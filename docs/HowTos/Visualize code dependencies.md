@@ -18,7 +18,7 @@ An initial package spec can look like this:
 
 ```xml
 <?xml version="1.0" encoding="utf-16"?>
-<SystemPackaging AssemblyRoot="." xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
+<SystemPackaging AssemblyRoot="." NetFramework="false" xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
     <Package Name="Plainion.Foundations">
         <Package.Clusters>
             <Cluster Name="UI">
@@ -63,6 +63,8 @@ The "include" and "exclude" directives within a cluster map to namespaces.
 
 You can then either analyze the dependencies between packages by selecting the packages of interest or within one package 
 by just selecting a particular one.
+
+Use "NetFramework" property to define whether .Net framework runtime should be used instead of .NET runtime.
 
 ![](../Screenshots/GenerateGraphFromPackageSpec.png)
 

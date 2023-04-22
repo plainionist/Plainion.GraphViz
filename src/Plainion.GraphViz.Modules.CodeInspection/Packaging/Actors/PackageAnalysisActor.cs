@@ -22,7 +22,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
                     Task.Run<AnalysisDocument>(() =>
                     {
-                        var loader = new TypesLoader(AssemblyLoaderFactory.Create());
+                        var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
+
+                        var loader = new TypesLoader(AssemblyLoaderFactory.Create(spec.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core));
                         var analyzer = new PackageAnalyzer(loader);
 
                         analyzer.UsedTypesOnly = r.UsedTypesOnly;
@@ -33,7 +35,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                             analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
                         }
 
-                        var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
                         return analyzer.Execute(spec, CancellationToken);
                     }, CancellationToken)
                     .ContinueWith<object>(x =>

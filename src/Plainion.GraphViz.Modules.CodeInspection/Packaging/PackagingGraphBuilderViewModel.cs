@@ -34,9 +34,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private bool myUsedTypesOnly;
         private bool myCreateClustersForNamespaces;
         private readonly GraphToSpecSynchronizer myGraphToSpecSynchronizer;
-        private IPresentationCreationService myPresentationCreationService;
-        private IStatusMessageService myStatusMessageService;
-        private PackageAnalysisClient myAnalysisClient;
+        private readonly IPresentationCreationService myPresentationCreationService;
+        private readonly IStatusMessageService myStatusMessageService;
+        private readonly PackageAnalysisClient myAnalysisClient;
         private IDocumentLoader myDocumentLoader;
         private string myFileName;
 
@@ -85,7 +85,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private void SetInitialTemplate(TextDocument document)
         {
             document.Text = 
-                @"<SystemPackaging AssemblyRoot=""ASSEMBLY_ROOT_UNDEFINED"" xmlns=""http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec"">
+                @"<SystemPackaging AssemblyRoot=""ASSEMBLY_ROOT_UNDEFINED"" NetFramework=""false"" xmlns=""http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec"">
     <Package Name=""System"">
         <Package.Clusters>
             <Cluster Name=""System"">

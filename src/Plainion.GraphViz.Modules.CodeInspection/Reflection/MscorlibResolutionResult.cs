@@ -1,17 +1,19 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     internal class MscorlibResolutionResult : AssemblyResolutionResult
     {
-        public MscorlibResolutionResult(FileInfo file, string referenceAssemblies)
+        public MscorlibResolutionResult(FileInfo file, params string[] referenceAssemblies)
             : base(file)
         {
-            ReferenceAssemblies = new DirectoryInfo(referenceAssemblies);
-
-            Contract.Requires(ReferenceAssemblies.Exists, $"'{referenceAssemblies}' does not exist");
+            ReferenceAssemblies = referenceAssemblies
+                .Select(x => new DirectoryInfo(x))
+                .ToList();
         }
 
-        public DirectoryInfo ReferenceAssemblies { get; }
+        public IReadOnlyCollection<DirectoryInfo> ReferenceAssemblies { get; }
     }
 }

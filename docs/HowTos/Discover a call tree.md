@@ -15,6 +15,7 @@ To start spanning a call tre load a configuration file of the following schema:
 
 ```json
 {
+    "netFramework" : "false",
     "binFolder": "D:/Workspace/Plainion/Plainion.GraphViz/bin/Debug",
     "sources": [ "Plainion.GraphViz.dll" ],
     "targets": [
@@ -28,6 +29,7 @@ To start spanning a call tre load a configuration file of the following schema:
 }
 ```
 
+- "netFramework" specifies the DotNet runtime which should be used. By default .NET is used. Set it to "true" to use .NET Framework
 - "binFolder" specifies the folder where all assemblies are located
 - "sources" specifies the source assemblies. Wildcards supported.
 - "targets" specifies the target API by assembly, type and method. "Method" can also be the getter/setter method

@@ -8,14 +8,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     internal class MscorlibResolver : AbstractAssemblyResolver<MscorlibResolutionResult>
     {
-        public MscorlibResolver()
+        private readonly DotNetRuntime myDotnetRuntime;
+
+        public MscorlibResolver(DotNetRuntime dotnetRuntime)
             : base(VersionMatchingStrategy.Exact)
         {
+            myDotnetRuntime = dotnetRuntime;
         }
 
         public override IReadOnlyCollection<MscorlibResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly)
         {
-            if (assemblyName.Name == "mscorlib" && assemblyName.Version == new Version(4, 0, 0, 0))
+            if (assemblyName.Name != "mscorlib")
+            {
+                return Array.Empty<MscorlibResolutionResult>();
+            }
+
+            if (myDotnetRuntime == DotNetRuntime.Framework)
             {
                 var netFwRoot = assemblyName.ProcessorArchitecture == ProcessorArchitecture.Amd64
                     ? @"%systemroot%\Microsoft.NET\Framework64"
@@ -25,8 +33,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 
                 var version = Directory.GetDirectories(netFwRoot, "v4.0.*")
                     .Select(Path.GetFileName)
-                    .OrderBy(x => x)
-                    .Last();
+                    .OrderByDescending(x => x)
+                    .First();
 
                 var result = new MscorlibResolutionResult(
                     new FileInfo(Path.Combine(netFwRoot, version, "mscorlib.dll")),
@@ -34,8 +42,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 
                 return new[] { result };
             }
+            else
+            {
+                var netRoot = @"C:\Program Files\dotnet\shared\Microsoft.NETCore.App";
 
-            return Array.Empty<MscorlibResolutionResult>();
+                var version = Directory.GetDirectories(netRoot)
+                    .Select(Path.GetFileName)
+                    .OrderByDescending(x => x)
+                    .First();
+
+                var result = new MscorlibResolutionResult(
+                    new FileInfo(Path.Combine(netRoot, version, "mscorlib.dll")),
+                    Path.Combine(@"C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App", version),
+                    Path.Combine(@"C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App", version));
+
+                return new[] { result };
+            }
         }
     }
 }

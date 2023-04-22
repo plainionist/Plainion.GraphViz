@@ -11,7 +11,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
         {
             Packages = new List<Package>();
         }
-        
+
+        public bool NetFramework { get; set; }
+
         public string AssemblyRoot { get; set; }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]

@@ -408,6 +408,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
         {
             var definition = new
             {
+                NetFramework = false,
                 BinFolder = "",
                 Sources = new[] { "" },
                 Targets = new[] { new
@@ -436,7 +437,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 AssemblyReferencesOnly = assemblyReferencesOnly;
                 StrictCallsOnly = strictCallsOnly;
 
-                var loader = AssemblyLoaderFactory.Create();
+                var loader = AssemblyLoaderFactory.Create(config.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core);
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }
