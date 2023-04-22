@@ -6,11 +6,14 @@ using System.Text.RegularExpressions;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Reflection;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {
     class InterfaceImplementationsMap
     {
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(InterfaceImplementationsMap));
+
         private readonly IReadOnlyCollection<Assembly> myAssemblies;
         private readonly Regex myTypeParameterPattern;
         private readonly Dictionary<string, IReadOnlyCollection<Type>> myMap;
@@ -56,7 +59,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 }
                 else
                 {
-                    Shell.Warn($"Implementation not found for: {call.To.DeclaringType.FullName}");
+                    myLogger.Warning($"Implementation not found for: {call.To.DeclaringType.FullName}");
                     return new[] { call };
                 }
             }

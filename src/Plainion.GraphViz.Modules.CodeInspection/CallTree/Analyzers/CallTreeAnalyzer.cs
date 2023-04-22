@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,7 @@ using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Reflection;
 using Plainion.GraphViz.Presentation;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {
@@ -21,6 +23,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
     class CallTreeAnalyzer
     {
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(CallTreeAnalyzer));
+
         private class MethodNode
         {
             public string myId;
@@ -181,10 +185,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             foreach (var x in monoLoader.SkippedAssemblies)
             {
-                Shell.Warn($"    {x}");
+                myLogger.Warning($"    {x}");
             }
 
-            return Shell.Profile("Generating call graph ...", () =>
+            return Profile("Generating call graph ...", () =>
             {
                 var builder = new RelaxedGraphBuilder();
                 var edges = calls
@@ -233,6 +237,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
                 return presentation;
             });
+        }
+
+        public static T Profile<T>(string caption, Func<T> f)
+        {
+            Console.WriteLine(caption);
+
+            var watch = new Stopwatch();
+            watch.Start();
+
+            var ret = f();
+
+            watch.Stop();
+            Console.WriteLine($"{caption} elapsed {watch.Elapsed}");
+
+            return ret;
         }
 
         private void CopyCaptions(GraphPresentation target, GraphPresentation source)
@@ -326,7 +345,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .Where(x => x != null)
                 .ToList();
 
-            var nestedTargets = Shell.Profile("Loading target methods ...", () =>
+            var nestedTargets = Profile("Loading target methods ...", () =>
                 targetDescriptors
                     .Select(target =>
                     {
@@ -348,7 +367,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
 
             var analyzer = new AssemblyDependencyAnalyzer(loader, relevantAssemblies);
-            var assemblyGraphPresentation = Shell.Profile("Analyzing assemblies dependencies ...", () =>
+            var assemblyGraphPresentation = Profile("Analyzing assemblies dependencies ...", () =>
                 analyzer.CreateAssemblyGraph(sources, targets.Select(x => x.Item1)));
 
             if (AssemblyReferencesOnly)
@@ -357,12 +376,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
             else
             {
-                var callsPresentation = Shell.Profile("Analyze method calls ...", () =>
+                var callsPresentation = Profile("Analyze method calls ...", () =>
                     BuildCallTree(sources, targets.Select(x => x.Item2).ToList(), assemblyGraphPresentation));
 
                 if (StrictCallsOnly)
                 {
-                    Shell.Profile("Analyze direct method call dependencies ...", () =>
+                    Profile("Analyze direct method call dependencies ...", () =>
                     {
                         var p = ReduceToDirectDependencies(targets.Select(x => x.Item2).ToList(), callsPresentation);
                         GraphUtils.Serialize(outputFile, p);
@@ -371,7 +390,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 }
                 else
                 {
-                    Shell.Profile("Analyze indirect type dependencies ...", () =>
+                    Profile("Analyze indirect type dependencies ...", () =>
                     {
                         var p = ReduceToIndirectDependencies(targets.Select(x => x.Item2).ToList(), callsPresentation);
                         GraphUtils.Serialize(outputFile, p);
@@ -400,11 +419,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             {
                 var config = JsonConvert.DeserializeAnonymousType(reader.ReadToEnd(), definition);
 
-                var sources = Shell.ResolveAssemblies(config.BinFolder, config.Sources).ToList();
+                var sources = ResolveAssemblies(config.BinFolder, config.Sources).ToList();
                 var targets = config.Targets
                     .Select(t => new TargetDescriptor
                     {
-                        Assembly = Shell.ResolveAssemblies(config.BinFolder, t.Assembly).Single(),
+                        Assembly = ResolveAssemblies(config.BinFolder, t.Assembly).Single(),
                         Type = t.Type,
                         Method = t.Method
                     })
@@ -416,6 +435,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 var loader = AssemblyLoaderFactory.Create();
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
+        }
+
+        private static IEnumerable<string> ResolveAssemblies(string binFolder, string pattern)
+        {
+            var files = Directory.GetFiles(binFolder, pattern);
+            if (files.Length == 0)
+            {
+                myLogger.Warning($"No assemblies found for pattern: {pattern}");
+                return Enumerable.Empty<string>();
+            }
+            else
+            {
+                return files
+                    .Select(f => Path.GetFullPath(f))
+                    .ToList();
+            }
+        }
+
+        private static IEnumerable<string> ResolveAssemblies(string binFolder, IEnumerable<string> patterns)
+        {
+            return patterns.SelectMany(p => ResolveAssemblies(binFolder, p)).ToList();
         }
     }
 }

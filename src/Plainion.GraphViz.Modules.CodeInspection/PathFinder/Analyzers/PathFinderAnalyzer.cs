@@ -6,14 +6,18 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Reflection;
 using Plainion.GraphViz.Presentation;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 {
     class PathFinderAnalyzer
     {
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PathFinderAnalyzer));
+
         private class TypeNode
         {
             public string myId;
@@ -132,7 +136,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 
             foreach (var asm in monoLoader.SkippedAssemblies)
             {
-                Shell.Warn("  " + asm);
+                myLogger.Warning("  " + asm);
             }
 
             var builder = new RelaxedGraphBuilder();
@@ -250,8 +254,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             {
                 var config = JsonConvert.DeserializeAnonymousType(reader.ReadToEnd(), definition);
 
-                var sources = Shell.ResolveAssemblies(config.BinFolder, config.Sources).ToList();
-                var targets = Shell.ResolveAssemblies(config.BinFolder, config.Targets).ToList();
+                var sources = ResolveAssemblies(config.BinFolder, config.Sources).ToList();
+                var targets = ResolveAssemblies(config.BinFolder, config.Targets).ToList();
 
                 KeepInnerAssemblyDependencies = config.KeepInnerAssemblyDependencies;
                 KeepSourceAssemblyClusters = config.KeepSourceAssemblyClusters;
@@ -261,6 +265,27 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
                 var loader = AssemblyLoaderFactory.Create();
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
+        }
+
+        private static IEnumerable<string> ResolveAssemblies(string binFolder, string pattern)
+        {
+            var files = Directory.GetFiles(binFolder, pattern);
+            if (files.Length == 0)
+            {
+                myLogger.Warning($"No assemblies found for pattern: {pattern}");
+                return Enumerable.Empty<string>();
+            }
+            else
+            {
+                return files
+                    .Select(f => Path.GetFullPath(f))
+                    .ToList();
+            }
+        }
+
+        private static IEnumerable<string> ResolveAssemblies(string binFolder, IEnumerable<string> patterns)
+        {
+            return patterns.SelectMany(p => ResolveAssemblies(binFolder, p)).ToList();
         }
     }
 }
