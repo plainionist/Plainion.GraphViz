@@ -65,7 +65,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
                 }
                 catch (Exception ex)
                 {
-                    myLogger.Warning($"Failed to load dependency {dependency}{Environment.NewLine}{ex.Message}");
+                    myLogger.Warning($"Failed to load dependency {dependency}{Environment.NewLine}Reason: {ex.Message}");
 
                     // don't try loading again
                     myAssemblyCache[dependency.FullName] = null;
@@ -108,7 +108,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
                 }
                 catch (Exception ex)
                 {
-                    myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}{ex.Message}");
+                    myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}Reason: {ex.Message}");
 
                     // don't try loading again
                     myAssemblyCache[path] = null;
