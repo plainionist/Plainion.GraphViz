@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     public abstract class AbstractAssemblyResolver<T> where T : AssemblyResolutionResult
     {

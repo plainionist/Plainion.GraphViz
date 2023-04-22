@@ -1,4 +1,4 @@
-﻿namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+﻿namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     class AssemblyLoaderFactory
     {

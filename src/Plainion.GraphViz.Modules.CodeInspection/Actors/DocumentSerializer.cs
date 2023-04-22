@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
+namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
     /// <summary>
     /// Most "analysis documents" cannot be directly serialized and transported through Akka.Net. 

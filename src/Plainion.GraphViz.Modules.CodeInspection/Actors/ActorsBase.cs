@@ -2,7 +2,7 @@
 using System.Threading;
 using Akka.Actor;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
+namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
     abstract class ActorsBase : ReceiveActor, IWithUnboundedStash
     {

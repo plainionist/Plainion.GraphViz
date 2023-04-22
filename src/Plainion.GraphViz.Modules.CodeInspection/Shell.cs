@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common
+namespace Plainion.GraphViz.Modules.CodeInspection
 {
     class Shell
     {
@@ -60,7 +60,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common
             var files = Directory.GetFiles(binFolder, pattern);
             if (files.Length == 0)
             {
-                Shell.Warn($"No assemblies found for pattern: {pattern}");
+                Warn($"No assemblies found for pattern: {pattern}");
                 return Enumerable.Empty<string>();
             }
             else

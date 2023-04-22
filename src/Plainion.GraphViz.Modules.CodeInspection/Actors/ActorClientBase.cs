@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Configuration;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
+namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
     class ActorClientBase : IDisposable
     {
@@ -71,7 +71,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Actors
                 info.CreateNoWindow = true;
                 info.UseShellExecute = false;
             }
-            
+
             myHostPid = Process.Start(info).Id;
 
             var config = ConfigurationFactory.ParseString(@"

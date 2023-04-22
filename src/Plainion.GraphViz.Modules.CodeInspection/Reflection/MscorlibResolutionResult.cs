@@ -1,10 +1,10 @@
 ﻿using System.IO;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     internal class MscorlibResolutionResult : AssemblyResolutionResult
     {
-        public MscorlibResolutionResult(FileInfo file, string referenceAssemblies) 
+        public MscorlibResolutionResult(FileInfo file, string referenceAssemblies)
             : base(file)
         {
             ReferenceAssemblies = new DirectoryInfo(referenceAssemblies);

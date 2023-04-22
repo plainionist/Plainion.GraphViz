@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     internal static class VersionExtensions
     {

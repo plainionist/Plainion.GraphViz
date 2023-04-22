@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Versioning;
-using Plainion;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     public enum DotNetFrameworkType
     {

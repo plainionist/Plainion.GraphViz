@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Plainion;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     public class NugetResolver : AbstractAssemblyResolver<NugetAssemblyResolutionResult>
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Plainion.Logging;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     internal class ReflectionOnlyAssemblyLoader : IAssemblyLoader
     {
@@ -65,7 +65,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 }
                 catch (Exception ex)
                 {
-                    myLogger.Error($"Failed to load assembly {dependency}{Environment.NewLine}{ex.Message}");
+                    myLogger.Warning($"Failed to load dependency {dependency}{Environment.NewLine}{ex.Message}");
 
                     // don't try loading again
                     myAssemblyCache[dependency.FullName] = null;
@@ -99,7 +99,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
                     myResolver.AddAssembliesFromFolder(new FileInfo(path).Directory);
 
-                    assembly = ReflectionOnlyLoadFrom(path);
+                    assembly = myContext.LoadFromAssemblyPath(path);
                     myAssemblyCache[path] = assembly;
 
                     ForceLoadDependenciesIfRequested(assembly);
@@ -142,19 +142,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             // to get the types for working with those.
             asm.GetTypes()
                 .SelectMany(x => x.GetMembers());
-        }
-
-        private Assembly ReflectionOnlyLoadFrom(string file)
-        {
-            try
-            {
-                return myContext.LoadFromAssemblyPath(file);
-            }
-            catch (BadImageFormatException)
-            {
-                myLogger.Warning($"Loading skipped for native/mixed mode assembly: {file}");
-                return null;
-            }
         }
     }
 }

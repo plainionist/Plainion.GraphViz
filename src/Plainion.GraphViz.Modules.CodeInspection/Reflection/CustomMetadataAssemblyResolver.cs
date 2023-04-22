@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
     {
@@ -20,7 +20,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         public CustomMetadataAssemblyResolver(Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly)
         {
-            Contract.RequiresNotNull(tryGetRequestingAssembly, nameof(tryGetRequestingAssembly));   
+            Contract.RequiresNotNull(tryGetRequestingAssembly, nameof(tryGetRequestingAssembly));
 
             myTryGetRequestingAssembly = tryGetRequestingAssembly;
             myAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

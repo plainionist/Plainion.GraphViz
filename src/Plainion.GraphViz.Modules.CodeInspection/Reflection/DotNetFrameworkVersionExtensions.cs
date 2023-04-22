@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     static class DotNetFrameworkVersionExtensions
     {
@@ -58,8 +58,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
             var standardVersion = self.TryGetNetStandardVersion();
 
             return myFrameworkVersionToStandardMap.Keys
-                .Where(x => (x.Framework == self.Framework && x.Version <= self.Version)
-                    || (standardVersion != null && x.Framework == DotNetFrameworkType.Standard && x.Version <= standardVersion))
+                .Where(x => x.Framework == self.Framework && x.Version <= self.Version
+                    || standardVersion != null && x.Framework == DotNetFrameworkType.Standard && x.Version <= standardVersion)
                 .ToList();
         }
     }

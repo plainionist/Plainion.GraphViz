@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     public record SemanticVersion : IComparable<SemanticVersion>
     {
@@ -48,7 +48,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
         public override string ToString() =>
             $"{Major}.{Minor}.{Patch}" + (PreRelease != null ? "-" + PreRelease : "");
-    
+
         public int CompareTo(SemanticVersion other)
         {
             if (other == null)

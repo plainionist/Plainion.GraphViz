@@ -7,7 +7,7 @@ using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.Text;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
+namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     class AssemblyDependencyAnalyzer
     {

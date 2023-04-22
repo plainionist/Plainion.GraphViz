@@ -2,9 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Plainion.GraphViz.Modules.CodeInspection.Common.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers;
-using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 {

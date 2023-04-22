@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Common;
-using Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Plainion.GraphViz.Modules.CodeInspection.Reflection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {
