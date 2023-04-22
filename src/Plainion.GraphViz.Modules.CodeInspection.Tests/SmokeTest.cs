@@ -15,7 +15,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     [TestFixture]
     class SmokeTest
     {
-        private static readonly string myProjectHome = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(SmokeTest).Assembly.Location), "..", "..", "..", ".."));
+        private static readonly string myProjectHome = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(SmokeTest).Assembly.Location), "..", ".."));
 
         private static readonly string[] TargetFrameworks = { "net6.0", "net48", "netcoreapp3.1" };
 

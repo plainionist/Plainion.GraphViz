@@ -174,10 +174,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .Where(n => assemblyGraphPresentation.Picking.Pick(n))
                 .ToList();
 
-            var interfaceImplementationsMap = new InterfaceImplementationsMap();
+            var assemblies = sources
+                .Concat(targets.Select(x => x.myDeclaringType.Assembly))
+                .ToList();
+
+            var interfaceImplementationsMap = new InterfaceImplementationsMap(assemblies);
             interfaceImplementationsMap.Build(relevantNodes, targets.Select(t => t.myDeclaringType));
 
-            var monoLoader = new MonoLoader(sources.Concat(targets.Select(x => x.myDeclaringType.Assembly)));
+            var monoLoader = new MonoLoader(assemblies);
             var calls = TraceCalles(monoLoader, relevantNodes, interfaceImplementationsMap, targets, sources);
 
             Console.WriteLine();
