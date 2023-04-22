@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
+    [DebuggerDisplay("{AssemblyName}")]
     public class AssemblyResolutionResult
     {
         public AssemblyResolutionResult(FileInfo file)

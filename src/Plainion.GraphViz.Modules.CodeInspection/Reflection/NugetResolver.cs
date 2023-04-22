@@ -10,12 +10,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
     public class NugetResolver : AbstractAssemblyResolver<NugetAssemblyResolutionResult>
     {
         private readonly IReadOnlyCollection<DirectoryInfo> myNugetCaches;
-        private readonly VersionMatchingStrategy myPackageMatchingStrategy;
 
-        public NugetResolver(VersionMatchingStrategy assemblyMatchingStrategy, VersionMatchingStrategy packageMatchingStrategy, IEnumerable<DirectoryInfo> caches = null)
+        public NugetResolver(VersionMatchingStrategy assemblyMatchingStrategy, IEnumerable<DirectoryInfo> caches = null)
             : base(assemblyMatchingStrategy)
         {
-            myPackageMatchingStrategy = packageMatchingStrategy;
             myNugetCaches = (caches ?? EnumerateCaches()).ToList();
         }
 
@@ -58,19 +56,21 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
         private IEnumerable<NugetAssemblyResolutionResult> EnumerateAssemblyCandidatesFromCache(AssemblyName assemblyName, DirectoryInfo cacheDir)
         {
             var packageDir = cacheDir.EnumerateDirectories(assemblyName.Name, SearchOption.TopDirectoryOnly)
-                .SingleOrDefault(x => x.Name == assemblyName.Name);
+                .SingleOrDefault(x => x.Name.Equals(assemblyName.Name, StringComparison.OrdinalIgnoreCase));
 
             if (packageDir == null)
             {
                 return new List<NugetAssemblyResolutionResult>();
             }
 
-            return packageDir.EnumerateFiles($"{assemblyName.Name}.dll", SearchOption.AllDirectories)
+            var results = packageDir.EnumerateFiles($"{assemblyName.Name}.dll", SearchOption.AllDirectories)
                 .Select(x => NugetAssemblyResolutionResult.TryCreate(x))
                 .Where(x => x != null)
+                .ToList();
+
+            return results
                 .Where(x => x.AssemblyName.Name == assemblyName.Name)
                 .Where(x => assemblyName.Version.Matches(x.AssemblyName.Version, myAssemblyMatchingStrategy))
-                .Where(x => assemblyName.Version.Matches(new Version(x.PackageVersion.Major, x.PackageVersion.Minor, x.PackageVersion.Patch), myPackageMatchingStrategy))
                 .Where(x => IsSupportedArchitecture(x.AssemblyName));
         }
     }

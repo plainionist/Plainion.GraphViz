@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
+    [DebuggerDisplay("{AssemblyName}")]
     public class NugetAssemblyResolutionResult : AssemblyResolutionResult
     {
         public NugetAssemblyResolutionResult(FileInfo file, DotNetFrameworkVersion fwVersion, SemanticVersion packageVersion)
@@ -46,7 +49,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
             var packageName = libDir.Parent.Parent.Name;
             var assemblyName = AssemblyName.GetAssemblyName(file.FullName);
 
-            return packageName == assemblyName.Name
+            return packageName .EndsWith(assemblyName.Name, StringComparison.OrdinalIgnoreCase)
                 ? new NugetAssemblyResolutionResult(file, fwVersion, packageVersion)
                 : null;
         }

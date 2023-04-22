@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
     class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
     {
+        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(CustomMetadataAssemblyResolver));
+
         private readonly HashSet<string> myFolders;
         // we must not add same assembly from different paths to PathAssemblyResolver.
         // it will fail with exception if version isnt exactly same
@@ -29,13 +32,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
             myAssemblies.Add(Path.GetFileName(coreAssembly.Location), coreAssembly.Location);
 
             myMscorlibResolver = new MscorlibResolver();
-            myRelativePathResolver = new RelativePathResolver(VersionMatchingStrategy.Exact, SearchOption.AllDirectories);
+            myRelativePathResolver = new RelativePathResolver(VersionMatchingStrategy.SemanticVersion, SearchOption.AllDirectories);
             myGacResolver = new GacResolver();
-            myNuGetResolver = new NugetResolver(VersionMatchingStrategy.Exact, VersionMatchingStrategy.Exact);
+            myNuGetResolver = new NugetResolver(VersionMatchingStrategy.SemanticVersion);
+
+            System.Diagnostics.Debugger.Launch();
         }
 
         public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
         {
+            var assembly = ResolveCore(context, assemblyName);
+            myLogger.Debug($"{assembly} => {assembly?.Location}");
+            return assembly;
+        }
+
+        private Assembly ResolveCore(MetadataLoadContext context, AssemblyName assemblyName)
+        { 
             var requestingAssembly = myTryGetRequestingAssembly() ?? Assembly.GetEntryAssembly();
 
             var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);

@@ -121,20 +121,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
         // ".NETFramework,Version=v4.5"
         public static DotNetFrameworkVersion TryParse(Assembly assembly)
         {
-            var attr = assembly.GetCustomAttribute<TargetFrameworkAttribute>();
-            if (attr == null)
+            var attrDatas = assembly.GetCustomAttributesData().Select(x => x.AttributeType).ToList();
+            var attrData = assembly.GetCustomAttributesData().SingleOrDefault(x => x.AttributeType.Name == typeof(TargetFrameworkAttribute).Name);
+            if (attrData == null)
             {
                 return null;
             }
 
-            var parts = attr.FrameworkName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var frameworkName = attrData.ConstructorArguments.Single().Value.ToString();
+            var parts = frameworkName.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length != 2)
             {
                 return null;
             }
 
             var fwType = ParseFrameworkType(parts[0]);
-            if (fwType != DotNetFrameworkType.Unknown)
+            if (fwType == DotNetFrameworkType.Unknown)
             {
                 return null;
             }
