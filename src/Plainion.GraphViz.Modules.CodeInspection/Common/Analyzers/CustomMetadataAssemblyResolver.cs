@@ -12,6 +12,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
         // we must not add same assembly from different paths to PathAssemblyResolver.
         // it will fail with exception if version isnt exactly same
         private readonly Dictionary<string, string> myAssemblies;
+        private readonly MscorlibResolver myMscorlibResolver;
+        private readonly GacResolver myGacResolver;
         private readonly RelativePathResolver myRelativePathResolver;
         private readonly NugetResolver myNuGetResolver;
         private readonly Func<Assembly> myTryGetRequestingAssembly;
@@ -26,7 +28,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
             myAssemblies.Add(Path.GetFileName(coreAssembly.Location), coreAssembly.Location);
 
+            myMscorlibResolver = new MscorlibResolver();
             myRelativePathResolver = new RelativePathResolver(VersionMatchingStrategy.Exact, SearchOption.AllDirectories);
+            myGacResolver = new GacResolver();
             myNuGetResolver = new NugetResolver(VersionMatchingStrategy.Exact, VersionMatchingStrategy.Exact);
         }
 
@@ -40,8 +44,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 return assembly;
             }
 
-            var mscorlibResolver = new MscorlibResolver();
-            var mscorlibResult = mscorlibResolver.TryResolve(assemblyName, requestingAssembly)
+            var mscorlibResult = myMscorlibResolver.TryResolve(assemblyName, requestingAssembly)
                 .OrderByDescending(x => x.AssemblyName.Version)
                 .FirstOrDefault();
 
@@ -65,6 +68,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
                 return context.LoadFromAssemblyPath(file.FullName);
             }
 
+            file = myGacResolver.TryResolve(assemblyName, requestingAssembly)
+                .OrderByDescending(x => x.AssemblyName.Version)
+                .Select(x => x.File)
+                .FirstOrDefault();
+
+            if (file != null)
+            {
+                return context.LoadFromAssemblyPath(file.FullName);
+            }
+
             file = myNuGetResolver.TryResolve(assemblyName, requestingAssembly)
                 .OrderByDescending(x => x.AssemblyName.Version)
                 .Select(x => x.File)
@@ -72,8 +85,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Common.Analyzers
 
             if (file != null)
             {
-                AddAssembliesFromFolder(file.Directory);
-
                 return context.LoadFromAssemblyPath(file.FullName);
             }
 
