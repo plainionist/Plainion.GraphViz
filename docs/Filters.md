@@ -76,3 +76,9 @@ These algorithms are node independent and are applied to the entire graph.
 After having done some filtering you can use the context menu on the canvas and the "Relayout" menu entry to
 re-layout the graph. This usually shows the remaining nodes in a more compact form.
 
+# Hands-on
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/z5By78jlR3M" title="YouTube video player" 
+    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    llowfullscreen>
+</iframe>

@@ -41,3 +41,8 @@ When clicking "Create graph" you will get a graph showing all possible call path
 target API.
 
 ![](../Screenshots/CallTree.Tree.png)
+
+
+# Hands-on
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jMi1I6Pd_9M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>

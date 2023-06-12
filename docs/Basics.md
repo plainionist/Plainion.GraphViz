@@ -72,3 +72,10 @@ This algorithm is very similar to the "Tree" algorithm except that arrows are fl
 This algorithm organizes dependencies in a circular way. It is fast and can handle even extremely huge graphs.
 
 This algorithm does not support clusters very well.
+
+# Hands-on
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/z5By78jlR3M" title="YouTube video player" 
+    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    llowfullscreen>
+</iframe>

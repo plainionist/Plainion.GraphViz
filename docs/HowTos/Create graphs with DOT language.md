@@ -26,3 +26,7 @@ Nodes without edges are just mentioned in a separate line.
 
 *Note:* If you open a DOT file in Plainion.GraphViz and then continue editing it the visualization in 
 Plainion.GraphViz will adopt automatically whenever you save the file.
+
+# Hands-on
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jMi1I6Pd_9M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>

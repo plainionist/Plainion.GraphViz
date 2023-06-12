@@ -85,3 +85,7 @@ Graphs generated from code dependencies will follow the following conventions:
 - Blue edges: inheritance or interface implementation
 - Black edges: method calls
 - Gray edges: everything else (e.g. usage of cast operators)
+
+# Hands-on
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/m6B9-mGJ0LY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
