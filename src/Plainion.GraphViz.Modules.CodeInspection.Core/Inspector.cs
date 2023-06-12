@@ -94,14 +94,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             {
                 return new Reference(myType, extractor(), ReferenceType.Undefined);
             }
-            catch (FileNotFoundException ex)
+            catch (Exception ex)
             {
-                FileNotFound(ex);
+                FailedToExtractTypeFromMember(ex);
                 return null;
             }
         }
 
-        private void FileNotFound(FileNotFoundException ex)
+        private void FailedToExtractTypeFromMember(Exception ex)
         {
             var sb = new StringBuilder();
             sb.AppendLine("ERROR: failed to extract type from member.");
@@ -141,9 +141,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
                 return method.GetParameters()
                     .Select(p => SafeCreateEdge(() => p.ParameterType));
             }
-            catch (FileNotFoundException ex)
+            catch (Exception ex)
             {
-                FileNotFound(ex);
+                FailedToExtractTypeFromMember(ex);
                 return Enumerable.Empty<Reference>();
             }
         }
@@ -175,7 +175,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
             }
             catch (FileNotFoundException ex)
             {
-                FileNotFound(ex);
+                FailedToExtractTypeFromMember(ex);
                 return Enumerable.Empty<MethodDefinition>();
             }
 
