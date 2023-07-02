@@ -23,6 +23,16 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         }
 
         [Test]
+        public void Parse_SingleLink_With_WhiteSpaces_MarkDownDocument()
+        {
+            var parser = new MarkdigParser(new FileSystem());
+
+            var md = parser.LoadMarkdown("....[Introduction](<User Manual/Introduction.md>)....");
+
+            Assert.IsTrue(md.Links.Any());
+        }
+
+        [Test]
         public void Parse_SingleLink_MarkDownFile()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
