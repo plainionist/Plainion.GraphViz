@@ -66,6 +66,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
 
         public bool ShowInvalidReferences { get; set; }
 
+        public bool ShowNonReferencedFiles { get; set; }
+
         public DelegateCommand CreateGraphCommand { get; private set; }
 
         public DelegateCommand CancelCommand { get; private set; }
@@ -146,6 +148,11 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
                 captionModule.Add(new Caption(file.FullPath, file.Name));
                 tooltipModule.Add(new ToolTipContent(file.FullPath, file.FullPath));
 
+                if (ShowNonReferencedFile(file))
+                {
+                    builder.TryAddNode(file.FullPath);
+                }
+
                 foreach (var reference in file.ValidMDReferences)
                 {
                     var e = builder.TryAddEdge(file.FullPath, reference);
@@ -177,6 +184,17 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
             }
 
             Model.Presentation = presentation;
+        }
+
+        private bool ShowNonReferencedFile(MDFile file)
+        {
+            return ShowNonReferencedFiles && !file.ValidMDReferences.Any()
+                && !InValidReferencesAreVisible(file);
+        }
+
+        private bool InValidReferencesAreVisible(MDFile file)
+        {
+            return file.InvalidMDReferences.Any() && ShowInvalidReferences;
         }
     }
 }

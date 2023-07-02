@@ -35,6 +35,8 @@
         <StackPanel DockPanel.Dock="Top">
             <CheckBox Content="Show invalid references" Margin="5,5,5,0" IsChecked="{Binding Path=ShowInvalidReferences}"
                       IsEnabled="{Binding IsReady}" />
+            <CheckBox Content="Show non-referenced files" Margin="5,5,5,0" IsChecked="{Binding Path=ShowNonReferencedFiles}"
+                      IsEnabled="{Binding IsReady}" />
             <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5">
                 <Button Content="Cancel" Margin="0,0,5,0" Command="{Binding Path=CancelCommand}" />
                 <Button Content="Create graph" Command="{Binding Path=CreateGraphCommand}" />
