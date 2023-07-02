@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,14 +16,17 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
 {
     internal class Analyzer
     {
+        private readonly IFileSystem myFileSystem;
         private readonly IMarkdownParser myMarkdownParser;
         private readonly ILinkResolver myLinkResolver;
         private readonly ILinkVerifier myLinkVerifier;
 
-        public Analyzer(IMarkdownParser markdownParser,
+        public Analyzer(IFileSystem fileSystem,
+            IMarkdownParser markdownParser,
             ILinkResolver linkResolver,
             ILinkVerifier linkVerifier)
         {
+            myFileSystem = fileSystem;
             myMarkdownParser = markdownParser;
             myLinkResolver = linkResolver;
             myLinkVerifier = linkVerifier;
@@ -35,7 +39,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
         {
             var doc = new AnalysisDocument();
 
-            if (!Directory.Exists(folderToAnalyze))
+            if (!myFileSystem.Directory.Exists(folderToAnalyze))
             {
                 doc.FailedItems.Add(new FailedFile
                 {
@@ -46,7 +50,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
                 return doc;
             }
 
-            var results = Directory.GetFiles(folderToAnalyze, "*.md", SearchOption.AllDirectories)
+            var results = myFileSystem.Directory.GetFiles(folderToAnalyze, "*.md", SearchOption.AllDirectories)
                 .Select(path => TryLoadFile(path, folderToAnalyze))
                 .ToList();
 
@@ -69,7 +73,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
 
                 var verifiedLinks = myLinkVerifier.VerifyInternalLinks(internalDocLinks);
                 var validMDReferences = FilterLinks<ValidLink>(verifiedLinks, ".md");
-                var invalidMDReferences = FilterLinks<InvalidLink>(verifiedLinks, ".md");
+                var invalidMDReferences = FilterLinks<InvalidLink>(verifiedLinks, ".md", "");
 
                 var filename = Path.GetFileNameWithoutExtension(path);
 
@@ -91,15 +95,22 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
             }
         }
 
-        private static IReadOnlyCollection<string> FilterLinks<T>(IEnumerable<VerifiedLink> links, string endsWith = "") 
+        private static IReadOnlyCollection<string> FilterLinks<T>(IEnumerable<VerifiedLink> links, params string[] fileExtensions) 
             where T : VerifiedLink
         {
             return links
                .OfType<T>()
-               .Where(l => l.Url.EndsWith(endsWith, StringComparison.OrdinalIgnoreCase))
+               .Where(l => MatchExtension(l.Url, fileExtensions))
                .Select(l => l.Url)
                .Distinct()
                .ToList();
+        }
+
+        private static bool MatchExtension(string url, string[] fileExtensions)
+        {
+            var fileExtenstion = Path.GetExtension(url);
+
+            return !fileExtensions.Any() || fileExtensions.Contains(fileExtenstion);
         }
     }
 }
