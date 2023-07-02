@@ -23,7 +23,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver
 
         private static ResolvedLink Resolve(string url, string currentDir, string root)
         {
-            var path = Path.GetFullPath(url, currentDir);
+            // Remove leading slash otherwise all subdirectories are lost in the new path.
+            var path = Path.GetFullPath(url.TrimStart('/'), currentDir);
 
             if (IsOutsideRoot(path, root))
             {
