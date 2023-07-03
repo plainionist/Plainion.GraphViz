@@ -22,6 +22,9 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             var usermanual = new StringBuilder();
             usermanual.AppendLine("[](Introduction.md)");
             usermanual.AppendLine("[](Chapter1)");
+            usermanual.AppendLine("[](Chapter1)");
+            usermanual.AppendLine(@"[](http:\\www.google.de)");
+            usermanual.AppendLine(@"[](\\NetworkShare\folderA)");
             usermanual.AppendLine("[](Appendix/AppendixA.md)");
             usermanual.AppendLine("![](Appendix/chart.jpg)");
 
@@ -30,7 +33,9 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
                 { @"C:\Project X\Documentation\Usermanual.md", new MockFileData(usermanual.ToString()) },
                 { @"C:\Project X\Documentation\Introduction.md", new MockFileData("") },
                 { @"C:\Project X\Documentation\Chapter1.md", new MockFileData("[](Chapter2.md)") },
-                { @"C:\Project X\Documentation\Chapter2.md", new MockFileData("") },
+                { @"C:\Project X\Documentation\Chapter2.md", new MockFileData("[](../Readme.md)") },
+                { @"C:\Project X\Readme.md", new MockFileData("") },
+                { @"C:\Project X\Documentation\Appendix\chart.jpg)", new MockFileData("") },
             });
 
             var parser = new MarkdigParser(fileSystem);
