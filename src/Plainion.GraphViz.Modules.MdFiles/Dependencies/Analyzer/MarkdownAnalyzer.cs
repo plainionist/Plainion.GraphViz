@@ -78,13 +78,12 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
 
                 var filename = Path.GetFileNameWithoutExtension(path);
 
-                return new MDFile
-                {
-                    Name = filename,
-                    FullPath = path,
-                    ValidMDReferences = validMDReferences,
-                    InvalidMDReferences = invalidMDReferences
-                };
+                return new MDFile(
+                    name: filename,
+                    fullPath: path,
+                    validMDReferences: validMDReferences,
+                    invalidMDReferences: invalidMDReferences
+                );
             }
             catch (Exception ex)
             {
