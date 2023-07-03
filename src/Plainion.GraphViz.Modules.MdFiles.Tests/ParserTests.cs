@@ -75,7 +75,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(md.Links.Count() == 3);
+                Assert.IsTrue(md.Links.Count == 3);
                 Assert.IsTrue(md.Links.OfType<DocLink>().Count() == 2);
                 Assert.IsTrue(md.Links.OfType<ImageLink>().Count() == 1);
             });

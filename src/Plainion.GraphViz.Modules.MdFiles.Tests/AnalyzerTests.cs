@@ -51,15 +51,15 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             {
                 Assert.IsTrue(doc.Files.Any());
                 Assert.IsTrue(!doc.FailedItems.Any());
-                Assert.IsTrue(doc.Files.Count() == 4);
+                Assert.IsTrue(doc.Files.Count == 4);
                 Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences.Any());
                 Assert.IsTrue(doc.Files.First(f
-                    => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences.Count() == 2);
+                    => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences.Count == 2);
                 Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences.Any());
                 Assert.IsTrue(doc.Files.First(f
-                    => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences.Count() == 1);
+                    => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences.Count == 1);
 
                 Assert.IsTrue(!doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Introduction.md").ValidMDReferences.Any());
@@ -69,7 +69,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
                 Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences.Any());
                 Assert.IsTrue(doc.Files.First(f
-                    => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences.Count() == 1);
+                    => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences.Count == 1);
                 Assert.IsTrue(!doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").InvalidMDReferences.Any());
 
