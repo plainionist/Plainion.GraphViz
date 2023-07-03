@@ -1,9 +1,11 @@
 ﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier
 {
-    internal abstract class VerifiedLink
+    internal abstract record VerifiedLink
     {
         protected VerifiedLink(string url)
         {
+            Contract.RequiresNotNullNotEmpty(url);
+
             Url = url;
         }
 

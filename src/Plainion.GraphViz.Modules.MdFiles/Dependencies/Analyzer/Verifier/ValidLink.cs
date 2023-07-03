@@ -1,6 +1,6 @@
 ﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier
 {
-    internal class ValidLink : VerifiedLink
+    internal record ValidLink : VerifiedLink
     {
         public ValidLink(string url) : base(url)
         {

@@ -18,6 +18,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser
             var inlineLinks = doc.Descendants<ParagraphBlock>().SelectMany(x => x.Inline.Descendants<LinkInline>());
 
             var links = inlineLinks
+                .Where(l => !string.IsNullOrEmpty(l.Url))
                 .Select(CreateLink)
                 .ToList();
 

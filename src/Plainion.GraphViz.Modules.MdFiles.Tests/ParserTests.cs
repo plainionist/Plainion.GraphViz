@@ -81,7 +81,6 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             });
         }
 
-        //ToDo: check if valid szenario
         [Test]
         public void Parse_EmptyLink_MarkDownDocument()
         {
@@ -89,7 +88,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             var md = parser.LoadMarkdown("[Missing Link]()");
 
-            Assert.IsTrue(md.Links.Any());
+            Assert.IsTrue(!md.Links.Any());
         }
     }
 }

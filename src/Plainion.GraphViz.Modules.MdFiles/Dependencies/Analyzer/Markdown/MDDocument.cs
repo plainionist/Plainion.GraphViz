@@ -6,6 +6,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown
     {
         public MDDocument(IReadOnlyCollection<Link> links)
         {
+            Contract.RequiresNotNull(links);
+
             Links = links;
         }
 

@@ -1,9 +1,11 @@
 ﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
 {
-    internal abstract class ResolvedLink
+    internal abstract record ResolvedLink
     {
         protected ResolvedLink(string url)
         {
+            Contract.RequiresNotNullNotEmpty(url);
+
             Url = url;
         }
 

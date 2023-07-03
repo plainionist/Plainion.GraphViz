@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains the absolute path to an internal link.
     /// </summary>
-    internal class InternalLink : ResolvedLink
+    internal record InternalLink : ResolvedLink
     {
         public InternalLink(string url) : base(url)
         {
