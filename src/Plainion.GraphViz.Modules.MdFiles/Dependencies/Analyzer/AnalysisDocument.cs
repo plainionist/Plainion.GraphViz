@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
 {
     internal class AnalysisDocument
     {

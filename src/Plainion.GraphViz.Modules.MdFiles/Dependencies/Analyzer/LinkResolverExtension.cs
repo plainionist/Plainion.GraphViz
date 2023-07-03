@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Markdown;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
 {
     internal static class LinkResolverExtension
     {

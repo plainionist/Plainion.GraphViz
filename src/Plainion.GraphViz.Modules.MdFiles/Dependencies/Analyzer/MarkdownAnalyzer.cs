@@ -6,22 +6,23 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Plainion;
 using Plainion.Collections;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Markdown;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Parser;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Verifier;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
 {
-    internal class Analyzer
+    internal class MarkdownAnalyzer
     {
         private readonly IFileSystem myFileSystem;
         private readonly IMarkdownParser myMarkdownParser;
         private readonly ILinkResolver myLinkResolver;
         private readonly ILinkVerifier myLinkVerifier;
 
-        public Analyzer(IFileSystem fileSystem,
+        public MarkdownAnalyzer(IFileSystem fileSystem,
             IMarkdownParser markdownParser,
             ILinkResolver linkResolver,
             ILinkVerifier linkVerifier)
@@ -95,7 +96,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
             }
         }
 
-        private static IReadOnlyCollection<string> FilterLinks<T>(IEnumerable<VerifiedLink> links, params string[] fileExtensions) 
+        private static IReadOnlyCollection<string> FilterLinks<T>(IEnumerable<VerifiedLink> links, params string[] fileExtensions)
             where T : VerifiedLink
         {
             return links

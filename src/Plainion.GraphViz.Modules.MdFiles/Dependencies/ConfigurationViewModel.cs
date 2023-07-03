@@ -5,6 +5,7 @@ using System.Windows.Media;
 using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
@@ -15,12 +16,12 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
     {
         private readonly IPresentationCreationService myPresentationCreationService;
         private readonly IStatusMessageService myStatusMessageService;
-        private readonly Analyzer myAnalyzer;
+        private readonly MarkdownAnalyzer myAnalyzer;
         private bool myIsReady;
         private CancellationTokenSource myCTS;
         private string myFolderToAnalyze;
 
-        public ConfigurationViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, Analyzer analyzer, IDomainModel model)
+        public ConfigurationViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, MarkdownAnalyzer analyzer, IDomainModel model)
             : base(model)
         {
             myPresentationCreationService = presentationCreationService;

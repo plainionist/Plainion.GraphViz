@@ -4,8 +4,8 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Markdown;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Parser;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser;
 
 namespace Plainion.GraphViz.Modules.MdFiles.Tests
 {

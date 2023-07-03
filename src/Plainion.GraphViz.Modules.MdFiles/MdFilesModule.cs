@@ -1,8 +1,9 @@
 ﻿using System.IO.Abstractions;
 using Plainion.GraphViz.Modules.MdFiles.Dependencies;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Parser;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Verifier;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
@@ -24,7 +25,7 @@ namespace Plainion.GraphViz.Modules.MdFiles
             myRegionManager.RegisterViewWithRegion(RegionNames.MdFilesDependencies, typeof(ConfigurationView));
 
             // explicitly register as singletons here to ensure that the host gets closed
-            containerRegistry.RegisterSingleton<Analyzer>();
+            containerRegistry.RegisterSingleton<MarkdownAnalyzer>();
             containerRegistry.RegisterSingleton<IMarkdownParser, MarkdigParser>();
             containerRegistry.RegisterSingleton<ILinkResolver, LinkResolver>();
             containerRegistry.RegisterSingleton<ILinkVerifier, LinkVerifier>();

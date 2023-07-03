@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
 {
     internal class FailedFile
     {

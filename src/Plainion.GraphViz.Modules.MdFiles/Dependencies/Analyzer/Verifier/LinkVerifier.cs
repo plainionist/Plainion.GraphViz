@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Abstractions;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Verifier
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier
 {
     internal class LinkVerifier : ILinkVerifier
     {

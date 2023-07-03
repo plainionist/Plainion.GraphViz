@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Verifier;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
 {
     internal static class LinkVerifierExtensions
     {

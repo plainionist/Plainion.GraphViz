@@ -1,4 +1,4 @@
-﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Markdown
+﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown
 {
     internal abstract class Link
     {

@@ -1,9 +1,9 @@
-﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver
+﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
 {
     internal interface ILinkResolver
     {
         /// <summary>
-        /// Resolves if the passed url is an external link (website, network share or just outside the analyzed folder) 
+        /// Resolves if the passed url is an external link (website, network share or just outside the analyzed folder)
         /// or an internal link. in case of an internal link the absolute path will be resolved.
         /// </summary>
         /// <param name="url">Absolute or relative url.</param>

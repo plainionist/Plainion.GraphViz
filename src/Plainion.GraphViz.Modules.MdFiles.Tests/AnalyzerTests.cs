@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
@@ -7,10 +6,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Parser;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Verifier;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier;
 
 namespace Plainion.GraphViz.Modules.MdFiles.Tests
 {
@@ -37,7 +36,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             var parser = new MarkdigParser(fileSystem);
             var resolver = new LinkResolver();
             var verifier = new LinkVerifier(fileSystem);
-            var analyzer = new Analyzer(fileSystem, parser, resolver, verifier);
+            var analyzer = new MarkdownAnalyzer(fileSystem, parser, resolver, verifier);
 
             var cts = new CancellationTokenSource();
             var doc = await analyzer.AnalyzeAsync(@"C:\Project X\Documentation\", cts.Token);
@@ -48,43 +47,42 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
                 Assert.IsTrue(doc.Files.Any());
                 Assert.IsTrue(!doc.FailedItems.Any());
                 Assert.IsTrue(doc.Files.Count() == 4);
-                Assert.IsTrue(doc.Files.First(f 
+                Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences.Any());
-                Assert.IsTrue(doc.Files.First(f 
+                Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences.Count() == 2);
-                Assert.IsTrue(doc.Files.First(f 
+                Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences.Any());
-                Assert.IsTrue(doc.Files.First(f 
+                Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences.Count() == 1);
 
-                Assert.IsTrue(!doc.Files.First(f 
+                Assert.IsTrue(!doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Introduction.md").ValidMDReferences.Any());
-                Assert.IsTrue(!doc.Files.First(f 
+                Assert.IsTrue(!doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Introduction.md").InvalidMDReferences.Any());
 
-                Assert.IsTrue(doc.Files.First(f 
+                Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences.Any());
-                Assert.IsTrue(doc.Files.First(f 
+                Assert.IsTrue(doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences.Count() == 1);
-                Assert.IsTrue(!doc.Files.First(f 
+                Assert.IsTrue(!doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").InvalidMDReferences.Any());
 
-                Assert.IsTrue(!doc.Files.First(f 
+                Assert.IsTrue(!doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Chapter2.md").ValidMDReferences.Any());
-                Assert.IsTrue(!doc.Files.First(f 
+                Assert.IsTrue(!doc.Files.First(f
                     => f.FullPath == @"C:\Project X\Documentation\Chapter2.md").InvalidMDReferences.Any());
-
             });
         }
 
         [Test]
         public async Task Test_Analyzer_With_InvalidDirectory()
         {
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>{});
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
             var parser = new MarkdigParser(fileSystem);
             var resolver = new LinkResolver();
             var verifier = new LinkVerifier(fileSystem);
-            var analyzer = new Analyzer(fileSystem, parser, resolver, verifier);
+            var analyzer = new MarkdownAnalyzer(fileSystem, parser, resolver, verifier);
 
             var cts = new CancellationTokenSource();
             var doc = await analyzer.AnalyzeAsync(@"C:\Project X\Documentation\", cts.Token);

@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Verifier;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier;
 
 namespace Plainion.GraphViz.Modules.MdFiles.Tests
 {

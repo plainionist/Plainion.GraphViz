@@ -2,9 +2,9 @@
 using System.Linq;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Markdown;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Parser
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser
 {
     internal class MarkdigParser : AbstractParser
     {

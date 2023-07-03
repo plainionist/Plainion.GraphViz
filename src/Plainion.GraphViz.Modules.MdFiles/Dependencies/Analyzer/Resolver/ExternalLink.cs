@@ -1,4 +1,4 @@
-﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver
+﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
 {
     internal class ExternalLink : ResolvedLink
     {

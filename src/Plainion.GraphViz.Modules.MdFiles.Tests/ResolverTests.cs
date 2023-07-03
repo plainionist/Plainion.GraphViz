@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Resolver;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver;
 
 namespace Plainion.GraphViz.Modules.MdFiles.Tests
 {

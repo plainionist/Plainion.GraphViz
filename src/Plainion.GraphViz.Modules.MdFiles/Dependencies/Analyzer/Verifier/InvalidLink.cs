@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Verifier
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier
 {
     internal class InvalidLink : VerifiedLink
     {

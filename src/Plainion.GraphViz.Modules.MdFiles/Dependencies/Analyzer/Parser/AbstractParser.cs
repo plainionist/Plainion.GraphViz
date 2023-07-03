@@ -1,7 +1,7 @@
 ﻿using System.IO.Abstractions;
-using Plainion.GraphViz.Modules.MdFiles.Dependencies.Markdown;
+using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown;
 
-namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Parser
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser
 {
     internal abstract class AbstractParser : IMarkdownParser
     {
