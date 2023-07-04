@@ -9,23 +9,29 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
     [TestFixture]
     internal class VerifierTests
     {
+        private MockFileSystem myFileSystem;
+        private ILinkVerifier myLinkVerifier;
+
+        [SetUp]
+        public void SetUp()
+        {
+            myFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            myLinkVerifier = new LinkVerifier(myFileSystem);
+        }
+
         [Test]
         [TestCase(@"C:\Project X\Usermanual\introduction.md")]
         [TestCase(@"C:\Project X\Usermanual\introduction")]
         public void Link_Is_Valid(string url)
         {
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { @"C:\Project X\Usermanual\introduction.md", new MockFileData("") },
-            });
+            myFileSystem.AddFile(@"C:\Project X\Usermanual\introduction.md", new MockFileData(""));
 
-            var verifier = new LinkVerifier(fileSystem);
-            var verifiedLink = verifier.VerifyInternalLink(url);
+            var verifiedLink = myLinkVerifier.VerifyInternalLink(url);
 
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(verifiedLink is ValidLink);
-                Assert.IsTrue(verifiedLink.Url.Equals(@"C:\Project X\Usermanual\introduction.md"));
+                Assert.IsInstanceOf<ValidLink>(verifiedLink);
+                Assert.AreEqual(verifiedLink.Url, @"C:\Project X\Usermanual\introduction.md");
             });
         }
 
@@ -34,18 +40,14 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         [TestCase(@"C:\Project X\Usermanual\introduction")]
         public void Link_Is_Invalid(string url)
         {
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { @"C:\Project X\Usermanual\chapter 1.md", new MockFileData("") },
-            });
+            myFileSystem.AddFile(@"C:\Project X\Usermanual\chapter 1.md", new MockFileData(""));
 
-            var verifier = new LinkVerifier(fileSystem);
-            var verifiedLink = verifier.VerifyInternalLink(url);
+            var verifiedLink = myLinkVerifier.VerifyInternalLink(url);
 
             Assert.Multiple(() =>
             {
-                Assert.IsTrue(verifiedLink is InvalidLink);
-                Assert.IsTrue((verifiedLink as InvalidLink).Exception is FileNotFoundException);
+                Assert.IsInstanceOf<InvalidLink>(verifiedLink);
+                Assert.IsInstanceOf<FileNotFoundException>((verifiedLink as InvalidLink).Exception);
             });
         }
     }
