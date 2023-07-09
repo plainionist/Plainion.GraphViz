@@ -20,7 +20,11 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var resolvedLink = myResolver.ResolveLink(@"http:\\www.google.de", currentDir, root);
 
-            Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+            Assert.Multiple(() =>
+            {
+                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+                Assert.AreEqual(resolvedLink.Url, @"http:\\www.google.de");
+            });
         }
 
         [Test]
@@ -29,7 +33,11 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var resolvedLink = myResolver.ResolveLink(@"\\MyShare\Folder", currentDir, root);
 
-            Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+            Assert.Multiple(() =>
+            {
+                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+                Assert.AreEqual(resolvedLink.Url, @"\\MyShare\Folder");
+            });
         }
 
         [Test]
@@ -39,7 +47,11 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             // UNC path are not supported by markdown and therefore wrongly parsed.
             var resolvedLink = myResolver.ResolveLink(@"\MyShare\Folder", currentDir, root);
 
-            Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+            Assert.Multiple(() =>
+            {
+                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+                Assert.AreEqual(resolvedLink.Url, @"\\MyShare\Folder");
+            });
         }
 
         [Test]
@@ -48,7 +60,11 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var resolvedLink = myResolver.ResolveLink(@"C:\Project X\Usermanual\introduction.md", currentDir, root);
 
-            Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+            Assert.Multiple(() =>
+            {
+                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+                Assert.AreEqual(resolvedLink.Url, @"C:\Project X\Usermanual\introduction.md");
+            });
         }
 
         [Test]
