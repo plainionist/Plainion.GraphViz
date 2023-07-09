@@ -10,7 +10,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
         public static IReadOnlyCollection<VerifiedLink> VerifyInternalLinks(this ILinkVerifier self, IEnumerable<InternalLink> links)
         {
             return links
-                .Select(l => self.VerifyInternalLink(l.Url.LocalPath))
+                .Select(l => self.VerifyInternalLink(l.Uri.LocalPath))
                 .ToList();
         }
     }

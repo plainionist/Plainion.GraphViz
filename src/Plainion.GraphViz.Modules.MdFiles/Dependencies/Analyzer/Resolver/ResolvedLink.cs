@@ -13,9 +13,9 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
                 throw new ArgumentException($"Url '{url}' is not an absolute uri.");
             }
 
-            Url = uri;
+            Uri = uri;
         }
 
-        public Uri Url { get; }
+        public Uri Uri { get; }
     }
 }
