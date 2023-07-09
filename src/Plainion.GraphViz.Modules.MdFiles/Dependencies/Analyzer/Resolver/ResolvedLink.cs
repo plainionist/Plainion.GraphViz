@@ -1,4 +1,6 @@
-﻿namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
+﻿using System;
+
+namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
 {
     internal abstract record ResolvedLink
     {
@@ -6,9 +8,14 @@
         {
             Contract.RequiresNotNullNotEmpty(url);
 
-            Url = url;
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            {
+                throw new ArgumentException($"Url '{url}' is not an absolute uri.");
+            }
+
+            Url = uri;
         }
 
-        public string Url { get; }
+        public Uri Url { get; }
     }
 }
