@@ -34,6 +34,16 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
         [Test]
         [TestCase(@"C:\Project X\Usermanual", @"C:\Project X\Usermanual\Chapter 1")]
+        public void Broken_UncPath_Is_External_Link(string root, string currentDir)
+        {
+            // UNC path are not supported by markdown and therefore wrongly parsed.
+            var resolvedLink = myResolver.ResolveLink(@"\MyShare\Folder", currentDir, root);
+
+            Assert.IsInstanceOf<ExternalLink>(resolvedLink);
+        }
+
+        [Test]
+        [TestCase(@"C:\Project X\Usermanual", @"C:\Project X\Usermanual\Chapter 1")]
         public void ExplicitPath_Is_External_Link(string root, string currentDir)
         {
             var resolvedLink = myResolver.ResolveLink(@"C:\Project X\Usermanual\introduction.md", currentDir, root);
