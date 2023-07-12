@@ -2,6 +2,6 @@
 {
     internal interface ILinkVerifier
     {
-        public VerifiedLink VerifyInternalLink(string url);
+        public VerifiedLink VerifyLink(string link);
     }
 }

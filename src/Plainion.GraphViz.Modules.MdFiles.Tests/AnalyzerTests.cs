@@ -47,14 +47,14 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             usermanual.AppendLine("[](Introduction.md)");
             usermanual.AppendLine("[](Chapter1)");
             usermanual.AppendLine("[](Chapter1)");
-            usermanual.AppendLine(@"[](http:\\www.google.de)");
+            usermanual.AppendLine(@"[](http://www.google.de)");
             usermanual.AppendLine(@"[](\\NetworkShare\folderA)");
             usermanual.AppendLine("[](Appendix/AppendixA.md)");
             usermanual.AppendLine("![](Appendix/chart.jpg)");
 
             myFileSystem.AddFile(@"C:\Project X\Documentation\Usermanual.md", new MockFileData(usermanual.ToString()));
             myFileSystem.AddFile(@"C:\Project X\Documentation\Introduction.md", new MockFileData(""));
-            myFileSystem.AddFile(@"C:\Project X\Documentation\Chapter1.md", new MockFileData("[](Chapter2.md)"));
+            myFileSystem.AddFile(@"C:\Project X\Documentation\Chapter1.md", new MockFileData("[](Chapter2#note)"));
             myFileSystem.AddFile(@"C:\Project X\Documentation\Chapter2.md", new MockFileData("[](../Readme.md)"));
             myFileSystem.AddFile(@"C:\Project X\Readme.md", new MockFileData(""));
             myFileSystem.AddFile(@"C:\Project X\Documentation\Appendix\chart.jpg)", new MockFileData(""));
@@ -65,18 +65,18 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             {
                 Assert.IsEmpty(doc.FailedItems);
                 Assert.IsNotEmpty(doc.Files);
-                Assert.AreEqual(doc.Files.Count, 4);
+                Assert.AreEqual(4, doc.Files.Count);
 
                 Assert.IsNotEmpty(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences);
-                Assert.AreEqual(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences.Count, 2);
+                Assert.AreEqual(2, doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").ValidMDReferences.Count);
                 Assert.IsNotEmpty(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences);
-                Assert.AreEqual(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences.Count, 1);
+                Assert.AreEqual(1, doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Usermanual.md").InvalidMDReferences.Count);
 
                 Assert.IsEmpty(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Introduction.md").ValidMDReferences);
                 Assert.IsEmpty(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Introduction.md").InvalidMDReferences);
 
                 Assert.IsNotEmpty(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences);
-                Assert.AreEqual(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences.Count, 1);
+                Assert.AreEqual(1, doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").ValidMDReferences.Count);
                 Assert.IsEmpty(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Chapter1.md").InvalidMDReferences);
 
                 Assert.IsEmpty(doc.Files.First(f => f.FullPath == @"C:\Project X\Documentation\Chapter2.md").ValidMDReferences);

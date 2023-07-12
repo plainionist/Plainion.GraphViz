@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 
 namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier
 {
@@ -12,22 +14,45 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier
             myFileSystem = fileSystem;
         }
 
-        public VerifiedLink VerifyInternalLink(string url)
+        public VerifiedLink VerifyLink(string link)
         {
-            var extension = myFileSystem.Path.GetExtension(url);
+            string path;
 
-            if (!myFileSystem.File.Exists(url))
+            try
             {
-                // Links to markdown files are not supposed to have .md extension
-                if (string.IsNullOrEmpty(extension) && myFileSystem.File.Exists($"{url}.md"))
-                {
-                    return new ValidLink($"{url}.md");
-                }
-
-                return new InvalidLink(url, new FileNotFoundException());
+                path = RemoveAnchorLink(link);
+            }
+            catch (Exception ex)
+            {
+                return new InvalidLink(link, ex);
             }
 
-            return new ValidLink(url);
+            if (myFileSystem.File.Exists(path))
+            {
+                return new ValidLink(path);
+            }
+
+            var extension = myFileSystem.Path.GetExtension(path);
+
+            // Links to markdown files are not supposed to have .md extension
+            if (string.IsNullOrEmpty(extension) && myFileSystem.File.Exists($"{path}.md"))
+            {
+                return new ValidLink($"{path}.md");
+            }
+
+            return new InvalidLink(path, new FileNotFoundException());
+        }
+
+        private static string RemoveAnchorLink(string link)
+        {
+            var path = link.Split("#");
+
+            if (path.Length > 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(link), "More than one # not allowed in a link.");
+            }
+
+            return path.First();
         }
     }
 }

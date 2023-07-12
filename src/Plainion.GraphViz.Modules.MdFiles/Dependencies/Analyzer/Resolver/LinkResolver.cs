@@ -34,11 +34,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
 
         private static ResolvedLink Resolve(string url, string file, string root)
         {
-            var currentDir = Path.GetDirectoryName(file);
-
-            // Remove leading slash of the url otherwise all subdirectories of the currentDir are lost in the new path,
-            // e.g. ("/Folder C/document.md", "C:\Folder A\Folder B\") becomes to "C:\Folder C\document.md".
-            var path = Path.GetFullPath(url.TrimStart('/'), currentDir);
+            var path = GetFullPath(url, file);
 
             if (IsOutsideRoot(path, root))
             {
@@ -46,6 +42,25 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
             }
 
             return new InternalLink(path);
+        }
+
+        private static string GetFullPath(string url, string file)
+        {
+            if (IsAnchorLink(url))
+            {
+                return $"{file}{url}";
+            }
+
+            var currentDir = Path.GetDirectoryName(file);
+
+            // Remove leading slash of the url otherwise all subdirectories of the currentDir are lost in the new path,
+            // e.g. ("/Folder C/document.md", "C:\Folder A\Folder B\") becomes to "C:\Folder C\document.md".
+            return Path.GetFullPath(url.TrimStart('/'), currentDir);
+        }
+
+        private static bool IsAnchorLink(string url)
+        {
+            return url.StartsWith("#");
         }
 
         private static bool IsOutsideRoot(string path, string root)

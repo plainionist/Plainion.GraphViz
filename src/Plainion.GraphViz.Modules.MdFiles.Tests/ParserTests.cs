@@ -56,6 +56,14 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         }
 
         [Test]
+        public void Parse_AnchorLink_MarkdownDocument()
+        {
+            var md = myParser.LoadMarkdown("...[Link to an anchor](#note)");
+
+            Assert.IsNotEmpty(md.Links);
+        }
+
+        [Test]
         public void Parse_MultipleLinks_MarkDownDocument()
         {
             var sb = new StringBuilder();
