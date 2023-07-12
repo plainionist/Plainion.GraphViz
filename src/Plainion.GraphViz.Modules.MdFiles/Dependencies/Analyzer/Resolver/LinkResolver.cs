@@ -5,7 +5,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
 {
     internal class LinkResolver : ILinkResolver
     {
-        public ResolvedLink ResolveLink(string url, string currentDir, string root)
+        public ResolvedLink ResolveLink(string url, string file, string root)
         {
             if (IsExternalLink(url))
             {
@@ -17,7 +17,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
                 return new ExternalLink("\\" + url);
             }
 
-            return Resolve(url, currentDir, root);
+            return Resolve(url, file, root);
         }
 
         private static bool IsExternalLink(string url)
@@ -32,8 +32,10 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver
             return url.StartsWith("\\") && Uri.TryCreate("\\" + url, UriKind.Absolute, out var uncPath) && uncPath.IsUnc;
         }
 
-        private static ResolvedLink Resolve(string url, string currentDir, string root)
+        private static ResolvedLink Resolve(string url, string file, string root)
         {
+            var currentDir = Path.GetDirectoryName(file);
+
             // Remove leading slash of the url otherwise all subdirectories of the currentDir are lost in the new path,
             // e.g. ("/Folder C/document.md", "C:\Folder A\Folder B\") becomes to "C:\Folder C\document.md".
             var path = Path.GetFullPath(url.TrimStart('/'), currentDir);

@@ -8,9 +8,9 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
     internal static class LinkResolverExtension
     {
         public static IReadOnlyCollection<ResolvedLink> ResolveLinks(this ILinkResolver self, IEnumerable<Link> links,
-            string currentDir, string root)
+            string file, string root)
         {
-            return links.Select(l => self.ResolveLink(l.Url, currentDir, root)).ToList();
+            return links.Select(l => self.ResolveLink(l.Url, file, root)).ToList();
         }
     }
 }

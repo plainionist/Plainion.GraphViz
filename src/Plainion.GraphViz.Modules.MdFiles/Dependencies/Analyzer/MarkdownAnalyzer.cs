@@ -65,11 +65,10 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
         {
             try
             {
-                var currentDir = Path.GetDirectoryName(path);
                 var mdDocument = myMarkdownParser.LoadFile(path);
                 var docLinks = mdDocument.Links.OfType<DocLink>();
 
-                var resolvedDocLinks = myLinkResolver.ResolveLinks(docLinks, currentDir, root);
+                var resolvedDocLinks = myLinkResolver.ResolveLinks(docLinks, path, root);
                 var internalDocLinks = resolvedDocLinks.OfType<InternalLink>();
 
                 var verifiedLinks = myLinkVerifier.VerifyInternalLinks(internalDocLinks);

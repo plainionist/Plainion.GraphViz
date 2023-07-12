@@ -7,9 +7,9 @@
         /// or an internal link. in case of an internal link the absolute path will be resolved.
         /// </summary>
         /// <param name="url">Absolute or relative url.</param>
-        /// <param name="currentDir">Directory of the current processed file.</param>
+        /// <param name="file">The current processed file.</param>
         /// <param name="root">Origin folder to be analyzed.</param>
         /// <returns>The resolved link which is an absolute path.</returns>
-        ResolvedLink ResolveLink(string url, string currentDir, string root);
+        ResolvedLink ResolveLink(string url, string file, string root);
     }
 }
