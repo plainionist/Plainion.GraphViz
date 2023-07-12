@@ -23,11 +23,11 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
         /// <summary>
         /// Without file extension
         /// </summary>
-        public string Name { get;}
+        public string Name { get; }
 
-        public string FullPath { get;}
+        public string FullPath { get; }
 
-        public IReadOnlyCollection<string> ValidMDReferences { get;}
+        public IReadOnlyCollection<string> ValidMDReferences { get; }
         public IReadOnlyCollection<string> InvalidMDReferences { get; }
     }
 }
