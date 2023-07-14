@@ -33,9 +33,9 @@
             <Button  Grid.Column="2" Content="Browse"  Command="{Binding Path=BrowseFolderCommand}"  Margin="5,0,0,0" />
         </Grid>
         <StackPanel DockPanel.Dock="Top">
-            <CheckBox Content="Show invalid references" Margin="5,5,5,0" IsChecked="{Binding Path=ShowInvalidReferences}"
+            <CheckBox Content="Show external references" Margin="5,5,5,0" IsChecked="{Binding Path=ShowExternalReferences}"
                       IsEnabled="{Binding IsReady}" />
-            <CheckBox Content="Show non-referenced files" Margin="5,5,5,0" IsChecked="{Binding Path=ShowNonReferencedFiles}"
+            <CheckBox Content="Show invalid references" Margin="5,5,5,0" IsChecked="{Binding Path=ShowInvalidReferences}"
                       IsEnabled="{Binding IsReady}" />
             <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5">
                 <Button Content="Cancel" Margin="0,0,5,0" Command="{Binding Path=CancelCommand}" />

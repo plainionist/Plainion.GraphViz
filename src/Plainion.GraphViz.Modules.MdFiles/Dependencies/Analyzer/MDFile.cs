@@ -5,19 +5,28 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
     internal class MDFile
     {
         public MDFile(string name, string fullPath,
-            IReadOnlyCollection<string> validMDReferences, IReadOnlyCollection<string> invalidMDReferences)
+            IReadOnlyCollection<string> validInternalMDRefs,
+            IReadOnlyCollection<string> invalidInternalMDRefs,
+            IReadOnlyCollection<string> validExternalMDRefs,
+            IReadOnlyCollection<string> invalidExternalMDRefs)
         {
             Contract.RequiresNotNullNotEmpty(name);
             Contract.RequiresNotNullNotEmpty(fullPath);
-            Contract.RequiresNotNull(validMDReferences);
-            Contract.RequiresNoDuplicates(validMDReferences);
-            Contract.RequiresNotNull(invalidMDReferences);
-            Contract.RequiresNoDuplicates(invalidMDReferences);
+            Contract.RequiresNotNull(validInternalMDRefs);
+            Contract.RequiresNoDuplicates(validInternalMDRefs);
+            Contract.RequiresNotNull(invalidInternalMDRefs);
+            Contract.RequiresNoDuplicates(invalidInternalMDRefs);
+            Contract.RequiresNotNull(validExternalMDRefs);
+            Contract.RequiresNoDuplicates(validExternalMDRefs);
+            Contract.RequiresNotNull(invalidExternalMDRefs);
+            Contract.RequiresNoDuplicates(invalidExternalMDRefs);
 
             Name = name;
             FullPath = fullPath;
-            ValidMDReferences = validMDReferences;
-            InvalidMDReferences = invalidMDReferences;
+            ValidInternalMDRefs = validInternalMDRefs;
+            InvalidInternalMDRefs = invalidInternalMDRefs;
+            ValidExternalMDRefs = validExternalMDRefs;
+            InvalidExternalMDRefs = invalidExternalMDRefs;
         }
 
         /// <summary>
@@ -27,7 +36,9 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
 
         public string FullPath { get; }
 
-        public IReadOnlyCollection<string> ValidMDReferences { get; }
-        public IReadOnlyCollection<string> InvalidMDReferences { get; }
+        public IReadOnlyCollection<string> ValidInternalMDRefs { get; }
+        public IReadOnlyCollection<string> InvalidInternalMDRefs { get; }
+        public IReadOnlyCollection<string> ValidExternalMDRefs { get; }
+        public IReadOnlyCollection<string> InvalidExternalMDRefs { get; }
     }
 }

@@ -67,7 +67,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
 
         public bool ShowInvalidReferences { get; set; }
 
-        public bool ShowNonReferencedFiles { get; set; }
+        public bool ShowExternalReferences { get; set; }
 
         public DelegateCommand CreateGraphCommand { get; private set; }
 
@@ -146,15 +146,12 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
 
             foreach (var file in document.Files)
             {
+                builder.TryAddNode(file.FullPath);
+
                 captionModule.Add(new Caption(file.FullPath, file.Name));
                 tooltipModule.Add(new ToolTipContent(file.FullPath, file.FullPath));
 
-                if (ShowNonReferencedFile(file))
-                {
-                    builder.TryAddNode(file.FullPath);
-                }
-
-                foreach (var reference in file.ValidMDReferences)
+                foreach (var reference in file.ValidInternalMDRefs)
                 {
                     var e = builder.TryAddEdge(file.FullPath, reference);
                     edgeStyleModule.Add(new EdgeStyle(e.Id)
@@ -163,9 +160,33 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
                     });
                 }
 
+                if (ShowExternalReferences)
+                {
+                    foreach (var reference in file.ValidExternalMDRefs)
+                    {
+                        var e = builder.TryAddEdge(file.FullPath, reference);
+                        edgeStyleModule.Add(new EdgeStyle(e.Id)
+                        {
+                            Color = Brushes.Green
+                        });
+                    }
+                }
+
                 if (ShowInvalidReferences)
                 {
-                    foreach (var reference in file.InvalidMDReferences)
+                    foreach (var reference in file.InvalidInternalMDRefs)
+                    {
+                        var e = builder.TryAddEdge(file.FullPath, reference);
+                        edgeStyleModule.Add(new EdgeStyle(e.Id)
+                        {
+                            Color = Brushes.Red
+                        });
+                    }
+                }
+
+                if (ShowInvalidReferences && ShowExternalReferences)
+                {
+                    foreach (var reference in file.InvalidExternalMDRefs)
                     {
                         var e = builder.TryAddEdge(file.FullPath, reference);
                         edgeStyleModule.Add(new EdgeStyle(e.Id)
@@ -185,17 +206,6 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies
             }
 
             Model.Presentation = presentation;
-        }
-
-        private bool ShowNonReferencedFile(MDFile file)
-        {
-            return ShowNonReferencedFiles && !file.ValidMDReferences.Any()
-                && !InValidReferencesAreVisible(file);
-        }
-
-        private bool InValidReferencesAreVisible(MDFile file)
-        {
-            return file.InvalidMDReferences.Any() && ShowInvalidReferences;
         }
     }
 }

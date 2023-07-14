@@ -68,21 +68,25 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
                 var docLinks = mdDocument.Links.OfType<DocLink>();
 
                 var resolvedDocLinks = myLinkResolver.ResolveLinks(docLinks, path, root);
-                var internalDocLinks = resolvedDocLinks.OfType<InternalLink>();
+                var mdLinks = FilterLinks(resolvedDocLinks, ".md", "");
 
-                var internalMdLinks = FilterLinks(internalDocLinks, ".md", "");
-                var verifiedLinks = myLinkVerifier.VerifyInternalLinks(internalMdLinks);
+                var verifiedInternalLinks = myLinkVerifier.VerifyInternalLinks(mdLinks);
+                var validInternalMDRefs = GetDistinctLinks<ValidLink>(verifiedInternalLinks);
+                var invalidInternalMDRefs = GetDistinctLinks<InvalidLink>(verifiedInternalLinks);
 
-                var validMDReferences = GetDistinctLinks<ValidLink>(verifiedLinks);
-                var invalidMDReferences = GetDistinctLinks<InvalidLink>(verifiedLinks);
+                var verifiedExternalLinks = myLinkVerifier.VerifyExternalLinks(mdLinks);
+                var validExternalMDRefs = GetDistinctLinks<ValidLink>(verifiedExternalLinks);
+                var invalidExternalMDRefs = GetDistinctLinks<InvalidLink>(verifiedExternalLinks);
 
                 var filename = Path.GetFileNameWithoutExtension(path);
 
                 return new MDFile(
                     name: filename,
                     fullPath: path,
-                    validMDReferences: validMDReferences,
-                    invalidMDReferences: invalidMDReferences
+                    validInternalMDRefs: validInternalMDRefs,
+                    invalidInternalMDRefs: invalidInternalMDRefs,
+                    validExternalMDRefs: validExternalMDRefs,
+                    invalidExternalMDRefs: invalidExternalMDRefs
                 );
             }
             catch (Exception ex)
@@ -100,7 +104,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
         {
             return links
                .OfType<T>()
-               .Where(l => MatchExtension(l.Uri.LocalPath, fileExtensions))
+               .Where(l => l.Uri.Scheme == Uri.UriSchemeFile && MatchExtension(l.Uri.LocalPath, fileExtensions))
                .ToList();
         }
 
