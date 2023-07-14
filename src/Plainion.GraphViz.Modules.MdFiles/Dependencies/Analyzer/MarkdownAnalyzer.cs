@@ -6,7 +6,6 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Plainion;
 using Plainion.Collections;
 using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Markdown;
 using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Parser;
@@ -71,9 +70,11 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
                 var resolvedDocLinks = myLinkResolver.ResolveLinks(docLinks, path, root);
                 var internalDocLinks = resolvedDocLinks.OfType<InternalLink>();
 
-                var verifiedLinks = myLinkVerifier.VerifyInternalLinks(internalDocLinks);
-                var validMDReferences = FilterLinks<ValidLink>(verifiedLinks, ".md");
-                var invalidMDReferences = FilterLinks<InvalidLink>(verifiedLinks, ".md", "");
+                var internalMdLinks = FilterLinks(internalDocLinks, ".md", "");
+                var verifiedLinks = myLinkVerifier.VerifyInternalLinks(internalMdLinks);
+
+                var validMDReferences = GetDistinctLinks<ValidLink>(verifiedLinks);
+                var invalidMDReferences = GetDistinctLinks<InvalidLink>(verifiedLinks);
 
                 var filename = Path.GetFileNameWithoutExtension(path);
 
@@ -94,22 +95,40 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
             }
         }
 
-        private static IReadOnlyCollection<string> FilterLinks<T>(IEnumerable<VerifiedLink> links, params string[] fileExtensions)
-            where T : VerifiedLink
+        private static IReadOnlyCollection<T> FilterLinks<T>(IEnumerable<T> links, params string[] fileExtensions)
+            where T : ResolvedLink
         {
             return links
                .OfType<T>()
-               .Where(l => MatchExtension(l.Url, fileExtensions))
-               .Select(l => l.Url)
-               .Distinct()
+               .Where(l => MatchExtension(l.Uri.LocalPath, fileExtensions))
                .ToList();
         }
 
         private static bool MatchExtension(string url, string[] fileExtensions)
         {
+            if (!fileExtensions.Any())
+            {
+                return true;
+            }
+
             var fileExtenstion = Path.GetExtension(url);
 
-            return !fileExtensions.Any() || fileExtensions.Contains(fileExtenstion);
+            if (string.IsNullOrEmpty(fileExtenstion) && fileExtensions.Contains(fileExtenstion))
+            {
+                return true;
+            }
+
+            return fileExtensions.Where(f => !string.IsNullOrEmpty(f)).Any(f => fileExtenstion.StartsWith(f));
+        }
+
+        private static IReadOnlyCollection<string> GetDistinctLinks<T>(IEnumerable<VerifiedLink> links)
+          where T : VerifiedLink
+        {
+            return links
+               .OfType<T>()
+               .Select(l => l.Url)
+               .Distinct()
+               .ToList();
         }
     }
 }
