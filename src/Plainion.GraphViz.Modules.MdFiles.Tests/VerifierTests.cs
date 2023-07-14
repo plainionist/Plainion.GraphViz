@@ -34,7 +34,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             Assert.Multiple(() =>
             {
                 Assert.IsInstanceOf<ValidLink>(verifiedLink);
-                Assert.AreEqual(@"C:\Project X\Usermanual\introduction.md", verifiedLink.Url);
+                Assert.AreEqual(@"C:\Project X\Usermanual\introduction.md", verifiedLink.Path);
             });
         }
 
@@ -51,7 +51,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             {
                 Assert.IsInstanceOf<InvalidLink>(verifiedLink);
                 Assert.IsInstanceOf<FileNotFoundException>((verifiedLink as InvalidLink).Exception);
-                Assert.AreEqual(link, verifiedLink.Url);
+                Assert.AreEqual(link, verifiedLink.Path);
             });
         }
 
@@ -68,7 +68,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
             {
                 Assert.IsInstanceOf<InvalidLink>(verifiedLink);
                 Assert.IsInstanceOf<ArgumentOutOfRangeException>((verifiedLink as InvalidLink).Exception);
-                Assert.AreEqual(link, verifiedLink.Url);
+                Assert.AreEqual(link, verifiedLink.Path);
             });
         }
     }

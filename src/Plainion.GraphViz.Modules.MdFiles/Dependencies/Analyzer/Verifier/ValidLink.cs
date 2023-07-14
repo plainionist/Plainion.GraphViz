@@ -2,7 +2,7 @@
 {
     internal record ValidLink : VerifiedLink
     {
-        public ValidLink(string url) : base(url)
+        public ValidLink(string path) : base(path)
         {
         }
     }

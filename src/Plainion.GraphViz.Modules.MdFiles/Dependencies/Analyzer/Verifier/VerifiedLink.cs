@@ -2,13 +2,13 @@
 {
     internal abstract record VerifiedLink
     {
-        protected VerifiedLink(string url)
+        protected VerifiedLink(string path)
         {
-            Contract.RequiresNotNullNotEmpty(url);
+            Contract.RequiresNotNullNotEmpty(path);
 
-            Url = url;
+            Path = path;
         }
 
-        public string Url { get; }
+        public string Path { get; }
     }
 }

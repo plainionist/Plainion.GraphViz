@@ -4,7 +4,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier
 {
     internal record InvalidLink : VerifiedLink
     {
-        public InvalidLink(string url, Exception exception) : base(url)
+        public InvalidLink(string path, Exception exception) : base(path)
         {
             Exception = exception;
         }

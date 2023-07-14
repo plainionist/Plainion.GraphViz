@@ -130,7 +130,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer
         {
             return links
                .OfType<T>()
-               .Select(l => l.Url)
+               .Select(l => l.Path)
                .Distinct()
                .ToList();
         }
