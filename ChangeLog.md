@@ -1,4 +1,8 @@
 
+## 5.1 - 2023-07-19
+
+- loading assemblies made more tollerant
+
 ## 5.0 - 2023-04-22
 
 - loading assemblies for "CodeInspection" completely reworked to support NetCoreApp and NetFramework in a clean way
