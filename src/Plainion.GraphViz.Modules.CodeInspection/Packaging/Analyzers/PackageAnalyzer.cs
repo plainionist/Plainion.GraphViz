@@ -202,18 +202,18 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             // ID needs to be derived from assembly/namespace to auto-magically match the next type 
             // of the same assembly/namespace into this cluster later on when building the graph
 
-            if (package.AutoClusters.Equals("assembly", StringComparison.OrdinalIgnoreCase))
+            if ("assembly".Equals(package.AutoClusters, StringComparison.OrdinalIgnoreCase))
             {
                 return new Cluster { Name = type.Assembly.GetName().Name, Id = type.Assembly.FullName };
             }
 
-            if (package.AutoClusters.Equals("namespace", StringComparison.OrdinalIgnoreCase))
+            if ("namespace".Equals(package.AutoClusters, StringComparison.OrdinalIgnoreCase))
             {
                 var id = type.Namespace ?? type.Assembly.FullName;
                 return new Cluster { Name = id, Id = id };
             }
 
-            if (package.AutoClusters.StartsWith("rootnamespace+", StringComparison.OrdinalIgnoreCase))
+            if (package.AutoClusters != null && package.AutoClusters.StartsWith("rootnamespace+", StringComparison.OrdinalIgnoreCase))
             {
                 var assemblyName = type.Assembly.GetName().Name;
                 if (!type.Namespace.StartsWith(assemblyName))
