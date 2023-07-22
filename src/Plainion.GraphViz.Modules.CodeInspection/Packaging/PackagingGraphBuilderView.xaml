@@ -52,7 +52,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
                 <TextBlock Grid.Row="0" Text="Filter packages (optional, default: all packages):"/>
@@ -68,10 +67,6 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0">
-                    <CheckBox Content="Create clusters for namespaces" IsChecked="{Binding CreateClustersForNamespaces}"
-                              ToolTip="Types will be grouped into clusters per namespace"/>
-                </StackPanel>
             </Grid>
         </GroupBox>
 

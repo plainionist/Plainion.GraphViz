@@ -54,8 +54,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                 var request = new AnalysisRequest
                 {
                     Spec = spec,
-                    PackagesToAnalyze = null,
-                    CreateClustersForNamespaces = false
+                    PackagesToAnalyze = null
                 };
 
                 // "AssemblyRoot" uses relative path

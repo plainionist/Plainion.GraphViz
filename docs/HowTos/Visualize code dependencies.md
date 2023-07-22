@@ -76,6 +76,12 @@ clusters automatically, one for each namespace.
 You can use the following options to customize the structure of the graph:
 
 - SystemPackaging.UsedTypesOnly: Types not used by any other type are excluded from the graph
+- Package.AutoClusters: Specifies that clusters should be generated automatically according to the given rule.
+  Manually defined clusters will be ignored if this attribute is set. Allowed values:
+  - "namespace": a cluster will be created for each namespace, containing all types of that namespace
+  - "assembly": a cluster will be created for each assembly, containing all types of that assembly
+  - "rootNamespace+n" (n=number): a cluster will be created for each namespace starting with the root namespace (the assembly name)
+    followed by the number of sub namespaces specified, containing all types of this namespace and all sub namespaces
 
 ## Generating the graph
 

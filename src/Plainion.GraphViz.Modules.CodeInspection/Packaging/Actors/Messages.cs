@@ -7,8 +7,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
         public string Spec { get;  set; }
 
         public string[] PackagesToAnalyze { get; set; }
-
-        public bool CreateClustersForNamespaces { get; set; }
     }
 
     class AnalysisMessage : AnalysisRequest

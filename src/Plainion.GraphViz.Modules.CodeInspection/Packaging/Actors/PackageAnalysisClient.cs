@@ -17,7 +17,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                 Spec = SpecUtils.Zip(request.Spec),
                 PackagesToAnalyze = request.PackagesToAnalyze,
                 OutputFile = Path.GetTempFileName(),
-                CreateClustersForNamespaces = request.CreateClustersForNamespaces
             };
 
             if (request.Spec.Length * 2 > 4000000)

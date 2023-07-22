@@ -31,7 +31,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private TextDocument myDocument;
         private IEnumerable<ElementCompletionData> myCompletionData;
         private CancellationTokenSource myCTS;
-        private bool myCreateClustersForNamespaces;
         private readonly GraphToSpecSynchronizer myGraphToSpecSynchronizer;
         private readonly IPresentationCreationService myPresentationCreationService;
         private readonly IStatusMessageService myStatusMessageService;
@@ -275,7 +274,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 Spec = Document.Text,
                 PackagesToAnalyze = PackagesToAnalyze != null ? PackagesToAnalyze.ToArray() : null,
-                CreateClustersForNamespaces = CreateClustersForNamespaces
             };
 
             try
@@ -410,12 +408,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             // reset only!
             myGraphToSpecSynchronizer.Presentation = null;
-        }
-
-        public bool CreateClustersForNamespaces
-        {
-            get { return myCreateClustersForNamespaces; }
-            set { SetProperty(ref myCreateClustersForNamespaces, value); }
         }
     }
 }

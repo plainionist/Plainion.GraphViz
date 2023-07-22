@@ -11,11 +11,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
         {
             Packages = new List<Package>();
         }
-
-        [DefaultValue(false)]
+        
         public bool NetFramework { get; set; }
         
-        [DefaultValue(true)]
         public bool UsedTypesOnly { get; set; }
 
         public string AssemblyRoot { get; set; }

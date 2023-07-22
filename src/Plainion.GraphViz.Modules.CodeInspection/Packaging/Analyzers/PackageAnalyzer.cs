@@ -35,11 +35,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         /// </summary>
         public IList<string> PackagesToAnalyze { get; private set; }
 
-        /// <summary>
-        /// If no matching cluster was found for a node it will be put in a cluster for its namespace
-        /// </summary>
-        public bool CreateClustersForNamespaces { get; set; }
-
         public AnalysisDocument Execute(SystemPackaging config, CancellationToken cancellationToken)
         {
             mySpec = config;
@@ -203,25 +198,39 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             // to get the clustering as good as possible
             var fullName = type.Namespace != null ? type.FullName : type.Assembly.GetName().Name;
 
+            // For AutoClusters:
+            // ID needs to be derived from assembly/namespace to auto-magically match the next type 
+            // of the same assembly/namespace into this cluster later on when building the graph
+
+            if (package.AutoClusters.Equals("assembly", StringComparison.OrdinalIgnoreCase))
+            {
+                return new Cluster { Name = type.Assembly.GetName().Name, Id = type.Assembly.FullName };
+            }
+
+            if (package.AutoClusters.Equals("namespace", StringComparison.OrdinalIgnoreCase))
+            {
+                var id = type.Namespace ?? type.Assembly.FullName;
+                return new Cluster { Name = id, Id = id };
+            }
+
+            if (package.AutoClusters.StartsWith("rootnamespace+", StringComparison.OrdinalIgnoreCase))
+            {
+                var assemblyName = type.Assembly.GetName().Name;
+                if (!type.Namespace.StartsWith(assemblyName))
+                {
+                    return new Cluster { Name = assemblyName, Id = assemblyName };
+                }
+
+                var tokens = type.Namespace.Split('.');
+                var numSubNamespaces = Int32.Parse(package.AutoClusters.Split('+').Last());
+                var id = string.Join(".", tokens.Take(Math.Min(assemblyName.Split('.').Length + numSubNamespaces, tokens.Length)));
+                return new Cluster { Name = id, Id = id };
+            }
+
             var cluster = package.Clusters.FirstOrDefault(c => c.Matches(fullName));
             if (cluster != null)
             {
                 return cluster;
-            }
-
-            if (package.CreateClustersForAssemblies)
-            {
-                // ID needs to be derived from assembly name to auto-magically match the next type 
-                // of the same assembly into this cluster later on when building the graph
-                return new Cluster { Name = type.Assembly.GetName().Name, Id = type.Assembly.FullName };
-            }
-
-            if (CreateClustersForNamespaces)
-            {
-                // ID needs to be derived from namespace name to auto-magically match the next type 
-                // of the same namespace into this cluster later on when building the graph
-                var id = type.Namespace ?? type.Assembly.FullName;
-                return new Cluster { Name = id, Id = id };
             }
 
             return null;

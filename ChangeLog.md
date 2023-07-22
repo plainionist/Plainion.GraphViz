@@ -1,8 +1,9 @@
 
-## 5.1 - 2023-07-
+## 5.2 - 2023-07-22
 
 - Package dependencies
   - "Used types only" option moved from UI to packaging spec
+  - "Create clusters for namespaces" replaced by "Package.AutoClusters" attribute (see docs)
 
 ## 5.1 - 2023-07-19
 
