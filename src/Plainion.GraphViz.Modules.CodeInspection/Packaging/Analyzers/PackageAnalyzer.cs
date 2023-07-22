@@ -17,7 +17,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
 
-        private SystemPackaging myConfig;
+        private SystemPackaging mySpec;
         private CancellationToken myCancellationToken;
         private Dictionary<string, List<Type>> myPackageToTypesMap;
         private List<Package> myRelevantPackages;
@@ -35,8 +35,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         /// </summary>
         public IList<string> PackagesToAnalyze { get; private set; }
 
-        public bool UsedTypesOnly { get; set; }
-
         /// <summary>
         /// If no matching cluster was found for a node it will be put in a cluster for its namespace
         /// </summary>
@@ -44,14 +42,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         public AnalysisDocument Execute(SystemPackaging config, CancellationToken cancellationToken)
         {
-            myConfig = config;
+            mySpec = config;
             myCancellationToken = cancellationToken;
 
             myRelevantPackages = PackagesToAnalyze.Any()
-                ? myConfig.Packages
+                ? mySpec.Packages
                     .Where(p => PackagesToAnalyze.Any(name => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
                     .ToList()
-                : myConfig.Packages;
+                : mySpec.Packages;
 
             myPackageToTypesMap = new Dictionary<string, List<Type>>();
 
@@ -88,11 +86,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         {
             Contract.Requires(!string.IsNullOrEmpty(package.Name), "Package requires a name");
 
-            myLogger.Info("Assembly root {0}", Path.GetFullPath(myConfig.AssemblyRoot));
+            myLogger.Info("Assembly root {0}", Path.GetFullPath(mySpec.AssemblyRoot));
             myLogger.Info("Loading package {0}", package.Name);
 
             return package.Includes
-                .SelectMany(i => Directory.GetFiles(myConfig.AssemblyRoot, i.Pattern))
+                .SelectMany(i => Directory.GetFiles(mySpec.AssemblyRoot, i.Pattern))
                 .Where(file => !package.Excludes.Any(e => e.Matches(file)))
                 .SelectMany(file => myTypesLoader.TryLoadAllTypes(file))
                 .ToList();
@@ -138,7 +136,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             var doc = new AnalysisDocument();
 
             var nodesWithEdgesIndex = new HashSet<Type>();
-            if (UsedTypesOnly)
+            if (mySpec.UsedTypesOnly)
             {
                 foreach (var edge in edges)
                 {
@@ -161,7 +159,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                        PackageIndex = idx
                    }))
                 .AsParallel()
-                .Where(e => !UsedTypesOnly || nodesWithEdgesIndex.Contains(e.Type))
+                .Where(e => !mySpec.UsedTypesOnly || nodesWithEdgesIndex.Contains(e.Type))
                 .Select(e => new
                 {
                     Node = e.Type,

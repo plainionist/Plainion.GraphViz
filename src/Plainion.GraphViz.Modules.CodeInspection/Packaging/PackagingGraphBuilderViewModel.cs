@@ -31,7 +31,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         private TextDocument myDocument;
         private IEnumerable<ElementCompletionData> myCompletionData;
         private CancellationTokenSource myCTS;
-        private bool myUsedTypesOnly;
         private bool myCreateClustersForNamespaces;
         private readonly GraphToSpecSynchronizer myGraphToSpecSynchronizer;
         private readonly IPresentationCreationService myPresentationCreationService;
@@ -69,8 +68,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                 .Select(t => new ElementCompletionData(t))
                 .ToList();
 
-            UsedTypesOnly = true;
-
             myGraphToSpecSynchronizer = new GraphToSpecSynchronizer(
                 () => SpecUtils.Deserialize(Document.Text),
                 spec =>
@@ -84,18 +81,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
         private void SetInitialTemplate(TextDocument document)
         {
-            document.Text = 
-                @"<SystemPackaging AssemblyRoot=""ASSEMBLY_ROOT_UNDEFINED"" NetFramework=""false"" xmlns=""http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec"">
-    <Package Name=""System"">
-        <Package.Clusters>
-            <Cluster Name=""System"">
-                <Include Pattern=""*"" />
-            </Cluster>
-        </Package.Clusters>
-        <Include Pattern=""*.dll"" />
-    </Package>
-</SystemPackaging>
-";
+            using (var stream = GetType().Assembly.GetManifestResourceStream("Plainion.GraphViz.Modules.CodeInspection.Resources.SystemPackagingTemplate.xaml"))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    document.Text = reader.ReadToEnd();
+                }
+            }
         }
 
         private void Document_Changed(object sender, DocumentChangeEventArgs e)
@@ -224,6 +216,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
                             var captions = presentation.GetPropertySetFor<Caption>();
 
                             var spec = new SystemPackaging();
+                            spec.UsedTypesOnly = true;
+                            spec.NetFramework = false;
 
                             foreach (var cluster in presentation.Graph.Clusters)
                             {
@@ -281,7 +275,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             {
                 Spec = Document.Text,
                 PackagesToAnalyze = PackagesToAnalyze != null ? PackagesToAnalyze.ToArray() : null,
-                UsedTypesOnly = UsedTypesOnly,
                 CreateClustersForNamespaces = CreateClustersForNamespaces
             };
 
@@ -417,12 +410,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             // reset only!
             myGraphToSpecSynchronizer.Presentation = null;
-        }
-
-        public bool UsedTypesOnly
-        {
-            get { return myUsedTypesOnly; }
-            set { SetProperty(ref myUsedTypesOnly, value); }
         }
 
         public bool CreateClustersForNamespaces

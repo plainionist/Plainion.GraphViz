@@ -1,29 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<SystemPackaging xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec" 
-                 xmlns:s="clr-namespace:System;assembly=mscorlib"
-                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:p="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-    <SystemPackaging.AssemblyRoot>c:\workspace\Project\bin\Debug</SystemPackaging.AssemblyRoot>
-    <Package Name="Package1">
-        <Include Pattern="P1*.dll"/>
-        <Package.Clusters>
-            <Cluster Name="Feature1">
-                <Include Pattern="*.Feature1.*"/>
-            </Cluster>
-            <Cluster Name="Feature2">
-                <Include Pattern="*.Feature2.*"/>
-            </Cluster>
-        </Package.Clusters>
-    </Package>
-    <Package Name="Package2">
-        <Include Pattern="P2*.dll"/>
-        <Package.Clusters>
-            <Cluster Name="FeatureX">
-                <Include Pattern="*.FeatureX.*"/>
-            </Cluster>
-            <Cluster Name="FeatureY">
-                <Include Pattern="*.FeatureY.*"/>
-            </Cluster>
-        </Package.Clusters>
-    </Package>
+﻿<SystemPackaging AssemblyRoot="ASSEMBLY_ROOT_UNDEFINED" NetFramework="false" xmlns="http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec">
+  <SystemPackaging.UsedTypesOnly>true</SystemPackaging.UsedTypesOnly>
+  <Package Name="System">
+    <Package.Clusters>
+      <Cluster Name="System">
+        <Include Pattern="*" />
+      </Cluster>
+    </Package.Clusters>
+    <Include Pattern="*.dll" />
+  </Package>
 </SystemPackaging>

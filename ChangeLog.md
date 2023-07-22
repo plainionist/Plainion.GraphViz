@@ -1,4 +1,9 @@
 
+## 5.1 - 2023-07-
+
+- Package dependencies
+  - "Used types only" option moved from UI to packaging spec
+
 ## 5.1 - 2023-07-19
 
 - loading assemblies made more tollerant

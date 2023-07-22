@@ -17,7 +17,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                 Spec = SpecUtils.Zip(request.Spec),
                 PackagesToAnalyze = request.PackagesToAnalyze,
                 OutputFile = Path.GetTempFileName(),
-                UsedTypesOnly = request.UsedTypesOnly,
                 CreateClustersForNamespaces = request.CreateClustersForNamespaces
             };
 

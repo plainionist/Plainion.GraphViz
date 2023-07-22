@@ -55,7 +55,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                 {
                     Spec = spec,
                     PackagesToAnalyze = null,
-                    UsedTypesOnly = false,
                     CreateClustersForNamespaces = false
                 };
 

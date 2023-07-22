@@ -71,6 +71,14 @@ Use "NetFramework" property to define whether .Net framework runtime should be u
 If you don't have specified any clusters within your packages you can select "Create clusters for namespaces" to generate
 clusters automatically, one for each namespace.
 
+## Options
+
+You can use the following options to customize the structure of the graph:
+
+- SystemPackaging.UsedTypesOnly: Types not used by any other type are excluded from the graph
+
+## Generating the graph
+
 When clicking "Create graph" you will get graphs similar to the ones below - depending on the dependency structure in your
 code base of course.
 

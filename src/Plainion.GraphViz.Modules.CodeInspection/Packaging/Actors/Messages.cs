@@ -8,8 +8,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
         public string[] PackagesToAnalyze { get; set; }
 
-        public bool UsedTypesOnly { get; set; }
-
         public bool CreateClustersForNamespaces { get; set; }
     }
 

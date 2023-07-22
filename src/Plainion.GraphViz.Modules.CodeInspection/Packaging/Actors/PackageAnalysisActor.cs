@@ -27,7 +27,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                         var loader = new TypesLoader(AssemblyLoaderFactory.Create(spec.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core));
                         var analyzer = new PackageAnalyzer(loader);
 
-                        analyzer.UsedTypesOnly = r.UsedTypesOnly;
                         analyzer.CreateClustersForNamespaces = r.CreateClustersForNamespaces;
 
                         if (r.PackagesToAnalyze != null)
