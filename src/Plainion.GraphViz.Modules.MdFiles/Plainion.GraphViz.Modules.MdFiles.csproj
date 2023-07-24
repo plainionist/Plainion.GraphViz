@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
+    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="Plainion.Prism" Version="8.0.0" />
+    <PackageReference Include="Plainion.Windows.Editors" Version="3.0.0" />
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="System.IO.Abstractions" Version="19.2.29" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
