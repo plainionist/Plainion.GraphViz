@@ -72,6 +72,8 @@ namespace Plainion.GraphViz.Dot
                     nodeLayouts.Add(layout);
                 }
 
+                // edge "MyProject.Facade" "MyProject.EventBroker" 4 3.2872 0.48858 3.999 1.3306 6.5111 4.3023 7.3657 5.3132 "." 5.5417 2.9583 solid black
+                // edge "MyProject.Facade" "MyProject.EventBroker" 4 3.0211 0.48395 3.7425 1.2714 6.1987 3.9522 7.0675 4.9004 solid black
                 while (parser.MoveNextEntry("edge"))
                 {
                     var sourceNodeId = parser.ReadId();
@@ -83,7 +85,7 @@ namespace Plainion.GraphViz.Dot
 
                     var label = parser.ReadLabel(edgeId);
 
-                    if (label.Label != "invis")
+                    if (label != null && label.Label != "invis")
                     {
                         // no label position
                         layout.LabelPosition = parser.ReadPoint();

@@ -168,13 +168,12 @@ namespace Plainion.GraphViz.Dot
             {
                 var label = myCaptions.TryGet(edge.Id);
 
-                // Hint (rendering): always pass label otherwise parser will fail :(
                 myWriter.Write(indent);
 
                 myWriter.Write("\"{0}\" -> \"{1}\" [label=\"{2}\"",
                     edge.Source.Id,
                     edge.Target.Id,
-                    label != null && label.DisplayText != label.OwnerId ? label.DisplayText : ".");
+                    label != null && label.DisplayText != label.OwnerId ? label.DisplayText : "");
 
                 if (!myOwner.IgnoreStyle)
                 {

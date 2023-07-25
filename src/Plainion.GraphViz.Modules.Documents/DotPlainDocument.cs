@@ -49,7 +49,10 @@ namespace Plainion.GraphViz.Modules.Documents
                         myNodeLayouts.Add(layout);
 
                         var caption = parser.ReadLabel(node.Id);
-                        myCaptions.Add(caption);
+                        if (caption != null)
+                        {
+                            myCaptions.Add(caption);
+                        }
 
                         var style = parser.ReadNodeStyle(node.Id);
                         myNodeStyles.Add(style);

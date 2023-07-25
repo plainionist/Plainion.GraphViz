@@ -57,8 +57,15 @@ namespace Plainion.GraphViz.Dot
 
         public Caption ReadLabel(string nodeId)
         {
-            var label = myReader.ReadString();
-            return new Caption(nodeId, label);
+            if (myReader.CanReadString())
+            {
+                var label = myReader.ReadString();
+                return new Caption(nodeId, label);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public NodeStyle ReadNodeStyle(string nodeId)
