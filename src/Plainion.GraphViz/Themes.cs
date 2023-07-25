@@ -6,7 +6,7 @@ namespace Plainion.GraphViz
 {
     public class Themes
     {
-        public static Theme Current => new DarkTheme();
+        public static Theme Current => new LightTheme();
 
         private class LightTheme : Theme
         {

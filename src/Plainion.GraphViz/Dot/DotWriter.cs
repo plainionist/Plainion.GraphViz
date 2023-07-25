@@ -170,18 +170,27 @@ namespace Plainion.GraphViz.Dot
 
                 myWriter.Write(indent);
 
-                myWriter.Write("\"{0}\" -> \"{1}\" [label=\"{2}\"",
-                    edge.Source.Id,
-                    edge.Target.Id,
-                    label != null && label.DisplayText != label.OwnerId ? label.DisplayText : "");
+                myWriter.Write("\"{0}\" -> \"{1}\"", edge.Source.Id, edge.Target.Id);
+
+                var attributes = new List<string>();
+
+                if (label != null && label.DisplayText != label.OwnerId)
+                {
+                    attributes.Add($"label=\"{label.DisplayText}\"");
+                }
 
                 if (!myOwner.IgnoreStyle)
                 {
                     var color = myEdgeStyles.Get(edge.Id).Color;
-                    myWriter.Write(", color={0}", color);
+                    attributes.Add($"color={color}");
                 }
 
-                myWriter.WriteLine("]");
+                if (attributes.Any())
+                {
+                    myWriter.Write(" [{0}]", string.Join(", ", attributes));
+                }
+
+                myWriter.WriteLine();
             }
         }
     }

@@ -12,7 +12,7 @@
         xmlns:dot="clr-namespace:Plainion.GraphViz.Dot;assembly=Plainion.GraphViz"
         xmlns:g="clr-namespace:Plainion.GraphViz;assembly=Plainion.GraphViz"
         Icon="Resources/GraphIcon.png"
-        Title="Plainion GraphViz Viewer" MinWidth="640" MinHeight="480" Height="768" Width="1024" 
+        Title="Plainion GraphViz Viewer" MinWidth="1024" MinHeight="768" Height="768" Width="1024" 
         WindowStartupLocation="CenterScreen" Background="{Binding WindowBackground, Source={x:Static g:Themes.Current}}">
     <i:Interaction.Triggers>
         <pn:InteractionRequestTrigger SourceObject="{Binding NodeMasksEditorRequest, Mode=OneWay}">
