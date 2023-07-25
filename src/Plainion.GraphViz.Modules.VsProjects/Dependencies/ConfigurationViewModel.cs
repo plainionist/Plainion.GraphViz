@@ -153,14 +153,14 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
             var builder = new RelaxedGraphBuilder();
             foreach (var project in document.Projects)
             {
-                captionModule.Add(new Caption(project.FullPath, project.Name));
-                tooltipModule.Add(new ToolTipContent(project.FullPath, project.FullPath));
+                captionModule.Add(new Caption(project.RelativePath, project.Name));
+                tooltipModule.Add(new ToolTipContent(project.RelativePath, project.RelativePath));
 
                 // ProjectReferences cannot be third party as those are part of the
                 // analyzed code base
                 foreach (var reference in project.ProjectReferences)
                 {
-                    var e = builder.TryAddEdge(project.FullPath, reference);
+                    var e = builder.TryAddEdge(project.RelativePath, reference);
                     edgeStyleModule.Add(new EdgeStyle(e.Id)
                     {
                         Color = Brushes.Blue
@@ -178,8 +178,8 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
                         continue;
                     }
 
-                    var targetId = referencedProject != null ? referencedProject.FullPath : reference;
-                    var e = builder.TryAddEdge(project.FullPath, targetId);
+                    var targetId = referencedProject != null ? referencedProject.RelativePath : reference;
+                    var e = builder.TryAddEdge(project.RelativePath, targetId);
                     edgeStyleModule.Add(new EdgeStyle(e.Id)
                     {
                         Color = Brushes.Green
@@ -191,13 +191,23 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
                 {
                     foreach (var reference in project.PackageReferences)
                     {
-                        var e = builder.TryAddEdge(project.FullPath, reference);
+                        var e = builder.TryAddEdge(project.RelativePath, reference);
                         edgeStyleModule.Add(new EdgeStyle(e.Id)
                         {
                             Color = Brushes.Brown
                         });
                     }
                 }
+            }
+
+            var projectsByTopLevelFolder = document.Projects
+                .Select(x => (tokens: x.RelativePath.Split('/', '\\'), project: x))
+                .Where(x => x.tokens.Length > 1)
+                .GroupBy(x => x.tokens.First(), x => x.project);
+
+            foreach (var cluster in projectsByTopLevelFolder)
+            {
+                builder.TryAddCluster(cluster.Key, cluster.Select(x => x.RelativePath));
             }
 
             presentation.Graph = builder.Graph;

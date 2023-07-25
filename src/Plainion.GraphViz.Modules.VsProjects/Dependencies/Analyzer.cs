@@ -28,7 +28,7 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
             }
 
             var results = Directory.GetFiles(folderToAnalyze, "*.*proj", SearchOption.AllDirectories)
-                .Select(TryLoadProject)
+                .Select(x => TryLoadProject(folderToAnalyze, x))
                 .ToList();
 
             doc.Projects.AddRange(results.OfType<VsProject>());
@@ -37,8 +37,10 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
             return doc;
         }
 
-        private object TryLoadProject(string path)
+        private object TryLoadProject(string home, string path)
         {
+            home = home.TrimEnd('/', '\\');
+
             try
             {
                 var doc = XElement.Load(path);
@@ -56,7 +58,7 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
                 return new VsProject
                 {
                     Name = projectName,
-                    FullPath = path,
+                    RelativePath = path.Substring(home.Length).TrimStart('/', '\\'),
                     Assembly = assemblyNameProperty != null ? assemblyNameProperty.Value : projectName,
                     References = doc.Elements()
                         .Where(x => x.Name.LocalName == "ItemGroup")
@@ -71,7 +73,7 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
                         .SelectMany(x => x.Elements())
                         .Where(x => x.Name.LocalName == "ProjectReference")
                         .Select(x => x.Attribute("Include").Value)
-                        .Select(x => Path.GetFullPath(Path.Combine(projectHome, x)))
+                        .Select(x => Path.GetFullPath(Path.Combine(projectHome, x)).Substring(home.Length).TrimStart('/', '\\'))
                         .Distinct(StringComparer.OrdinalIgnoreCase)
                         .ToList(),
                     PackageReferences = doc.Elements()

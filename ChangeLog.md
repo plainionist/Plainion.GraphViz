@@ -2,6 +2,7 @@
 ## 6.0 - 2023-07-
 
 - New Plugin added to visualize MarkDown file dependencies
+- VsProject dependencies creates cluster for top level folders
 
 ## 5.2 - 2023-07-22
 

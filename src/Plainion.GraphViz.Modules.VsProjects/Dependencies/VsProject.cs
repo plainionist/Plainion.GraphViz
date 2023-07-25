@@ -8,9 +8,12 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
         /// Without file extension
         /// </summary>
         public string Name { get; init; }
-        
-        public string FullPath { get; init; }
-        
+
+        /// <summary>
+        /// Relative path to the project file from root of analyzed code base
+        /// </summary>
+        public string RelativePath { get; init; }
+
         /// <summary>
         /// Without file extension
         /// </summary>

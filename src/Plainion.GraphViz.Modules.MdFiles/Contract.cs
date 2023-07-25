@@ -7,7 +7,7 @@ namespace Plainion.GraphViz.Modules.MdFiles
 {
     internal static class Contract
     {
-        public static void RequiresNotNull<T>(T argument, [CallerArgumentExpression(nameof(argument))] string argumentName = "") where T : class
+        public static void RequiresNotNull<T>(T argument, [CallerArgumentExpression("argument")] string argumentName = "") where T : class
         {
             if (argument is null)
             {
@@ -15,7 +15,7 @@ namespace Plainion.GraphViz.Modules.MdFiles
             }
         }
 
-        public static void RequiresNotNullNotEmpty(string argument, [CallerArgumentExpression(nameof(argument))] string argumentName = "")
+        public static void RequiresNotNullNotEmpty(string argument, [CallerArgumentExpression("argument")] string argumentName = "")
         {
             if (string.IsNullOrEmpty(argument))
             {
@@ -23,7 +23,7 @@ namespace Plainion.GraphViz.Modules.MdFiles
             }
         }
 
-        public static void RequiresNoDuplicates<T>(IEnumerable<T> argument, [CallerArgumentExpression(nameof(argument))] string argumentName = "")
+        public static void RequiresNoDuplicates<T>(IEnumerable<T> argument, [CallerArgumentExpression("argument")] string argumentName = "")
         {
             if (argument.Distinct().Count() != argument.Count())
             {
