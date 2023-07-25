@@ -3,6 +3,7 @@
 
 - New Plugin added to visualize MarkDown file dependencies
 - VsProject dependencies creates cluster for top level folders
+- F11 toggles full screen mode
 
 ## 5.2 - 2023-07-22
 

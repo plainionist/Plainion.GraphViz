@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
@@ -51,13 +50,13 @@ namespace Plainion.GraphViz.Dot
             var nodeLayouts = new List<NodeLayout>();
             var edgeLayouts = new List<EdgeLayout>();
 
-            ParsePlainFile(nodeLayouts, edgeLayouts, presentation.GetPropertySetFor<Caption>());
+            ParsePlainFile(nodeLayouts, edgeLayouts);
 
             var module = presentation.GetModule<IGraphLayoutModule>();
             module.Set(nodeLayouts, edgeLayouts);
         }
 
-        private void ParsePlainFile(List<NodeLayout> nodeLayouts, List<EdgeLayout> edgeLayouts, IPropertySetModule<Caption> captionModule)
+        private void ParsePlainFile(List<NodeLayout> nodeLayouts, List<EdgeLayout> edgeLayouts)
         {
             using (var reader = new DotPlainReader(new StreamReader(myPlainFile.FullName)))
             {

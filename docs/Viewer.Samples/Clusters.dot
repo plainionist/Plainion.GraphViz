@@ -5,11 +5,11 @@ digraph {
   subgraph "cluster_C1" {
     label = "Feature A"
     "MyProject.Builder" [label="Builder", color=#FFD3D3D3]
-    "MyProject.Services.Component" [label="Component", color=#FFD3D3D3]
-    "MyProject.Factory" [label="Factory", color=#FFD3D3D3]
-    "MyProject.Services.IComponent" [label="IComponent", color=#FFD3D3D3]
     "MyProject.Domain.POCO1" [label="POCO1", color=#FFD3D3D3]
     "MyProject.Domain.POCO2" [label="POCO2", color=#FFD3D3D3]
+    "MyProject.Factory" [label="Factory", color=#FFD3D3D3]
+    "MyProject.Services.Component" [label="Component", color=#FFD3D3D3]
+    "MyProject.Services.IComponent" [label="IComponent", color=#FFD3D3D3]
   }
   subgraph "cluster_C2" {
     label = "Feature B"
@@ -21,27 +21,26 @@ digraph {
   }
   "MyProject.Builder" [label="Builder", color=#FFD3D3D3]
   "MyProject.Command" [label="Command", color=#FFD3D3D3]
-  "MyProject.Services.Component" [label="Component", color=#FFD3D3D3]
   "MyProject.Context" [label="Context", color=#FFD3D3D3]
+  "MyProject.Domain.POCO1" [label="POCO1", color=#FFD3D3D3]
+  "MyProject.Domain.POCO2" [label="POCO2", color=#FFD3D3D3]
   "MyProject.EventBroker" [label="EventBroker", color=#FFD3D3D3]
   "MyProject.EventConverter" [label="EventConverter", color=#FFD3D3D3]
   "MyProject.Facade" [label="Facade", color=#FFD3D3D3]
   "MyProject.Factory" [label="Factory", color=#FFD3D3D3]
-  "MyProject.Services.IComponent" [label="IComponent", color=#FFD3D3D3]
   "MyProject.Operation" [label="Operation", color=#FFD3D3D3]
-  "MyProject.Domain.POCO1" [label="POCO1", color=#FFD3D3D3]
-  "MyProject.Domain.POCO2" [label="POCO2", color=#FFD3D3D3]
-  
+  "MyProject.Services.Component" [label="Component", color=#FFD3D3D3]
+  "MyProject.Services.IComponent" [label="IComponent", color=#FFD3D3D3]
   "MyProject.Builder" -> "MyProject.Domain.POCO1" [label=".", color=#FF000000]
   "MyProject.Builder" -> "MyProject.Domain.POCO2" [label=".", color=#FF000000]
-  "MyProject.Services.Component" -> "MyProject.Services.IComponent" [label=".", color=#FF000000]
   "MyProject.Context" -> "MyProject.Services.IComponent" [label=".", color=#FF000000]
   "MyProject.EventBroker" -> "MyProject.EventConverter" [label=".", color=#FF000000]
   "MyProject.Facade" -> "MyProject.Builder" [label=".", color=#FF000000]
   "MyProject.Facade" -> "MyProject.EventBroker" [label=".", color=#FF000000]
   "MyProject.Facade" -> "MyProject.Factory" [label=".", color=#FF000000]
-  "MyProject.Factory" -> "MyProject.Services.Component" [label=".", color=#FF000000]
   "MyProject.Factory" -> "MyProject.Context" [label=".", color=#FF000000]
   "MyProject.Factory" -> "MyProject.Operation" [label=".", color=#FF000000]
+  "MyProject.Factory" -> "MyProject.Services.Component" [label=".", color=#FF000000]
   "MyProject.Operation" -> "MyProject.Command" [label=".", color=#FF000000]
+  "MyProject.Services.Component" -> "MyProject.Services.IComponent" [label=".", color=#FF000000]
 }
