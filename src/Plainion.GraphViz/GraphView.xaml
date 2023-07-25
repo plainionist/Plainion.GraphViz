@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:pn="http://github.com/ronin4net/plainion"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:g="clr-namespace:Plainion.GraphViz"
              xmlns:local="clr-namespace:Plainion.GraphViz.Visuals">
     <Grid x:Name="Grid" >
-        <ScrollViewer x:Name="ScrollViewer"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+        <ScrollViewer x:Name="ScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <i:Interaction.Behaviors>
                 <pn:PanOnLMBBehavior/>
             </i:Interaction.Behaviors>

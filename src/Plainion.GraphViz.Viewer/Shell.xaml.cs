@@ -29,12 +29,14 @@ namespace Plainion.GraphViz.Viewer
                     WindowStyle = WindowStyle.SingleBorderWindow;
                     ResizeMode = ResizeMode.CanResize;
                     WindowState = WindowState.Normal;
+                    Themes.Naked.IsEnabled = false;
                 }
                 else
                 {
                     WindowStyle = WindowStyle.None;
                     ResizeMode = ResizeMode.NoResize;
                     WindowState = WindowState.Maximized;
+                    Themes.Naked.IsEnabled = true;
                 }
 
                 e.Handled = true;

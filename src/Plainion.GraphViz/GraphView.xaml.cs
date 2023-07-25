@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Printing;
 using System.Windows;
@@ -40,6 +41,15 @@ namespace Plainion.GraphViz
             // ensure to get key events
             myZoomSlider.Focusable = false;
             Focusable = true;
+
+            Themes.Naked.PropertyChanged += Naked_PropertyChanged;
+        }
+
+        private void Naked_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            ScrollViewer.HorizontalScrollBarVisibility = Themes.Naked.IsEnabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
+            ScrollViewer.VerticalScrollBarVisibility = Themes.Naked.IsEnabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
+            myZoomSlider.Visibility= Themes.Naked.IsEnabled ? Visibility.Hidden : Visibility.Visible;
         }
 
         public IGraphViewNavigation Navigation

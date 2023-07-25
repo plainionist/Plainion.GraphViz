@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -48,8 +49,17 @@ namespace Plainion.GraphViz.Viewer
                 // need to wait until initialization of UI is done
                 Application.Current.Dispatcher.BeginInvoke(new Action(() => DocumentLoader.Load(args[1])));
             }
+
+            Themes.Naked.PropertyChanged += Naked_PropertyChanged;
         }
 
+        private void Naked_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(NakedVisibility));
+        }
+
+        public Visibility NakedVisibility => Themes.Naked.IsEnabled ? Visibility.Hidden : Visibility.Visible;
+        
         [OptionalDependency]
         public IDocumentLoader DocumentLoader { get; set; }
 

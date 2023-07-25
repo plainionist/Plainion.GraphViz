@@ -70,7 +70,8 @@
     <Grid>
         <ContentControl prism:RegionManager.RegionName="{x:Static v:RegionNames.GraphViewer}" Name="myGraphViewerContainer"/>
 
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Margin ="6">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Margin ="6"
+                    Visibility="{Binding NakedVisibility}">
             <StackPanel Orientation="Horizontal">
                 <StackPanel.Resources>
                     <ObjectDataProvider x:Key="LayoutAlgorithms" MethodName="GetValues"
@@ -127,8 +128,9 @@
                 </ToggleButton>
             </StackPanel>
         </StackPanel>
-        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin ="6,6,26,6">
-            <Button Command="{Binding Path=ShowStatusMessagesCommand}" Padding="1" Margin="2" ToolTip="Show status messages" Visibility="{Binding Path=StatusBarVisibility}">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin ="6,6,26,6"
+                    Visibility="{Binding NakedVisibility}">
+            <Button Command="{Binding ShowStatusMessagesCommand}" Padding="1" Margin="2" ToolTip="Show status messages" Visibility="{Binding StatusBarVisibility}">
                 <Button.Content>
                     <Image Source="/Resources/StatusMessages.png" Width="16"/>
                 </Button.Content>

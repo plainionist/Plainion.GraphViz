@@ -1,4 +1,6 @@
-﻿using System.Windows.Media;
+﻿using System.ComponentModel;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Plainion.GraphViz
 {
@@ -34,6 +36,28 @@ namespace Plainion.GraphViz
             public override Brush NodeCaptionColor(Brush color) => Brushes.Black;
             public override Brush CaptionColor(Brush color) => Brushes.LightGray;
             public override Brush ClusterBorderColor(Brush color) => Brushes.DodgerBlue;
+        }
+
+        public static readonly NakedView Naked = new NakedView();
+    }
+
+    public class NakedView : INotifyPropertyChanged
+    {
+        private bool myNaked = false;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool IsEnabled
+        {
+            get { return myNaked; }
+            set
+            {
+                if (value != myNaked)
+                {
+                    myNaked = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEnabled)));
+                }
+            }
         }
     }
 
