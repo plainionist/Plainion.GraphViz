@@ -42,6 +42,7 @@ namespace PlainionGraphViz.Viewer
 
             var moduleAssemblies = Directory.EnumerateFiles(Path.GetDirectoryName(GetType().Assembly.Location), "*.dll")
                 .Where(x => Path.GetFileNameWithoutExtension(x).StartsWith("Plainion.GraphViz.Modules.", StringComparison.OrdinalIgnoreCase))
+                .Where(x => !Path.GetFileNameWithoutExtension(x).EndsWith("SDK", StringComparison.OrdinalIgnoreCase))
                 .Where(x => Path.GetExtension(x).Equals(".dll", StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
