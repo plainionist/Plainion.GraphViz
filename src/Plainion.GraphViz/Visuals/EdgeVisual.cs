@@ -61,7 +61,7 @@ namespace Plainion.GraphViz.Visuals
                 context.Close();
             }
 
-            var pen = new Pen(styleState.Color, 1);
+            var pen = new Pen(Themes.Current.EdgeBrush(styleState.Color), 1);
             SetLineThickness(pen);
 
             // http://stackoverflow.com/questions/1755520/improve-drawingvisual-renders-speed
@@ -77,7 +77,7 @@ namespace Plainion.GraphViz.Visuals
                     CultureInfo.InvariantCulture,
                     FlowDirection.LeftToRight,
                     myFont,
-                    sourceLayoutState.Height * 0.5, Brushes.Black);
+                    sourceLayoutState.Height * 0.5, Themes.Current.CaptionColor(Brushes.Black));
 
                 dc.DrawText(tx, new Point(layoutState.LabelPosition.X - tx.Width, layoutState.LabelPosition.Y - tx.Height));
             }
@@ -90,7 +90,7 @@ namespace Plainion.GraphViz.Visuals
         protected override Brush GetBorderBrush()
         {
             var style = myPresentation.GetPropertySetFor<EdgeStyle>().Get(Owner.Id);
-            return style.Color;
+            return Themes.Current.EdgeBrush(style.Color);
         }
 
         public void ApplyZoomFactor(double zoomFactor)

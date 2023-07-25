@@ -36,6 +36,7 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
 
             OpenFolderRequest = new InteractionRequest<SelectFolderDialogNotification>();
 
+            IgnoreThirdPartyReferences = true;
             IsReady = true;
         }
 
