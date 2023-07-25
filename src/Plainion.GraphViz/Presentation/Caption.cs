@@ -4,10 +4,10 @@
     {
         private string myDisplayText;
 
-        public Caption( string ownerId, string label )
-            : base( ownerId )
+        public Caption(string ownerId, string label)
+            : base(ownerId)
         {
-            Label = string.IsNullOrEmpty( label ) ? ownerId : label;
+            Label = string.IsNullOrEmpty(label) ? ownerId : label;
             DisplayText = Label;
         }
 
@@ -16,7 +16,7 @@
         public string DisplayText
         {
             get { return myDisplayText; }
-            set { SetProperty( ref myDisplayText, value ); }
+            set { SetProperty(ref myDisplayText, value); }
         }
     }
 }
