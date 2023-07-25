@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Printing;
 using System.Windows;
@@ -9,6 +10,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Visuals;
@@ -49,7 +52,7 @@ namespace Plainion.GraphViz
         {
             ScrollViewer.HorizontalScrollBarVisibility = Themes.Naked.IsEnabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
             ScrollViewer.VerticalScrollBarVisibility = Themes.Naked.IsEnabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
-            myZoomSlider.Visibility= Themes.Naked.IsEnabled ? Visibility.Hidden : Visibility.Visible;
+            myZoomSlider.Visibility = Themes.Naked.IsEnabled ? Visibility.Hidden : Visibility.Visible;
         }
 
         public IGraphViewNavigation Navigation
@@ -414,6 +417,30 @@ namespace Plainion.GraphViz
 
             ScrollViewer.ScrollToHorizontalOffset(ScrollViewer.ScrollableWidth / 2);
             ScrollViewer.ScrollToVerticalOffset(ScrollViewer.ScrollableHeight / 2);
+        }
+
+        public void ExportAsPng(Stream stream)
+        {
+            var targetSize = myGraphVisual.RenderSize;
+
+            double dpiScale = 300.0 / 96;
+            double dpiX = 300.0;
+            double dpiY = 300.0;
+
+            var bmp = new RenderTargetBitmap(
+                Convert.ToInt32(targetSize.Width * dpiScale),
+                Convert.ToInt32(targetSize.Height * dpiScale),
+                dpiX,
+                dpiY,
+                PixelFormats.Pbgra32);
+
+
+            bmp.Render(myGraphVisual.Drawing);
+
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bmp));
+
+            encoder.Save(stream);
         }
     }
 }
