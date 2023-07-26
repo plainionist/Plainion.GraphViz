@@ -11,6 +11,7 @@
     <None Remove="GraphIcon.ico" />
     <None Remove="Resources\Bookmarks.png" />
     <None Remove="Resources\Clusters.png" />
+    <None Remove="Resources\Export.png" />
     <None Remove="Resources\Filter.png" />
     <None Remove="Resources\GraphIcon.png" />
     <None Remove="Resources\Print.png" />
@@ -50,6 +51,7 @@
     <Resource Include="Resources\Clusters.png" />
     <Resource Include="Resources\Filter.png" />
     <Resource Include="Resources\GraphIcon.png" />
+    <Resource Include="Resources\Export.png" />
     <Resource Include="Resources\Print.png" />
     <Resource Include="Resources\Refresh.png" />
     <Resource Include="Resources\Settings.png" />

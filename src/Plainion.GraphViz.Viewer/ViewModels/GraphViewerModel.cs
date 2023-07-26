@@ -174,7 +174,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             HomeCommand = new DelegateCommand(
                 () => Navigation.HomeZoomPan(),
                 () => Presentation != null);
-
+            
             InvalidateLayoutCommand = new DelegateCommand(
                 () => Presentation.InvalidateLayout(),
                 () => Presentation != null);
@@ -193,6 +193,9 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>();
             PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
+
+            ExportGraphRequest = new InteractionRequest<SaveFileDialogNotification>();
+            ExportGraphCommand = new DelegateCommand(OnExportGrpah, () => Presentation != null);
 
             eventAggregator.GetEvent<NodeFocusedEvent>().Subscribe(OnEventFocused);
 
@@ -442,7 +445,34 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             PrintGraphRequest.Raise(notification, c => { });
         }
 
+        public InteractionRequest<SaveFileDialogNotification> ExportGraphRequest { get; private set; }
+
+        public DelegateCommand ExportGraphCommand { get; private set; }
+
+        private void OnExportGrpah()
+        {
+            var notification = new SaveFileDialogNotification();
+            notification.RestoreDirectory = true;
+            notification.Filter = "PNG files (*.png)|*.png";
+            notification.FilterIndex = 0;
+            notification.DefaultExt = ".png";
+
+            ExportGraphRequest.Raise(notification,
+                n =>
+                {
+                    if (n.Confirmed)
+                    {
+                        using(var stream = File.OpenWrite(n.FileName))
+                        {
+                            Export.ExportAsPng(stream);
+                        }
+                    }
+                });
+        }
+
         public IGraphViewNavigation Navigation { get; set; }
+
+        public IGraphViewExport Export{ get; set; }
 
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
@@ -546,6 +576,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             HomeCommand.RaiseCanExecuteChanged();
             InvalidateLayoutCommand.RaiseCanExecuteChanged();
             PrintGraphCommand.RaiseCanExecuteChanged();
+            ExportGraphCommand.RaiseCanExecuteChanged();
 
             BuildClustersMenu();
             BuildSelectedNodesMenu();

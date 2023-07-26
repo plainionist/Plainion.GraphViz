@@ -7,15 +7,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
              xmlns:prism="http://www.codeplex.com/prism"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <r:GraphView GraphSource="{Binding Presentation}" LayoutEngine="{Binding LayoutEngine}" 
                  GraphItemForContextMenu="{Binding GraphItemForContextMenu, Mode=OneWayToSource}"
+                 Export="{Binding Export, Mode=OneWayToSource}"
                  Navigation="{Binding Navigation, Mode=OneWayToSource}" Name="myGraphView">
         <i:Interaction.Triggers>
             <pn:InteractionRequestTrigger SourceObject="{Binding PrintGraphRequest, Mode=OneWay}">
                 <pn:PopupPrintDialogAction/>
+            </pn:InteractionRequestTrigger>
+            <pn:InteractionRequestTrigger SourceObject="{Binding ExportGraphRequest, Mode=OneWay}">
+                <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:SaveFileDialog}"/>
             </pn:InteractionRequestTrigger>
         </i:Interaction.Triggers>
 

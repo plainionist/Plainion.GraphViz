@@ -19,7 +19,7 @@ using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz
 {
-    public partial class GraphView : UserControl, IGraphViewNavigation, IPrintRequestAware
+    public partial class GraphView : UserControl, IGraphViewNavigation, IPrintRequestAware, IGraphViewExport
     {
         private Point myZoomStartPoint;
         private AdornerLayer myAdornerLayer;
@@ -62,6 +62,15 @@ namespace Plainion.GraphViz
         }
 
         public static readonly DependencyProperty NavigationProperty = DependencyProperty.Register("Navigation", typeof(IGraphViewNavigation),
+            typeof(GraphView));
+
+        public IGraphViewExport Export
+        {
+            get { return (IGraphViewExport)GetValue(ExportProperty); }
+            set { throw new NotSupportedException("Read-only property"); }
+        }
+
+        public static readonly DependencyProperty ExportProperty = DependencyProperty.Register("Export", typeof(IGraphViewExport),
             typeof(GraphView));
 
         public IGraphItem GraphItemForContextMenu
@@ -145,6 +154,7 @@ namespace Plainion.GraphViz
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             SetValue(NavigationProperty, this);
+            SetValue(ExportProperty, this);
 
             myGraphVisual.RenderingFinished += OnRenderingFinished;
 
@@ -338,7 +348,7 @@ namespace Plainion.GraphViz
 
                 e.Handled = true;
             }
-
+                
             base.OnPreviewKeyUp(e);
         }
 
