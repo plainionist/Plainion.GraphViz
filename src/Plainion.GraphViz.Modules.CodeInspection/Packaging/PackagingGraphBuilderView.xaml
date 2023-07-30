@@ -77,9 +77,9 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Open spec"  Command="{Binding Path=OpenCommand}"/>
-            <Button Grid.Column="2" Content="Create graph" Command="{Binding Path=CreateGraphCommand}" Margin="5,0,0,0"/>
-            <Button Grid.Column="3" Content="Cancel" Command="{Binding Path=CancelCommand}" Margin="5,0,0,0"/>
+            <Button Grid.Column="0" Content="Open spec"  Command="{Binding Path=OpenCommand}" Padding="3"/>
+            <Button Grid.Column="2" Content="Create graph" Command="{Binding Path=CreateGraphCommand}"  Padding="3" Margin="5,0,0,0"/>
+            <Button Grid.Column="3" Content="Cancel" Command="{Binding Path=CancelCommand}"  Padding="3" Margin="5,0,0,0"/>
         </Grid>
     </Grid>
 </UserControl>

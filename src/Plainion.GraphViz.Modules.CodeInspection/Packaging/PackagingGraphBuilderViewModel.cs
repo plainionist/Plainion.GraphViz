@@ -230,7 +230,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 
                                 foreach (var node in cluster.Nodes)
                                 {
-                                    var assembly = node.Id;
+                                    var assembly = captions.Get(node.Id).Label;
                                     if (!assembly.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
                                     {
                                         assembly += ".dll";
