@@ -32,7 +32,7 @@ namespace Plainion.GraphViz.Algorithms
             try
             {
                 // re-fetch the cluster in case it was folded
-                var clusterNodes = Presentation.TransformedGraph().Clusters.Single(c => c.Id == cluster.Id).Nodes
+                var nodesOfCluster = Presentation.TransformedGraph().Clusters.Single(c => c.Id == cluster.Id).Nodes
                     // do not process hidden nodes
                     .Where(Presentation.Picking.Pick)
                     .ToList();
@@ -43,7 +43,7 @@ namespace Plainion.GraphViz.Algorithms
                     Label = GetMaskLabel(cluster)
                 };
 
-                mask.Set(FindNodes(clusterNodes));
+                mask.Set(FindMatchingNodes(nodesOfCluster));
 
                 return mask;
             }
@@ -75,29 +75,32 @@ namespace Plainion.GraphViz.Algorithms
             throw new NotSupportedException(SiblingsType.ToString());
         }
 
-        private IEnumerable<Node> FindNodes(IReadOnlyCollection<Node> clusterNodes)
+        private IEnumerable<Node> FindMatchingNodes(IReadOnlyCollection<Node> nodesOfCluster)
         {
             var empty = new List<Node>();
-            var nodes = clusterNodes
-                .Where(n => FilterNodes(n, empty))
+
+            // start analysing direct siblings of the cluster nodes
+            var matchingNodes = nodesOfCluster
+                .Where(n => IsMatchingNode(n, empty))
                 .ToList();
 
+            // continue analysing siblings recursively
             var moreFound = true;
             while (moreFound)
             {
-                var moreNodes = clusterNodes
-                    .Except(nodes)
-                    .Where(n => FilterNodes(n, nodes))
+                var moreNodes = nodesOfCluster
+                    .Except(matchingNodes)
+                    .Where(n => IsMatchingNode(n, matchingNodes))
                     .ToList();
 
                 moreFound = moreNodes.Any();
-                nodes.AddRange(moreNodes);
+                matchingNodes.AddRange(moreNodes);
             }
 
-            return nodes;
+            return matchingNodes;
         }
 
-        private bool FilterNodes(Node n, IReadOnlyCollection<Node> nodes)
+        private bool IsMatchingNode(Node n, IReadOnlyCollection<Node> nodes)
         {
             if (SiblingsType == SiblingsType.Any)
             {
