@@ -12,12 +12,13 @@ namespace Plainion.GraphViz.Algorithms
     /// </summary>
     public class RemoveNodesNotConnectedOutsideCluster : AbstractAlgorithm
     {
-        public RemoveNodesNotConnectedOutsideCluster(IGraphPresentation presentation)
+        public RemoveNodesNotConnectedOutsideCluster(IGraphPresentation presentation, SiblingsType siblingsType)
             : base(presentation)
         {
+            SiblingsType = siblingsType;
         }
 
-        public SiblingsType SiblingsType { get; set; }
+        public SiblingsType SiblingsType { get; }
 
         public INodeMask Compute(Cluster cluster)
         {
@@ -77,11 +78,9 @@ namespace Plainion.GraphViz.Algorithms
 
         private IEnumerable<Node> FindMatchingNodes(IReadOnlyCollection<Node> nodesOfCluster)
         {
-            var empty = new List<Node>();
-
             // start analysing direct siblings of the cluster nodes
             var matchingNodes = nodesOfCluster
-                .Where(n => IsMatchingNode(n, empty))
+                .Where(n => IsMatchingNode(n, new List<Node>()))
                 .ToList();
 
             // continue analysing siblings recursively
@@ -104,6 +103,7 @@ namespace Plainion.GraphViz.Algorithms
         {
             if (SiblingsType == SiblingsType.Any)
             {
+                // node is matching if the only visible siblings are inside the cluster
                 return n.In.All(e => !Presentation.Picking.Pick(e.Source) || nodes.Contains(e.Source))
                     && n.Out.All(e => !Presentation.Picking.Pick(e.Target) || nodes.Contains(e.Target));
             }

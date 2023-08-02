@@ -12,19 +12,20 @@ namespace Plainion.GraphViz.Presentation
         private IModuleChangedObserver myNodeMaskModuleObserver;
         private IModuleChangedObserver myTransformationModuleObserver;
 
-        public GraphPresentation()
+        public GraphPresentation(IGraph graph = null)
         {
-            myModules = new List<object>();
-
-            myModules.Add(new PropertySetModule<ToolTipContent>(id => new ToolTipContent(id, null)));
-            myModules.Add(new PropertySetModule<Selection>(id => new Selection(id) { IsSelected = false }));
-            // TODO: move translation from string to WPF entities to parser
-            myModules.Add(new PropertySetModule<NodeStyle>(id => new NodeStyle(id)));
-            myModules.Add(new PropertySetModule<EdgeStyle>(id => new EdgeStyle(id)));
-            myModules.Add(new CaptionModule(id => new Caption(id, null)));
-            myModules.Add(new GraphLayoutModule());
-            myModules.Add(new NodeMaskModule());
-            myModules.Add(new TransformationModule(this));
+            myModules = new List<object>
+            {
+                new PropertySetModule<ToolTipContent>(id => new ToolTipContent(id, null)),
+                new PropertySetModule<Selection>(id => new Selection(id) { IsSelected = false }),
+                // TODO: move translation from string to WPF entities to parser
+                new PropertySetModule<NodeStyle>(id => new NodeStyle(id)),
+                new PropertySetModule<EdgeStyle>(id => new EdgeStyle(id)),
+                new CaptionModule(id => new Caption(id, null)),
+                new GraphLayoutModule(),
+                new NodeMaskModule(),
+                new TransformationModule(this)
+            };
 
             Picking = new PickingCache(this, new GraphPicking(this));
 
@@ -33,6 +34,11 @@ namespace Plainion.GraphViz.Presentation
 
             myTransformationModuleObserver = GetModule<ITransformationModule>().CreateObserver();
             myTransformationModuleObserver.ModuleChanged += OnModuleChanged;
+
+            if (graph != null)
+            {
+                Graph = graph;
+            }
         }
 
         private void OnModuleChanged(object sender, EventArgs e)

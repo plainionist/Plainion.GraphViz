@@ -118,13 +118,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 c => ToggleClusterFolding(c));
 
             RemoveNodesNotConnectedWithOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation) { SiblingsType = SiblingsType.Any }.Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, SiblingsType.Any).Compute(c)));
 
             RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation) { SiblingsType = SiblingsType.Sources }.Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, SiblingsType.Sources).Compute(c)));
 
             RemoveNodesNotReachingOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation) { SiblingsType = SiblingsType.Targets }.Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, SiblingsType.Targets).Compute(c)));
 
             SelectNodesOfClusterCommand = new DelegateCommand<Cluster>(
                 c => SelectVisibleNodesFrom(c));
@@ -174,7 +174,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             HomeCommand = new DelegateCommand(
                 () => Navigation.HomeZoomPan(),
                 () => Presentation != null);
-            
+
             InvalidateLayoutCommand = new DelegateCommand(
                 () => Presentation.InvalidateLayout(),
                 () => Presentation != null);
@@ -462,7 +462,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 {
                     if (n.Confirmed)
                     {
-                        using(var stream = File.OpenWrite(n.FileName))
+                        using (var stream = File.OpenWrite(n.FileName))
                         {
                             Export.ExportAsPng(stream);
                         }
@@ -472,7 +472,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public IGraphViewNavigation Navigation { get; set; }
 
-        public IGraphViewExport Export{ get; set; }
+        public IGraphViewExport Export { get; set; }
 
         public DelegateCommand ShowCyclesCommand { get; private set; }
 
