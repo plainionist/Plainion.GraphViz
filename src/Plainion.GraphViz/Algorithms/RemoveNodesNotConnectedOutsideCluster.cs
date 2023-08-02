@@ -37,24 +37,13 @@ namespace Plainion.GraphViz.Algorithms
                     .Where(Presentation.Picking.Pick)
                     .ToList();
 
-                var mask = new NodeMask();
-                mask.IsShowMask = false;
+                var mask = new NodeMask
+                {
+                    IsShowMask = false,
+                    Label = GetMaskLabel(cluster)
+                };
 
                 mask.Set(FindNodes(clusterNodes));
-
-                var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
-                if (SiblingsType == SiblingsType.Any)
-                {
-                    mask.Label = $"Nodes not connected with outside {caption.DisplayText}";
-                }
-                else if (SiblingsType == SiblingsType.Sources)
-                {
-                    mask.Label = $"Nodes not reachable from outside {caption.DisplayText}";
-                }
-                else if (SiblingsType == SiblingsType.Targets)
-                {
-                    mask.Label = $"Nodes reaching outside {caption.DisplayText}";
-                }
 
                 return mask;
             }
@@ -65,6 +54,25 @@ namespace Plainion.GraphViz.Algorithms
                     folding.Add(cluster.Id);
                 }
             }
+        }
+
+        private string GetMaskLabel(Cluster cluster)
+        {
+            var caption = Presentation.GetPropertySetFor<Caption>().Get(cluster.Id);
+            if (SiblingsType == SiblingsType.Any)
+            {
+                return $"Nodes not connected with outside {caption.DisplayText}";
+            }
+            else if (SiblingsType == SiblingsType.Sources)
+            {
+                return $"Nodes not reachable from outside {caption.DisplayText}";
+            }
+            else if (SiblingsType == SiblingsType.Targets)
+            {
+                return $"Nodes reaching outside {caption.DisplayText}";
+            }
+
+            throw new NotSupportedException(SiblingsType.ToString());
         }
 
         private IEnumerable<Node> FindNodes(IReadOnlyCollection<Node> clusterNodes)
@@ -89,7 +97,7 @@ namespace Plainion.GraphViz.Algorithms
             return nodes;
         }
 
-        private bool FilterNodes(Node n, List<Node> nodes)
+        private bool FilterNodes(Node n, IReadOnlyCollection<Node> nodes)
         {
             if (SiblingsType == SiblingsType.Any)
             {
