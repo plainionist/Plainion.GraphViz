@@ -44,7 +44,9 @@ namespace Plainion.GraphViz.Algorithms
                     Label = GetMaskLabel(cluster)
                 };
 
-                mask.Set(FindMatchingNodes(nodesOfCluster));
+                // find nodes with siblings of requested type,
+                // all other nodes of the cluster to be removed
+                mask.Set(nodesOfCluster.Except(FindNodesWithRequestedSiblings(nodesOfCluster)));
 
                 return mask;
             }
@@ -76,20 +78,23 @@ namespace Plainion.GraphViz.Algorithms
             throw new NotSupportedException(SiblingsType.ToString());
         }
 
-        private IEnumerable<Node> FindMatchingNodes(IReadOnlyCollection<Node> nodesOfCluster)
+        private IEnumerable<Node> FindNodesWithRequestedSiblings(IReadOnlyCollection<Node> nodesOfCluster)
         {
-            // start analysing direct siblings of the cluster nodes
-            var matchingNodes = nodesOfCluster
-                .Where(n => IsMatchingNode(n, new List<Node>()))
+            var nodesOutsideCluster = Presentation.Graph.Nodes
+                .Where(Presentation.Picking.Pick)
+                .Except(nodesOfCluster)
                 .ToList();
 
-            // continue analysing siblings recursively
+            // start with direct siblings outside the cluster
+            var matchingNodes = nodesOutsideCluster;
+
+            // continue analysing nodes with possible indirect siblings outside cluster
             var moreFound = true;
             while (moreFound)
             {
                 var moreNodes = nodesOfCluster
                     .Except(matchingNodes)
-                    .Where(n => IsMatchingNode(n, matchingNodes))
+                    .Where(n => HasVisibleSiblingsIn(n, matchingNodes))
                     .ToList();
 
                 moreFound = moreNodes.Any();
@@ -99,21 +104,20 @@ namespace Plainion.GraphViz.Algorithms
             return matchingNodes;
         }
 
-        private bool IsMatchingNode(Node n, IReadOnlyCollection<Node> nodes)
+        private bool HasVisibleSiblingsIn(Node n, IReadOnlyCollection<Node> nodes)
         {
             if (SiblingsType == SiblingsType.Any)
             {
-                // node is matching if the only visible siblings are inside the cluster
-                return n.In.All(e => !Presentation.Picking.Pick(e.Source) || nodes.Contains(e.Source))
-                    && n.Out.All(e => !Presentation.Picking.Pick(e.Target) || nodes.Contains(e.Target));
+                return n.In.Any(e => Presentation.Picking.Pick(e.Source) && nodes.Contains(e.Source))
+                    || n.Out.Any(e => Presentation.Picking.Pick(e.Target) && nodes.Contains(e.Target));
             }
             else if (SiblingsType == SiblingsType.Sources)
             {
-                return n.In.All(e => !Presentation.Picking.Pick(e.Source) || nodes.Contains(e.Source));
+                return n.In.Any(e => Presentation.Picking.Pick(e.Source) && nodes.Contains(e.Source));
             }
             else if (SiblingsType == SiblingsType.Targets)
             {
-                return n.Out.All(e => !Presentation.Picking.Pick(e.Target) || nodes.Contains(e.Target));
+                return n.Out.Any(e => Presentation.Picking.Pick(e.Target) && nodes.Contains(e.Target));
             }
 
             throw new NotSupportedException(SiblingsType.ToString());

@@ -1,10 +1,11 @@
 
-## 6.0 - 2023-07-
+## 6.0 - 2023-08-02
 
 - New Plugin added to visualize MarkDown file dependencies
 - VsProject dependencies creates cluster for top level folders
 - F11 toggles full screen mode
 - Export graph as PNG
+- Algo RemoveNodesNotConnectedOutsideCluster fixed
 
 ## 5.2 - 2023-07-22
 

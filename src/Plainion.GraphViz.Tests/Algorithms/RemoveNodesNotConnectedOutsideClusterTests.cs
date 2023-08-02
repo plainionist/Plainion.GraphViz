@@ -9,12 +9,13 @@ namespace Plainion.GraphViz.Tests.Algorithms
     public class RemoveNodesNotConnectedOutsideClusterTests
     {
         [Test]
-        public void SimpleCrossClusterEdge()
+        public void DirectCrossClusterEdge()
         {
             var builder = new RelaxedGraphBuilder();
             builder.TryAddEdge("a", "b");
-            builder.TryAddCluster("c1", new[] { "a" });
-            builder.TryAddCluster("c2", new[] { "b" });
+            builder.TryAddEdge("x", "y");
+            builder.TryAddCluster("c1", new[] { "a", "x" });
+            builder.TryAddCluster("c2", new[] { "b", "y" });
 
             var presentation = new GraphPresentation(builder.Graph);
 
@@ -22,7 +23,30 @@ namespace Plainion.GraphViz.Tests.Algorithms
 
             var mask = algo.Compute(presentation.GetCluster("c1"));
 
-            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.True);
+            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("x")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("y")), Is.Null);
+        }
+
+        [Test]
+        public void IndirectCrossClusterEdge()
+        {
+            var builder = new RelaxedGraphBuilder();
+            builder.TryAddEdge("a", "b");
+            builder.TryAddEdge("b", "c");
+            builder.TryAddCluster("c1", new[] { "a", "b" });
+            builder.TryAddCluster("c2", new[] { "c" });
+
+            var presentation = new GraphPresentation(builder.Graph);
+
+            var algo = new RemoveNodesNotConnectedOutsideCluster(presentation, SiblingsType.Any);
+
+            var mask = algo.Compute(presentation.GetCluster("c1"));
+
+            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("c")), Is.Null);
         }
 
         [Test]
@@ -30,6 +54,50 @@ namespace Plainion.GraphViz.Tests.Algorithms
         {
             var builder = new RelaxedGraphBuilder();
             builder.TryAddEdge("a", "b");
+            builder.TryAddEdge("b", "c");
+            builder.TryAddCluster("c1", new[] { "a", "b", "c" });
+
+            var presentation = new GraphPresentation(builder.Graph);
+
+            var algo = new RemoveNodesNotConnectedOutsideCluster(presentation, SiblingsType.Any);
+
+            var mask = algo.Compute(presentation.GetCluster("c1"));
+
+            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.False);
+            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.False);
+            Assert.That(mask.IsSet(presentation.GetNode("c")), Is.False);
+        }
+
+        [Test]
+        public void InnerClusterCycle()
+        {
+            var builder = new RelaxedGraphBuilder();
+            builder.TryAddEdge("a", "b");
+            builder.TryAddEdge("b", "a");
+            builder.TryAddEdge("x", "y");
+            builder.TryAddEdge("y", "z");
+            builder.TryAddEdge("z", "x");
+            builder.TryAddCluster("c1", new[] { "a", "b", "x", "y", "z" });
+
+            var presentation = new GraphPresentation(builder.Graph);
+
+            var algo = new RemoveNodesNotConnectedOutsideCluster(presentation, SiblingsType.Any);
+
+            var mask = algo.Compute(presentation.GetCluster("c1"));
+
+            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.False);
+            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.False);
+            Assert.That(mask.IsSet(presentation.GetNode("x")), Is.False);
+            Assert.That(mask.IsSet(presentation.GetNode("y")), Is.False);
+            Assert.That(mask.IsSet(presentation.GetNode("z")), Is.False);
+        }
+
+        [Test]
+        public void NodeWithoutEdges()
+        {
+            var builder = new RelaxedGraphBuilder();
+            builder.TryAddNode("a");
+            builder.TryAddNode("b");
             builder.TryAddCluster("c1", new[] { "a", "b" });
 
             var presentation = new GraphPresentation(builder.Graph);
@@ -38,24 +106,8 @@ namespace Plainion.GraphViz.Tests.Algorithms
 
             var mask = algo.Compute(presentation.GetCluster("c1"));
 
-            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.True);
-            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.True);
-        }
-
-        [Test]
-        public void NodeWithoutEdges()
-        {
-            var builder = new RelaxedGraphBuilder();
-            builder.TryAddNode("a");
-            builder.TryAddCluster("c1", new[] { "a" });
-
-            var presentation = new GraphPresentation(builder.Graph);
-
-            var algo = new RemoveNodesNotConnectedOutsideCluster(presentation, SiblingsType.Any);
-
-            var mask = algo.Compute(presentation.GetCluster("c1"));
-
-            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.True);
+            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.False);
+            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.False);
         }
     }
 }
