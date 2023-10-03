@@ -6,7 +6,7 @@ namespace Plainion.GraphViz.Model
 {
     [Serializable]
     [DebuggerDisplay("{Id}")]
-    public class Node : IGraphItem
+    public class Node : IGraphItem, IEquatable<Node>
     {
         public Node(string id)
         {
@@ -18,9 +18,16 @@ namespace Plainion.GraphViz.Model
             Out = new List<Edge>();
         }
 
-        public string Id { get; private set; }
+        public string Id { get; }
 
-        public IList<Edge> In { get; private set; }
-        public IList<Edge> Out { get; private set; }
+        public IList<Edge> In { get; }
+        public IList<Edge> Out { get; }
+
+        public bool Equals(Node other) =>
+            other != null && Id == other.Id;
+
+        public override bool Equals(object obj) => Equals(obj as Node);
+
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

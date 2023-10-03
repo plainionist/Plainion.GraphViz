@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Plainion.GraphViz.Model
 {
     [Serializable]
-    public class Edge : IGraphItem
+    [DebuggerDisplay("{Source.Id} -> {Target.Id}")]
+    public class Edge : IGraphItem, IEquatable<Edge>
     {
         public Edge(Node source, Node target)
         {
@@ -20,6 +22,13 @@ namespace Plainion.GraphViz.Model
 
         public Node Source { get; }
         public Node Target { get; }
+
+        public bool Equals(Edge other) =>
+            other != null && Id == other.Id;
+
+        public override bool Equals(object obj) => Equals(obj as Edge);
+
+        public override int GetHashCode() => Id.GetHashCode();
 
         public static string CreateId(string sourceId, string targetId)
         {
