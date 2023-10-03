@@ -1,4 +1,9 @@
 
+## 6.1 - 2023-10-03
+
+- Algo RemoveNodesNotConnectedOutsideCluster fixed
+  (equality implementation of graph items)
+
 ## 6.0 - 2023-08-02
 
 - New Plugin added to visualize MarkDown file dependencies
