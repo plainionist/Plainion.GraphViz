@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -27,7 +29,20 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
                 return doc;
             }
 
-            var results = Directory.GetFiles(folderToAnalyze, "*.*proj", SearchOption.AllDirectories)
+            static IEnumerable<string> GetDirectories(string folder)
+            {
+                bool VisitFolder(string folder) =>
+                    !Path.GetFileName(folder).Equals("node_modules", StringComparison.OrdinalIgnoreCase);
+
+                yield return folder;
+                foreach (var subFolder in Directory.GetDirectories(folder).Where(VisitFolder).SelectMany(GetDirectories))
+                {
+                    yield return subFolder;
+                }
+            }
+
+            var results = GetDirectories(folderToAnalyze)
+                .SelectMany(x => Directory.GetFiles(x, "*.*proj"))
                 .Select(x => TryLoadProject(folderToAnalyze, x))
                 .ToList();
 
@@ -80,7 +95,9 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
                         .Where(x => x.Name.LocalName == "ItemGroup")
                         .SelectMany(x => x.Elements())
                         .Where(x => x.Name.LocalName == "PackageReference")
-                        .Select(x => x.Attribute("Include").Value)
+                        .Select(x => x.Attribute("Include"))
+                        .Where(x => x != null)
+                        .Select(x => x.Value)
                         .Distinct(StringComparer.OrdinalIgnoreCase)
                         .ToList()
                 };
