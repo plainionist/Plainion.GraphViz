@@ -22,6 +22,7 @@ namespace Plainion.GraphViz.Algorithms
 
         public INodeMask Compute(Cluster cluster)
         {
+            
             var folding = Presentation.ClusterFolding();
             var clusterIsFolded = folding.Clusters.Contains(cluster.Id);
             if (clusterIsFolded)
@@ -80,15 +81,13 @@ namespace Plainion.GraphViz.Algorithms
 
         private IEnumerable<Node> FindNodesWithRequestedSiblings(IReadOnlyCollection<Node> nodesOfCluster)
         {
-            var nodesOutsideCluster = Presentation.Graph.Nodes
+            var nodesOutsideCluster = Presentation.GetModule<ITransformationModule>().Graph.Nodes
                 .Where(Presentation.Picking.Pick)
                 .Except(nodesOfCluster)
                 .ToList();
 
-            // start with direct siblings outside the cluster
             var matchingNodes = nodesOutsideCluster;
 
-            // continue analysing nodes with possible indirect siblings outside cluster
             var moreFound = true;
             while (moreFound)
             {

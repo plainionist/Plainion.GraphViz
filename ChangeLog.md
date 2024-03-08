@@ -1,4 +1,9 @@
 
+## 6.2 - 2024-03-08
+
+- Algo RemoveNodesNotConnectedOutsideCluster fixed
+  (respect folding of clusters)
+
 ## 6.1 - 2023-10-03
 
 - Algo RemoveNodesNotConnectedOutsideCluster fixed

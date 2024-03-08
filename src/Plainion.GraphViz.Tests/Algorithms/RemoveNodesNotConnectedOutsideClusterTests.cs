@@ -30,6 +30,50 @@ namespace Plainion.GraphViz.Tests.Algorithms
         }
 
         [Test]
+        public void DirectCrossClusterEdge_NotReachableFromOutside()
+        {
+            var builder = new RelaxedGraphBuilder();
+            builder.TryAddEdge("a", "b");
+            builder.TryAddEdge("x", "y");
+            builder.TryAddCluster("c1", new[] { "a" });
+            builder.TryAddCluster("c2", new[] { "b", "x", "y" });
+
+            var presentation = new GraphPresentation(builder.Graph);
+
+            var algo = new RemoveNodesNotConnectedOutsideCluster(presentation, SiblingsType.Sources);
+
+            var mask = algo.Compute(presentation.GetCluster("c2"));
+
+            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("x")), Is.EqualTo(false));
+            Assert.That(mask.IsSet(presentation.GetNode("y")), Is.EqualTo(false));
+        }
+
+        [Test]
+        public void DirectCrossClusterEdge_ClustersFolded_NotReachableFromOutside()
+        {
+            var builder = new RelaxedGraphBuilder();
+            builder.TryAddEdge("a", "b");
+            builder.TryAddEdge("x", "y");
+            builder.TryAddCluster("c1", new[] { "a" });
+            builder.TryAddCluster("c2", new[] { "b", "x", "y" });
+
+            var presentation = new GraphPresentation(builder.Graph);
+            presentation.ClusterFolding().Toggle("c1");
+            presentation.ClusterFolding().Toggle("c2");
+
+            var algo = new RemoveNodesNotConnectedOutsideCluster(presentation, SiblingsType.Sources);
+
+            var mask = algo.Compute(presentation.GetCluster("c2"));
+
+            Assert.That(mask.IsSet(presentation.GetNode("a")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("b")), Is.Null);
+            Assert.That(mask.IsSet(presentation.GetNode("x")), Is.EqualTo(false));
+            Assert.That(mask.IsSet(presentation.GetNode("y")), Is.EqualTo(false));
+        }
+
+        [Test]
         public void IndirectCrossClusterEdge()
         {
             var builder = new RelaxedGraphBuilder();
