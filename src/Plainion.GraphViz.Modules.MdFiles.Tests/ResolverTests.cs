@@ -23,8 +23,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
-                Assert.AreEqual(@"http://www.google.de/", resolvedLink.Uri.AbsoluteUri);
+                Assert.That(resolvedLink, Is.InstanceOf<ExternalLink>());
+                Assert.That(@"http://www.google.de/", Is.EqualTo(resolvedLink.Uri.AbsoluteUri));
             });
         }
 
@@ -36,8 +36,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
-                Assert.AreEqual(@"\\myshare\Folder", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<ExternalLink>());
+                Assert.That(@"\\myshare\Folder", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -50,8 +50,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
-                Assert.AreEqual(@"\\myshare\Folder", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<ExternalLink>());
+                Assert.That(@"\\myshare\Folder", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -63,8 +63,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
-                Assert.AreEqual(@"C:\Project X\Usermanual\introduction.md", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<ExternalLink>());
+                Assert.That(@"C:\Project X\Usermanual\introduction.md", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -75,8 +75,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<InternalLink>(resolvedLink);
-                Assert.AreEqual(@$"{file}#note", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<InternalLink>());
+                Assert.That(@$"{file}#note", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -87,8 +87,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<InternalLink>(resolvedLink);
-                Assert.AreEqual(@"C:\Project X\Usermanual\Chapter 2\chapter#note", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<InternalLink>());
+                Assert.That(@"C:\Project X\Usermanual\Chapter 2\chapter#note", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -101,8 +101,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<InternalLink>(resolvedLink);
-                Assert.AreEqual(@$"{currentDir}\introduction.md", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<InternalLink>());
+                Assert.That(@$"{currentDir}\introduction.md", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -115,8 +115,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<InternalLink>(resolvedLink);
-                Assert.AreEqual(@$"{currentDir}\introduction.md", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<InternalLink>());
+                Assert.That(@$"{currentDir}\introduction.md", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -129,8 +129,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<InternalLink>(resolvedLink);
-                Assert.AreEqual(@$"{currentDir}\SubChapter\introduction.md", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<InternalLink>());
+                Assert.That(@$"{currentDir}\SubChapter\introduction.md", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -142,8 +142,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<InternalLink>(resolvedLink);
-                Assert.AreEqual(@$"{root}\introduction.md", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<InternalLink>());
+                Assert.That(@$"{root}\introduction.md", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
 
@@ -155,8 +155,8 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.IsInstanceOf<ExternalLink>(resolvedLink);
-                Assert.AreEqual(@$"C:\Project X\introduction.md", resolvedLink.Uri.LocalPath);
+                Assert.That(resolvedLink, Is.InstanceOf<ExternalLink>());
+                Assert.That(@$"C:\Project X\introduction.md", Is.EqualTo(resolvedLink.Uri.LocalPath));
             });
         }
     }

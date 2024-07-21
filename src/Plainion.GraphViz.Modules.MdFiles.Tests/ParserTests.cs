@@ -26,7 +26,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var md = myParser.LoadMarkdown("....[Introduction](UserManual/Introduction.md)....");
 
-            Assert.IsNotEmpty(md.Links);
+            Assert.That(md.Links, Is.Not.Empty);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var md = myParser.LoadMarkdown("....[Introduction](<User Manual/Introduction.md>)....");
 
-            Assert.IsNotEmpty(md.Links);
+            Assert.That(md.Links, Is.Not.Empty);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             var md = myParser.LoadFile(@"C:\manual.md");
 
-            Assert.IsNotEmpty(md.Links);
+            Assert.That(md.Links, Is.Not.Empty);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var md = myParser.LoadMarkdown("...![This is a sample image](images/sample.png)...");
 
-            Assert.IsNotEmpty(md.Links.OfType<ImageLink>());
+            Assert.That(md.Links.OfType<ImageLink>(), Is.Not.Empty);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var md = myParser.LoadMarkdown("...[Link to an anchor](#note)");
 
-            Assert.IsNotEmpty(md.Links);
+            Assert.That(md.Links, Is.Not.Empty);
         }
 
         [Test]
@@ -79,9 +79,9 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
 
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(md.Links.Count, 3);
-                Assert.AreEqual(md.Links.OfType<DocLink>().Count(), 2);
-                Assert.AreEqual(md.Links.OfType<ImageLink>().Count(), 1);
+                Assert.That(md.Links.Count, Is.EqualTo(3));
+                Assert.That(md.Links.OfType<DocLink>().Count(), Is.EqualTo(2));
+                Assert.That(md.Links.OfType<ImageLink>().Count(), Is.EqualTo(1));
             });
         }
 
@@ -90,7 +90,7 @@ namespace Plainion.GraphViz.Modules.MdFiles.Tests
         {
             var md = myParser.LoadMarkdown("[Missing Link]()");
 
-            Assert.IsEmpty(md.Links);
+            Assert.That(md.Links, Is.Empty);
         }
     }
 }
