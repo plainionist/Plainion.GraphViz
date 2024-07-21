@@ -12,7 +12,7 @@
     <PackageReference Include="Plainion.Prism" Version="8.0.0" />
     <PackageReference Include="Plainion.Windows.Editors" Version="3.0.0" />
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
-    <PackageReference Include="System.IO.Abstractions" Version="19.2.29" />
+    <PackageReference Include="System.IO.Abstractions" Version="21.0.26" />
   </ItemGroup>
 
   <ItemGroup>
