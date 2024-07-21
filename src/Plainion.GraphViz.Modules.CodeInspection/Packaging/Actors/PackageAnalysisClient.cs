@@ -10,7 +10,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {
     class PackageAnalysisClient : ActorClientBase
     {
-        public async Task<AnalysisDocument> AnalyseAsync(AnalysisRequest request, CancellationToken cancellationToken)
+        public async Task<AnalysisDocument> AnalyseAsync(AnalysisRequest request, CancellationToken cancellationToken = default)
         {
             var msg = new AnalysisMessage
             {

@@ -8,7 +8,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
 {
     class InheritanceClient : ActorClientBase
     {
-        public async Task<IEnumerable<TypeDescriptor>> GetAllTypesAsync(string assemblyLocation, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TypeDescriptor>> GetAllTypesAsync(string assemblyLocation, CancellationToken cancellationToken = default)
         {
             var msg = new GetAllTypesMessage
             {
@@ -27,7 +27,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
             }
         }
 
-        public async Task<TypeRelationshipDocument> AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, CancellationToken cancellationToken)
+        public async Task<TypeRelationshipDocument> AnalyzeInheritanceAsync(string assemblyLocation, bool ignoreDotNetTypes, TypeDescriptor typeToAnalyse, CancellationToken cancellationToken = default)
         {
             var msg = new GetInheritanceGraphMessage
             {

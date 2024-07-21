@@ -6,7 +6,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 {
     class CallTreeClient : ActorClientBase
     {
-        public async Task<string> AnalyzeAsync(CallTreeRequest request, CancellationToken cancellationToken)
+        public async Task<string> AnalyzeAsync(CallTreeRequest request, CancellationToken cancellationToken = default)
         {
             var response = await this.ProcessAsync(typeof(CallTreeActor), request, cancellationToken);
 
