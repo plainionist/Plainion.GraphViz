@@ -1,5 +1,6 @@
 ﻿using System.IO;
-using MessagePack;
+using System.IO.Compression;
+using Newtonsoft.Json;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
@@ -7,31 +8,73 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
     /// Most "analysis documents" cannot be directly serialized and transported through Akka.Net. 
     /// Use this serializer to serialize the document to byte[] or file and send that through Akka.Net messages.
     /// </summary>
-    class DocumentSerializer
+
+    public class DocumentSerializer
     {
         public byte[] Serialize<T>(T doc)
         {
-            return MessagePackSerializer.Serialize(doc);
+            string jsonString = JsonConvert.SerializeObject(doc);
+            byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(jsonString);
+
+            return Compress(jsonBytes);
         }
 
         public void Serialize<T>(T doc, string file)
         {
-            using var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
+            string jsonString = JsonConvert.SerializeObject(doc);
+            byte[] jsonBytes = System.Text.Encoding.UTF8.GetBytes(jsonString);
+            byte[] compressedBytes = Compress(jsonBytes);
 
-            MessagePackSerializer.Serialize(stream, doc);
+            using var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
+            stream.Write(compressedBytes, 0, compressedBytes.Length);
         }
 
         public T Deserialize<T>(byte[] blob)
         {
-            return MessagePackSerializer.Deserialize<T>(blob);
+            byte[] decompressedBytes = Decompress(blob);
+            string jsonString = System.Text.Encoding.UTF8.GetString(decompressedBytes);
+
+            return JsonConvert.DeserializeObject<T>(jsonString);
         }
 
         public T Deserialize<T>(string file)
         {
+            byte[] compressedBytes;
+
             using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
             {
-                return MessagePackSerializer.Deserialize<T>(stream);
+                using var memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
+                compressedBytes = memoryStream.ToArray();
             }
+
+            byte[] decompressedBytes = Decompress(compressedBytes);
+            string jsonString = System.Text.Encoding.UTF8.GetString(decompressedBytes);
+
+            return JsonConvert.DeserializeObject<T>(jsonString);
+        }
+
+        private byte[] Compress(byte[] data)
+        {
+            using var compressedStream = new MemoryStream();
+            using (var zipStream = new GZipStream(compressedStream, CompressionMode.Compress))
+            {
+                zipStream.Write(data, 0, data.Length);
+            }
+
+            return compressedStream.ToArray();
+        }
+
+        private byte[] Decompress(byte[] data)
+        {
+            using var compressedStream = new MemoryStream(data);
+            using var decompressedStream = new MemoryStream();
+            using (var zipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+            {
+                zipStream.CopyTo(decompressedStream);
+            }
+
+            return decompressedStream.ToArray();
         }
     }
 }

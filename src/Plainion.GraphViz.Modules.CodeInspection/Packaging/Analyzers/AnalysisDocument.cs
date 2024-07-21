@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using MessagePack;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
-    [MessagePackObject(keyAsPropertyName: true)]
     public class AnalysisDocument
     {
         private readonly HashSet<string> myNodes;

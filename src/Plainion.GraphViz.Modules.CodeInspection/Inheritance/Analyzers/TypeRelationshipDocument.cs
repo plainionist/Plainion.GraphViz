@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using MessagePack;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 {
-    [MessagePackObject(keyAsPropertyName: true)]
     public class TypeRelationshipDocument
     {
         private readonly HashSet<Tuple<string, string, ReferenceType>> myEdges;
