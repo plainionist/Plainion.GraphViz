@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+  </PropertyGroup>
 
-    <ItemGroup>
+  <ItemGroup>
     <PackageReference Include="nunit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
@@ -12,8 +12,8 @@
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="19.2.29" />
   </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Plainion.GraphViz.Modules.MdFiles\Plainion.GraphViz.Modules.MdFiles.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz.Modules.MdFiles\Plainion.GraphViz.Modules.MdFiles.csproj" />
+  </ItemGroup>
 
 </Project>

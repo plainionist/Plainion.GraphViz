@@ -23,21 +23,21 @@ namespace Plainion.GraphViz.Presentation
         public LayoutAlgorithm Algorithm
         {
             get { return myLayoutAlgorithm; }
-            set { SetProperty( ref myLayoutAlgorithm, value ); }
+            set { SetProperty(ref myLayoutAlgorithm, value); }
         }
 
-        public void Add( NodeLayout layout )
+        public void Add(NodeLayout layout)
         {
-            myNodeLayouts.Add( layout.OwnerId, layout );
+            myNodeLayouts.Add(layout.OwnerId, layout);
 
-            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, layout ) );
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, layout));
         }
 
-        public void Add( EdgeLayout layout )
+        public void Add(EdgeLayout layout)
         {
-            myEdgeLayouts.Add( layout.OwnerId, layout );
+            myEdgeLayouts.Add(layout.OwnerId, layout);
 
-            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, layout ) );
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, layout));
         }
 
         public void Clear()
@@ -47,53 +47,53 @@ namespace Plainion.GraphViz.Presentation
             myNodeLayouts.Clear();
             myEdgeLayouts.Clear();
 
-            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, items ) );
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, items));
         }
 
-        public NodeLayout GetLayout( Node node )
+        public NodeLayout GetLayout(Node node)
         {
-            if( !myNodeLayouts.ContainsKey( node.Id ) )
+            if (!myNodeLayouts.ContainsKey(node.Id))
             {
                 return null;
             }
 
-            return myNodeLayouts[ node.Id ];
+            return myNodeLayouts[node.Id];
         }
 
-        public EdgeLayout GetLayout( Edge edge )
+        public EdgeLayout GetLayout(Edge edge)
         {
-            if( !myEdgeLayouts.ContainsKey( edge.Id ) )
+            if (!myEdgeLayouts.ContainsKey(edge.Id))
             {
                 return null;
             }
 
-            return myEdgeLayouts[ edge.Id ];
+            return myEdgeLayouts[edge.Id];
         }
 
-        public void Set( IEnumerable<NodeLayout> nodeLayouts, IEnumerable<EdgeLayout> edgeLayouts )
+        public void Set(IEnumerable<NodeLayout> nodeLayouts, IEnumerable<EdgeLayout> edgeLayouts)
         {
             Clear();
 
-            foreach( var layout in nodeLayouts )
+            foreach (var layout in nodeLayouts)
             {
-                Add( layout );
+                Add(layout);
             }
 
-            foreach( var layout in edgeLayouts )
+            foreach (var layout in edgeLayouts)
             {
-                Add( layout );
+                Add(layout);
             }
 
-            OnCollectionChanged( new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, Items ) );
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, Items));
         }
 
         public override IEnumerable<AbstractPropertySet> Items
         {
             get
             {
-                return myNodeLayouts
+                return myNodeLayouts.Values
                     .OfType<AbstractPropertySet>()
-                    .Concat( myEdgeLayouts.OfType<AbstractPropertySet>() )
+                    .Concat(myEdgeLayouts.Values.OfType<AbstractPropertySet>())
                     .ToList();
             }
         }

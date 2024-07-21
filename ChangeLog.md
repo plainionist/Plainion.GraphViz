@@ -1,4 +1,8 @@
 
+## 7.0 - 2024-07-21
+
+- upgraded to .Net 8
+
 ## 6.2 - 2024-03-08
 
 - Algo RemoveNodesNotConnectedOutsideCluster fixed
