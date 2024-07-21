@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using MessagePack;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 {
@@ -11,39 +11,26 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
     {
         public byte[] Serialize<T>(T doc)
         {
-            using (var stream = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(stream, doc);
-
-                return stream.ToArray();
-            }
+            return MessagePackSerializer.Serialize(doc);
         }
 
         public void Serialize<T>(T doc, string file)
         {
-            using (var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write))
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(stream, doc);
-            }
+            using var stream = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Write);
+
+            MessagePackSerializer.Serialize(stream, doc);
         }
 
         public T Deserialize<T>(byte[] blob)
         {
-            using (var stream = new MemoryStream(blob))
-            {
-                var formatter = new BinaryFormatter();
-                return (T)formatter.Deserialize(stream);
-            }
+            return MessagePackSerializer.Deserialize<T>(blob);
         }
 
         public T Deserialize<T>(string file)
         {
             using (var stream = new FileStream(file, FileMode.Open, FileAccess.Read))
             {
-                var formatter = new BinaryFormatter();
-                return (T)formatter.Deserialize(stream);
+                return MessagePackSerializer.Deserialize<T>(stream);
             }
         }
     }
