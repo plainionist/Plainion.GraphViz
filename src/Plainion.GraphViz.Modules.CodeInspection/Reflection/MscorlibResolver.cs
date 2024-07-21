@@ -25,9 +25,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 
             if (myDotnetRuntime == DotNetRuntime.Framework)
             {
-                var netFwRoot = assemblyName.ProcessorArchitecture == ProcessorArchitecture.Amd64
-                    ? @"%systemroot%\Microsoft.NET\Framework64"
-                    : @"%systemroot%\Microsoft.NET\Framework";
+                // TODO: no longer supported with .Net 8 -> lets check whether 32bit support is even needed
+                //var netFwRoot = assemblyName.ProcessorArchitecture == ProcessorArchitecture.Amd64
+                //    ? @"%systemroot%\Microsoft.NET\Framework64"
+                //    : @"%systemroot%\Microsoft.NET\Framework";
+                var netFwRoot = @"%systemroot%\Microsoft.NET\Framework64";
 
                 netFwRoot = Environment.ExpandEnvironmentVariables(netFwRoot);
 
