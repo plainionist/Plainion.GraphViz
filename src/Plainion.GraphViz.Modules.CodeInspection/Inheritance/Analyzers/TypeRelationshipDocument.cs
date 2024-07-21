@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using MessagePack;
 using Plainion.GraphViz.Infrastructure;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 {
-    [Serializable]
-    class TypeRelationshipDocument
+    [MessagePackObject(keyAsPropertyName: true)]
+    public class TypeRelationshipDocument
     {
-        private HashSet<Tuple<string, string, ReferenceType>> myEdges;
-        private Dictionary<string, TypeDescriptor> myDescriptors;
-        private List<FailedItem> myFailedItems;
+        private readonly HashSet<Tuple<string, string, ReferenceType>> myEdges;
+        private readonly Dictionary<string, TypeDescriptor> myDescriptors;
+        private readonly List<FailedItem> myFailedItems;
 
         public TypeRelationshipDocument()
         {

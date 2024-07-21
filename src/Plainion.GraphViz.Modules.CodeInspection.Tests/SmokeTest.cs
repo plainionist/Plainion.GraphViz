@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Plainion.Diagnostics;
 using Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors;
@@ -17,7 +17,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         private static readonly string myProjectHome = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(SmokeTest).Assembly.Location), "..", ".."));
 
-        private static readonly string[] TargetFrameworks = { "net6.0", "net48", "netcoreapp3.1" };
+        private static readonly string[] TargetFrameworks = ["net8.0", "net48"];
 
         [OneTimeSetUp]
         public void FixtureSetup()
@@ -37,7 +37,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         }
 
         [TestCaseSource(nameof(TargetFrameworks))]
-        public void AnalyzePackageDependencies(string targetFramework)
+        public async Task AnalyzePackageDependencies(string targetFramework)
         {
             using (var client = new PackageAnalysisClient())
             {
@@ -60,7 +60,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                 // "AssemblyRoot" uses relative path
                 Environment.CurrentDirectory = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", targetFramework);
 
-                var response = client.AnalyseAsync(request, CancellationToken.None).Result;
+                var response = await client.AnalyseAsync(request);
 
                 var edges = response.Edges
                     .Select(x => $"{x.Item1} -> {x.Item2}")
@@ -70,21 +70,20 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         }
 
         [TestCaseSource(nameof(TargetFrameworks))]
-        public void AnalyzeInheritance(string targetFramework)
+        public async Task AnalyzeInheritance(string targetFramework)
         {
             using (var client = new InheritanceClient())
             {
-                client.HideHostWindow = true;
+                client.HideHostWindow = false;
 
                 var assemblyLocation = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", targetFramework, "DummyProject.Lib.dll");
 
-                var types = client.GetAllTypesAsync(assemblyLocation, CancellationToken.None).Result;
+                var types = await client.GetAllTypesAsync(assemblyLocation);
 
-                var response = client.AnalyzeInheritanceAsync(
+                var response = await client.AnalyzeInheritanceAsync(
                     assemblyLocation: assemblyLocation,
                     ignoreDotNetTypes: true,
-                    typeToAnalyse: types.Single(x => x.FullName == "DummyProject.Lib.IBuilder"),
-                    cancellationToken: CancellationToken.None).Result;
+                    typeToAnalyse: types.Single(x => x.FullName == "DummyProject.Lib.IBuilder"));
 
                 string RemoveId(string nodeId) => nodeId.Split('#')[0];
 
@@ -96,7 +95,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         }
 
         [TestCaseSource(nameof(TargetFrameworks))]
-        public void AnalyzeCallTree(string targetFramework)
+        public async Task AnalyzeCallTree(string targetFramework)
         {
             using (var client = new CallTreeClient())
             {
@@ -119,12 +118,12 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                         ""relevantAssemblies"": [ ""DummyProject*"" ]
                     }");
 
-                var responseFile = client.AnalyzeAsync(new CallTreeRequest
+                var responseFile = await client.AnalyzeAsync(new CallTreeRequest
                 {
                     ConfigFile = configFile,
                     AssemblyReferencesOnly = false,
                     StrictCallsOnly = true
-                }, CancellationToken.None).Result;
+                });
 
                 var response = File.ReadAllText(responseFile);
 
@@ -134,7 +133,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         }
 
         [TestCaseSource(nameof(TargetFrameworks))]
-        public void AnalyzePath(string targetFramework)
+        public async Task AnalyzePath(string targetFramework)
         {
             using (var client = new PathFinderClient())
             {
@@ -154,11 +153,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                         ""relevantAssemblies"": [ ""DummyProject*"" ]
                     }");
 
-                var responseFile = client.AnalyzeAsync(new PathFinderRequest
+                var responseFile = await client.AnalyzeAsync(new PathFinderRequest
                 {
                     ConfigFile = configFile,
                     AssemblyReferencesOnly = false
-                }, CancellationToken.None).Result;
+                });
 
                 var response = File.ReadAllText(responseFile);
 

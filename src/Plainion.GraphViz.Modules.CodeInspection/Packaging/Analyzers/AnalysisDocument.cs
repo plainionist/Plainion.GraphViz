@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using MessagePack;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
-    [Serializable]
-    class AnalysisDocument
+    [MessagePackObject(keyAsPropertyName: true)]
+    public class AnalysisDocument
     {
-        private HashSet<string> myNodes;
-        private HashSet<Tuple<string, string>> myEdges;
-        private Dictionary<string, IEnumerable<string>> myClusters;
+        private readonly HashSet<string> myNodes;
+        private readonly HashSet<Tuple<string, string>> myEdges;
+        private readonly Dictionary<string, IEnumerable<string>> myClusters;
         // key: id, value: caption
-        private Dictionary<string, string> myCaptions;
+        private readonly Dictionary<string, string> myCaptions;
         // key: id, value: color
-        private Dictionary<string, string> myNodeStyles;
+        private readonly Dictionary<string, string> myNodeStyles;
         // key: id, value: color
-        private Dictionary<string, string> myEdgeStyles;
+        private readonly Dictionary<string, string> myEdgeStyles;
 
         public AnalysisDocument()
         {

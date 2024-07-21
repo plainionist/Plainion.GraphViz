@@ -1,9 +1,10 @@
 ﻿using System;
+using MessagePack;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 {
-    [Serializable]
-    class TypeDescriptor
+    [MessagePackObject(keyAsPropertyName: true)]
+    public class TypeDescriptor
     {
         private int myHashCode;
 
