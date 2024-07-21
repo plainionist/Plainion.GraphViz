@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
-    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
     <PackageReference Include="Plainion.Prism" Version="8.0.0" />
     <PackageReference Include="Plainion.Windows.Editors" Version="3.0.0" />
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />

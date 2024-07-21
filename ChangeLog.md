@@ -2,6 +2,7 @@
 ## 7.0 - 2024-07-21
 
 - upgraded to .Net 8
+- NuGet dependencies updated
 
 ## 6.2 - 2024-03-08
 
