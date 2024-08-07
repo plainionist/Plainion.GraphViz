@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -46,6 +47,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 
         private Assembly ResolveCore(MetadataLoadContext context, AssemblyName assemblyName)
         {
+            //Debugger.Launch();
+
             var requestingAssembly = myTryGetRequestingAssembly() ?? Assembly.GetEntryAssembly();
 
             var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);

@@ -1,4 +1,8 @@
 
+## 7.1 - 2024-08-07
+
+- loading of .NET 8 projects into "package analysis" fixed
+
 ## 7.0 - 2024-07-21
 
 - upgraded to .Net 8

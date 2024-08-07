@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 {
+    /// <summary>
+    /// Resolves the entry point to the .NET runtime/SDK.
+    /// </summary>
     internal class MscorlibResolver : AbstractAssemblyResolver<MscorlibResolutionResult>
     {
         private readonly DotNetRuntime myDotnetRuntime;
@@ -18,7 +21,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
 
         public override IReadOnlyCollection<MscorlibResolutionResult> TryResolve(AssemblyName assemblyName, Assembly requestingAssembly)
         {
-            if (assemblyName.Name != "mscorlib")
+            if (assemblyName.Name != "mscorlib" && assemblyName.Name != "System.Runtime")
             {
                 return Array.Empty<MscorlibResolutionResult>();
             }
@@ -39,7 +42,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
                     .First();
 
                 var result = new MscorlibResolutionResult(
-                    new FileInfo(Path.Combine(netFwRoot, version, "mscorlib.dll")),
+                    new FileInfo(Path.Combine(netFwRoot, version, assemblyName.Name + ".dll")),
                     @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8");
 
                 return new[] { result };
@@ -54,7 +57,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
                     .First();
 
                 var result = new MscorlibResolutionResult(
-                    new FileInfo(Path.Combine(netRoot, version, "mscorlib.dll")),
+                    new FileInfo(Path.Combine(netRoot, version, assemblyName.Name + ".dll")),
                     Path.Combine(@"C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App", version),
                     Path.Combine(@"C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App", version));
 
