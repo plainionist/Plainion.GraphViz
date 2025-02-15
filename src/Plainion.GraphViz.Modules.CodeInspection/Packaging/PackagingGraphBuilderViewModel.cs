@@ -309,7 +309,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             var builder = new RelaxedGraphBuilder();
             foreach (var edge in response.Edges)
             {
-                builder.TryAddEdge(edge.Item1, edge.Item2);
+                builder.TryAddEdge(edge.Item1, edge.Item2, edge.Item3);
             }
 
             foreach (var node in response.Nodes)

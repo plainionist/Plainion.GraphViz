@@ -59,9 +59,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             var monoLoader = new MonoLoader(myTypesLoader.Assemblies);
 
-            var edges = Analyze(monoLoader)
-                .Distinct()
-                .ToList();
+            var references = Analyze(monoLoader);
 
             if (monoLoader.SkippedAssemblies.Any())
             {
@@ -74,7 +72,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             myLogger.Info("Building Graph ...");
 
-            return GenerateDocument(edges);
+            return GenerateDocument(references);
         }
 
         private IEnumerable<Type> Load(Package package)
@@ -91,6 +89,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 .ToList();
         }
 
+        // preserves duplicates as we want to compute weight of edges later
         private Reference[] Analyze(MonoLoader monoLoader)
         {
             try
@@ -126,17 +125,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 .Where(edge => edge.From != edge.To);
         }
 
-        private AnalysisDocument GenerateDocument(IReadOnlyCollection<Reference> edges)
+        private AnalysisDocument GenerateDocument(IReadOnlyCollection<Reference> references)
         {
             var doc = new AnalysisDocument();
 
             var nodesWithEdgesIndex = new HashSet<Type>();
             if (mySpec.UsedTypesOnly)
             {
-                foreach (var edge in edges)
+                foreach (var reference in references)
                 {
-                    nodesWithEdgesIndex.Add(edge.From);
-                    nodesWithEdgesIndex.Add(edge.To);
+                    nodesWithEdgesIndex.Add(reference.From);
+                    nodesWithEdgesIndex.Add(reference.To);
                 }
             }
 
@@ -178,14 +177,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 }
             }
 
-            foreach (var edge in edges)
+            foreach (var reference in references)
             {
-                doc.Add(edge);
+                doc.Add(reference);
 
-                var color = GetEdgeColor(edge);
+                var color = GetEdgeColor(reference);
                 if (color != null)
                 {
-                    doc.AddEdgeColor(edge, color);
+                    doc.AddEdgeColor(reference, color);
                 }
             }
 

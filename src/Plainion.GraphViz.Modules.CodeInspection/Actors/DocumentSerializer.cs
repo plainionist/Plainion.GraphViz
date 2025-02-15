@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.IO.Compression;
 using Newtonsoft.Json;
 
@@ -8,7 +9,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
     /// Most "analysis documents" cannot be directly serialized and transported through Akka.Net. 
     /// Use this serializer to serialize the document to byte[] or file and send that through Akka.Net messages.
     /// </summary>
-
     public class DocumentSerializer
     {
         public byte[] Serialize<T>(T doc)
@@ -34,7 +34,39 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
             byte[] decompressedBytes = Decompress(blob);
             string jsonString = System.Text.Encoding.UTF8.GetString(decompressedBytes);
 
-            return JsonConvert.DeserializeObject<T>(jsonString);
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new TupleStringConverter());
+
+            return JsonConvert.DeserializeObject<T>(jsonString, settings);
+        }
+
+        public class TupleStringConverter : JsonConverter
+        {
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(Tuple<string, string>);
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                var value = reader.Value as string;
+                if (value != null)
+                {
+                    // Remove parentheses and split by comma
+                    var parts = value.Trim('(', ')').Split(new[] { ", " }, StringSplitOptions.None);
+                    if (parts.Length == 2)
+                    {
+                        return Tuple.Create(parts[0], parts[1]);
+                    }
+                }
+                throw new JsonSerializationException($"Cannot deserialize '{value}' to Tuple<string, string>");
+            }
+
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                var tuple = (Tuple<string, string>)value;
+                writer.WriteValue($"({tuple.Item1}, {tuple.Item2})");
+            }
         }
 
         public T Deserialize<T>(string file)
@@ -48,10 +80,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
                 compressedBytes = memoryStream.ToArray();
             }
 
-            byte[] decompressedBytes = Decompress(compressedBytes);
-            string jsonString = System.Text.Encoding.UTF8.GetString(decompressedBytes);
-
-            return JsonConvert.DeserializeObject<T>(jsonString);
+            return Deserialize<T>(compressedBytes);
         }
 
         private byte[] Compress(byte[] data)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
@@ -8,7 +10,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
     public class AnalysisDocument
     {
         private readonly HashSet<string> myNodes;
-        private readonly HashSet<Tuple<string, string>> myEdges;
+        // key: edge, value: count
+        private readonly Dictionary<Tuple<string, string>, int> myEdges;
         private readonly Dictionary<string, IEnumerable<string>> myClusters;
         // key: id, value: caption
         private readonly Dictionary<string, string> myCaptions;
@@ -19,18 +22,24 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         public AnalysisDocument()
         {
-            myNodes = new HashSet<string>();
-            myEdges = new HashSet<Tuple<string, string>>();
-            myClusters = new Dictionary<string, IEnumerable<string>>();
+            myNodes = [];
+            myEdges = [];
+            myClusters = [];
 
-            myCaptions = new Dictionary<string, string>();
-            myNodeStyles = new Dictionary<string, string>();
-            myEdgeStyles = new Dictionary<string, string>();
+            myCaptions = [];
+            myNodeStyles = [];
+            myEdgeStyles = [];
         }
 
         public IEnumerable<string> Nodes { get { return myNodes; } }
 
-        public IEnumerable<Tuple<string, string>> Edges { get { return myEdges; } }
+        public IReadOnlyCollection<Tuple<string, string, int>> Edges{ get; set; }
+
+        [OnSerializing]
+        private void OnSerializing(StreamingContext _)
+        {
+            Edges = myEdges.Select(x => Tuple.Create(x.Key.Item1, x.Key.Item2, x.Value)).ToList();
+        }
 
         public IReadOnlyDictionary<string, IEnumerable<string>> Clusters { get { return myClusters; } }
 
@@ -40,14 +49,20 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         public IReadOnlyDictionary<string, string> EdgeStyles { get { return myEdgeStyles; } }
 
-        public void Add(Reference edge)
+        public void Add(Reference reference)
         {
-            myEdges.Add(CreateEdge(edge));
+            var edge = Tuple.Create(NodeId(reference.From), NodeId(reference.To));
+            if (!myEdges.TryGetValue(edge, out var count))
+            {
+                myEdges.Add(edge, 1);
+            }
+            else
+            {
+                myEdges[edge] = count + 1;
+            }
         }
 
         private string NodeId(Type t) => t.Namespace != null ? t.FullName : t.AssemblyQualifiedName;
-
-        private Tuple<string, string> CreateEdge(Reference edge) => Tuple.Create(NodeId(edge.From), NodeId(edge.To));
 
         public void AddEdgeColor(Reference edge, string color)
         {

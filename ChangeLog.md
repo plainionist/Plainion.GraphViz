@@ -2,6 +2,7 @@
 
 - Dot files: color attribute uses quotes to support parsing in nexus-odyssey
 - Support for weighted edges added
+- Package analysis interprets count of references between two types a weight for edges
 
 ## 7.1 - 2024-08-07
 
