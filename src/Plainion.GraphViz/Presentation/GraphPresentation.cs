@@ -137,7 +137,7 @@ namespace Plainion.GraphViz.Presentation
 
             foreach (var edge in GetEdges(this, other))
             {
-                builder.TryAddEdge(edge.Source.Id, edge.Target.Id);
+                builder.TryAddEdge(edge.Source.Id, edge.Target.Id, edge.Weight);
             }
 
             foreach (var cluster in GetClusters(this, other))

@@ -174,6 +174,11 @@ namespace Plainion.GraphViz.Dot
 
                 var attributes = new List<string>();
 
+                if (edge.Weight != 1)
+                {
+                    attributes.Add($"weight=\"{edge.Weight}\"");
+                }
+
                 if (label != null && label.DisplayText != label.OwnerId)
                 {
                     attributes.Add($"label=\"{label.DisplayText}\"");

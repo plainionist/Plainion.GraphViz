@@ -10,7 +10,7 @@ namespace Plainion.GraphViz.Presentation
 {
     public class BinaryPresentationWriter : IDisposable
     {
-        internal static int Version = 1;
+        internal const int Version = 2;
 
         private BinaryWriter myWriter;
         private BrushConverter myBrushConverter;
@@ -70,6 +70,7 @@ namespace Plainion.GraphViz.Presentation
             {
                 writeNode(edge.Source);
                 writeNode(edge.Target);
+                myWriter.Write(edge.Weight);
             }
 
             myWriter.Write(graph.Clusters.Count());

@@ -26,7 +26,7 @@ namespace Plainion.GraphViz.Modules.Documents
             private set;
         }
 
-        public void Load( string path )
+        public void Load(string path)
         {
             myGraphBuilder = new RelaxedGraphBuilder();
             Filename = path;
@@ -36,37 +36,37 @@ namespace Plainion.GraphViz.Modules.Documents
 
         protected abstract void Load();
 
-        public Node TryAddNode( string nodeId )
+        public Node TryAddNode(string nodeId)
         {
-            var node = myGraphBuilder.TryAddNode( nodeId );
-            if( node == null )
+            var node = myGraphBuilder.TryAddNode(nodeId);
+            if (node == null)
             {
-                myFailedItems.Add( new FailedItem( nodeId, "Node already exists" ) );
+                myFailedItems.Add(new FailedItem(nodeId, "Node already exists"));
                 return null;
             }
 
             return node;
         }
 
-        public Edge TryAddEdge( string sourceNodeId, string targetNodeId )
+        public Edge TryAddEdge(string sourceNodeId, string targetNodeId, int? weight = null)
         {
-            var edge = myGraphBuilder.TryAddEdge( sourceNodeId, targetNodeId );
+            var edge = myGraphBuilder.TryAddEdge(sourceNodeId, targetNodeId, weight);
 
-            if( edge == null )
+            if (edge == null)
             {
-                myFailedItems.Add( new FailedItem( Edge.CreateId( sourceNodeId, targetNodeId ), "Edge already exists" ) );
+                myFailedItems.Add(new FailedItem(Edge.CreateId(sourceNodeId, targetNodeId), "Edge already exists"));
                 return null;
             }
 
             return edge;
         }
 
-        public Cluster TryAddCluster( string clusterId, IEnumerable<string> nodes )
+        public Cluster TryAddCluster(string clusterId, IEnumerable<string> nodes)
         {
-            var cluster = myGraphBuilder.TryAddCluster( clusterId, nodes );
-            if( cluster == null )
+            var cluster = myGraphBuilder.TryAddCluster(clusterId, nodes);
+            if (cluster == null)
             {
-                myFailedItems.Add( new FailedItem( clusterId, "Cluster already exists" ) );
+                myFailedItems.Add(new FailedItem(clusterId, "Cluster already exists"));
                 return null;
             }
 

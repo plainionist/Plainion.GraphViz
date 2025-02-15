@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Text;
-using Plainion.GraphViz.Model;
 using System.Windows.Media;
+using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {
     public class BinaryPresentationReader : IDisposable
     {
-        private static int Version = 1;
+        private const int Version = 2;
 
         private BinaryReader myReader;
-        private BrushConverter myBrushConverter;
+        private readonly BrushConverter myBrushConverter;
 
         /// <summary>
         /// The stream is left open.
@@ -43,7 +42,7 @@ namespace Plainion.GraphViz.Presentation
             var version = myReader.ReadInt32();
             Contract.Invariant(version == Version, "Unexpected version: " + version);
 
-            presentation.Graph = ReadGraph();
+            presentation.Graph = ReadGraph(version);
 
             ReadNodeMasks(presentation.GetModule<NodeMaskModule>());
             ReadTansformations(presentation);
@@ -59,14 +58,18 @@ namespace Plainion.GraphViz.Presentation
             return presentation;
         }
 
-        private IGraph ReadGraph()
+        private IGraph ReadGraph(int version)
         {
             var builder = new RelaxedGraphBuilder();
 
             var count = myReader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
-                builder.TryAddEdge(myReader.ReadString(), myReader.ReadString());
+                var sourceId = myReader.ReadString();
+                var targetId = myReader.ReadString();
+                var weight = version >= 2 ? new int?(myReader.ReadInt32()) : null;
+
+                builder.TryAddEdge(sourceId, targetId, weight);
             }
 
             count = myReader.ReadInt32();

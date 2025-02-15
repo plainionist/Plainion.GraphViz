@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net.Http.Headers;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
@@ -108,7 +110,7 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
                             myCurrentSubGraph.Nodes.Add(node.Id);
                         }
 
-                        TryReadAttributes(node);
+                        TryReadAttributes<Node>(node.Id);
                     }
                     else
                     {
@@ -125,15 +127,16 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
                     myIterator.MoveNext();
                     var target = myIterator.Current;
 
-                    var edge = myDocument.TryAddEdge(source.Value, target.Value);
+                    var edgeId = Edge.CreateId(source.Value, target.Value);
+                    var weight = TryReadAttributes<Edge>(edgeId);
+
+                    var edge = myDocument.TryAddEdge(source.Value, target.Value, weight);
 
                     if (myCurrentSubGraph != null)
                     {
                         myCurrentSubGraph.Nodes.Add(source.Value);
                         myCurrentSubGraph.Nodes.Add(target.Value);
                     }
-
-                    TryReadAttributes(edge);
 
                     continue;
                 }
@@ -147,11 +150,13 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
             }
         }
 
-        private void TryReadAttributes<T>(T owner) where T : IGraphItem
+        private int? TryReadAttributes<T>(string ownerId) where T : IGraphItem
         {
+            int? weight = null;
+
             if (!myIterator.IsNext(TokenType.AttributeBegin))
             {
-                return;
+                return weight;
             }
 
             myIterator.MoveNext();
@@ -169,24 +174,34 @@ namespace Plainion.GraphViz.Modules.Documents.DotLang
 
                 if (key.Equals("label", StringComparison.OrdinalIgnoreCase))
                 {
-                    myDocument.Add(new Caption(owner.Id, value));
+                    myDocument.Add(new Caption(ownerId, value));
+                }
+
+                if (key.Equals("weight", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (int.TryParse(value, out var wValue))
+                    {
+                        weight = wValue;
+                    }
                 }
 
                 if (key.Equals("color", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (owner is Node)
+                    if (typeof(T) == typeof(Node))
                     {
-                        myDocument.Add(new NodeStyle(owner.Id) { FillColor = StyleConverter.GetBrush(value) });
+                        myDocument.Add(new NodeStyle(ownerId) { FillColor = StyleConverter.GetBrush(value) });
                     }
-                    else if (owner is Edge)
+                    else if (typeof(T) == typeof(Edge))
                     {
-                        myDocument.Add(new EdgeStyle(owner.Id) { Color = StyleConverter.GetBrush(value) });
+                        myDocument.Add(new EdgeStyle(ownerId) { Color = StyleConverter.GetBrush(value) });
                     }
                 }
 
                 // either colon or end
                 myIterator.MoveNext();
             }
+
+            return weight;
         }
 
         private bool IsNodeDefinition()

@@ -1,7 +1,7 @@
-## 7.2 - 2025-02-15
+## 8.0 - 2025-02-15
 
 - Dot files: color attribute uses quotes to support parsing in nexus-odyssey
-
+- Support for weighted edges added
 
 ## 7.1 - 2024-08-07
 

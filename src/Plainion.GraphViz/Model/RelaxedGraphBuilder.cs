@@ -39,12 +39,14 @@ namespace Plainion.GraphViz.Model
             return node;
         }
 
-        public Edge TryAddEdge(string sourceNodeId, string targetNodeId)
+        public Edge TryAddEdge(string sourceNodeId, string targetNodeId, int? weight = null)
         {
             var sourceNode = GetOrCreateNode(sourceNodeId);
             var targetNode = GetOrCreateNode(targetNodeId);
 
-            var edge = new Edge(sourceNode, targetNode);
+            var edge = weight.HasValue
+                ? new Edge(sourceNode, targetNode, weight.Value)
+                : new Edge(sourceNode, targetNode);
 
             if (!myGraph.TryAdd(edge))
             {

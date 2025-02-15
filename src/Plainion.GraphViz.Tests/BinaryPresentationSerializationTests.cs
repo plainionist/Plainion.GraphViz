@@ -18,9 +18,9 @@ namespace Plainion.GraphViz.Tests
         {
             var builder = new RelaxedGraphBuilder();
             builder.TryAddEdge("a", "b");
-            builder.TryAddEdge("a", "c");
+            builder.TryAddEdge("a", "c", 3);
             builder.TryAddNode("d");
-            builder.TryAddCluster("X17", new[] { "b", "c" });
+            builder.TryAddCluster("X17", ["b", "c"]);
 
             myPresentation = new GraphPresentation();
             myPresentation.Graph = builder.Graph;
@@ -33,6 +33,12 @@ namespace Plainion.GraphViz.Tests
 
             Assert.That(presentation, Is.Not.SameAs(myPresentation));
             Assert.That(presentation.Graph.Edges.Ids(), Is.EquivalentTo(myPresentation.Graph.Edges.Ids()));
+
+            var edgeWithWeight = presentation.Graph.Edges.Single(x => x.Source.Id == "a" && x.Target.Id == "c");
+            Assert.That(edgeWithWeight.Weight, Is.EqualTo(3));
+
+            var edgeWithoutWeight = presentation.Graph.Edges.Single(x => x.Source.Id == "a" && x.Target.Id == "b");
+            Assert.That(edgeWithoutWeight.Weight, Is.EqualTo(1));
         }
 
         [Test]

@@ -13,15 +13,15 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( @"graph { 
+            using (var reader = new StringReader(@"graph { 
     n1
     n2
-}" ) )
+}"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "n1", "n2" } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "n1", "n2" }));
         }
 
         [Test]
@@ -29,12 +29,12 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( @"digraph { n1; n2; }" ) )
+            using (var reader = new StringReader(@"digraph { n1; n2; }"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "n1", "n2" } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "n1", "n2" }));
         }
 
         [Test]
@@ -42,12 +42,12 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( "digraph { \"Node 1\"; \"Node 2\"; }" ) )
+            using (var reader = new StringReader("digraph { \"Node 1\"; \"Node 2\"; }"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "Node 1", "Node 2" } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "Node 1", "Node 2" }));
         }
 
         [Test]
@@ -55,16 +55,16 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( @"graph { 
+            using (var reader = new StringReader(@"graph { 
     n1
    /* ignore this */
     n2
-}" ) )
+}"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "n1", "n2" } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "n1", "n2" }));
         }
 
         [Test]
@@ -72,16 +72,16 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( @"graph { 
+            using (var reader = new StringReader(@"graph { 
     n1
     // ignore this
     n2
-}" ) )
+}"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "n1", "n2" } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "n1", "n2" }));
         }
 
         [Test]
@@ -89,16 +89,16 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( @"graph { 
+            using (var reader = new StringReader(@"graph { 
     n1 -> n2
     n2 -> n3
-}" ) )
+}"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "n1", "n2", "n3" } ) );
-            Assert.That( document.Graph.Edges.Select( e => e.Id ), Is.EquivalentTo( new[] { Edge.CreateId( "n1", "n2" ), Edge.CreateId( "n2", "n3" ) } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "n1", "n2", "n3" }));
+            Assert.That(document.Graph.Edges.Select(e => e.Id), Is.EquivalentTo(new[] { Edge.CreateId("n1", "n2"), Edge.CreateId("n2", "n3") }));
         }
 
         [Test]
@@ -106,13 +106,13 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( @"digraph { n1 -> n2; n2 -> n3; }" ) )
+            using (var reader = new StringReader(@"digraph { n1 -> n2; n2 -> n3; }"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "n1", "n2", "n3" } ) );
-            Assert.That( document.Graph.Edges.Select( e => e.Id ), Is.EquivalentTo( new[] { Edge.CreateId( "n1", "n2" ), Edge.CreateId( "n2", "n3" ) } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "n1", "n2", "n3" }));
+            Assert.That(document.Graph.Edges.Select(e => e.Id), Is.EquivalentTo(new[] { Edge.CreateId("n1", "n2"), Edge.CreateId("n2", "n3") }));
         }
 
         [Test]
@@ -120,13 +120,13 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( "digraph { \"Node 1\" -> \"Node 2\"; }" ) )
+            using (var reader = new StringReader("digraph { \"Node 1\" -> \"Node 2\"; }"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "Node 1", "Node 2" } ) );
-            Assert.That( document.Graph.Edges.Select( e => e.Id ), Is.EquivalentTo( new[] { Edge.CreateId( "Node 1", "Node 2" ) } ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "Node 1", "Node 2" }));
+            Assert.That(document.Graph.Edges.Select(e => e.Id), Is.EquivalentTo(new[] { Edge.CreateId("Node 1", "Node 2") }));
         }
 
         [Test]
@@ -134,13 +134,13 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( "graph { n1 [ label= \"Another text\" ]; n2; n3 }" ) )
+            using (var reader = new StringReader("graph { n1 [ label= \"Another text\" ]; n2; n3 }"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            Assert.That( document.Graph.Nodes.Select( n => n.Id ), Is.EquivalentTo( new[] { "n1", "n2", "n3" } ) );
-            Assert.That( document.Captions.Single( c => c.OwnerId == "n1" ).Label, Is.EqualTo( "Another text" ) );
+            Assert.That(document.Graph.Nodes.Select(n => n.Id), Is.EquivalentTo(new[] { "n1", "n2", "n3" }));
+            Assert.That(document.Captions.Single(c => c.OwnerId == "n1").Label, Is.EqualTo("Another text"));
         }
 
         [Test]
@@ -148,16 +148,33 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( "digraph { n1 -> n2 [ label= \"Implemented by\" ]; n2 -> n3 [ label=\"called by\"] }" ) )
+            using (var reader = new StringReader("digraph { n1 -> n2 [ label= \"Implemented by\" ]; n2 -> n3 [ label=\"called by\"] }"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
-            var edge1 = Edge.CreateId( "n1", "n2" );
-            var edge2 = Edge.CreateId( "n2", "n3" );
-            Assert.That( document.Graph.Edges.Select( e => e.Id ), Is.EquivalentTo( new[] { edge1, edge2 } ) );
-            Assert.That( document.Captions.Single( c => c.OwnerId == edge1 ).Label, Is.EqualTo( "Implemented by" ) );
-            Assert.That( document.Captions.Single( c => c.OwnerId == edge2 ).Label, Is.EqualTo( "called by" ) );
+            var edge1 = Edge.CreateId("n1", "n2");
+            var edge2 = Edge.CreateId("n2", "n3");
+            Assert.That(document.Graph.Edges.Select(e => e.Id), Is.EquivalentTo(new[] { edge1, edge2 }));
+            Assert.That(document.Captions.Single(c => c.OwnerId == edge1).Label, Is.EqualTo("Implemented by"));
+            Assert.That(document.Captions.Single(c => c.OwnerId == edge2).Label, Is.EqualTo("called by"));
+        }
+
+        [Test]
+        public void Read_EdgeWithWeight_EdgeAndWeightDetected()
+        {
+            var document = new DotLangDocument();
+
+            using (var reader = new StringReader("digraph { n1 -> n2 [ weight= \"7\" ]; n2 -> n3 [ label=\"ignore\"] }"))
+            {
+                document.Read(reader);
+            }
+
+            var edge1 = Edge.CreateId("n1", "n2");
+            var edge2 = Edge.CreateId("n2", "n3");
+            Assert.That(document.Graph.Edges.Select(e => e.Id), Is.EquivalentTo(new[] { edge1, edge2 }));
+            Assert.That(document.Graph.Edges.Single(x => x.Source.Id == "n1").Weight, Is.EqualTo(7));
+            Assert.That(document.Graph.Edges.Single(x => x.Source.Id == "n2").Weight, Is.EqualTo(1));
         }
 
         [Test]
@@ -165,33 +182,33 @@ namespace Plainion.GraphViz.Modules.Documents.Tests
         {
             var document = new DotLangDocument();
 
-            using( var reader = new StringReader( "digraph {   subgraph cluster_C1 { label=\"C1\"; a0; a1; }    subgraph cluster_C2 { label=\"C2\"; b0 -> b1; } a0 -> b0; }" ) )
+            using (var reader = new StringReader("digraph {   subgraph cluster_C1 { label=\"C1\"; a0; a1; }    subgraph cluster_C2 { label=\"C2\"; b0 -> b1; } a0 -> b0; }"))
             {
-                document.Read( reader );
+                document.Read(reader);
             }
 
             {
-                var edge1 = Edge.CreateId( "b0", "b1" );
-                var edge2 = Edge.CreateId( "a0", "b0" );
-                Assert.That( document.Graph.Edges.Select( e => e.Id ), Is.EquivalentTo( new[] { edge1, edge2 } ) );
+                var edge1 = Edge.CreateId("b0", "b1");
+                var edge2 = Edge.CreateId("a0", "b0");
+                Assert.That(document.Graph.Edges.Select(e => e.Id), Is.EquivalentTo(new[] { edge1, edge2 }));
             }
 
             {
-                var c1 = document.Graph.Clusters.SingleOrDefault( c => c.Id == "cluster_C1" );
-                Assert.That( c1, Is.Not.Null, "Cluster C1 not found" );
+                var c1 = document.Graph.Clusters.SingleOrDefault(c => c.Id == "cluster_C1");
+                Assert.That(c1, Is.Not.Null, "Cluster C1 not found");
 
-                Assert.That( document.Captions.Single( c => c.OwnerId == "cluster_C1" ).Label, Is.EqualTo( "C1" ) );
+                Assert.That(document.Captions.Single(c => c.OwnerId == "cluster_C1").Label, Is.EqualTo("C1"));
 
-                Assert.That( c1.Nodes.Select( n => n.Id ), Is.EqualTo( new[] { "a0", "a1" } ) );
+                Assert.That(c1.Nodes.Select(n => n.Id), Is.EqualTo(new[] { "a0", "a1" }));
             }
 
             {
-                var c2 = document.Graph.Clusters.SingleOrDefault( c => c.Id == "cluster_C2" );
-                Assert.That( c2, Is.Not.Null, "Cluster C2 not found" );
+                var c2 = document.Graph.Clusters.SingleOrDefault(c => c.Id == "cluster_C2");
+                Assert.That(c2, Is.Not.Null, "Cluster C2 not found");
 
-                Assert.That( document.Captions.Single( c => c.OwnerId == "cluster_C2" ).Label, Is.EqualTo( "C2" ) );
+                Assert.That(document.Captions.Single(c => c.OwnerId == "cluster_C2").Label, Is.EqualTo("C2"));
 
-                Assert.That( c2.Nodes.Select( n => n.Id ), Is.EqualTo( new[] { "b0", "b1" } ) );
+                Assert.That(c2.Nodes.Select(n => n.Id), Is.EqualTo(new[] { "b0", "b1" }));
             }
         }
     }
