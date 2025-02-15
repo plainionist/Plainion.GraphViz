@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Core
 {
@@ -17,6 +19,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
     // http://stackoverflow.com/questions/24680054/how-to-get-the-list-of-methods-called-from-a-method-using-reflection-in-c-sharp
     public class Inspector
     {
+        private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(Inspector));
+
         private readonly MonoLoader myLoader;
         private readonly Type myType;
         private readonly string myFullName;
@@ -78,8 +82,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Core
 
         private IEnumerable<Reference> GetInterfaces()
         {
-            return myType.GetInterfaces()
-                .Select(t => new Reference(myType, t, ReferenceType.Implements));
+            try
+            {
+                return myType.GetInterfaces()
+                    .Select(t => new Reference(myType, t, ReferenceType.Implements));
+            }
+            catch (TypeLoadException ex)
+            {
+                if (ex.TypeName.StartsWith("System") || ex.Message.Contains("Could not find type 'System."))
+                {
+                    // might be that we found .NET8 assembly while actually .net FW assembly of same name would be required
+                    // we should better handle this but for now lets not fail the parsing as we are usually not interested in .net types
+                    myLogger.Error(ex, "Failed  to load .NET type");
+                    return Enumerable.Empty<Reference>();
+                }
+                throw;
+            }
         }
 
         private IEnumerable<Reference> GetFieldTypes()
