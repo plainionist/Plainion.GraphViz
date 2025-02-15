@@ -10,12 +10,12 @@ namespace Plainion.GraphViz
 {
     class ToolTipAdorner : Adorner
     {
-        private ToolTipController myToolTipController;
-        private IVisualPicking myPicking;
-        private IPropertySetModule<ToolTipContent> myToolTipModule;
+        private readonly ToolTipController myToolTipController;
+        private readonly IVisualPicking myPicking;
+        private readonly IPropertySetModule<ToolTipContent> myToolTipModule;
 
-        public ToolTipAdorner( UIElement owner, IVisualPicking picking, IPropertySetModule<ToolTipContent> toolTipModule )
-            : base( owner )
+        public ToolTipAdorner(UIElement owner, IVisualPicking picking, IPropertySetModule<ToolTipContent> toolTipModule)
+            : base(owner)
         {
             myPicking = picking;
             myToolTipModule = toolTipModule;
@@ -23,50 +23,50 @@ namespace Plainion.GraphViz
             myToolTipController = new ToolTipController();
         }
 
-        protected override void OnMouseDown( MouseButtonEventArgs e )
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             myToolTipController.Hide();
 
-            base.OnMouseDown( e );
+            base.OnMouseDown(e);
         }
 
-        protected override void OnMouseLeave( MouseEventArgs e )
+        protected override void OnMouseLeave(MouseEventArgs e)
         {
-            base.OnMouseLeave( e );
+            base.OnMouseLeave(e);
 
             myToolTipController.Hide();
         }
 
-        protected override void OnMouseMove( MouseEventArgs e )
+        protected override void OnMouseMove(MouseEventArgs e)
         {
             var graphItem = myPicking.PickMousePosition();
 
-            if( graphItem == null )
+            if (graphItem == null)
             {
                 myToolTipController.Hide();
                 return;
             }
 
-            if( !( graphItem is Node ) )
+            if (!(graphItem is Node))
             {
                 return;
             }
 
-            var toolTipState = myToolTipModule.Get( graphItem.Id );
-            if( toolTipState != null )
+            var toolTipState = myToolTipModule.Get(graphItem.Id);
+            if (toolTipState != null)
             {
-                myToolTipController.Move( graphItem.Id, toolTipState.Content );
+                myToolTipController.Move(graphItem.Id, toolTipState.Content);
             }
         }
 
-        protected override void OnRender( DrawingContext dc )
+        protected override void OnRender(DrawingContext dc)
         {
-            base.OnRender( dc );
+            base.OnRender(dc);
 
             // without a background the OnMouseMove event would not be fired!
             // Alternative: implement a Canvas as a child of this adorner, like
             // the ConnectionAdorner does.
-            dc.DrawRectangle( Brushes.Transparent, null, new Rect( RenderSize ) );
+            dc.DrawRectangle(Brushes.Transparent, null, new Rect(RenderSize));
         }
     }
 }
