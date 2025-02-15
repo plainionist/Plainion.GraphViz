@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka" Version="1.5.26" />
-    <PackageReference Include="Akka.Remote" Version="1.5.26" />
+    <PackageReference Include="Akka" Version="1.5.37" />
+    <PackageReference Include="Akka.Remote" Version="1.5.37" />
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
     <PackageReference Include="Plainion.Prism" Version="8.0.0" />
     <PackageReference Include="Plainion.Windows.Editors" Version="3.0.0" />
