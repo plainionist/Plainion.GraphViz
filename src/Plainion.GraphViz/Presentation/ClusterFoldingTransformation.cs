@@ -21,10 +21,23 @@ namespace Plainion.GraphViz.Presentation
         // later which nodes where in which cluster BEFORE folding
         private IGraph myGraph;
 
+        /// <summary>
+        /// Represents an aggregated edge between clusters derived from node to node edges
+        /// </summary>
         private class ComputedEdge
         {
+            public ComputedEdge(string sourceId, string targetId)
+            {
+                SourceId = sourceId;
+                TargetId = targetId;
+            }
+
+            public string SourceId;
+            public string TargetId;
             public bool IsVisible;
             public List<Edge> Originals = new List<Edge>();
+
+            public int Weight => Originals.Sum(x => x.Weight);
 
             public bool ShouldBeVisibile(IGraphPicking picking)
             {
@@ -298,19 +311,19 @@ namespace Plainion.GraphViz.Presentation
                     : node.Id;
             }
 
-            // add edges
+            // process edges
             foreach (var edge in graph.Edges)
             {
                 var sourceId = GetNodeId(edge.Source);
                 var targetId = GetNodeId(edge.Target);
 
-                // 1. Add all edges which are not folded (visibility of those is handled with masks)
-                //    Otherwise these edges are not "seen" when trying to extend the graph with "add" algorithms
+                // Add all edges which are not folded (visibility of those is handled with masks)
+                // Otherwise these edges are not "seen" when trying to extend the graph with "add" algorithms
                 if (sourceId == edge.Source.Id && targetId == edge.Target.Id)
                 {
                     // edge between two unfolded nodes
                     // -> add it
-                    builder.TryAddEdge(sourceId, targetId);
+                    builder.TryAddEdge(sourceId, targetId, edge.Weight);
 
                     // nothing more to be done with this edge
                     continue;
@@ -322,29 +335,30 @@ namespace Plainion.GraphViz.Presentation
                     continue;
                 }
 
-                var isEdgeVisible = myPresentation.Picking.Pick(edge);
-
-                // 2. Only add redirected edges if original edge was visible
-                //    Otherwise we would draw an edge which should not exist based on actual node visibility.
-                //    This makes the folding respect node visibility.
-                if (isEdgeVisible)
-                {
-                    // add redirected edge
-                    builder.TryAddEdge(sourceId, targetId);
-                }
-
-                // ALWAYS remember based on what we computed the redirected Remember "decision" for when visibility of nodes/edges changes so that
+                // ALWAYS remember based on what we computed the redirected edge.
+                // Remember "decision" for when visibility of nodes/edges changes so that
                 // we can check whether transformation has to be triggered again
                 {
                     var redirectedEdgeId = Edge.CreateId(sourceId, targetId);
                     if (!myComputedEdges.TryGetValue(redirectedEdgeId, out var originalEdges))
                     {
-                        originalEdges = new ComputedEdge();
+                        originalEdges = new ComputedEdge(sourceId, targetId);
                         myComputedEdges.Add(redirectedEdgeId, originalEdges);
                     }
 
-                    originalEdges.IsVisible |= isEdgeVisible;
+                    originalEdges.IsVisible |= myPresentation.Picking.Pick(edge);
                     originalEdges.Originals.Add(edge);
+                }
+            }
+
+            // add folded/redirected edges
+            foreach(var edge in myComputedEdges.Values)
+            {
+                // Only visible edges otherwise we would draw an edge which should not exist based on actual node visibility.
+                // This makes the folding respect node visibility.
+                if (edge.IsVisible)
+                {
+                    builder.TryAddEdge(edge.SourceId, edge.TargetId, edge.Weight);
                 }
             }
 
