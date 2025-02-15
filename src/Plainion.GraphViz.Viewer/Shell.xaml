@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:Plainion.GraphViz.Viewer.Views"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:pn="http://github.com/ronin4net/plainion"
-        xmlns:prism="http://www.codeplex.com/prism"
+        xmlns:prism="http://prismlibrary.com/"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:dot="clr-namespace:Plainion.GraphViz.Dot;assembly=Plainion.GraphViz"
         xmlns:g="clr-namespace:Plainion.GraphViz;assembly=Plainion.GraphViz"

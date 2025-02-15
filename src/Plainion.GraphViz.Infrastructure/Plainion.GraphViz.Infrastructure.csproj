@@ -7,9 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="Plainion.Prism" Version="8.0.0" />
-    <PackageReference Include="Plainion.Windows" Version="4.0.1" />
-    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="Plainion.Prism" Version="9.0.0" />
+    <PackageReference Include="Plainion.Windows" Version="5.0.0" />
+    <PackageReference Include="Prism.Wpf" Version="9.0.537" />
   </ItemGroup>
 
   <ItemGroup>

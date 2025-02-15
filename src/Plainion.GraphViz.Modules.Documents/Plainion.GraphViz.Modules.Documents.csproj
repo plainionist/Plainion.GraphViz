@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Plainion.Prism" Version="8.0.0" />
-    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="Plainion.Prism" Version="9.0.0" />
+    <PackageReference Include="Prism.Wpf" Version="9.0.537" />
     <PackageReference Include="Unity" Version="5.11.10" />
   </ItemGroup>
 

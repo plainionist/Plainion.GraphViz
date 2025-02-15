@@ -5,7 +5,7 @@
         xmlns:v="clr-namespace:Plainion.GraphViz.Viewer"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:pn="http://github.com/ronin4net/plainion"
-        xmlns:prism="http://www.codeplex.com/prism"
+        xmlns:prism="http://prismlibrary.com/"
         Width="600" Height="600" x:Name="_this">
     <UserControl.Resources>
         <ResourceDictionary>

@@ -6,7 +6,7 @@ using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Resolver;
 using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer.Verifier;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
+using Prism.Navigation.Regions;
 
 namespace Plainion.GraphViz.Modules.MdFiles
 {

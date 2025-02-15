@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:tk="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:prism="http://www.codeplex.com/prism"
+        xmlns:prism="http://prismlibrary.com/"
         xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
         xmlns:pn="http://github.com/ronin4net/plainion"
         Width="500">

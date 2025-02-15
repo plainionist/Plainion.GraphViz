@@ -11,10 +11,11 @@ using Plainion.GraphViz.Infrastructure.ViewModel;
 using Plainion.GraphViz.Viewer;
 using Plainion.GraphViz.Viewer.Services;
 using Plainion.Prism.Interactivity;
+using Prism.Container.Unity;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
-using Prism.Regions.Behaviors;
+using Prism.Navigation.Regions;
+using Prism.Navigation.Regions.Behaviors;
 using Prism.Unity;
 using Unity;
 

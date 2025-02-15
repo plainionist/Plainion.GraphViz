@@ -3,7 +3,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:prism="http://www.codeplex.com/prism"
+             xmlns:prism="http://prismlibrary.com/"
              xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
              xmlns:pn="http://github.com/ronin4net/plainion"
              xmlns:inf="clr-namespace:Plainion.GraphViz.Infrastructure;assembly=Plainion.GraphViz.Infrastructure"

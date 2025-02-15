@@ -8,7 +8,7 @@ using Plainion.GraphViz.Modules.CodeInspection.PathFinder;
 using Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
+using Prism.Navigation.Regions;
 
 namespace Plainion.GraphViz.Modules.CodeInspection
 {

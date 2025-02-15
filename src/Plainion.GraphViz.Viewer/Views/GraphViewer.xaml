@@ -8,7 +8,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:pn="http://github.com/ronin4net/plainion"
              xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
-             xmlns:prism="http://www.codeplex.com/prism"
+             xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <r:GraphView GraphSource="{Binding Presentation}" LayoutEngine="{Binding LayoutEngine}" 
