@@ -26,8 +26,6 @@ namespace Plainion.GraphViz.Viewer.Services
 
             var presentation = new GraphPresentation();
 
-            presentation.GetPropertySetFor<ToolTipContent>().DefaultProvider = id => new ToolTipContent(id, new TextBlock { Text = id });
-
             presentation.GetModule<CaptionModule>().LabelConverter = new GenericLabelConverter(myConfigurationService.Config.LabelConversion);
 
             return presentation;

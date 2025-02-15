@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -47,16 +48,24 @@ namespace Plainion.GraphViz
                 return;
             }
 
-            if (!(graphItem is Node))
+            if (graphItem is not Node)
             {
                 return;
             }
 
             var toolTipState = myToolTipModule.Get(graphItem.Id);
-            if (toolTipState != null)
+            if (toolTipState == null)
             {
-                myToolTipController.Move(graphItem.Id, toolTipState.Content);
+                toolTipState = new ToolTipContent(graphItem.Id, new TextBlock { Text = graphItem.Id });
+                myToolTipModule.Add(toolTipState);
             }
+
+            if (toolTipState.Content == null)
+            {
+                toolTipState.Content = new TextBlock { Text = graphItem.Id };
+            }
+
+            myToolTipController.Move(graphItem.Id, toolTipState.Content);
         }
 
         protected override void OnRender(DrawingContext dc)

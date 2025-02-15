@@ -7,16 +7,18 @@ namespace Plainion.GraphViz.Presentation
 {
     public class PropertySetModule<T> : AbstractModule<T>, IPropertySetModule<T> where T : AbstractPropertySet
     {
-        private Dictionary<string, T> myItems;
+        private readonly Dictionary<string, T> myItems;
 
         public PropertySetModule(Func<string, T> defaultProvider)
         {
+            Contract.RequiresNotNull(defaultProvider, nameof(defaultProvider));
+
             DefaultProvider = defaultProvider;
 
-            myItems = new Dictionary<string, T>();
+            myItems = [];
         }
 
-        public Func<string, T> DefaultProvider { get; set; }
+        public Func<string, T> DefaultProvider { get; }
 
         public bool Contains(string id)
         {
