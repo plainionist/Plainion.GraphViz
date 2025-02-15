@@ -1,3 +1,8 @@
+## 7.2 - 2025-02-15
+
+- Dot files: color attribute uses quotes to support parsing in nexus-odyssey
+
+
 ## 7.1 - 2024-08-07
 
 - loading of .NET 8 projects into "package analysis" fixed

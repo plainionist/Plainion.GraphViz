@@ -158,7 +158,7 @@ namespace Plainion.GraphViz.Dot
                 if (!myOwner.IgnoreStyle)
                 {
                     var fillColor = myNodeStyles.Get(node.Id).FillColor;
-                    myWriter.Write(", color={0}", fillColor);
+                    myWriter.Write(", color=\"{0}\"", fillColor);
                 }
 
                 myWriter.WriteLine("]");
@@ -182,7 +182,7 @@ namespace Plainion.GraphViz.Dot
                 if (!myOwner.IgnoreStyle)
                 {
                     var color = myEdgeStyles.Get(edge.Id).Color;
-                    attributes.Add($"color={color}");
+                    attributes.Add($"color=\"{color}\"");
                 }
 
                 if (attributes.Any())
