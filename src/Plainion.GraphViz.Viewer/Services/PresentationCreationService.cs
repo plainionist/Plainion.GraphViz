@@ -17,21 +17,18 @@ namespace Plainion.GraphViz.Viewer.Services
         /// Optional path can be specified to check for "context related" configuration.
         /// </summary>
         /// <returns></returns>
-        public IGraphPresentation CreatePresentation( string dataRoot )
+        public IGraphPresentation CreatePresentation(string dataRoot)
         {
-            if ( !string.IsNullOrEmpty( dataRoot ) )
+            if (!string.IsNullOrEmpty(dataRoot))
             {
-                myConfigurationService.Update( dataRoot );
+                myConfigurationService.Update(dataRoot);
             }
 
             var presentation = new GraphPresentation();
 
-            if ( myConfigurationService.Config.NodeIdAsDefaultToolTip )
-            {
-                presentation.GetPropertySetFor<ToolTipContent>().DefaultProvider = id => new ToolTipContent( id, new TextBlock { Text = id } );
-            }
+            presentation.GetPropertySetFor<ToolTipContent>().DefaultProvider = id => new ToolTipContent(id, new TextBlock { Text = id });
 
-            presentation.GetModule<CaptionModule>().LabelConverter = new GenericLabelConverter( myConfigurationService.Config.LabelConversion );
+            presentation.GetModule<CaptionModule>().LabelConverter = new GenericLabelConverter(myConfigurationService.Config.LabelConversion);
 
             return presentation;
         }

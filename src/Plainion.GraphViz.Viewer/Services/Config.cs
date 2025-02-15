@@ -18,10 +18,7 @@ namespace Plainion.GraphViz.Viewer.Configuration
         public Config()
         {
             LabelConversion = new List<ILabelConversionStep>();
-            NodeIdAsDefaultToolTip = true;
         }
-
-        public bool NodeIdAsDefaultToolTip { get; set; }
 
         [DesignerSerializationVisibility( DesignerSerializationVisibility.Content )]
         public List<ILabelConversionStep> LabelConversion { get; private set; }
