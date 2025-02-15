@@ -48,7 +48,7 @@ namespace Plainion.GraphViz
                 return;
             }
 
-            if (graphItem is not Node)
+            if (graphItem is not Node && graphItem is not Edge)
             {
                 return;
             }
@@ -56,13 +56,20 @@ namespace Plainion.GraphViz
             var toolTipState = myToolTipModule.Get(graphItem.Id);
             if (toolTipState == null)
             {
-                toolTipState = new ToolTipContent(graphItem.Id, new TextBlock { Text = graphItem.Id });
+                toolTipState = new ToolTipContent(graphItem.Id, null);
                 myToolTipModule.Add(toolTipState);
             }
 
             if (toolTipState.Content == null)
             {
-                toolTipState.Content = new TextBlock { Text = graphItem.Id };
+                if (graphItem is Node node)
+                {
+                    toolTipState.Content = new TextBlock { Text = graphItem.Id };
+                }
+                else if (graphItem is Edge edge)
+                {
+                    toolTipState.Content = new TextBlock { Text = $"Weight={edge.Weight}" };
+                }
             }
 
             myToolTipController.Move(graphItem.Id, toolTipState.Content);
