@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -107,8 +108,10 @@ namespace Plainion.GraphViz.Visuals
 
         private void SetLineThickness(Pen pen)
         {
-            // make lines thicker if we zoom out so that we can still see them
-            pen.Thickness = 0.016 * 0.5 / myZoomFactor;
+            // Make lines thicker
+            // - depending on edge weight
+            // - if we zoom out so that we can still see them.
+            pen.Thickness = 0.016 * 0.5 / myZoomFactor * (1 + Owner.Weight / 10);
         }
     }
 }
