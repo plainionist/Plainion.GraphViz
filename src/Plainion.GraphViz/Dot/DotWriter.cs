@@ -115,7 +115,7 @@ namespace Plainion.GraphViz.Dot
                     }
 
                     var relevantEdges = myGraph.Edges
-                        .Where(e => myPicking.Pick(e))
+                        .Where(myPicking.Pick)
                         .OrderByIf(e => e.Id, myOwner.PrettyPrint);
 
                     foreach (var edge in relevantEdges)

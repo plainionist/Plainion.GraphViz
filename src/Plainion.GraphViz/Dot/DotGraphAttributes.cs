@@ -58,8 +58,8 @@ namespace Plainion.GraphViz.Dot
                 { "mode", "major" },
                 { "compound", "true" },
                 { "overlap", "prism" },
-                { "nodesep", "0.3" },
-                { "sep", "0.2" },
+                { "nodesep", "0.5" },
+                { "sep", "0.5" },
                 { "start", "rand" },
                 { "normalize", "true" },
                 { "edgeweight", "2" }

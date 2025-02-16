@@ -1,6 +1,9 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Windows;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
@@ -34,7 +37,8 @@ namespace Plainion.GraphViz.Dot
                 Settings = DotSettings.FromAlgorithm(layoutAlgorithm)
             };
 
-            var writtenNodesCount = writer.Write(presentation.GetModule<ITransformationModule>().Graph, presentation.Picking, presentation);
+            var graph = presentation.GetModule<ITransformationModule>().Graph;
+            var writtenNodesCount = writer.Write(graph, presentation.Picking, presentation);
 
             myConverter.Algorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > FastRenderingNodeCountLimit
                 ? LayoutAlgorithm.ScalableForcceDirectedPlancement
@@ -50,8 +54,7 @@ namespace Plainion.GraphViz.Dot
 
             ParsePlainFile(nodeLayouts, edgeLayouts);
 
-            var module = presentation.GetModule<IGraphLayoutModule>();
-            module.Set(nodeLayouts, edgeLayouts);
+            SetLayouts(graph, presentation, nodeLayouts, edgeLayouts);
         }
 
         private void ParsePlainFile(List<NodeLayout> nodeLayouts, List<EdgeLayout> edgeLayouts)
@@ -92,6 +95,56 @@ namespace Plainion.GraphViz.Dot
                     edgeLayouts.Add(layout);
                 }
             }
+        }
+
+        private void SetLayouts(IGraph graph, IGraphPresentation presentation, List<NodeLayout> nodeLayouts, List<EdgeLayout> edgeLayouts)
+        {
+            var module = presentation.GetModule<IGraphLayoutModule>();
+            module.Set(nodeLayouts, edgeLayouts);
+
+            var maxXNode = nodeLayouts.OrderByDescending(x => x.Center.X).First();
+            var graphWidth = maxXNode.Center.X + maxXNode.Width;
+
+            // Observation: "neato" skips nodes without edges.
+            // to prevent rendering from crashing lets add dummy layouts
+            var y = 1.0;
+            const double nodeWidth = 5.0;
+            const double nodeHeight = 0.5;
+            foreach (var node in graph.Nodes.Where(presentation.Picking.Pick))
+            {
+                if (module.GetLayout(node) == null)
+                {
+                    // defaults derived once from some ".plain" output
+                    // node "A" 27.092 14.774 4.1987 0.5 "A" solid ellipse black lightgrey
+                    module.Add(new NodeLayout(node.Id)
+                    {
+                        Center = new Point(graphWidth + nodeWidth, y), // includes margin to left
+                        Width = nodeWidth,
+                        Height = nodeHeight
+                    });
+                    y += nodeHeight + (2 * nodeHeight); // include padding to top
+                }
+            }
+
+            // Observation: "neato" skips edges for unclear reason.
+            // to prevent rendering from crashing lets add dummy layouts
+            foreach (var edge in graph.Edges.Where(presentation.Picking.Pick))
+            {
+                if (module.GetLayout(edge) == null)
+                {
+                    // defaults derived once from some ".plain" output
+                    // edge "MyProject.Facade" "MyProject.EventBroker" 4 3.2872 0.48858 3.999 1.3306 6.5111 4.3023 7.3657 5.3132 "." 5.5417 2.9583 solid black
+                    module.Add(new EdgeLayout(edge.Id)
+                    {
+                        // we need at least 2 points to not crash the renderer
+                        Points = [
+                            new Point(graphWidth, 1),
+                            new Point(graphWidth, 1)
+                        ]
+                    });
+                }
+            }
+
         }
     }
 }
