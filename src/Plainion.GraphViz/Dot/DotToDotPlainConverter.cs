@@ -7,7 +7,7 @@ namespace Plainion.GraphViz.Dot
 {
     public class DotToDotPlainConverter
     {
-        private string myDotToolsHome;
+        private readonly string myDotToolsHome;
 
         public DotToDotPlainConverter(string dotToolsHome)
         {
@@ -109,13 +109,13 @@ namespace Plainion.GraphViz.Dot
         private string CreateArgumentsForFdp(FileInfo dotFile, FileInfo plainFile)
         {
             var exe = Path.Combine(myDotToolsHome, "fdp.exe");
-            return $"/C \"\"{exe}\" -x -Goverlap=prism -Gstart=rand -Gsplines=true -Gpackmode=graph -Tplain -q -o{plainFile.FullName} {dotFile.FullName}\"";
+            return $"/C \"\"{exe}\" -x -Tplain -q -o{plainFile.FullName} {dotFile.FullName}\"";
         }
 
         private string CreateArgumentsForNeato(FileInfo dotFile, FileInfo plainFile)
         {
             var exe = Path.Combine(myDotToolsHome, "neato.exe");
-            return $"/C \"\"{exe}\" -x -Gmode=ipsep -Goverlap=false -Gstart=rand -Gsplines=true -Tplain -q -o{plainFile.FullName} {dotFile.FullName}\"";
+            return $"/C \"\"{exe}\" -x -Tplain -q -o{plainFile.FullName} {dotFile.FullName}\"";
         }
     }
 }

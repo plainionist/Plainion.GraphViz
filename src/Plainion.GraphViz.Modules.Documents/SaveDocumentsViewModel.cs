@@ -107,7 +107,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
             if (Model.Presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Flow)
             {
-                writer.Settings = DotPresets.Flow;
+                writer.Settings = DotSettings.Flow;
             }
 
             writer.Write(Model.Presentation.GetModule<ITransformationModule>().Graph, Model.Presentation.Picking, Model.Presentation);

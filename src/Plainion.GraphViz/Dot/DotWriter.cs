@@ -17,7 +17,7 @@ namespace Plainion.GraphViz.Dot
             Contract.RequiresNotNull(path, "path");
 
             myPath = path;
-            Settings = DotPresets.Default;
+            Settings = DotSettings.Default;
         }
 
         public int? FastRenderingNodeCountLimit { get; set; }
@@ -66,21 +66,23 @@ namespace Plainion.GraphViz.Dot
                 {
                     myWriter.WriteLine("digraph {");
 
-                    ApplySettings();
-
                     var relevantNodes = myGraph.Nodes
-                        .Where(n => myPicking.Pick(n))
+                        .Where(myPicking.Pick)
                         .OrderByIf(n => n.Id, myOwner.PrettyPrint)
                         .ToList();
+
+                    var attributes = myOwner.Settings?.GraphAttributes ?? [];
 
                     if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
                     {
                         // https://graphviz.org/docs/attrs/nslimit/
-                        myWriter.WriteLine("  nslimit=0.2");
-                        myWriter.WriteLine("  nslimit1=0.2");
-                        myWriter.WriteLine("  splines=line");
-                        myWriter.WriteLine("  mclimit=0.5");
+                        attributes["nslimit"] = "0.2";
+                        attributes["nslimit1"] = "0.2";
+                        attributes["splines"] = "line";
+                        attributes["mclimit"] = "0.5";
                     }
+
+                    WriteGraphAttributes(attributes);
 
                     foreach (var cluster in myGraph.Clusters)
                     {
@@ -127,24 +129,11 @@ namespace Plainion.GraphViz.Dot
                 }
             }
 
-            private void ApplySettings()
+            private void WriteGraphAttributes(Dictionary<string, string> attributes)
             {
-                if (myOwner.Settings == null)
+                foreach(var attr in attributes)
                 {
-                    return;
-                }
-
-                if (myOwner.Settings.Ratio != null)
-                {
-                    myWriter.WriteLine("  ratio=\"{0}\"", myOwner.Settings.Ratio);
-                }
-                if (myOwner.Settings.RankDir != null)
-                {
-                    myWriter.WriteLine("  rankdir={0}", myOwner.Settings.RankDir);
-                }
-                if (myOwner.Settings.RankSep != null)
-                {
-                    myWriter.WriteLine("  ranksep=\"{0}\"", myOwner.Settings.RankSep);
+                    myWriter.WriteLine($"  {attr.Key.ToLower()}=\"{attr.Value}\"");
                 }
             }
 

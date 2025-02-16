@@ -157,7 +157,7 @@ namespace Plainion.GraphViz.Modules.Documents
                 writer.PrettyPrint = true;
                 if (p.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Flow)
                 {
-                    writer.Settings = DotPresets.Flow;
+                    writer.Settings = DotSettings.Flow;
                 }
 
                 writer.Write(graph, new NullGraphPicking(), p);

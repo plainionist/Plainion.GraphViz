@@ -33,8 +33,24 @@ namespace Plainion.GraphViz.Dot
 
             if (layoutAlgorithm == LayoutAlgorithm.Flow)
             {
-                writer.Settings = DotPresets.Flow;
+                writer.Settings = DotSettings.Flow;
             }
+            else if (layoutAlgorithm == LayoutAlgorithm.ForceDirectedPlacement)
+            {
+                writer.Settings.GraphAttributes["overlap"] = "prism";
+                writer.Settings.GraphAttributes["start"] = "rand";
+                writer.Settings.GraphAttributes["splines"] = "true";
+                writer.Settings.GraphAttributes["packmode"] = "graph";
+            }
+            else if (layoutAlgorithm == LayoutAlgorithm.NeatSpring)
+            {
+                writer.Settings.GraphAttributes["compound"] = "true";
+                writer.Settings.GraphAttributes["overlap"] = "prism";
+                writer.Settings.GraphAttributes["nodesep"] = "0.5";
+                writer.Settings.GraphAttributes["sep"] = "1";
+                writer.Settings.GraphAttributes["start"] = "rand";
+            }
+
 
             var writtenNodesCount = writer.Write(presentation.GetModule<ITransformationModule>().Graph, presentation.Picking, presentation);
 
