@@ -115,7 +115,7 @@ namespace Plainion.GraphViz.Dot
         private string CreateArgumentsForNeato(FileInfo dotFile, FileInfo plainFile)
         {
             var exe = Path.Combine(myDotToolsHome, "neato.exe");
-            return $"/C \"\"{exe}\" -x -Gmode=ipsep -Goverlap=false -Gstart=rand -Gsplines=true -q -o{plainFile.FullName} {dotFile.FullName}\"";
+            return $"/C \"\"{exe}\" -x -Gmode=ipsep -Goverlap=false -Gstart=rand -Gsplines=true -Tplain -q -o{plainFile.FullName} {dotFile.FullName}\"";
         }
     }
 }

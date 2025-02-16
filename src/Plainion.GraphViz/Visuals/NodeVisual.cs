@@ -29,6 +29,8 @@ namespace Plainion.GraphViz.Visuals
         // TODO: we should interpret the shape/style/color attributes ...
         public void Draw(NodeLayout layoutState)
         {
+            Contract.RequiresNotNull(layoutState, $"No node layout found for '{Owner.Id}'");
+
             var style = myPresentation.GetPropertySetFor<NodeStyle>().Get(Owner.Id);
             var label = myPresentation.GetPropertySetFor<Caption>().Get(Owner.Id);
 

@@ -32,6 +32,8 @@ namespace Plainion.GraphViz.Visuals
 
         public void Draw(EdgeLayout layoutState)
         {
+            Contract.RequiresNotNull(layoutState, $"No edge layout found for '{Owner.Id}'");
+
             var styleState = myPresentation.GetPropertySetFor<EdgeStyle>().Get(Owner.Id);
             var label = myPresentation.GetPropertySetFor<Caption>().TryGet(Owner.Id);
 
