@@ -109,9 +109,9 @@ namespace Plainion.GraphViz.Visuals
         private void SetLineThickness(Pen pen)
         {
             // Make lines thicker
-            // - depending on edge weight
+            // - depending on edge weight, but also limit the impact
             // - if we zoom out so that we can still see them.
-            pen.Thickness = 0.016 * 0.5 / myZoomFactor * (1 + Owner.Weight / 10);
+            pen.Thickness = 0.016 * 0.5 / myZoomFactor * Math.Min(5, 1 + Owner.Weight / 10);
         }
     }
 }
