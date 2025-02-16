@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+
+"""
+Graphviz sandbox
+
+This program is a wrapper around Graphviz. It aims to provide a safe environment for the
+processing of untrusted input graphs and command line options. More precisely:
+  1. No network access will be allowed.
+  2. The file system will be read-only. Command line options like `-o …` and `-O` will
+     not work. It is expected that the caller will render to stdout and pipe the output
+     to their desired file.
+"""
+
+import abc
+import platform
+import shutil
+import subprocess as sp
+import sys
+from pathlib import Path
+from typing import List, Type, Union
+
+
+class Sandbox:
+    """
+    API for sandbox interaction
+
+    Specific sandbox mechanisms should be implemented as derived classes of this.
+    """
+
+    @staticmethod
+    @abc.abstractmethod
+    def is_usable() -> bool:
+        """is this sandbox available on the current platform?"""
+        raise NotImplementedError
+
+    @staticmethod
+    @abc.abstractmethod
+    def _run(args: List[Union[Path, str]]) -> int:
+        """run the given command line within the sandbox"""
+        raise NotImplementedError
+
+    @classmethod
+    def run(cls, args: List[Union[Path, str]]) -> int:
+        """wrapper around `_run` to perform common sanity checks"""
+        assert cls.is_usable(), "attempted to use unusable sandbox"
+        return cls._run(args)
+
+
+class Bubblewrap(Sandbox):
+    """
+    Bubblewrap¹-based sandbox
+
+    ¹ https://github.com/containers/bubblewrap
+    """
+
+    def is_usable() -> bool:
+        return shutil.which("bwrap") is not None
+
+    def _run(args: List[Union[Path, str]]) -> sp.CompletedProcess:
+        prefix = ["bwrap", "--ro-bind", "/", "/", "--unshare-all", "--"]
+        return sp.call(prefix + args)
+
+
+def main(args: List[str]) -> int:
+    """entry point"""
+
+    # available sandboxes in order of preference
+    SANDBOXES: Tuple[Type[Sandbox]] = (Bubblewrap,)
+
+    # locate Graphviz, preferring the version collocated with us
+    exe = ".exe" if platform.system() == "Windows" else ""
+    dot = Path(__file__).parent / f"dot{exe}"
+    if not dot.exists():
+        dot = shutil.which("dot")
+    if dot is None:
+        sys.stderr.write("Graphviz (`dot`) not found\n")
+        return -1
+
+    # find a usable sandbox
+    sandbox: Optional[Type[Sandbox]] = None
+    for box in SANDBOXES:
+        if not box.is_usable():
+            continue
+        sandbox = box
+        break
+    if sandbox is None:
+        sys.stderr.write("no usable sandbox found\n")
+        return -1
+
+    dot_args = args[1:]
+
+    # run Graphviz
+    return sandbox.run([dot] + dot_args)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

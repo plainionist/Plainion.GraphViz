@@ -29,11 +29,19 @@ namespace Plainion.GraphViz.Viewer.Views
             {
                 return "Flow";
             }
-            else if (algo == LayoutAlgorithm.Sfdp)
+            else if (algo == LayoutAlgorithm.ScalableForcceDirectedPlancement)
             {
-                return "Galaxies";
+                return "Large Galaxies";
             }
-            else 
+            else if (algo == LayoutAlgorithm.ForceDirectedPlacement)
+            {
+                return "Small Galaxies";
+            }
+            else if (algo == LayoutAlgorithm.NeatSpring)
+            {
+                return "Organic";
+            }
+            else
             {
                 return algo.ToString();
             }

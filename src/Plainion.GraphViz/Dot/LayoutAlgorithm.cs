@@ -6,6 +6,8 @@ namespace Plainion.GraphViz.Dot
         Auto,
         Hierarchy,
         Flow,
-        Sfdp
+        ScalableForcceDirectedPlancement,
+        ForceDirectedPlacement,
+        NeatSpring
     }
 }

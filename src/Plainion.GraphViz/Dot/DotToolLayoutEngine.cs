@@ -39,7 +39,7 @@ namespace Plainion.GraphViz.Dot
             var writtenNodesCount = writer.Write(presentation.GetModule<ITransformationModule>().Graph, presentation.Picking, presentation);
 
             myConverter.Algorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > FastRenderingNodeCountLimit
-                ? LayoutAlgorithm.Sfdp
+                ? LayoutAlgorithm.ScalableForcceDirectedPlancement
                 : presentation.GetModule<IGraphLayoutModule>().Algorithm;
 
             myConverter.Convert(myDotFile, myPlainFile);

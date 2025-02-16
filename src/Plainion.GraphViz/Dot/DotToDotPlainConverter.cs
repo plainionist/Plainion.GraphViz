@@ -36,11 +36,19 @@ namespace Plainion.GraphViz.Dot
 
                 if (Algorithm == LayoutAlgorithm.Hierarchy || Algorithm == LayoutAlgorithm.Flow || Algorithm == LayoutAlgorithm.Auto)
                 {
-                    RunWithDot(out arguments, dotFile, plainFile);
+                    arguments = CreateArgumentsForDot(dotFile, plainFile);
+                }
+                else if (Algorithm == LayoutAlgorithm.ForceDirectedPlacement)
+                {
+                    arguments = CreateArgumentsForFdp(dotFile, plainFile);
+                }
+                else if (Algorithm == LayoutAlgorithm.NeatSpring)
+                {
+                    arguments = CreateArgumentsForNeato(dotFile, plainFile);
                 }
                 else
                 {
-                    RunWithSfdp(out arguments, dotFile, plainFile);
+                    arguments = CreateArgumentsForSfdp(dotFile, plainFile);
                 }
 
                 var startInfo = new ProcessStartInfo("cmd", arguments);
@@ -51,7 +59,7 @@ namespace Plainion.GraphViz.Dot
                 var stdErr = new StringWriter();
                 var ret = Processes.Execute(startInfo, null, stdErr);
 
-                if (Algorithm == LayoutAlgorithm.Sfdp)
+                if (Algorithm == LayoutAlgorithm.ScalableForcceDirectedPlancement)
                 {
                     // ignore the error code for this engine - it mostly still works :)
                     ret = 0;
@@ -75,7 +83,7 @@ namespace Plainion.GraphViz.Dot
                 {
                     // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
                     // -> try fallback with sfdp.exe
-                    Algorithm = LayoutAlgorithm.Sfdp;
+                    Algorithm = LayoutAlgorithm.ScalableForcceDirectedPlancement;
                     Convert(dotFile, plainFile);
                 }
                 else
@@ -85,22 +93,29 @@ namespace Plainion.GraphViz.Dot
             }
         }
 
-        private void RunWithDot(out string arguments, FileInfo dotFile, FileInfo plainFile)
+        private string CreateArgumentsForDot(FileInfo dotFile, FileInfo plainFile)
         {
             var unflattenExe = Path.Combine(myDotToolsHome, "unflatten.exe");
             var dotExe = Path.Combine(myDotToolsHome, "dot.exe");
-
-            arguments = string.Format("/C \"\"{0}\" -l5 -c8 {1} | \"{2}\" -Tplain -q -o{3}\"",
-                unflattenExe, dotFile.FullName,
-                dotExe, plainFile.FullName);
+            return $"/C \"\"{unflattenExe}\" -l5 -c8 {dotFile.FullName} | \"{dotExe}\" -Tplain -q -o{plainFile.FullName}\"";
         }
 
-        private void RunWithSfdp(out string arguments, FileInfo dotFile, FileInfo plainFile)
+        private string CreateArgumentsForSfdp(FileInfo dotFile, FileInfo plainFile)
         {
             var exe = Path.Combine(myDotToolsHome, "sfdp.exe");
+            return $"/C \"\"{exe}\" -x -Goverlap=scale -Tplain -q -o{plainFile.FullName} {dotFile.FullName}\"";
+        }
 
-            arguments = string.Format("/C \"\"{0}\" -x -Goverlap=scale -Tplain -q -o{1} {2}\"",
-                exe, plainFile.FullName, dotFile.FullName);
+        private string CreateArgumentsForFdp(FileInfo dotFile, FileInfo plainFile)
+        {
+            var exe = Path.Combine(myDotToolsHome, "fdp.exe");
+            return $"/C \"\"{exe}\" -x -Goverlap=prism -Gstart=rand -Gsplines=true -Gpackmode=graph -Tplain -q -o{plainFile.FullName} {dotFile.FullName}\"";
+        }
+
+        private string CreateArgumentsForNeato(FileInfo dotFile, FileInfo plainFile)
+        {
+            var exe = Path.Combine(myDotToolsHome, "neato.exe");
+            return $"/C \"\"{exe}\" -x -Gmode=ipsep -Goverlap=false -Gstart=rand -Gsplines=true -q -o{plainFile.FullName} {dotFile.FullName}\"";
         }
     }
 }
