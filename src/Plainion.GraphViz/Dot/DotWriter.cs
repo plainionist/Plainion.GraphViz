@@ -75,7 +75,7 @@ namespace Plainion.GraphViz.Dot
 
                     if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
                     {
-                        // http://www.graphviz.org/content/attrs#dnslimit
+                        // https://graphviz.org/docs/attrs/nslimit/
                         myWriter.WriteLine("  nslimit=0.2");
                         myWriter.WriteLine("  nslimit1=0.2");
                         myWriter.WriteLine("  splines=line");
