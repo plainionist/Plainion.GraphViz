@@ -435,13 +435,10 @@ namespace Plainion.GraphViz
             bounds.Union(myGraphVisual.Drawing.ContentBounds);
 
             double scaleFactor = 2.0;
-            double dpi = 300.0 * scaleFactor;
-            double dpiScale = dpi / 96;
+            double dpiScale = 300.0 * scaleFactor / 96;
 
-            int baseWidth = Convert.ToInt32(bounds.Width * dpiScale);
-            int baseHeight = Convert.ToInt32(bounds.Height * dpiScale);
-            int width = Math.Min(10 * 1024, Convert.ToInt32(baseWidth * scaleFactor));
-            int height = Convert.ToInt32(baseHeight * scaleFactor);
+            int width = Math.Min(10 * 1024, Convert.ToInt32(bounds.Width * dpiScale * scaleFactor));
+            int height = Convert.ToInt32(bounds.Height * dpiScale * scaleFactor);
 
             var target = new DrawingVisual();
             using (var dc = target.RenderOpen())
@@ -455,7 +452,7 @@ namespace Plainion.GraphViz
                 dc.Pop();
             }
 
-            var bmp = new RenderTargetBitmap(width, height, dpi, dpi, PixelFormats.Pbgra32);
+            var bmp = new RenderTargetBitmap(width, height, 600, 600, PixelFormats.Pbgra32);
             bmp.Render(target);
 
             var encoder = new PngBitmapEncoder();
