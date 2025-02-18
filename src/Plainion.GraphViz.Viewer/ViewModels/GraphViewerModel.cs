@@ -462,10 +462,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 {
                     if (n.Confirmed)
                     {
-                        using (var stream = File.OpenWrite(n.FileName))
-                        {
-                            Export.ExportAsPng(stream);
-                        }
+                        using var stream = File.OpenWrite(n.FileName);
+                        Export.ExportAsPng(stream);
                     }
                 });
         }

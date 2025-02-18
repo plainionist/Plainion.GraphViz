@@ -348,7 +348,7 @@ namespace Plainion.GraphViz
 
                 e.Handled = true;
             }
-                
+
             base.OnPreviewKeyUp(e);
         }
 
@@ -433,18 +433,13 @@ namespace Plainion.GraphViz
         {
             var targetSize = myGraphVisual.RenderSize;
 
-            double dpiScale = 300.0 / 96;
-            double dpiX = 300.0;
-            double dpiY = 300.0;
+            double dpi = 300.0;
+            double dpiScale = dpi / 96;
 
-            var bmp = new RenderTargetBitmap(
-                Convert.ToInt32(targetSize.Width * dpiScale),
-                Convert.ToInt32(targetSize.Height * dpiScale),
-                dpiX,
-                dpiY,
-                PixelFormats.Pbgra32);
+            int width = Math.Min(4 * 1024, Convert.ToInt32(targetSize.Width * dpiScale));
+            int height = Math.Min(4 * 1024, Convert.ToInt32(targetSize.Height * dpiScale));
 
-
+            var bmp = new RenderTargetBitmap(width, height, dpi, dpi, PixelFormats.Pbgra32);
             bmp.Render(myGraphVisual.Drawing);
 
             var encoder = new PngBitmapEncoder();

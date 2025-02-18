@@ -1,9 +1,11 @@
-## 8.0 - 2025-02-15
+
+## 8.0 - 2025-02-
 
 - Dot files: color attribute uses quotes to support parsing in nexus-odyssey
 - Support for weighted edges added
 - Package analysis interprets count of references between two types a weight for edges
 - GraphViz "neato" and "fdp" layout engines integrated
+- OutOfMemory for export of huge graphs fixed
 
 ## 7.1 - 2024-08-07
 
