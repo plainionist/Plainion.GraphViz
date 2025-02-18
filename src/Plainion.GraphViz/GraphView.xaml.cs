@@ -431,16 +431,26 @@ namespace Plainion.GraphViz
 
         public void ExportAsPng(Stream stream)
         {
-            var targetSize = myGraphVisual.RenderSize;
+            var bounds = myGraphVisual.Drawing.DescendantBounds;
+            bounds.Union(myGraphVisual.Drawing.ContentBounds);
 
             double dpi = 300.0;
             double dpiScale = dpi / 96;
 
-            int width = Math.Min(4 * 1024, Convert.ToInt32(targetSize.Width * dpiScale));
-            int height = Math.Min(4 * 1024, Convert.ToInt32(targetSize.Height * dpiScale));
+            int width = Math.Min(4 * 1024, Convert.ToInt32(bounds.Width * dpiScale));
+            int height = Convert.ToInt32(bounds.Height / bounds.Width * width);
+
+            var target = new DrawingVisual();
+            using (var dc = target.RenderOpen())
+            {
+                foreach (DrawingVisual child in myGraphVisual.Drawing.Children)
+                {
+                    dc.DrawDrawing(child.Drawing);
+                }
+            }
 
             var bmp = new RenderTargetBitmap(width, height, dpi, dpi, PixelFormats.Pbgra32);
-            bmp.Render(myGraphVisual.Drawing);
+            bmp.Render(target);
 
             var encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(bmp));
