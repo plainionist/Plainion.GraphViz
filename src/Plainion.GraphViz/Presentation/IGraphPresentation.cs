@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation

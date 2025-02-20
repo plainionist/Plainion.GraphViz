@@ -4,6 +4,6 @@ namespace Plainion.GraphViz.Infrastructure.Services
 {
     public interface IPresentationCreationService
     {
-        IGraphPresentation CreatePresentation( string dataRoot );
+        IGraphPresentation CreatePresentation(string dataRoot);
     }
 }
