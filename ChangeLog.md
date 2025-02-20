@@ -1,5 +1,9 @@
 
-## 8.0 - 2025-02-
+## 8.1 - 2025-02-20
+
+- "Obfuscate" tool added
+
+## 8.0 - 2025-02-15
 
 - Dot files: color attribute uses quotes to support parsing in nexus-odyssey
 - Support for weighted edges added
