@@ -44,11 +44,13 @@ namespace Plainion.GraphViz.Modules.Documents
             }
         }
 
+        // when cluster assignments change we want to sync these updates back to the graph
         private void OnTransformationsChanged(object sender, EventArgs eventArgs)
         {
             myWriteDocument(myPresentation);
         }
 
+        // when captions change we want to sync the label back to the graph
         private void OnCaptionsChanged(object sender, EventArgs eventArgs)
         {
             var transformationModule = myPresentation.GetModule<ITransformationModule>();

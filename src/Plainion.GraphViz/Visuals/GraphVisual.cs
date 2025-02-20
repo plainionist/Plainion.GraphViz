@@ -83,12 +83,11 @@ namespace Plainion.GraphViz.Visuals
 
             var layoutModule = Presentation.GetModule<IGraphLayoutModule>();
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
-            var clusterFolding = myPresentation.ClusterFolding();
 
             // current assumption: it is enough to check the nodes as we would not render edges independent from nodes
 
             var visibleNodes = transformationModule.Graph.Nodes
-                .Where(node => Presentation.Picking.Pick(node))
+                .Where(Presentation.Picking.Pick)
                 .ToList();
 
             if (visibleNodes.Count == 0 && myDrawingElements.Count == 0)
