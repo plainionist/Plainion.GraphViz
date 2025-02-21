@@ -187,7 +187,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
         {
             var notification = new OpenFileDialogNotification();
             notification.RestoreDirectory = true;
-            notification.Filter = "Packaging Spec (*.xaml)|*.xaml|Assembly Graph (*.dot)|*.dot";
+            notification.Filter = "Packaging Spec (*.xaml;*.dot)|*.xaml;*.dot";
             notification.FilterIndex = 0;
             notification.CheckFileExists = false;
 
