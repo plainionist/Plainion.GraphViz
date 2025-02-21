@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Model;
@@ -225,14 +226,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 
             if (AssemblyReferencesOnly)
             {
-                GraphUtils.Serialize(outputFile, assemblyGraphPresentation);
+                DocumentSerializer.Serialize(outputFile, assemblyGraphPresentation);
             }
             else
             {
                 Console.WriteLine("Analyze type dependencies ...");
 
                 var p = CreateTypeDependencyGraph(sources, targets, assemblyGraphPresentation);
-                GraphUtils.Serialize(outputFile, p);
+                DocumentSerializer.Serialize(outputFile, p);
             }
         }
 

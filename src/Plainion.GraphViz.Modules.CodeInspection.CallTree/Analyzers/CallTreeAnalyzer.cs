@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
+using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
@@ -376,7 +377,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             if (AssemblyReferencesOnly)
             {
-                GraphUtils.Serialize(outputFile, assemblyGraphPresentation);
+                DocumentSerializer.Serialize(outputFile, assemblyGraphPresentation);
             }
             else
             {
@@ -388,7 +389,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                     Profile("Analyze direct method call dependencies ...", () =>
                     {
                         var p = ReduceToDirectDependencies(targets.Select(x => x.Item2).ToList(), callsPresentation);
-                        GraphUtils.Serialize(outputFile, p);
+                        DocumentSerializer.Serialize(outputFile, p);
                         return 0;
                     });
                 }
@@ -397,7 +398,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                     Profile("Analyze indirect type dependencies ...", () =>
                     {
                         var p = ReduceToIndirectDependencies(targets.Select(x => x.Item2).ToList(), callsPresentation);
-                        GraphUtils.Serialize(outputFile, p);
+                        DocumentSerializer.Serialize(outputFile, p);
                         return 0;
                     });
                 }

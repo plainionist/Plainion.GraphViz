@@ -10,4 +10,8 @@
     <PackageReference Include="Plainion.Core" Version="4.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj" />
+  </ItemGroup>
+
 </Project>
