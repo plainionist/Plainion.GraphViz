@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz.Actors.Client\Plainion.GraphViz.Actors.Client.csproj" />
     <ProjectReference Include="..\Plainion.GraphViz.Viewer.Abstractions\Plainion.GraphViz.Viewer.Abstractions.csproj" />
     <ProjectReference Include="..\Plainion.GraphViz.CodeInspection\Plainion.GraphViz.CodeInspection.csproj" />
   </ItemGroup>

@@ -46,6 +46,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Obfuscate", "src\Plainion.GraphViz.Modules.Obfuscate\Plainion.GraphViz.Modules.Obfuscate.csproj", "{3DC1D7EC-2AFF-43D3-BB21-D2C111B1B1C9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Actors.Client", "src\Plainion.GraphViz.Actors.Client\Plainion.GraphViz.Actors.Client.csproj", "{0BA6C2A1-F048-430D-BDBC-2779B52A3B0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,10 @@ Global
 		{3DC1D7EC-2AFF-43D3-BB21-D2C111B1B1C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DC1D7EC-2AFF-43D3-BB21-D2C111B1B1C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DC1D7EC-2AFF-43D3-BB21-D2C111B1B1C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BA6C2A1-F048-430D-BDBC-2779B52A3B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BA6C2A1-F048-430D-BDBC-2779B52A3B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BA6C2A1-F048-430D-BDBC-2779B52A3B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BA6C2A1-F048-430D-BDBC-2779B52A3B0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

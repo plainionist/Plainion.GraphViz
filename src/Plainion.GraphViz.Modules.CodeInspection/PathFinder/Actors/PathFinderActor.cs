@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Plainion.GraphViz.Modules.CodeInspection.Actors;
+using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors

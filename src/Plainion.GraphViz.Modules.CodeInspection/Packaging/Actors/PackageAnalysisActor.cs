@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Plainion.Collections;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
-using Plainion.GraphViz.Modules.CodeInspection.Actors;
+using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 

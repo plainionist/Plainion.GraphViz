@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Plainion.GraphViz.Modules.CodeInspection.Actors;
+using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors
