@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.CodeInspection.Inheritance.InheritanceGraphBuilderView"
+             x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tk="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
+        xmlns:pn="http://github.com/ronin4net/plainion"
+        Width="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Plainion.Prism;component/Resources/Templates.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding ClosedCommand}"/>
+        </i:EventTrigger>
+        <pn:InteractionRequestTrigger SourceObject="{Binding OpenFileRequest, Mode=OneWay}">
+            <pn:PopupCommonDialogAction FileDialogType="{x:Type win32:OpenFileDialog}"/>
+        </pn:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    <DockPanel Background="#FDFDF5">
+        <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Select assembly:" Padding="0,0,10,0" />
+            <TextBox  Grid.Column="1" ToolTip="Enter full path to assembly" Text="{Binding Path=AssemblyToAnalyseLocation, Mode=TwoWay}"
+                      IsEnabled="{Binding IsReady}"/>
+            <Button  Grid.Column="2" Content="Browse"  Command="{Binding Path=BrowseAssemblyCommand}"  Margin="5,0,0,0"/>
+        </Grid>
+        <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Select type:" Padding="0,0,10,0" />
+            <tk:AutoCompleteBox Grid.Column="1" ToolTip="Enter type name" 
+                            ValueMemberPath="FullName"
+                            ItemsSource="{Binding Path=Types}" ItemFilter="{Binding Path=TypeFilter}"
+                            SelectedItem="{Binding Path=TypeToAnalyse, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                            Validation.ErrorTemplate="{StaticResource HighlightErrorsWithBorder}"
+                            IsEnabled="{Binding IsReady}">
+                <tk:AutoCompleteBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding FullName}" />
+                    </DataTemplate>
+                </tk:AutoCompleteBox.ItemTemplate>
+            </tk:AutoCompleteBox>
+        </Grid>
+        <StackPanel DockPanel.Dock="Top">
+            <CheckBox Content="Ignore .NET types" Margin="5,5,5,0" IsChecked="{Binding Path=IgnoreDotNetTypes}"
+                      IsEnabled="{Binding IsReady}"/>
+            <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal" Margin="5">
+                <Button Content="Cancel" Margin="0,0,5,0" Command="{Binding Path=CancelCommand}" />
+                <Button Content="Add to graph" Margin="0,0,5,0"  Command="{Binding Path=AddToGraphCommand}"/>
+                <Button Content="Create graph" Command="{Binding Path=CreateGraphCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</UserControl>

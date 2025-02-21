@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors),SYSLIB0011</WarningsNotAsErrors>
+    <UseWPF>true</UseWPF>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Akka" Version="1.5.37" />
+    <PackageReference Include="Akka.Remote" Version="1.5.37" />
+    <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
+    <PackageReference Include="Plainion.Prism" Version="9.0.0" />
+    <PackageReference Include="Plainion.Windows.Editors" Version="3.0.0" />
+    <PackageReference Include="Prism.Wpf" Version="9.0.537" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plainion.GraphViz.Actors.Client\Plainion.GraphViz.Actors.Client.csproj" />
+    <ProjectReference Include="..\Plainion.GraphViz.Viewer.Abstractions\Plainion.GraphViz.Viewer.Abstractions.csproj" />
+    <ProjectReference Include="..\Plainion.GraphViz.CodeInspection\Plainion.GraphViz.CodeInspection.csproj" />
+  </ItemGroup>
+
+</Project>
