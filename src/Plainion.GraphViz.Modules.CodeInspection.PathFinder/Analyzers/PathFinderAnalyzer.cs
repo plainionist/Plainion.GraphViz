@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Common;
 using Plainion.GraphViz.Presentation;
 using Plainion.Logging;
 
