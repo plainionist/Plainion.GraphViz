@@ -12,12 +12,15 @@ public static class GraphUtils
     {
         var graph = presentation.GetModule<ITransformationModule>().Graph;
 
-        if (graph.Nodes.Any(n => presentation.Picking.Pick(n)))
+        if (graph.Nodes.Any(presentation.Picking.Pick))
         {
             Console.WriteLine("Dumping graph ...");
 
-            var writer = new DotWriter(file);
-            writer.PrettyPrint = true;
+            var writer = new DotWriter(file)
+            {
+                PrettyPrint = true
+            };
+
             writer.Write(graph, presentation.Picking, presentation);
         }
         else
