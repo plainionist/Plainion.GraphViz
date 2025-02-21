@@ -6,7 +6,6 @@ using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Modules.CodeInspection.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
-using Plainion.GraphViz.Modules.CodeInspection.Reflection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {

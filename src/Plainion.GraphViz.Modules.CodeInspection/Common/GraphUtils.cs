@@ -4,7 +4,7 @@ using System.Linq;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Modules.CodeInspection
+namespace Plainion.GraphViz.Modules.CodeInspection.Common
 {
     static class GraphUtils
     {

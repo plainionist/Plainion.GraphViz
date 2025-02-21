@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.CodeInspection;
-using Plainion.GraphViz.Modules.CodeInspection.Reflection;
+using Plainion.GraphViz.Model;
+using Plainion.GraphViz.Modules.CodeInspection.Common;
 using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
