@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Verifier;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Verifier;
 
 namespace Plainion.GraphViz.Modules.Markdown.Tests
 {

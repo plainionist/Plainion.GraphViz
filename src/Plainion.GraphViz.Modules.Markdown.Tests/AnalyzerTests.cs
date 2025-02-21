@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Parser;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Resolver;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Verifier;
+using Plainion.GraphViz.Modules.Markdown.Analyzer;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Parser;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Resolver;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Verifier;
 
 namespace Plainion.GraphViz.Modules.Markdown.Tests
 {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Resolver;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Resolver;
 
 namespace Plainion.GraphViz.Modules.Markdown.Tests
 {

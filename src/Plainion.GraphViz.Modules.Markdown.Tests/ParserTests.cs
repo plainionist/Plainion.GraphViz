@@ -3,8 +3,8 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Markdown;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Parser;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Markdown;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Parser;
 
 namespace Plainion.GraphViz.Modules.Markdown.Tests
 {

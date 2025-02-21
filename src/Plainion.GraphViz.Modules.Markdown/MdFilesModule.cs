@@ -1,9 +1,8 @@
 ﻿using System.IO.Abstractions;
-using Plainion.GraphViz.Modules.Markdown.Dependencies;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Parser;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Resolver;
-using Plainion.GraphViz.Modules.Markdown.Dependencies.Analyzer.Verifier;
+using Plainion.GraphViz.Modules.Markdown.Analyzer;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Parser;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Resolver;
+using Plainion.GraphViz.Modules.Markdown.Analyzer.Verifier;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Navigation.Regions;
