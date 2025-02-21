@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Plainion.GraphViz.Algorithms;
+using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;

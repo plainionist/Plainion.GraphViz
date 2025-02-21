@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Plainion.GraphViz.Modules.CodeInspection;
+namespace Plainion.GraphViz.CodeInspection;
 
 public class R
 {
