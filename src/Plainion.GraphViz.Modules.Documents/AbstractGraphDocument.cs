@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Plainion.GraphViz.Infrastructure;
+using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Modules.Documents

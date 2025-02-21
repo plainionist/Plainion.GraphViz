@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Input;
 using Plainion.Collections;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Mvvm;
 using Plainion.Windows.Controls.Tree;

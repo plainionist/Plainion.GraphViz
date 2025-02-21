@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Plainion.GraphViz.Infrastructure;
+using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Documents

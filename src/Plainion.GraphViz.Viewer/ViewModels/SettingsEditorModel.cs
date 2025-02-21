@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Configuration;
 using Plainion.GraphViz.Viewer.Services;

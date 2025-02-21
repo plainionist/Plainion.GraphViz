@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using Plainion.GraphViz.Dot;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;

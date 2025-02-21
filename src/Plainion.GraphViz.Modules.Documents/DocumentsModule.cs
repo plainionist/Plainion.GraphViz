@@ -1,4 +1,4 @@
-﻿using Plainion.GraphViz.Infrastructure.Services;
+﻿using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Navigation.Regions;
@@ -20,8 +20,8 @@ namespace Plainion.GraphViz.Modules.Documents
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.OpenDocuments, typeof(OpenDocumentsView));
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.SaveDocuments, typeof(SaveDocumentsView));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.OpenDocuments, typeof(OpenDocumentsView));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SaveDocuments, typeof(SaveDocumentsView));
 
             myContainer.RegisterType<IDocumentLoader, OpenDocumentsViewModel>(new ContainerControlledLifetimeManager());
         }

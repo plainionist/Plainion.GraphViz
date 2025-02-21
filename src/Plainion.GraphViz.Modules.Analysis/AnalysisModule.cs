@@ -15,11 +15,11 @@ namespace Plainion.GraphViz.Modules.Analysis
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.SearchBox, typeof(SearchBox));
-            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
-            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.NodeMasksView, typeof(NodeMasksView));
-            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.ClusterEditor, typeof(ClusterEditor));
-            myRegionManager.RegisterViewWithRegion(GraphViz.Infrastructure.RegionNames.Bookmarks, typeof(Bookmarks));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SearchBox, typeof(SearchBox));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.NodeMasksView, typeof(NodeMasksView));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ClusterEditor, typeof(ClusterEditor));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.Bookmarks, typeof(Bookmarks));
         }
 
         public void OnInitialized(IContainerProvider containerProvider)

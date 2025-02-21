@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
-using Plainion.GraphViz.Infrastructure.Services;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.Services;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Model;
 using Prism.Commands;
 using Prism.Mvvm;

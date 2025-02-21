@@ -68,7 +68,7 @@ namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
                     .FirstOrDefault(x => x.Name.LocalName == "AssemblyName");
 
                 // <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
-                // <ProjectReference Include="..\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj" />
+                // <ProjectReference Include="..\Plainion.GraphViz.Viewer.Abstractions\Plainion.GraphViz.Viewer.Abstractions.csproj" />
                 // <Reference Include="System.ServiceModel" />
                 return new VsProject
                 {

@@ -1,4 +1,4 @@
-﻿using Plainion.GraphViz.Infrastructure.Services;
+﻿using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Viewer.Services

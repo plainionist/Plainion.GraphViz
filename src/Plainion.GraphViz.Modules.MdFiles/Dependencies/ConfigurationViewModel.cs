@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
-using Plainion.GraphViz.Infrastructure.Services;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.Services;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.MdFiles.Dependencies.Analyzer;
 using Plainion.GraphViz.Presentation;

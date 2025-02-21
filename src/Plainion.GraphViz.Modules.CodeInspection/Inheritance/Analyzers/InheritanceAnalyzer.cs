@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using Plainion.GraphViz.Infrastructure;
+using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 

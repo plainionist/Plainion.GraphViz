@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 
 namespace Plainion.GraphViz.Modules.Analysis
 {

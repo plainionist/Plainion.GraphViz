@@ -16,7 +16,7 @@ namespace Plainion.GraphViz.Modules.SDK
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(Analysis1.ToolsMenuItem));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(Analysis1.ToolsMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.SDKAnalysis1, typeof(Analysis1.ConfigurationView));
 
             // explicitly register as singletons here to ensure that the host gets closed

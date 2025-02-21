@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz", "src\Plainion.GraphViz\Plainion.GraphViz.csproj", "{8CC5C764-ACE2-4AF2-BCA1-F78753E709AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Infrastructure", "src\Plainion.GraphViz.Infrastructure\Plainion.GraphViz.Infrastructure.csproj", "{FC787D39-FC3E-4031-BD87-D6971F3006FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Viewer.Abstractions", "src\Plainion.GraphViz.Viewer.Abstractions\Plainion.GraphViz.Viewer.Abstractions.csproj", "{FC787D39-FC3E-4031-BD87-D6971F3006FA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Analysis", "src\Plainion.GraphViz.Modules.Analysis\Plainion.GraphViz.Modules.Analysis.csproj", "{1E0DFA4E-2952-4B64-93A9-DB0A9829A773}"
 EndProject

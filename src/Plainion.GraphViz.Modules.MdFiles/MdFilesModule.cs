@@ -21,7 +21,7 @@ namespace Plainion.GraphViz.Modules.MdFiles
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(ToolsMenuItem));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(ToolsMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.MdFilesDependencies, typeof(ConfigurationView));
 
             // explicitly register as singletons here to ensure that the host gets closed

@@ -2,7 +2,7 @@
         x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:inf="clr-namespace:Plainion.GraphViz.Infrastructure;assembly=Plainion.GraphViz.Infrastructure"
+        xmlns:inf="clr-namespace:Plainion.GraphViz.Viewer.Abstractions;assembly=Plainion.GraphViz.Viewer.Abstractions"
         xmlns:v="clr-namespace:Plainion.GraphViz.Viewer"
         xmlns:views="clr-namespace:Plainion.GraphViz.Viewer.Views"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"

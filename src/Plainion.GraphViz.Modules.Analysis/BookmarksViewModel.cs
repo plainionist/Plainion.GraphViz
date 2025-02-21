@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Prism.Commands;
 

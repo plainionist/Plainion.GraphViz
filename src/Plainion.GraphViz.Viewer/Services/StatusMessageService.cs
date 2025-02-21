@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using Plainion.GraphViz.Infrastructure.Services;
+using Plainion.GraphViz.Viewer.Abstractions.Services;
 
 namespace Plainion.GraphViz.Viewer.Services
 {

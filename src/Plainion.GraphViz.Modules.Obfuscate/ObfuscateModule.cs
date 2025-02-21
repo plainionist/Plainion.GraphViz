@@ -15,7 +15,7 @@ public class ObfuscateModule : IModule
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(ToolsMenuItem));
+        myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(ToolsMenuItem));
     }
 
     public void OnInitialized(IContainerProvider containerProvider)

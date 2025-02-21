@@ -23,16 +23,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(InheritanceGraphMenuItem));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(InheritanceGraphMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.InheritanceGraphBuilder, typeof(InheritanceGraphBuilderView));
 
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PackagingGraphMenuItem));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(PackagingGraphMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.PackagingGraphBuilder, typeof(PackagingGraphBuilderView));
 
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(PathFinderMenuItem));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(PathFinderMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.PathFinder, typeof(PathFinderView));
 
-            myRegionManager.RegisterViewWithRegion(Infrastructure.RegionNames.AddIns, typeof(CallTreeMenuItem));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(CallTreeMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.CallTree, typeof(CallTreeView));
 
             // explicitly register as singletons here to ensure that the host gets closed

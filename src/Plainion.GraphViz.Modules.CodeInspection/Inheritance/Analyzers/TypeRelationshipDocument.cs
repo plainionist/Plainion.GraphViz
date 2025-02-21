@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Plainion.GraphViz.Infrastructure;
+using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Modules.CodeInspection.Core;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers

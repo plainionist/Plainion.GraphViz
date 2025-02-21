@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
 using Prism.Commands;
-using Plainion.GraphViz.Infrastructure.ViewModel;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Analysis
