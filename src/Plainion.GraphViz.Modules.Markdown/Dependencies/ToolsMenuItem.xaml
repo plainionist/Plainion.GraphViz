@@ -1,0 +1,19 @@
+﻿<MenuItem x:Class="Plainion.GraphViz.Modules.Markdown.Dependencies.ToolsMenuItem"
+          x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:v="clr-namespace:Plainion.GraphViz.Modules.Markdown"
+             mc:Ignorable="d"
+             Header="Markdown Files dependencies ..."
+             Command="{Binding StartAnalysisCommand}">
+    <i:Interaction.Triggers>
+        <pn:InteractionRequestTrigger SourceObject="{Binding StartAnalysisRequest, Mode=OneWay}">
+            <pn:PopupWindowAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.MarkdownDependencies}" />
+        </pn:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+</MenuItem>
