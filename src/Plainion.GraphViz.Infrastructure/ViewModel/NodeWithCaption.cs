@@ -4,7 +4,7 @@ namespace Plainion.GraphViz.Infrastructure.ViewModel
 {
     public class NodeWithCaption
     {
-        public NodeWithCaption( Node node, string displayText )
+        public NodeWithCaption(Node node, string displayText)
         {
             Node = node;
             DisplayText = displayText;

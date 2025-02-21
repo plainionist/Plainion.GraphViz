@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Plainion.GraphViz.Infrastructure.Services;
+﻿using Plainion.GraphViz.Infrastructure.Services;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Viewer.Services
