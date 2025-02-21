@@ -3,27 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
-using Plainion.GraphViz.Presentation;
 using Plainion.Text;
 
-namespace Plainion.GraphViz.Modules.CodeInspection;
+namespace Plainion.GraphViz.CodeInspection;
 
-public class AssemblyDependencyAnalyzer
+public class AssemblyDependencyAnalyzer(IAssemblyLoader loader, IEnumerable<string> relevantAssemblies)
 {
     public record AssemblyReference(Assembly Assembly, Assembly Dependency);
 
-    private readonly IAssemblyLoader myLoader;
-    private readonly IEnumerable<Wildcard> myRelevantAssemblies;
-
-    public AssemblyDependencyAnalyzer(IAssemblyLoader loader, IEnumerable<string> relevantAssemblies)
-    {
-        myLoader = loader;
-        myRelevantAssemblies = relevantAssemblies.Select(p => new Wildcard(p)).ToList();
-    }
+    private readonly IAssemblyLoader myLoader = loader;
+    private readonly IEnumerable<Wildcard> myRelevantAssemblies = relevantAssemblies.Select(p => new Wildcard(p)).ToList();
 
     /// <summary>
-    /// Creates a graph of all source and target assemblies and all assemblies directly and indirectly referenced
-    /// by source assemblies which cause an indirect dependency to target assemblies
+    /// Returns the dependencies of the given assemblies recursively. Only follows the relevant assemblies passed to the constructor.
     /// </summary>
     public IReadOnlyCollection<AssemblyReference> GetRecursiveDependencies(IEnumerable<Assembly> sources) =>
         sources.Aggregate(new List<AssemblyReference>(), (acc, asm) => Analyze(acc, asm, false));
@@ -57,8 +49,6 @@ public class AssemblyDependencyAnalyzer
             .ToList();
     }
 
-    private bool FollowAssembly(Assembly asm)
-    {
-        return myRelevantAssemblies.Any(p => p.IsMatch(asm.GetName().Name));
-    }
+    private bool FollowAssembly(Assembly asm) =>
+        myRelevantAssemblies.Any(p => p.IsMatch(asm.GetName().Name));
 }

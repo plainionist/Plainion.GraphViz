@@ -26,8 +26,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Actors.Host", "src\Plainion.GraphViz.Actors.Host\Plainion.GraphViz.Actors.Host.csproj", "{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.CodeInspection", "src\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj", "{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Tests", "src\Plainion.GraphViz.Tests\Plainion.GraphViz.Tests.csproj", "{ED17823C-F627-457E-B2E1-7C80FB391F5D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.CodeInspection", "src\Plainion.GraphViz.CodeInspection\Plainion.GraphViz.CodeInspection.csproj", "{EB61222B-B3D5-4901-A42D-7386E4AE08D6}"
@@ -98,10 +96,6 @@ Global
 		{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED17823C-F627-457E-B2E1-7C80FB391F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED17823C-F627-457E-B2E1-7C80FB391F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED17823C-F627-457E-B2E1-7C80FB391F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
