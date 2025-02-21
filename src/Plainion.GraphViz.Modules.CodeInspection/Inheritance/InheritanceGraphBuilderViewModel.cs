@@ -10,7 +10,7 @@ using Plainion.Collections;
 using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;
 using Plainion.GraphViz.Presentation;

@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Tests", "src\Plainion.GraphViz.Tests\Plainion.GraphViz.Tests.csproj", "{ED17823C-F627-457E-B2E1-7C80FB391F5D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.CodeInspection.Core", "src\Plainion.GraphViz.Modules.CodeInspection.Core\Plainion.GraphViz.Modules.CodeInspection.Core.csproj", "{EB61222B-B3D5-4901-A42D-7386E4AE08D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.CodeInspection", "src\Plainion.GraphViz.CodeInspection\Plainion.GraphViz.CodeInspection.csproj", "{EB61222B-B3D5-4901-A42D-7386E4AE08D6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "docs", "docs\docs.csproj", "{BE1F4CBE-C1CD-4794-99F6-4AE5B5568E5C}"
 EndProject

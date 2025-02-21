@@ -4,7 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 

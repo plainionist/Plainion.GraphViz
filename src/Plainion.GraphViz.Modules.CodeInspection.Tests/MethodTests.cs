@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Plainion.GraphViz.CodeInspection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Plainion.GraphViz.CodeInspection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers
 {

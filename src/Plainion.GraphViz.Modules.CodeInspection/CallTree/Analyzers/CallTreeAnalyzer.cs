@@ -7,7 +7,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Reflection;
 using Plainion.GraphViz.Presentation;
 using Plainion.Logging;

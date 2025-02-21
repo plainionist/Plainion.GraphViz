@@ -1,5 +1,5 @@
 ﻿using System;
-using Plainion.GraphViz.Modules.CodeInspection.Core;
+using Plainion.GraphViz.CodeInspection;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
