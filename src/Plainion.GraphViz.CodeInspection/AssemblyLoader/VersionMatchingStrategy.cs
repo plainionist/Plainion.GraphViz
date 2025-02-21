@@ -1,8 +1,7 @@
-﻿namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
+﻿namespace Plainion.GraphViz.CodeInspection.AssemblyLoader;
+
+enum VersionMatchingStrategy
 {
-    public enum VersionMatchingStrategy
-    {
-        Exact = 0,
-        SemanticVersion = 1,
-    }
+    Exact = 0,
+    SemanticVersion = 1,
 }

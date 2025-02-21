@@ -11,6 +11,7 @@ using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Reflection;
 using Plainion.GraphViz.Presentation;
 using Plainion.Logging;
+using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 {

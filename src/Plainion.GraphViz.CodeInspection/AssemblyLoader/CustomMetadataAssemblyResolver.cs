@@ -5,132 +5,131 @@ using System.Linq;
 using System.Reflection;
 using Plainion.Logging;
 
-namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
+namespace Plainion.GraphViz.CodeInspection.AssemblyLoader;
+
+class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
 {
-    class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
+    private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(CustomMetadataAssemblyResolver));
+
+    private readonly HashSet<string> myFolders;
+    // we must not add same assembly from different paths to PathAssemblyResolver.
+    // it will fail with exception if version isnt exactly same
+    private readonly Dictionary<string, string> myAssemblies;
+    private readonly MscorlibResolver myMscorlibResolver;
+    private readonly GacResolver myGacResolver;
+    private readonly RelativePathResolver myRelativePathResolver;
+    private readonly NugetResolver myNuGetResolver;
+    private readonly Func<Assembly> myTryGetRequestingAssembly;
+
+    public CustomMetadataAssemblyResolver(Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly, DotNetRuntime dotnetRuntime)
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(CustomMetadataAssemblyResolver));
+        Contract.RequiresNotNull(tryGetRequestingAssembly, nameof(tryGetRequestingAssembly));
 
-        private readonly HashSet<string> myFolders;
-        // we must not add same assembly from different paths to PathAssemblyResolver.
-        // it will fail with exception if version isnt exactly same
-        private readonly Dictionary<string, string> myAssemblies;
-        private readonly MscorlibResolver myMscorlibResolver;
-        private readonly GacResolver myGacResolver;
-        private readonly RelativePathResolver myRelativePathResolver;
-        private readonly NugetResolver myNuGetResolver;
-        private readonly Func<Assembly> myTryGetRequestingAssembly;
+        myTryGetRequestingAssembly = tryGetRequestingAssembly;
+        myAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        myFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        public CustomMetadataAssemblyResolver(Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly, DotNetRuntime dotnetRuntime)
+        myAssemblies.Add(Path.GetFileName(coreAssembly.Location), coreAssembly.Location);
+
+        myMscorlibResolver = new MscorlibResolver(dotnetRuntime);
+        myRelativePathResolver = new RelativePathResolver(VersionMatchingStrategy.SemanticVersion, SearchOption.AllDirectories);
+        myGacResolver = new GacResolver();
+        myNuGetResolver = new NugetResolver(VersionMatchingStrategy.SemanticVersion);
+    }
+
+    public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
+    {
+        var assembly = ResolveCore(context, assemblyName);
+        myLogger.Debug($"{assembly} => {assembly?.Location}");
+        return assembly;
+    }
+
+    private Assembly ResolveCore(MetadataLoadContext context, AssemblyName assemblyName)
+    {
+        //Debugger.Launch();
+
+        var requestingAssembly = myTryGetRequestingAssembly() ?? Assembly.GetEntryAssembly();
+
+        var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);
+        if (assembly != null)
         {
-            Contract.RequiresNotNull(tryGetRequestingAssembly, nameof(tryGetRequestingAssembly));
-
-            myTryGetRequestingAssembly = tryGetRequestingAssembly;
-            myAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            myFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            myAssemblies.Add(Path.GetFileName(coreAssembly.Location), coreAssembly.Location);
-
-            myMscorlibResolver = new MscorlibResolver(dotnetRuntime);
-            myRelativePathResolver = new RelativePathResolver(VersionMatchingStrategy.SemanticVersion, SearchOption.AllDirectories);
-            myGacResolver = new GacResolver();
-            myNuGetResolver = new NugetResolver(VersionMatchingStrategy.SemanticVersion);
-        }
-
-        public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
-        {
-            var assembly = ResolveCore(context, assemblyName);
-            myLogger.Debug($"{assembly} => {assembly?.Location}");
             return assembly;
         }
 
-        private Assembly ResolveCore(MetadataLoadContext context, AssemblyName assemblyName)
+        var mscorlibResult = myMscorlibResolver.TryResolve(assemblyName, requestingAssembly)
+            .OrderByDescending(x => x.AssemblyName.Version)
+            .FirstOrDefault();
+
+        if (mscorlibResult != null)
         {
-            //Debugger.Launch();
-
-            var requestingAssembly = myTryGetRequestingAssembly() ?? Assembly.GetEntryAssembly();
-
-            var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);
-            if (assembly != null)
+            // add "reference assemblies" first because in case of .NET 6 we have "windows desktop" assemblies
+            // location from there and we need to load e.g. windowsbase.dll from there as in ".net core app" 
+            // there is only a "proxy" assembly
+            foreach (var dir in mscorlibResult.ReferenceAssemblies)
             {
-                return assembly;
+                AddAssembliesFromFolder(dir);
             }
 
-            var mscorlibResult = myMscorlibResolver.TryResolve(assemblyName, requestingAssembly)
-                .OrderByDescending(x => x.AssemblyName.Version)
-                .FirstOrDefault();
+            AddAssembliesFromFolder(mscorlibResult.File.Directory);
 
-            if (mscorlibResult != null)
-            {
-                // add "reference assemblies" first because in case of .NET 6 we have "windows desktop" assemblies
-                // location from there and we need to load e.g. windowsbase.dll from there as in ".net core app" 
-                // there is only a "proxy" assembly
-                foreach (var dir in mscorlibResult.ReferenceAssemblies)
-                {
-                    AddAssembliesFromFolder(dir);
-                }
-
-                AddAssembliesFromFolder(mscorlibResult.File.Directory);
-
-                return context.LoadFromAssemblyPath(mscorlibResult.File.FullName);
-            }
-
-            var file = myRelativePathResolver.TryResolve(assemblyName, requestingAssembly)
-                .OrderByDescending(x => x.AssemblyName.Version)
-                .Select(x => x.File)
-                .FirstOrDefault();
-
-            if (file != null)
-            {
-                AddAssembliesFromFolder(file.Directory);
-
-                return context.LoadFromAssemblyPath(file.FullName);
-            }
-
-            file = myGacResolver.TryResolve(assemblyName, requestingAssembly)
-                .OrderByDescending(x => x.AssemblyName.Version)
-                .Select(x => x.File)
-                .FirstOrDefault();
-
-            if (file != null)
-            {
-                return context.LoadFromAssemblyPath(file.FullName);
-            }
-
-            file = myNuGetResolver.TryResolve(assemblyName, requestingAssembly)
-                .OrderByDescending(x => x.AssemblyName.Version)
-                .Select(x => x.File)
-                .FirstOrDefault();
-
-            if (file != null)
-            {
-                return context.LoadFromAssemblyPath(file.FullName);
-            }
-
-            return null;
+            return context.LoadFromAssemblyPath(mscorlibResult.File.FullName);
         }
 
-        internal void AddAssembliesFromFolder(DirectoryInfo folder)
+        var file = myRelativePathResolver.TryResolve(assemblyName, requestingAssembly)
+            .OrderByDescending(x => x.AssemblyName.Version)
+            .Select(x => x.File)
+            .FirstOrDefault();
+
+        if (file != null)
         {
-            if (myFolders.Contains(folder.FullName))
+            AddAssembliesFromFolder(file.Directory);
+
+            return context.LoadFromAssemblyPath(file.FullName);
+        }
+
+        file = myGacResolver.TryResolve(assemblyName, requestingAssembly)
+            .OrderByDescending(x => x.AssemblyName.Version)
+            .Select(x => x.File)
+            .FirstOrDefault();
+
+        if (file != null)
+        {
+            return context.LoadFromAssemblyPath(file.FullName);
+        }
+
+        file = myNuGetResolver.TryResolve(assemblyName, requestingAssembly)
+            .OrderByDescending(x => x.AssemblyName.Version)
+            .Select(x => x.File)
+            .FirstOrDefault();
+
+        if (file != null)
+        {
+            return context.LoadFromAssemblyPath(file.FullName);
+        }
+
+        return null;
+    }
+
+    internal void AddAssembliesFromFolder(DirectoryInfo folder)
+    {
+        if (myFolders.Contains(folder.FullName))
+        {
+            return;
+        }
+
+        AddPaths(folder.GetFiles("*.dll").Select(x => x.FullName));
+        AddPaths(folder.GetFiles("*.exe").Select(x => x.FullName));
+
+        myFolders.Add(folder.FullName);
+
+        void AddPaths(IEnumerable<string> paths)
+        {
+            foreach (var path in paths)
             {
-                return;
-            }
-
-            AddPaths(folder.GetFiles("*.dll").Select(x => x.FullName));
-            AddPaths(folder.GetFiles("*.exe").Select(x => x.FullName));
-
-            myFolders.Add(folder.FullName);
-
-            void AddPaths(IEnumerable<string> paths)
-            {
-                foreach (var path in paths)
+                var key = Path.GetFileName(path);
+                if (!myAssemblies.ContainsKey(key))
                 {
-                    var key = Path.GetFileName(path);
-                    if (!myAssemblies.ContainsKey(key))
-                    {
-                        myAssemblies.Add(key, path);
-                    }
+                    myAssemblies.Add(key, path);
                 }
             }
         }

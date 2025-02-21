@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Reflection

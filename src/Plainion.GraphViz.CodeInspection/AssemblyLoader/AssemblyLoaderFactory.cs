@@ -1,13 +1,12 @@
-﻿namespace Plainion.GraphViz.Modules.CodeInspection.Reflection
-{
-    public enum DotNetRuntime
-    {
-        Core,
-        Framework
-    }
+﻿namespace Plainion.GraphViz.CodeInspection.AssemblyLoader;
 
-    public class AssemblyLoaderFactory
-    {
-        public static IAssemblyLoader Create(DotNetRuntime runtime) => new ReflectionOnlyAssemblyLoader(runtime);
-    }
+public enum DotNetRuntime
+{
+    Core,
+    Framework
+}
+
+public class AssemblyLoaderFactory
+{
+    public static IAssemblyLoader Create(DotNetRuntime runtime) => new ReflectionOnlyAssemblyLoader(runtime);
 }
