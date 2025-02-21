@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Actors.Client;
+using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Model;
@@ -222,7 +223,13 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 
             Console.WriteLine("Analyzing assembly dependencies ...");
             var analyzer = new AssemblyDependencyAnalyzer(loader, relevantAssemblies);
-            var assemblyGraphPresentation = analyzer.CreateAssemblyGraph(sources, targets);
+            var deps = analyzer.GetRecursiveDependencies(sources);
+
+            var assemblyGraphPresentation = new SpecialGraphBuilder()
+                .CreateGraphOfReachables(
+                    sources.Select(R.AssemblyName),
+                    targets.Select(R.AssemblyName),
+                    deps.Select(r => (R.AssemblyName(r.Assembly), R.AssemblyName(r.Dependency))));
 
             if (AssemblyReferencesOnly)
             {

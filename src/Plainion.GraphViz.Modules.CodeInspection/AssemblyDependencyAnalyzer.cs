@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Plainion.GraphViz.Algorithms;
-using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Presentation;
 using Plainion.Text;
@@ -12,11 +10,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection;
 
 public class AssemblyDependencyAnalyzer
 {
-    private class AssemblyReference
-    {
-        public Assembly myAssembly;
-        public Assembly myDependency;
-    }
+    public record AssemblyReference(Assembly Assembly, Assembly Dependency);
 
     private readonly IAssemblyLoader myLoader;
     private readonly IEnumerable<Wildcard> myRelevantAssemblies;
@@ -31,16 +25,8 @@ public class AssemblyDependencyAnalyzer
     /// Creates a graph of all source and target assemblies and all assemblies directly and indirectly referenced
     /// by source assemblies which cause an indirect dependency to target assemblies
     /// </summary>
-    public GraphPresentation CreateAssemblyGraph(IEnumerable<Assembly> sources, IEnumerable<Assembly> targets)
-    {
-        var deps = sources.Aggregate(new List<AssemblyReference>(), (acc, asm) => Analyze(acc, asm, false));
-
-        return new SpecialGraphBuilder()
-            .CreateGraphOfReachables(
-                sources.Select(R.AssemblyName),
-                targets.Select(R.AssemblyName),
-                deps.Select(r => (R.AssemblyName(r.myAssembly), R.AssemblyName(r.myDependency))));
-    }
+    public IReadOnlyCollection<AssemblyReference> GetRecursiveDependencies(IEnumerable<Assembly> sources) =>
+        sources.Aggregate(new List<AssemblyReference>(), (acc, asm) => Analyze(acc, asm, false));
 
     private List<AssemblyReference> Analyze(List<AssemblyReference> analyzed, Assembly asm, bool isSource)
     {
@@ -53,12 +39,12 @@ public class AssemblyDependencyAnalyzer
             .ToList();
 
         var analyzedAssemblies = analyzed
-            .Select(x => x.myAssembly)
+            .Select(x => x.Assembly)
             .Distinct()
             .ToList();
 
         var initialAcc = analyzed.ToList();
-        initialAcc.Add(new AssemblyReference { myAssembly = asm, myDependency = asm });
+        initialAcc.Add(new AssemblyReference(asm, asm));
 
         var indirectDeps = dependencies
             .Where(x => analyzedAssemblies.Any(a => a.FullName != x.FullName))
@@ -66,7 +52,7 @@ public class AssemblyDependencyAnalyzer
             .Aggregate(initialAcc, (acc, asm) => Analyze(acc, asm, false));
 
         return dependencies
-            .Select(x => new AssemblyReference { myAssembly = asm, myDependency = x })
+            .Select(x => new AssemblyReference(asm, x))
             .Concat(indirectDeps)
             .ToList();
     }

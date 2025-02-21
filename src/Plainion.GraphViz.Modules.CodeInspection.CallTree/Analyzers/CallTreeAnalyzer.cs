@@ -373,7 +373,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
             var analyzer = new AssemblyDependencyAnalyzer(loader, relevantAssemblies);
             var assemblyGraphPresentation = Profile("Analyzing assemblies dependencies ...", () =>
-                analyzer.CreateAssemblyGraph(sources, targets.Select(x => x.Item1)));
+            {
+                var deps = analyzer.GetRecursiveDependencies(sources);
+
+                return new SpecialGraphBuilder()
+                    .CreateGraphOfReachables(
+                        sources.Select(R.AssemblyName),
+                        targets.Select(x => R.AssemblyName(x.Item1)),
+                        deps.Select(r => (R.AssemblyName(r.Assembly), R.AssemblyName(r.Dependency))));
+
+            });
 
             if (AssemblyReferencesOnly)
             {
