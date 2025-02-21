@@ -15,11 +15,11 @@ namespace Plainion.GraphViz.Modules.VsProjects
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(Dependencies.ToolsMenuItem));
-            myRegionManager.RegisterViewWithRegion(RegionNames.VsProjectDependencies, typeof(Dependencies.ConfigurationView));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(ToolsMenuItem));
+            myRegionManager.RegisterViewWithRegion(RegionNames.VsProjectDependencies, typeof(ConfigurationView));
 
             // explicitly register as singletons here to ensure that the host gets closed
-            containerRegistry.RegisterSingleton<Dependencies.Analyzer>();
+            containerRegistry.RegisterSingleton<Analyzer>();
         }
 
         public void OnInitialized(IContainerProvider containerProvider)

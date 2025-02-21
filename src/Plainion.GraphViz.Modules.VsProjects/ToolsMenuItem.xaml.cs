@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
+namespace Plainion.GraphViz.Modules.VsProjects
 {
     partial class ToolsMenuItem : MenuItem
     {

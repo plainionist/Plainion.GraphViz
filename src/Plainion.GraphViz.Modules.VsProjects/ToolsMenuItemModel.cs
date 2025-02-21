@@ -3,7 +3,7 @@ using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 using Prism.Mvvm;
 
-namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
+namespace Plainion.GraphViz.Modules.VsProjects
 {
     class ToolsMenuItemModel : BindableBase
     {

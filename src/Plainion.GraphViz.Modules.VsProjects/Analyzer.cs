@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Plainion.Collections;
 
-namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
+namespace Plainion.GraphViz.Modules.VsProjects
 {
     class Analyzer
     {

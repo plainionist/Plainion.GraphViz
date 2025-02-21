@@ -11,7 +11,7 @@ using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 
-namespace Plainion.GraphViz.Modules.VsProjects.Dependencies
+namespace Plainion.GraphViz.Modules.VsProjects
 {
     class ConfigurationViewModel : ViewModelBase
     {
