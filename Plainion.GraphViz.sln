@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Documents.Tests", "src\Plainion.GraphViz.Modules.Documents.Tests\Plainion.GraphViz.Modules.Documents.Tests.csproj", "{D03FE809-E508-406F-B48A-EE9432DEC4B4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.ActorsHost", "src\Plainion.GraphViz.ActorsHost\Plainion.GraphViz.ActorsHost.csproj", "{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Actors.Host", "src\Plainion.GraphViz.Actors.Host\Plainion.GraphViz.Actors.Host.csproj", "{5BF9E3F7-A37C-497D-BA97-0BB5B5B967DD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.CodeInspection", "src\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj", "{21CC39C6-6535-4F17-ABA3-82AF9F49FE0C}"
 EndProject

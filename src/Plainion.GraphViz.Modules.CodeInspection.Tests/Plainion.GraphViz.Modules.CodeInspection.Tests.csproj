@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plainion.GraphViz.ActorsHost\Plainion.GraphViz.ActorsHost.csproj" />
+    <ProjectReference Include="..\Plainion.GraphViz.Actors.Host\Plainion.GraphViz.Actors.Host.csproj" />
     <ProjectReference Include="..\Plainion.GraphViz.Modules.CodeInspection\Plainion.GraphViz.Modules.CodeInspection.csproj" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 # Architecture
 
 Code inspections use Akka.Net Remoting to outsource the actual analysis into another process which can be closed
-to release the loaded assemblies. This process is the Plainion.GraphViz.ActorsHost.
+to release the loaded assemblies. This process is the Plainion.GraphViz.Actors.Host.
 
 Each code inspection is separated into the following components
 

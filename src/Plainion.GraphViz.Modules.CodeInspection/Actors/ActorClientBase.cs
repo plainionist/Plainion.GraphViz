@@ -63,7 +63,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
 
             ShutdownActorSystem();
 
-            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.Graphviz.ActorsHost.exe");
+            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.GraphViz.Actors.Host.exe");
             var info = new ProcessStartInfo(executable);
 
             if (HideHostWindow)
@@ -103,7 +103,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Actors
                 return null;
             }
 
-            return Process.GetProcessesByName("Plainion.GraphViz.ActorsHost").SingleOrDefault(p => p.Id == myHostPid);
+            return Process.GetProcessesByName("Plainion.GraphViz.Actors.Host").SingleOrDefault(p => p.Id == myHostPid);
         }
 
         private void ShutdownActorSystem()
