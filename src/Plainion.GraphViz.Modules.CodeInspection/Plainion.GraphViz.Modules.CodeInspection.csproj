@@ -8,14 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Page Remove="Resources\SystemPackagingTemplate.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\SystemPackagingTemplate.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Akka" Version="1.5.37" />
     <PackageReference Include="Akka.Remote" Version="1.5.37" />
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />

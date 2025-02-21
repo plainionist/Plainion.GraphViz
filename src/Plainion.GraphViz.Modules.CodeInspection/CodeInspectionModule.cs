@@ -2,8 +2,6 @@
 using Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging;
-using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.PathFinder;
 using Plainion.GraphViz.Modules.CodeInspection.PathFinder.Actors;
 using Prism.Ioc;
@@ -26,9 +24,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection
             myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(InheritanceGraphMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.InheritanceGraphBuilder, typeof(InheritanceGraphBuilderView));
 
-            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(PackagingGraphMenuItem));
-            myRegionManager.RegisterViewWithRegion(RegionNames.PackagingGraphBuilder, typeof(PackagingGraphBuilderView));
-
             myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(PathFinderMenuItem));
             myRegionManager.RegisterViewWithRegion(RegionNames.PathFinder, typeof(PathFinderView));
 
@@ -36,7 +31,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection
             myRegionManager.RegisterViewWithRegion(RegionNames.CallTree, typeof(CallTreeView));
 
             // explicitly register as singletons here to ensure that the host gets closed
-            containerRegistry.RegisterSingleton<PackageAnalysisClient>();
             containerRegistry.RegisterSingleton<InheritanceClient>();
             containerRegistry.RegisterSingleton<CallTreeClient>();
             containerRegistry.RegisterSingleton<PathFinderClient>();
