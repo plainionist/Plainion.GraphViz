@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Controls.Tree.TreeEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:tree="clr-namespace:Plainion.GraphViz.Controls.Tree"
+             x:Name="_this"
+             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Plainion.Windows;component/Controls/Tree/TreeEditor.Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel LastChildFill="True" DataContext="{Binding ElementName=_this}">
+        <DockPanel.Resources>
+            <!-- Binds to TreeEditor itself which only works because DockPanel DataContext is set to TreeEditor itself-->
+            <pn:BindingProxy x:Key="ThisProxy" Data="{Binding}"/>
+
+            <DataTemplate x:Key="NodeTemplate">
+                <!-- keep empty by intention -->
+            </DataTemplate>
+        </DockPanel.Resources>
+
+        <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch">
+            <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Filter, Mode=TwoWay}" SearchEventTimeDelay="0" 
+                                    LabelText="{Binding FilterLabel}"/>
+        </Grid>
+
+        <tree:ExtendedTreeView x:Name="myTree" Margin="0,3,0,0" ItemsSource="{Binding Root.Children}" 
+                               ItemContainerStyle="{Binding NodeStyle}">
+            <tree:ExtendedTreeView.Resources>
+                <pn:BindingProxy x:Key="TreeProxy" Data="{Binding ElementName=myTree}"/>
+            </tree:ExtendedTreeView.Resources>
+
+            <i:Interaction.Behaviors>
+                <!--
+                When we use this here together with EditableTextBlock in the nodes we break
+                setting the cursor with click in the TextBox
+                <interactivity:FocusOnClickBehavior/>
+                -->
+                <pn:FrameworkElementDropBehavior/>
+            </i:Interaction.Behaviors>
+
+            <tree:ExtendedTreeView.ContextMenu>
+                <ContextMenu>
+                    <ContextMenu.Resources>
+                        <pn:ConverterChain x:Key="CollapseIfNullConverter">
+                            <pn:IsEmptyConverter/>
+                            <pn:NotConverter/>
+                            <pn:BoolToVisibilityConverter/>
+                        </pn:ConverterChain>
+                        <pn:ConverterChain x:Key="IsBoundConverter">
+                            <pn:IsEmptyConverter/>
+                            <pn:NotConverter/>
+                        </pn:ConverterChain>
+                    </ContextMenu.Resources>
+                    <MenuItem Header="New" Command="{Binding CreateChildCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"
+                              Visibility="{Binding CreateChildCommand, Mode=OneWay, Converter={StaticResource CollapseIfNullConverter}}"/>
+                    <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"
+                              Visibility="{Binding DeleteCommand, Mode=OneWay, Converter={StaticResource CollapseIfNullConverter}}"/>
+                    <Separator>
+                        <Separator.Visibility>
+                            <MultiBinding>
+                                <Binding Path="CreateChildCommand" Converter="{StaticResource IsBoundConverter}"/>
+                                <Binding Path="DeleteCommand" Converter="{StaticResource IsBoundConverter}"/>
+                                <MultiBinding.Converter>
+                                    <pn:OrConverter>
+                                        <pn:BoolToVisibilityConverter/>
+                                    </pn:OrConverter>
+                                </MultiBinding.Converter>
+                            </MultiBinding>
+                        </Separator.Visibility>
+                    </Separator>
+                    <MenuItem Header="Expand">
+                        <MenuItem Header="This" Command="{Binding ExpandAllCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"/>
+                        <MenuItem Header="All" Command="{Binding ExpandAllCommand}"/>
+                    </MenuItem>
+                    <MenuItem Header="Collapse">
+                        <MenuItem Header="This" Command="{Binding CollapseAllCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"/>
+                        <MenuItem Header="All" Command="{Binding CollapseAllCommand}"/>
+                    </MenuItem>
+                </ContextMenu>
+            </tree:ExtendedTreeView.ContextMenu>
+
+            <tree:ExtendedTreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource NodeTemplate}"/>
+                </HierarchicalDataTemplate>
+            </tree:ExtendedTreeView.ItemTemplate>
+        </tree:ExtendedTreeView>
+    </DockPanel>
+</UserControl>
