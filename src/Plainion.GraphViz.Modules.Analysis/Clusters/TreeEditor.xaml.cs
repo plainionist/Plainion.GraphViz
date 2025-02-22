@@ -13,13 +13,6 @@ partial class TreeEditor : UserControl, IDropable
         InitializeComponent();
 
         TreeEditorCommands.RegisterCommandBindings(this);
-
-        if (NodeStyle == null)
-        {
-            NodeStyle = (Style)Resources["DefaultNodeStyle"];
-        }
-
-        myTree.ItemContainerStyle = NodeStyle;
     }
 
     public static DependencyProperty FilterLabelProperty = DependencyProperty.Register("FilterLabel", typeof(string), typeof(TreeEditor),
@@ -173,20 +166,5 @@ partial class TreeEditor : UserControl, IDropable
     {
         get { return (ICommand)GetValue(DropCommandProperty); }
         set { SetValue(DropCommandProperty, value); }
-    }
-
-    public static readonly DependencyProperty NodeStyleProperty = DependencyProperty.Register("NodeStyle", typeof(Style), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(null, OnNodeStyleChanged));
-
-    private static void OnNodeStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var self = (TreeEditor)d;
-        self.myTree.ItemContainerStyle = self.NodeStyle;
-    }
-
-    public Style NodeStyle
-    {
-        get { return (Style)GetValue(NodeStyleProperty); }
-        set { SetValue(NodeStyleProperty, value); }
     }
 }

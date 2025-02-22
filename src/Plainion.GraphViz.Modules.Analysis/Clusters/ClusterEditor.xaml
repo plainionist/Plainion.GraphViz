@@ -12,7 +12,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Plainion.Prism;component/Resources/Templates.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Plainion.GraphViz.Modules.Analysis;component/Clusters/TreeEditor.Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -79,20 +78,9 @@
             <pngv:TreeEditor Grid.Row="0" Root="{Binding Root}" FilterLabel="Filter on caption or id"
                            CreateChildCommand="{Binding AddClusterCommand}"
                            DeleteCommand="{Binding DeleteClusterCommand}"
-                           DropCommand="{Binding DropCommand}">
-                <pngv:TreeEditor.NodeStyle>
-                    <Style TargetType="{x:Type pngv:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
-                        <Setter Property="Text" Value="{Binding Caption, Mode=TwoWay}"/>
-                        <Setter Property="ToolTip" Value="{Binding Id}"/>
-                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
-                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
-                        <Setter Property="FormattedText" Value="{Binding DisplayText}"/>
-                    </Style>
-                </pngv:TreeEditor.NodeStyle>
-            </pngv:TreeEditor>
+                           DropCommand="{Binding DropCommand}" />
 
-            <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0"
-                      IsChecked="{Binding TreeShowId}"/>
+            <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0" IsChecked="{Binding TreeShowId}"/>
         </Grid>
     </Grid>
 </UserControl>
