@@ -19,29 +19,11 @@ partial class TreeEditor : UserControl, IDropable
     public static readonly RoutedCommand ExpandAll = new();
     public static readonly RoutedCommand CollapseAll = new();
 
-    private void OnExpandAll(ClusterTreeNode node)
-    {
-        if (node == null)
-        {
-            node = Root;
-        }
+    private void OnExpandAll(ClusterTreeNode node) =>
+        myTree.StateContainer.GetOrCreate(node ?? Root).ExpandAll();
 
-        var nodeState = myTree.StateContainer.GetOrCreate(node);
-
-        nodeState.ExpandAll();
-    }
-
-    private void OnCollapseAll(ClusterTreeNode node)
-    {
-        if (node == null)
-        {
-            node = Root;
-        }
-
-        var nodeState = myTree.StateContainer.GetOrCreate(node);
-
-        nodeState.CollapseAll();
-    }
+    private void OnCollapseAll(ClusterTreeNode node) =>
+        myTree.StateContainer.GetOrCreate(node ?? Root).CollapseAll();
 
     public static DependencyProperty FilterLabelProperty = DependencyProperty.Register("FilterLabel", typeof(string), typeof(TreeEditor),
         new FrameworkPropertyMetadata(null));
@@ -112,25 +94,14 @@ partial class TreeEditor : UserControl, IDropable
         set { SetValue(FilterProperty, value); }
     }
 
-    string IDropable.DataFormat
-    {
-        get { return typeof(NodeItem).FullName; }
-    }
+    string IDropable.DataFormat => typeof(NodeItem).FullName;
 
-    bool IDropable.IsDropAllowed(object data, DropLocation location)
-    {
-        if (Root == null)
-        {
-            return false;
-        }
-
-        return myTree.StateContainer.GetOrCreate(Root).IsDropAllowed(location);
-    }
+    bool IDropable.IsDropAllowed(object data, DropLocation location) =>
+        Root == null ? false : myTree.StateContainer.GetOrCreate(Root).IsDropAllowed(location);
 
     void IDropable.Drop(object data, DropLocation location)
     {
-        var droppedElement = data as NodeItem;
-        if (droppedElement == null)
+        if (data is not NodeItem droppedElement)
         {
             return;
         }
@@ -184,9 +155,6 @@ partial class TreeEditor : UserControl, IDropable
         set { SetValue(DeleteCommandProperty, value); }
     }
 
-    /// <summary>
-    /// Parameter will be of type <see cref="NodeDropRequest"/>.
-    /// </summary>
     public static DependencyProperty DropCommandProperty = DependencyProperty.Register("DropCommand", typeof(ICommand), typeof(TreeEditor),
         new FrameworkPropertyMetadata(null));
 

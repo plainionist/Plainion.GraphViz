@@ -74,7 +74,7 @@ class DragDropBehavior
 
             Node = node;
 
-            Contract.Requires(Node.GetType().GetProperty("Parent").CanWrite, "Parent is not writable");
+            Contract.Requires(Node.GetType().GetProperty(nameof(Node.Parent)).CanWrite, "Parent is not writable");
 
             Children = new ObservableCollection(Node.Children);
             Siblings = new ObservableCollection(Node.Parent != null ? Node.Parent.Children : new ObservableCollection<ClusterTreeNode>());
@@ -93,7 +93,7 @@ class DragDropBehavior
 
         public void SetParent(ClusterTreeNode node)
         {
-            Node.GetType().GetProperty("Parent").SetValue(Node, node);
+            Node.GetType().GetProperty(nameof(Node.Parent)).SetValue(Node, node);
         }
     }
 
