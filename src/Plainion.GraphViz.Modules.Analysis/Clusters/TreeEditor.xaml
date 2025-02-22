@@ -45,12 +45,7 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <!--
-                            Note that the following do not work, but I believe the top 2 should?!
-                            <ToggleButton IsChecked="{TemplateBinding IsExpanded}" ClickMode="Press" Name="Expander">
-                            <ToggleButton IsChecked="{TemplateBinding Property=IsExpanded}" ClickMode="Press" Name="Expander">
-                            <ToggleButton IsChecked="{TemplateBinding Path=IsExpanded}" ClickMode="Press" Name="Expander">
-                            -->
+
                                         <ToggleButton IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" 
                                                       ClickMode="Press" Name="Expander">
                                             <ToggleButton.Style>
@@ -149,7 +144,6 @@
                     </Setter>
                     <Setter Property="Text" Value="{Binding Caption, Mode=TwoWay}"/>
                     <Setter Property="ToolTip" Value="{Binding Id}"/>
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
                     <Setter Property="FormattedText" Value="{Binding DisplayText}"/>
                 </Style>

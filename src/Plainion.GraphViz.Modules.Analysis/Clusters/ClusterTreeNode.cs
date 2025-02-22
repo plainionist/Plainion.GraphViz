@@ -9,7 +9,6 @@ class ClusterTreeNode : BindableBase
 {
     private readonly IGraphPresentation myPresentation;
     private ClusterTreeNode myParent;
-    private bool myIsExpanded;
     private bool myIsSelected;
     private string myCaption;
     private bool myShowId;
@@ -54,12 +53,6 @@ class ClusterTreeNode : BindableBase
     public string DisplayText
     {
         get { return ShowId ? Id : Caption; }
-    }
-
-    public bool IsExpanded
-    {
-        get { return myIsExpanded; }
-        set { SetProperty(ref myIsExpanded, value); }
     }
 
     public bool IsSelected
