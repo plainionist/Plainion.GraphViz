@@ -81,7 +81,7 @@
                            DeleteCommand="{Binding DeleteClusterCommand}"
                            DropCommand="{Binding DropCommand}">
                 <pngv:TreeEditor.NodeStyle>
-                    <Style TargetType="{x:Type pn:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
+                    <Style TargetType="{x:Type pngv:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
                         <Setter Property="Text" Value="{Binding Caption, Mode=TwoWay}"/>
                         <Setter Property="ToolTip" Value="{Binding Id}"/>
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
