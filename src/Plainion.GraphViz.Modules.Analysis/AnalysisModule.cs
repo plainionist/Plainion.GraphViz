@@ -1,4 +1,8 @@
-﻿using Prism.Ioc;
+﻿using Plainion.GraphViz.Modules.Analysis.Bookmarks;
+using Plainion.GraphViz.Modules.Analysis.Clusters;
+using Plainion.GraphViz.Modules.Analysis.Filters;
+using Plainion.GraphViz.Modules.Analysis.Search;
+using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Navigation.Regions;
 
@@ -19,7 +23,7 @@ namespace Plainion.GraphViz.Modules.Analysis
             myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
             myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.NodeMasksView, typeof(NodeMasksView));
             myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ClusterEditor, typeof(ClusterEditor));
-            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.Bookmarks, typeof(Bookmarks));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.Bookmarks, typeof(BookmarksView));
         }
 
         public void OnInitialized(IContainerProvider containerProvider)

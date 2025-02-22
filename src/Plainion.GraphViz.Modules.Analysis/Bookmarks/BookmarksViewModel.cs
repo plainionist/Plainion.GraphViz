@@ -5,7 +5,7 @@ using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
 using Prism.Commands;
 
-namespace Plainion.GraphViz.Modules.Analysis
+namespace Plainion.GraphViz.Modules.Analysis.Bookmarks
 {
     class BookmarksViewModel : ViewModelBase
     {

@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.Analysis.Clusters.ClusterEditor"
+             x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:pn="http://github.com/ronin4net/plainion"
+        x:Name="_this">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Plainion.Prism;component/Resources/Templates.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Plainion.Windows;component/Controls/Tree/TreeEditor.Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="#FDFDF5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0" LastChildFill="True" Margin="5">
+            <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Filter:" Padding="0,0,10,0" />
+                <TextBox Grid.Row="0"  Grid.Column="1" ToolTip="Enter regular expression filter" 
+                          Text="{Binding Filter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                          Validation.ErrorTemplate="{StaticResource HighlightErrorsWithBorder}">
+                    <i:Interaction.Behaviors>
+                        <pn:TextBoxRaiseCommandOnEnterBehavior Command="{Binding AddNodesToClusterCommand }"/>
+                    </i:Interaction.Behaviors>
+                </TextBox>
+                <Button Grid.Row="0" Grid.Column="2" Content="{Binding AddButtonCaption}" Command="{Binding AddNodesToClusterCommand }" Margin="5,0,0,0"/>
+
+                <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Content="Filter on identifier" IsChecked="{Binding FilterOnId}"/>
+            </Grid>
+            <ListView Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                      Margin="0,5,0,0" MinHeight="200" 
+                      ItemsSource="{Binding PreviewNodes}" SelectedItem="{Binding SelectedPreviewItem}">
+                <i:Interaction.Behaviors>
+                    <pn:FrameworkElementDropBehavior/>
+                </i:Interaction.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding DisplayText}" Background="Transparent">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDown">
+                                    <prism:InvokeCommandAction Command="{Binding ElementName=_this, Path=DataContext.MouseDownCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DockPanel>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+        <Grid Grid.Column="2" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <pn:TreeEditor Grid.Row="0" Root="{Binding Root}" FilterLabel="Filter on caption or id"
+                           CreateChildCommand="{Binding AddClusterCommand}"
+                           DeleteCommand="{Binding DeleteClusterCommand}"
+                           DropCommand="{Binding DropCommand}">
+                <pn:TreeEditor.NodeStyle>
+                    <Style TargetType="{x:Type pn:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
+                        <Setter Property="Text" Value="{Binding Caption, Mode=TwoWay}"/>
+                        <Setter Property="ToolTip" Value="{Binding Id}"/>
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                        <Setter Property="FormattedText" Value="{Binding DisplayText}"/>
+                    </Style>
+                </pn:TreeEditor.NodeStyle>
+            </pn:TreeEditor>
+
+            <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0"
+                      IsChecked="{Binding TreeShowId}"/>
+        </Grid>
+    </Grid>
+</UserControl>
