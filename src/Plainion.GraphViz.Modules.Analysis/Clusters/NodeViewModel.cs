@@ -29,7 +29,7 @@ class NodeViewModel
         set { SetProperty(ref myIsFilteredOut, value); }
     }
 
-    public bool IsExpanded
+    private bool IsExpanded
     {
         get { return myIsExpanded; }
         set
@@ -167,12 +167,12 @@ class NodeViewModel
         return depth - 1;
     }
 
-    public NodeViewModel GetParent(NodeViewModel state)
+    private NodeViewModel GetParent(NodeViewModel state)
     {
         return state.DataContext.Parent == null ? null : myContainer.GetOrCreate(state.DataContext.Parent);
     }
 
-    public IEnumerable<NodeViewModel> GetChildren()
+    private IEnumerable<NodeViewModel> GetChildren()
     {
         if (DataContext.Children == null)
         {
