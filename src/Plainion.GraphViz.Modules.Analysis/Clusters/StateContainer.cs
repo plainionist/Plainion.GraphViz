@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Plainion.GraphViz.Controls.Tree;
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 /// <summary>
 /// used to store additional state to the actual INode model.

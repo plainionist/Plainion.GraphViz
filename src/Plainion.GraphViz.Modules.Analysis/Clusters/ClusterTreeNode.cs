@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Prism.Mvvm;
 using Plainion.GraphViz.Presentation;
-using Plainion.GraphViz.Controls.Tree;
+using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {

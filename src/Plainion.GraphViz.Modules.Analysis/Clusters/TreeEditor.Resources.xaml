@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:pn="http://github.com/ronin4net/plainion"
-                    xmlns:tree="clr-namespace:Plainion.GraphViz.Controls.Tree">
+                    xmlns:tree="clr-namespace:Plainion.GraphViz.Modules.Analysis.Clusters">
 
     <!-- http://leecampbell.blogspot.de/2009/01/horizontal-stretch-on-treeviewitems.html -->
     <Style x:Key="DefaultNodeStyle" TargetType="{x:Type tree:NodeItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">

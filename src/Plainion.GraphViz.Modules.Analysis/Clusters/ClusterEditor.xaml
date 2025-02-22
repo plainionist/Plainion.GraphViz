@@ -5,14 +5,14 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:pn="http://github.com/ronin4net/plainion"
-        xmlns:pngv="https://github.com/plainionist/Plainion.GraphViz"
+        xmlns:pngv="clr-namespace:Plainion.GraphViz.Modules.Analysis.Clusters"
         x:Name="_this">
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Plainion.Prism;component/Resources/Templates.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Plainion.GraphViz.Controls;component/Tree/TreeEditor.Resources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Plainion.GraphViz.Modules.Analysis;component/Clusters/TreeEditor.Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

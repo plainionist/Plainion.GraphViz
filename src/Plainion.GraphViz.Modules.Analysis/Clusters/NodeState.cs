@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Plainion.Windows.Interactivity.DragDrop;
 
-namespace Plainion.GraphViz.Controls.Tree;
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 /// <summary>
 /// The "state" master is always the actual DataContext (the implementation of INode). Only for state which 

@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace Plainion.GraphViz.Controls.Tree;
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 /// <summary>
 /// Required interface of nodes in <see cref="TreeEditor"/>.

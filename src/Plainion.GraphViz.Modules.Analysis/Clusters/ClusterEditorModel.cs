@@ -8,7 +8,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Plainion;
 using Plainion.Collections;
-using Plainion.GraphViz.Controls.Tree;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;

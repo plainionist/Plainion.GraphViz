@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Plainion.GraphViz.Controls.XmlEditor;
+namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.XmlEditor;
 
 class PropertyElementCompletionData : AbstractCompletionData
 {

@@ -7,7 +7,7 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
         xmlns:pn="http://github.com/ronin4net/plainion"
-        xmlns:pngv="https://github.com/plainionist/Plainion.GraphViz"
+        xmlns:l="clr-namespace:Plainion.GraphViz.Modules.CodeInspection.Packaging.XmlEditor"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:v="clr-namespace:Plainion.GraphViz.Modules.CodeInspection.Packaging"
@@ -46,7 +46,7 @@
             <TextBox Grid.Column="1" Text="{Binding FileName, Mode=TwoWay}" Margin="5,0,0,0"/>
         </Grid>
 
-        <pngv:XmlEditor Grid.Row="1" Document="{Binding Document}" CompletionData="{Binding CompletionData}" />
+        <l:XmlEditor Grid.Row="1" Document="{Binding Document}" CompletionData="{Binding CompletionData}" />
 
         <GroupBox Grid.Row="2" Header="Options">
             <Grid>

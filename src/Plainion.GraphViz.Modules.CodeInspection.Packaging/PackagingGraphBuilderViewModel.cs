@@ -12,16 +12,16 @@ using System.Windows;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
 using Plainion.Collections;
-using Plainion.GraphViz.Viewer.Abstractions.Services;
-using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.XmlEditor;
 using Plainion.GraphViz.Presentation;
+using Plainion.GraphViz.Viewer.Abstractions.Services;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
-using Plainion.GraphViz.Controls.XmlEditor;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {

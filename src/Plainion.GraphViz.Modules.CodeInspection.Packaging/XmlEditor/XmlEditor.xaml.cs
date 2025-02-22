@@ -10,7 +10,7 @@ using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Search;
 
-namespace Plainion.GraphViz.Controls.XmlEditor;
+namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.XmlEditor;
 
 public partial class XmlEditor : UserControl
 {

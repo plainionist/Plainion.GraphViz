@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Plainion.GraphViz.Controls;
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 static class VisualTreeUtils
 {

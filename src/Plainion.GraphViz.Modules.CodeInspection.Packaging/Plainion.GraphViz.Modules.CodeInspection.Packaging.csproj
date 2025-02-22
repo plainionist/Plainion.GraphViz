@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AvalonEdit" Version="6.1.3.50" />
     <PackageReference Include="Akka" Version="1.5.37" />
     <PackageReference Include="Akka.Remote" Version="1.5.37" />
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
@@ -27,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plainion.GraphViz.Actors.Client\Plainion.GraphViz.Actors.Client.csproj" />
-    <ProjectReference Include="..\Plainion.GraphViz.Controls\Plainion.GraphViz.Controls.csproj" />
     <ProjectReference Include="..\Plainion.GraphViz.Viewer.Abstractions\Plainion.GraphViz.Viewer.Abstractions.csproj" />
     <ProjectReference Include="..\Plainion.GraphViz.CodeInspection\Plainion.GraphViz.CodeInspection.csproj" />
   </ItemGroup>

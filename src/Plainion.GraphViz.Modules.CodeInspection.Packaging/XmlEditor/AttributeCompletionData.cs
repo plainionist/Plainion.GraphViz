@@ -3,7 +3,7 @@ using System.Reflection;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
-namespace Plainion.GraphViz.Controls.XmlEditor;
+namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.XmlEditor;
 
 class AttributeCompletionData : AbstractCompletionData
 {

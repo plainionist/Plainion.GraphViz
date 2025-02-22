@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Plainion.GraphViz.Controls.Tree;
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 /// <summary>
 /// Defaults for the <see cref="TreeEditor"/> commands.

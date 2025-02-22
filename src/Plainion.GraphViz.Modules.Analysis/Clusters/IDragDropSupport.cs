@@ -1,4 +1,4 @@
-﻿namespace Plainion.GraphViz.Controls.Tree;
+﻿namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 /// <summary>
 /// Can be implemented by <see cref="INode"/> implementations to control drag and drop allowence.

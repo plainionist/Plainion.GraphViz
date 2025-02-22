@@ -7,7 +7,7 @@ using System.Windows.Input;
 using Plainion.Windows.Interactivity.DragDrop;
 using Plainion.Windows.Mvvm;
 
-namespace Plainion.GraphViz.Controls.Tree;
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 public class NodeItem : TreeViewItem, IDropable, IDragable
 {

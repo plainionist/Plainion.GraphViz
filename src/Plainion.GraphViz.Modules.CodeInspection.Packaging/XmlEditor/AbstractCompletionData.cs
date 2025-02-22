@@ -4,7 +4,7 @@ using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
-namespace Plainion.GraphViz.Controls.XmlEditor;
+namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.XmlEditor;
 
 public abstract class AbstractCompletionData : ICompletionData
 {

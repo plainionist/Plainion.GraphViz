@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Plainion.GraphViz.Controls.Tree;
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 /// <summary>
 /// Used by the <see cref="TreeEditor"/> to handle certain aspects which are difficult to handle in the Xaml.
