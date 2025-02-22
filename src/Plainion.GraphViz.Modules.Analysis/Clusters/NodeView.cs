@@ -87,7 +87,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         return item is NodeView;
     }
 
-    internal NodeState State { get; private set; }
+    internal NodeViewModel State { get; private set; }
 
     public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView),
         new FrameworkPropertyMetadata(null));

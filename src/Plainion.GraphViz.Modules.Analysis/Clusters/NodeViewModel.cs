@@ -8,18 +8,14 @@ using Plainion.Windows.Interactivity.DragDrop;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-/// <summary>
-/// The "state" master is always the actual DataContext (the implementation of INode). Only for state which 
-/// is not represented by DataContext this class here is the master
-/// </summary>
-class NodeState
+class NodeViewModel
 {
     private NodeView myAttachedView;
     private readonly StateContainer myContainer;
     private bool myIsFilteredOut;
     private bool myIsExpanded;
 
-    public NodeState(ClusterTreeNode dataContext, StateContainer container)
+    public NodeViewModel(ClusterTreeNode dataContext, StateContainer container)
     {
         DataContext = dataContext;
         myContainer = container;
@@ -171,16 +167,16 @@ class NodeState
         return depth - 1;
     }
 
-    public NodeState GetParent(NodeState state)
+    public NodeViewModel GetParent(NodeViewModel state)
     {
         return state.DataContext.Parent == null ? null : myContainer.GetOrCreate(state.DataContext.Parent);
     }
 
-    public IEnumerable<NodeState> GetChildren()
+    public IEnumerable<NodeViewModel> GetChildren()
     {
         if (DataContext.Children == null)
         {
-            return Enumerable.Empty<NodeState>();
+            return Enumerable.Empty<NodeViewModel>();
         }
 
         return DataContext.Children
