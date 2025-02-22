@@ -212,18 +212,16 @@ class NodeState
     {
         if (location == DropLocation.InPlace)
         {
-            var dragDropSupport = DataContext as IDragDropSupport;
-            if (dragDropSupport != null)
+            if (DataContext != null)
             {
-                return dragDropSupport.IsDropAllowed;
+                return DataContext.IsDropAllowed;
             }
         }
         else
         {
-            var dragDropSupport = DataContext.Parent as IDragDropSupport;
-            if (dragDropSupport != null)
+            if (DataContext.Parent != null)
             {
-                return dragDropSupport.IsDropAllowed;
+                return DataContext.Parent.IsDropAllowed;
             }
         }
 

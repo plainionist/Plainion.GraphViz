@@ -219,8 +219,7 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
     {
         get
         {
-            var dragDropSupport = State.DataContext as IDragDropSupport;
-            if (dragDropSupport != null && !dragDropSupport.IsDragAllowed)
+            if (State.DataContext != null && !State.DataContext.IsDragAllowed)
             {
                 return null;
             }

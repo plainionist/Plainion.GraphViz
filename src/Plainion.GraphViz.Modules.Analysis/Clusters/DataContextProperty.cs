@@ -3,7 +3,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 class DataContextProperty<T>
 {
-    private string myPropertyName;
+    private readonly string myPropertyName;
 
     public DataContextProperty(string propertyName)
     {

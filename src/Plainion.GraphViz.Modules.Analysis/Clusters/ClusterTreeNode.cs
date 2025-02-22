@@ -1,95 +1,93 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Plainion.GraphViz.Presentation;
 using Prism.Mvvm;
 
-namespace Plainion.GraphViz.Modules.Analysis.Clusters
+namespace Plainion.GraphViz.Modules.Analysis.Clusters;
+
+class ClusterTreeNode : BindableBase
 {
-    class ClusterTreeNode : BindableBase, IDragDropSupport
+    private readonly IGraphPresentation myPresentation;
+    private ClusterTreeNode myParent;
+    private bool myIsExpanded;
+    private bool myIsSelected;
+    private string myCaption;
+    private bool myShowId;
+
+    public ClusterTreeNode(IGraphPresentation presentation)
     {
-        private readonly IGraphPresentation myPresentation;
-        private ClusterTreeNode myParent;
-        private bool myIsExpanded;
-        private bool myIsSelected;
-        private string myCaption;
-        private bool myShowId;
+        myPresentation = presentation;
 
-        public ClusterTreeNode(IGraphPresentation presentation)
+        Children = new ObservableCollection<ClusterTreeNode>();
+
+        IsDropAllowed = true;
+        IsDragAllowed = true;
+    }
+
+    public string Id { get; set; }
+
+    public string Caption
+    {
+        get { return myCaption; }
+        set
         {
-            myPresentation = presentation;
-
-            Children = new ObservableCollection<ClusterTreeNode>();
-
-            IsDropAllowed = true;
-            IsDragAllowed = true;
-        }
-
-        public string Id { get; set; }
-
-        public string Caption
-        {
-            get { return myCaption; }
-            set
+            if (SetProperty(ref myCaption, value))
             {
-                if (SetProperty(ref myCaption, value))
-                {
-                    RaisePropertyChanged(nameof(DisplayText));
-                    myPresentation.GetPropertySetFor<Caption>().Get(Id).DisplayText = myCaption;
-                }
+                RaisePropertyChanged(nameof(DisplayText));
+                myPresentation.GetPropertySetFor<Caption>().Get(Id).DisplayText = myCaption;
             }
         }
+    }
 
-        public bool ShowId
+    public bool ShowId
+    {
+        get { return myShowId; }
+        set
         {
-            get { return myShowId; }
-            set
+            if (SetProperty(ref myShowId, value))
             {
-                if (SetProperty(ref myShowId, value))
-                {
-                    RaisePropertyChanged(nameof(DisplayText));
-                }
+                RaisePropertyChanged(nameof(DisplayText));
             }
         }
+    }
 
-        public string DisplayText
+    public string DisplayText
+    {
+        get { return ShowId ? Id : Caption; }
+    }
+
+    public bool IsExpanded
+    {
+        get { return myIsExpanded; }
+        set { SetProperty(ref myIsExpanded, value); }
+    }
+
+    public bool IsSelected
+    {
+        get { return myIsSelected; }
+        set { SetProperty(ref myIsSelected, value); }
+    }
+
+    public bool IsDragAllowed { get; set; }
+
+    public bool IsDropAllowed { get; set; }
+
+    public ObservableCollection<ClusterTreeNode> Children { get; private set; }
+
+    public ClusterTreeNode Parent
+    {
+        get { return myParent; }
+        set { SetProperty(ref myParent, value); }
+    }
+
+    public bool Matches(string pattern)
+    {
+        if (pattern == "*")
         {
-            get { return ShowId ? Id : Caption; }
+            return Caption != null;
         }
 
-        public bool IsExpanded
-        {
-            get { return myIsExpanded; }
-            set { SetProperty(ref myIsExpanded, value); }
-        }
-
-        public bool IsSelected
-        {
-            get { return myIsSelected; }
-            set { SetProperty(ref myIsSelected, value); }
-        }
-
-        public bool IsDragAllowed { get; set; }
-
-        public bool IsDropAllowed { get; set; }
-
-        public ObservableCollection<ClusterTreeNode> Children { get; private set; }
-
-        public ClusterTreeNode Parent
-        {
-            get { return myParent; }
-            set { SetProperty(ref myParent, value); }
-        }
-
-        public bool Matches(string pattern)
-        {
-            if (pattern == "*")
-            {
-                return Caption != null;
-            }
-
-            return Caption != null && Caption.Contains(pattern, StringComparison.OrdinalIgnoreCase)
-                || Id != null && Id.Contains(pattern, StringComparison.OrdinalIgnoreCase);
-        }
+        return Caption != null && Caption.Contains(pattern, StringComparison.OrdinalIgnoreCase)
+            || Id != null && Id.Contains(pattern, StringComparison.OrdinalIgnoreCase);
     }
 }
