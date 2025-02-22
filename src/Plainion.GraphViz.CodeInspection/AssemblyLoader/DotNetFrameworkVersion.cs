@@ -18,8 +18,7 @@ record DotNetFrameworkVersion : IComparable<DotNetFrameworkVersion>
 {
     public DotNetFrameworkVersion(DotNetFrameworkType framework, Version version)
     {
-        Contract.RequiresNotNull(framework, nameof(framework));
-        Contract.RequiresNotNull(version, nameof(version));
+        Contract.RequiresNotNull(version);
 
         Framework = framework;
         Version = version;

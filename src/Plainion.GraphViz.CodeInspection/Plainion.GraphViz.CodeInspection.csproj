@@ -7,7 +7,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
     <PackageReference Include="Mono.Cecil" Version="0.11.6" />
-    <PackageReference Include="Plainion.Core" Version="4.0.1" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
   </ItemGroup>
 

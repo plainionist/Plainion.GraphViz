@@ -8,9 +8,8 @@ namespace Plainion.GraphViz.CodeInspection
     {
         public Reference(Type from, Type to, ReferenceType type)
         {
-            Contract.RequiresNotNull(from, "from");
-            Contract.RequiresNotNull(to, "to");
-            Contract.RequiresNotNull(type, "type");
+            Contract.RequiresNotNull(from);
+            Contract.RequiresNotNull(to);
 
             From = from;
             To = to;

@@ -11,14 +11,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
 
         private class FastWildcard
         {
-            private readonly Plainion.Text.Wildcard myWildcard;
+            private readonly GraphViz.CodeInspection.Wildcard myWildcard;
             private readonly string mySubstring;
 
             public FastWildcard(string pattern)
             {
                 if (pattern.Contains("*"))
                 {
-                    myWildcard = new Plainion.Text.Wildcard("*" + pattern + "*", RegexOptions.IgnoreCase);
+                    myWildcard = new GraphViz.CodeInspection.Wildcard("*" + pattern + "*", RegexOptions.IgnoreCase);
                 }
                 else
                 {
