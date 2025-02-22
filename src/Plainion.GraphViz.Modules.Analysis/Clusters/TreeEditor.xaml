@@ -191,15 +191,9 @@
                             </MultiBinding>
                         </Separator.Visibility>
                     </Separator>
-                    <MenuItem Header="Expand">
-                        <MenuItem Header="This" Command="{Binding ExpandAllCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"/>
-                        <MenuItem Header="All" Command="{Binding ExpandAllCommand}"/>
-                    </MenuItem>
-                    <MenuItem Header="Collapse">
-                        <MenuItem Header="This" Command="{Binding CollapseAllCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"/>
-                        <MenuItem Header="All" Command="{Binding CollapseAllCommand}"/>
-                    </MenuItem>
-                </ContextMenu>
+                    <MenuItem Header="Expand All" Command="{Binding ExpandAllCommand}"/>
+                    <MenuItem Header="Collapse All" Command="{Binding CollapseAllCommand}"/>
+               </ContextMenu>
             </tree:ExtendedTreeView.ContextMenu>
 
             <tree:ExtendedTreeView.ItemTemplate>

@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Xml.Linq;
+using Plainion.GraphViz.Model;
 using Plainion.Windows.Interactivity.DragDrop;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
@@ -12,18 +14,12 @@ partial class TreeEditor : UserControl, IDropable
     {
         InitializeComponent();
 
-        CommandBindings.Add(new CommandBinding(ExpandAll, (sender, e) => OnExpandAll((ClusterTreeNode)e.Parameter)));
-        CommandBindings.Add(new CommandBinding(CollapseAll, (sender, e) => OnCollapseAll((ClusterTreeNode)e.Parameter)));
+        CommandBindings.Add(new CommandBinding(ExpandAll, (_, _) => myTree.StateContainer.GetOrCreate(Root).ExpandAll()));
+        CommandBindings.Add(new CommandBinding(CollapseAll, (_, _) => myTree.StateContainer.GetOrCreate(Root).CollapseAll()));
     }
 
     public static readonly RoutedCommand ExpandAll = new();
     public static readonly RoutedCommand CollapseAll = new();
-
-    private void OnExpandAll(ClusterTreeNode node) =>
-        myTree.StateContainer.GetOrCreate(node ?? Root).ExpandAll();
-
-    private void OnCollapseAll(ClusterTreeNode node) =>
-        myTree.StateContainer.GetOrCreate(node ?? Root).CollapseAll();
 
     public static DependencyProperty FilterLabelProperty = DependencyProperty.Register("FilterLabel", typeof(string), typeof(TreeEditor),
         new FrameworkPropertyMetadata(null));
