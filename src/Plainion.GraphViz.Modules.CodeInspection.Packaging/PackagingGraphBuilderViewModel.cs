@@ -20,8 +20,8 @@ using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
-using Plainion.Windows.Editors.Xml;
 using Prism.Commands;
+using Plainion.GraphViz.Controls.XmlEditor;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
