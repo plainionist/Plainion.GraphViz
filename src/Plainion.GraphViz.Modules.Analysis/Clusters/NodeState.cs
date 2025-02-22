@@ -20,13 +20,13 @@ class NodeState
     private bool myIsExpanded;
     private bool myShowChildrenCount;
 
-    public NodeState(INode dataContext, StateContainer container)
+    public NodeState(ClusterTreeNode dataContext, StateContainer container)
     {
         DataContext = dataContext;
         myContainer = container;
     }
 
-    public INode DataContext { get; private set; }
+    public ClusterTreeNode DataContext { get; private set; }
 
     public bool IsFilteredOut
     {

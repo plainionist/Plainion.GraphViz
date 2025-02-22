@@ -11,7 +11,7 @@ class ShowChildrenCountConverter : IMultiValueConverter
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         var owner = (NodeItem)values[0];
-        var children = (IEnumerable<INode>)values[1];
+        var children = (IEnumerable<ClusterTreeNode>)values[1];
 
         if (owner.State == null || !owner.State.ShowChildrenCount)
         {

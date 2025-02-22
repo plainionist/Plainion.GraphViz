@@ -6,7 +6,7 @@ using Plainion.Windows.Interactivity.DragDrop;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-public partial class TreeEditor : UserControl, IDropable
+partial class TreeEditor : UserControl, IDropable
 {
     public TreeEditor()
     {
@@ -31,7 +31,7 @@ public partial class TreeEditor : UserControl, IDropable
         set { SetValue(FilterLabelProperty, value); }
     }
 
-    public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(INode), typeof(TreeEditor),
+    public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(ClusterTreeNode), typeof(TreeEditor),
         new FrameworkPropertyMetadata(null, OnRootChanged));
 
     private static void OnRootChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -58,9 +58,9 @@ public partial class TreeEditor : UserControl, IDropable
         OnFilterChanged();
     }
 
-    public INode Root
+    public ClusterTreeNode Root
     {
-        get { return (INode)GetValue(RootProperty); }
+        get { return (ClusterTreeNode)GetValue(RootProperty); }
         set { SetValue(RootProperty, value); }
     }
 

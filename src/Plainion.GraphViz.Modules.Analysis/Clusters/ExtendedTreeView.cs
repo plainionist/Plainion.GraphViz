@@ -27,12 +27,12 @@ class ExtendedTreeView : TreeView
         return item is NodeItem;
     }
 
-    public static DependencyProperty NodeForContextMenuProperty = DependencyProperty.Register("NodeForContextMenu", typeof(INode), typeof(ExtendedTreeView),
+    public static DependencyProperty NodeForContextMenuProperty = DependencyProperty.Register("NodeForContextMenu", typeof(ClusterTreeNode), typeof(ExtendedTreeView),
         new FrameworkPropertyMetadata(null));
 
-    public INode NodeForContextMenu
+    public ClusterTreeNode NodeForContextMenu
     {
-        get { return (INode)GetValue(NodeForContextMenuProperty); }
+        get { return (ClusterTreeNode)GetValue(NodeForContextMenuProperty); }
         set { SetValue(NodeForContextMenuProperty, value); }
     }
 
@@ -57,7 +57,7 @@ class ExtendedTreeView : TreeView
 
         if (nodeItem != null)
         {
-            NodeForContextMenu = (INode)nodeItem.DataContext;
+            NodeForContextMenu = (ClusterTreeNode)nodeItem.DataContext;
 
             nodeItem.Focus();
         }

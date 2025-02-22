@@ -10,14 +10,14 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 class StateContainer
 {
     private readonly Dictionary<object, NodeState> myStates;
-    private INode myDataContext;
+    private ClusterTreeNode myDataContext;
 
     public StateContainer()
     {
         myStates = new Dictionary<object, NodeState>();
     }
 
-    public INode DataContext
+    public ClusterTreeNode DataContext
     {
         get { return myDataContext; }
         set
@@ -35,7 +35,7 @@ class StateContainer
         return GetOrCreate(DataContext);
     }
 
-    public NodeState GetOrCreate(INode dataContext)
+    public NodeState GetOrCreate(ClusterTreeNode dataContext)
     {
         NodeState state;
         if (!myStates.TryGetValue(dataContext, out state))

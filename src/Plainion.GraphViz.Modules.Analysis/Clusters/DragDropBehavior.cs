@@ -17,15 +17,15 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 /// - INode.Children must be of type ObservableCollection{T}
 /// </para>
 /// </summary>
-public class DragDropBehavior
+class DragDropBehavior
 {
     private NodeWriteAccess myRoot;
 
     private class ObservableCollection
     {
-        private IEnumerable<INode> myCollection;
+        private IEnumerable<ClusterTreeNode> myCollection;
 
-        public ObservableCollection(IEnumerable<INode> collection)
+        public ObservableCollection(IEnumerable<ClusterTreeNode> collection)
         {
             Contract.Requires(collection.GetType().IsGenericType
                 && collection.GetType().GetGenericTypeDefinition() == typeof(ObservableCollection<>), "Collection is not of type ObservableCollection<T>");
@@ -68,7 +68,7 @@ public class DragDropBehavior
 
     private class NodeWriteAccess
     {
-        public NodeWriteAccess(INode node)
+        public NodeWriteAccess(ClusterTreeNode node)
         {
             Contract.RequiresNotNull(node, "node");
 
@@ -77,10 +77,10 @@ public class DragDropBehavior
             Contract.Requires(Node.GetType().GetProperty("Parent").CanWrite, "Parent is not writable");
 
             Children = new ObservableCollection(Node.Children);
-            Siblings = new ObservableCollection(Node.Parent != null ? Node.Parent.Children : new ObservableCollection<INode>());
+            Siblings = new ObservableCollection(Node.Parent != null ? Node.Parent.Children : new ObservableCollection<ClusterTreeNode>());
         }
 
-        public INode Node { get; private set; }
+        public ClusterTreeNode Node { get; private set; }
 
         public ObservableCollection Children { get; private set; }
 
@@ -91,13 +91,13 @@ public class DragDropBehavior
             return Node.Parent != null ? new NodeWriteAccess(Node.Parent) : null;
         }
 
-        public void SetParent(INode node)
+        public void SetParent(ClusterTreeNode node)
         {
             Node.GetType().GetProperty("Parent").SetValue(Node, node);
         }
     }
 
-    public DragDropBehavior(INode root)
+    public DragDropBehavior(ClusterTreeNode root)
     {
         Contract.RequiresNotNull(root, "root");
 
@@ -109,7 +109,7 @@ public class DragDropBehavior
         var droppedNode = new NodeWriteAccess(request.DroppedNode);
         var dropTarget = new NodeWriteAccess(request.DropTarget);
 
-        if (request.DropTarget == myRoot)
+        if (request.DropTarget == myRoot.Node)
         {
             ChangeParent(droppedNode, n => myRoot.Children.Add(n), myRoot);
         }

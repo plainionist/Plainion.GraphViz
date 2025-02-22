@@ -6,10 +6,10 @@ using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {
-    class ClusterTreeNode : BindableBase, INode, IDragDropSupport
+    class ClusterTreeNode : BindableBase, IDragDropSupport
     {
         private readonly IGraphPresentation myPresentation;
-        private INode myParent;
+        private ClusterTreeNode myParent;
         private bool myIsExpanded;
         private bool myIsSelected;
         private string myCaption;
@@ -73,20 +73,15 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         public bool IsDropAllowed { get; set; }
 
-        IEnumerable<INode> INode.Children
-        {
-            get { return Children; }
-        }
-
         public ObservableCollection<ClusterTreeNode> Children { get; private set; }
 
-        public INode Parent
+        public ClusterTreeNode Parent
         {
             get { return myParent; }
             set { SetProperty(ref myParent, value); }
         }
 
-        bool INode.Matches(string pattern)
+        public bool Matches(string pattern)
         {
             if (pattern == "*")
             {

@@ -45,7 +45,7 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
 
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        var node = DataContext as INode;
+        var node = DataContext as ClusterTreeNode;
         if (node == null)
         {
             // there seem to be reasons where DataContext is MS.Internal.NamedObject

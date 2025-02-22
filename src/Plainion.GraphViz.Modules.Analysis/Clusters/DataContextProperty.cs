@@ -10,13 +10,13 @@ class DataContextProperty<T>
         myPropertyName = propertyName;
     }
 
-    public T Get(INode dataContext)
+    public T Get(ClusterTreeNode dataContext)
     {
         var prop = dataContext.GetType().GetProperty(myPropertyName);
         return (T)prop.GetValue(dataContext);
     }
 
-    public void Set(INode dataContext, T value)
+    public void Set(ClusterTreeNode dataContext, T value)
     {
         var prop = dataContext.GetType().GetProperty(myPropertyName);
         prop.SetValue(dataContext, value);

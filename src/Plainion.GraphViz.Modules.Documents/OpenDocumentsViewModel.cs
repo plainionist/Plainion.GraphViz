@@ -135,11 +135,18 @@ namespace Plainion.GraphViz.Modules.Documents
                 }
 
                 var transformationModule = p.GetModule<ITransformationModule>();
+                var dynamicClusters = transformationModule.Items.OfType<DynamicClusterTransformation>().SingleOrDefault();
                 foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
+                    // when cluster was deleted, it is invisible
+                    var isHidden = dynamicClusters != null && dynamicClusters.ClusterVisibility.TryGetValue(cluster.Id, out var isVisible) && !isVisible;
+                    if (isHidden)
+                    {
+                        continue;
+                    }
+
                     // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
-                    var folding = transformationModule.Items
-                        .OfType<ClusterFoldingTransformation>()
+                    var folding = transformationModule.Items.OfType<ClusterFoldingTransformation>()
                         .SingleOrDefault(f => f.Clusters.Contains(cluster.Id));
 
                     // the nodes we get through ITransformationModule might be new instances!
