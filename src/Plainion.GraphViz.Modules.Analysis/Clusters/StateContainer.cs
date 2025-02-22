@@ -39,9 +39,4 @@ class StateContainer
         }
         return state;
     }
-
-    // used to avoid updates from NodeItem to NodeState while recursively updating NodeStates
-    public bool IsCheckedPropagationRunning { get; set; }
-
-    public DataContextProperty<bool?> IsCheckedProperty { get; set; }
 }
