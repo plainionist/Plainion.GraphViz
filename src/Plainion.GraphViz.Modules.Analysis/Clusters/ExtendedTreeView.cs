@@ -13,6 +13,7 @@ class ExtendedTreeView : TreeView
     public ExtendedTreeView()
     {
         StateContainer = new StateContainer();
+        StateContainer.ShowChildrenCount = true;
     }
 
     public StateContainer StateContainer { get; private set; }

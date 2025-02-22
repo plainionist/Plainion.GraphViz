@@ -43,7 +43,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             Root.IsDropAllowed = false;
 
             AddClusterCommand = new DelegateCommand<ClusterTreeNode>(OnAddCluster, n => n == Root);
-            DeleteClusterCommand = new DelegateCommand<ClusterTreeNode>(OnDeleteCluster, n => n.Parent == Root);
+            DeleteClusterCommand = new DelegateCommand<ClusterTreeNode>(OnDeleteCluster, n => n?.Parent == Root);
 
             myDragDropBehavior = new DragDropBehavior(Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
