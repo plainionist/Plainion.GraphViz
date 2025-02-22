@@ -2,22 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
-using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
     class TypesLoader
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(TypesLoader));
-
+        private readonly ILogger<TypesLoader> myLogger;
         private readonly IAssemblyLoader myAssemblyLoader;
         private readonly HashSet<Assembly> myAssemblies;
 
-        public TypesLoader(IAssemblyLoader loader)
+        public TypesLoader(ILogger<TypesLoader> logger, IAssemblyLoader loader)
         {
+            Contract.RequiresNotNull(logger, nameof(logger));
+            Contract.RequiresNotNull(loader, nameof(loader));
+
+            myLogger = logger;
             myAssemblyLoader = loader;
-            myAssemblies = new HashSet<Assembly>();
+
+            myAssemblies = [];
         }
 
         public IReadOnlyCollection<Assembly> Assemblies => myAssemblies;
@@ -45,7 +49,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
-                    myLogger.Warning("Not all types could be loaded from assembly {0}. Error: {1}{2}",
+                    myLogger.LogWarning("Not all types could be loaded from assembly {0}. Error: {1}{2}",
                         assembly.Location, Environment.NewLine, ex.Dump());
 
                     return ex.Types
@@ -66,7 +70,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 {
                     // for some strange reason, in such a case, we can safely access "FullName" but
                     // will get exception from "Namespace"
-                    myLogger.Warning($"Failed to load '{type.FullName}'");
+                    myLogger.LogWarning($"Failed to load '{type.FullName}'");
                     return false;
                 }
             }

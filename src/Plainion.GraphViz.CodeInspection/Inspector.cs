@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Plainion.Logging;
 
 namespace Plainion.GraphViz.CodeInspection
 {
@@ -18,17 +18,18 @@ namespace Plainion.GraphViz.CodeInspection
     // http://stackoverflow.com/questions/24680054/how-to-get-the-list-of-methods-called-from-a-method-using-reflection-in-c-sharp
     public class Inspector
     {
-        private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(Inspector));
-
+        private readonly ILogger<Inspector> myLogger;
         private readonly MonoLoader myLoader;
         private readonly Type myType;
         private readonly string myFullName;
 
-        public Inspector(MonoLoader loader, Type type)
+        public Inspector(ILogger<Inspector> logger, MonoLoader loader, Type type)
         {
-            Contract.RequiresNotNull(loader, "loader");
-            Contract.RequiresNotNull(type, "type");
+            Contract.RequiresNotNull(logger, nameof(logger));
+            Contract.RequiresNotNull(loader, nameof(loader));
+            Contract.RequiresNotNull(type, nameof(type));
 
+            myLogger = logger;
             myLoader = loader;
             myType = type;
 
@@ -92,7 +93,7 @@ namespace Plainion.GraphViz.CodeInspection
                 {
                     // might be that we found .NET8 assembly while actually .net FW assembly of same name would be required
                     // we should better handle this but for now lets not fail the parsing as we are usually not interested in .net types
-                    myLogger.Error(ex, "Failed  to load .NET type");
+                    myLogger.LogError(ex, "Failed  to load .NET type");
                     return Enumerable.Empty<Reference>();
                 }
                 throw;

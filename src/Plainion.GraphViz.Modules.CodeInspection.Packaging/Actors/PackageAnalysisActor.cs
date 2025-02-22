@@ -6,6 +6,7 @@ using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
+using Microsoft.Extensions.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 {
@@ -22,10 +23,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
                     Task.Run<AnalysisDocument>(() =>
                     {
+                        var loggerFactory = LoggerFactory.Create(builder =>
+                        {
+                            builder.AddConsole();
+                            builder.SetMinimumLevel(LogLevel.Debug);
+                        });
+
                         var spec = SpecUtils.Deserialize(SpecUtils.Unzip(r.Spec));
 
-                        var loader = new TypesLoader(AssemblyLoaderFactory.Create(spec.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core));
-                        var analyzer = new PackageAnalyzer(loader);
+                        var loaderFactory = AssemblyLoaderFactory.Create(loggerFactory, spec.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core);
+                        var loader = new TypesLoader(loggerFactory.CreateLogger<TypesLoader>(), loaderFactory);
+                        var analyzer = new PackageAnalyzer(loggerFactory, loader);
 
                         if (r.PackagesToAnalyze != null)
                         {

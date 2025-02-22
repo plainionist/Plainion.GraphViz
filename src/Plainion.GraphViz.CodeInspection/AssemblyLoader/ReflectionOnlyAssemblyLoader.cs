@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Plainion.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Plainion.GraphViz.CodeInspection.AssemblyLoader;
 
 class ReflectionOnlyAssemblyLoader : IAssemblyLoader
 {
-    private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(ReflectionOnlyAssemblyLoader));
-
+    private readonly ILogger<ReflectionOnlyAssemblyLoader> myLogger;
     private readonly Dictionary<string, Assembly> myAssemblyCache;
     private readonly CustomMetadataAssemblyResolver myResolver;
     private MetadataLoadContext myContext;
     private Assembly myRequestingAssembly;
 
-    public ReflectionOnlyAssemblyLoader(DotNetRuntime dotnetRuntime)
+    public ReflectionOnlyAssemblyLoader(ILoggerFactory loggerFactory, DotNetRuntime dotnetRuntime)
     {
-        myResolver = new CustomMetadataAssemblyResolver(() => myRequestingAssembly, typeof(object).Assembly, dotnetRuntime);
+        Contract.RequiresNotNull(loggerFactory, nameof(loggerFactory));
+
+        myLogger = loggerFactory.CreateLogger<ReflectionOnlyAssemblyLoader>();
+
+        myResolver = new CustomMetadataAssemblyResolver(
+            loggerFactory.CreateLogger<CustomMetadataAssemblyResolver>(),
+            () => myRequestingAssembly, typeof(object).Assembly, dotnetRuntime);
+
         myContext = new MetadataLoadContext(myResolver, typeof(object).Assembly.GetName().Name);
 
         myAssemblyCache = new Dictionary<string, Assembly>();
@@ -63,7 +69,7 @@ class ReflectionOnlyAssemblyLoader : IAssemblyLoader
             }
             catch (Exception ex)
             {
-                myLogger.Warning($"Failed to load dependency {dependency}{Environment.NewLine}Reason: {ex.Message}");
+                myLogger.LogWarning($"Failed to load dependency {dependency}{Environment.NewLine}Reason: {ex.Message}");
 
                 // don't try loading again
                 myAssemblyCache[dependency.FullName] = null;
@@ -93,7 +99,7 @@ class ReflectionOnlyAssemblyLoader : IAssemblyLoader
 
             try
             {
-                myLogger.Debug($"Loading {path}");
+                myLogger.LogDebug($"Loading {path}");
 
                 myResolver.AddAssembliesFromFolder(new FileInfo(path).Directory);
 
@@ -106,7 +112,7 @@ class ReflectionOnlyAssemblyLoader : IAssemblyLoader
             }
             catch (Exception ex)
             {
-                myLogger.Error($"Failed to load assembly {path}{Environment.NewLine}Reason: {ex.Message}");
+                myLogger.LogError($"Failed to load assembly {path}{Environment.NewLine}Reason: {ex.Message}");
 
                 // don't try loading again
                 myAssemblyCache[path] = null;

@@ -10,7 +10,8 @@
   <ItemGroup>
     <PackageReference Include="Akka" Version="1.5.37" />
     <PackageReference Include="Akka.Remote" Version="1.5.37" />
-    <PackageReference Include="Plainion.Core" Version="4.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
   </ItemGroup>
 
 </Project>

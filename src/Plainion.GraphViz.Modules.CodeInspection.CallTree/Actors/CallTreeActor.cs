@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Microsoft.Extensions.Logging;
 using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers;
 
@@ -20,9 +21,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Actors
 
                 Task.Run<string>(() =>
                 {
+                    var loggerFactory = LoggerFactory.Create(builder =>
+                    {
+                        builder.AddConsole();
+                        builder.SetMinimumLevel(LogLevel.Debug);
+                    });
+
                     var outputFile = Path.GetTempFileName() + ".dot";
-                    var analyzer = new CallTreeAnalyzer();
+
+                    var analyzer = new CallTreeAnalyzer(loggerFactory);
                     analyzer.Execute(r.ConfigFile, r.AssemblyReferencesOnly, r.StrictCallsOnly, outputFile);
+
                     return outputFile;
                 }, CancellationToken)
                 .ContinueWith<object>(x =>

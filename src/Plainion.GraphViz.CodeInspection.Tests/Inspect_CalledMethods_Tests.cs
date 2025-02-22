@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Plainion.GraphViz.CodeInspection;
 
@@ -85,7 +87,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
         [Test]
         public void FromPrivatMethod()
         {
-            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), typeof(Caller));
+            var reflector = new Inspector(new NullLoggerFactory().CreateLogger<Inspector>(), new MonoLoader(new[] { typeof(Caller).Assembly }), typeof(Caller));
 
             var calls = reflector.GetCalledMethods();
 
@@ -111,7 +113,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type callerType, string callerMethod, Type callingType, string callingMethod)
         {
-            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), callerType);
+            var reflector = new Inspector(new NullLoggerFactory().CreateLogger<Inspector>(), new MonoLoader([typeof(Caller).Assembly]), callerType);
 
             var calls = reflector.GetCalledMethods();
 

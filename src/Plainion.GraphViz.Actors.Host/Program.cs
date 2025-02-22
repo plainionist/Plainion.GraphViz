@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading;
 using Akka.Actor;
 using Akka.Configuration;
-using Plainion.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Plainion.GraphViz.Actors.Host;
 
@@ -28,20 +28,23 @@ class Program
 
     private static void Main(string[] args)
     {
-        LoggerFactory.AddSink(new ConsoleLoggingSink());
-        LoggerFactory.LogLevel = LogLevel.Debug;
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+            builder.SetMinimumLevel(LogLevel.Debug);
+        });
 
-        var logger = LoggerFactory.GetLogger(typeof(Program));
+        var logger = loggerFactory.CreateLogger<Program>();
 
         try
         {
-            logger.Notice("==> Starting");
+            logger.LogInformation("==> Starting");
 
-            logger.Notice("Loading modules");
+            logger.LogInformation("Loading modules");
 
             LoadModules(logger);
 
-            logger.Notice("Creating actor system");
+            logger.LogInformation("Creating actor system");
 
             using (var system = ActorSystem.Create("CodeInspection", ActorSystemConfig))
             {
@@ -52,7 +55,7 @@ class Program
         }
         catch
         {
-            logger.Error(" === DEAD === ");
+            logger.LogError(" === DEAD === ");
         }
     }
 
@@ -74,7 +77,7 @@ class Program
             }
             catch(Exception ex)
             {
-                logger.Error($"Failed to load module '{file}' with {Environment.NewLine}{ex}");
+                logger.LogError($"Failed to load module '{file}' with {Environment.NewLine}{ex}");
             }
         }
     }

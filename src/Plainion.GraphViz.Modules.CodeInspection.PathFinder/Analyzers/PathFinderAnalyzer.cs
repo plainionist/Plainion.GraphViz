@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Algorithms;
@@ -11,13 +12,13 @@ using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
-using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 {
     class PathFinderAnalyzer
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PathFinderAnalyzer));
+        private readonly ILoggerFactory myLoggerFactory;
+        private readonly ILogger<PathFinderAnalyzer> myLogger;
 
         private class TypeNode
         {
@@ -41,6 +42,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             }
         }
 
+        public PathFinderAnalyzer(ILoggerFactory loggerFactory)
+        {
+            Contract.RequiresNotNull(loggerFactory, nameof(loggerFactory));
+
+            myLoggerFactory = loggerFactory;
+            myLogger = myLoggerFactory.CreateLogger<PathFinderAnalyzer>();
+        }
+
         public bool KeepInnerAssemblyDependencies { get; set; }
         public bool KeepSourceAssemblyClusters { get; set; }
         public bool KeepTargetAssemblyClusters { get; set; }
@@ -50,7 +59,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
         {
             Console.Write(".");
 
-            var inspector = new Inspector(monoLoader, t);
+            var inspector = new Inspector(myLoggerFactory.CreateLogger<Inspector>(), monoLoader, t);
             return inspector.GetUsedTypes();
         }
 
@@ -137,7 +146,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
 
             foreach (var asm in monoLoader.SkippedAssemblies)
             {
-                myLogger.Warning("  " + asm);
+                myLogger.LogWarning("  " + asm);
             }
 
             var builder = new RelaxedGraphBuilder();
@@ -270,17 +279,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
                 KeepTargetAssemblyClusters = config.KeepTargetAssemblyClusters;
                 AssemblyReferencesOnly = assemblyReferencesOnly;
 
-                var loader = AssemblyLoaderFactory.Create(config.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core);
+                var loader = AssemblyLoaderFactory.Create(myLoggerFactory, config.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core);
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }
 
-        private static IEnumerable<string> ResolveAssemblies(string binFolder, string pattern)
+        private IEnumerable<string> ResolveAssemblies(string binFolder, string pattern)
         {
             var files = Directory.GetFiles(binFolder, pattern);
             if (files.Length == 0)
             {
-                myLogger.Warning($"No assemblies found for pattern: {pattern}");
+                myLogger.LogWarning($"No assemblies found for pattern: {pattern}");
                 return Enumerable.Empty<string>();
             }
             else
@@ -291,7 +300,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             }
         }
 
-        private static IEnumerable<string> ResolveAssemblies(string binFolder, IEnumerable<string> patterns)
+        private IEnumerable<string> ResolveAssemblies(string binFolder, IEnumerable<string> patterns)
         {
             return patterns.SelectMany(p => ResolveAssemblies(binFolder, p)).ToList();
         }

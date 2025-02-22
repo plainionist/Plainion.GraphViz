@@ -3,26 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Model;
-using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {
     class InterfaceImplementationsMap
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(InterfaceImplementationsMap));
-
+        private readonly ILogger<InterfaceImplementationsMap> myLogger;
         private readonly IReadOnlyCollection<Assembly> myAssemblies;
         private readonly Regex myTypeParameterPattern;
         private readonly Dictionary<string, IReadOnlyCollection<Type>> myMap;
         private List<Type> myTargetTypes;
 
-        public InterfaceImplementationsMap(IEnumerable<Assembly> assemblies)
+        public InterfaceImplementationsMap(ILogger<InterfaceImplementationsMap> logger, IEnumerable<Assembly> assemblies)
         {
+            Contract.RequiresNotNull(logger, nameof(logger));
+            Contract.RequiresNotNull(assemblies, nameof(assemblies));
+
+            myLogger = logger;
             myAssemblies = assemblies.ToList();
+
             myTypeParameterPattern = new Regex(@"\[\[.*\]\]");
-            myMap = new Dictionary<string, IReadOnlyCollection<Type>>();
+            myMap = [];
         }
 
         public void Build(IReadOnlyCollection<Node> relevantNodes, IEnumerable<Type> targetTypes)
@@ -58,7 +62,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 }
                 else
                 {
-                    myLogger.Warning($"Implementation not found for: {call.To.DeclaringType.FullName}");
+                    myLogger.LogWarning($"Implementation not found for: {call.To.DeclaringType.FullName}");
                     return new[] { call };
                 }
             }

@@ -1,4 +1,6 @@
-﻿namespace Plainion.GraphViz.CodeInspection.AssemblyLoader;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Plainion.GraphViz.CodeInspection.AssemblyLoader;
 
 public enum DotNetRuntime
 {
@@ -8,5 +10,6 @@ public enum DotNetRuntime
 
 public class AssemblyLoaderFactory
 {
-    public static IAssemblyLoader Create(DotNetRuntime runtime) => new ReflectionOnlyAssemblyLoader(runtime);
+    public static IAssemblyLoader Create(ILoggerFactory loggerFactory, DotNetRuntime runtime) =>
+        new ReflectionOnlyAssemblyLoader(loggerFactory, runtime);
 }

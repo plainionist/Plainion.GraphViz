@@ -5,6 +5,8 @@ using NUnit.Framework;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.CodeInspection;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {
@@ -78,7 +80,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type code, Type usedType, ReferenceType edgeType)
         {
-            var reflector = new Inspector(new MonoLoader(new[] { code.Assembly, usedType.Assembly }), code);
+            var reflector = new Inspector(new NullLoggerFactory().CreateLogger<Inspector>(), new MonoLoader(new[] { code.Assembly, usedType.Assembly }), code);
 
             var edges = reflector.GetUsedTypes();
 

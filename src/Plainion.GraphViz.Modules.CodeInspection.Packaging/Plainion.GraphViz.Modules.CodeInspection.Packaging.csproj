@@ -23,6 +23,8 @@
     <PackageReference Include="Plainion.Windows.Editors" Version="3.0.0" />
     <PackageReference Include="Prism.Wpf" Version="9.0.537" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>

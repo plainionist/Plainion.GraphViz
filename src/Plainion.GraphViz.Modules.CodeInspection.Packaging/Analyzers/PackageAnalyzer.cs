@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
-using Plainion.Logging;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 {
@@ -14,7 +14,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         private static readonly string[] Colors = { "LightBlue", "LightGreen", "LightCoral", "Brown", "DarkTurquoise", "MediumAquamarine", "Orange",
                                            "LawnGreen","DarkKhaki","BurlyWood","SteelBlue","Goldenrod", "Tomato","Crimson","CadetBlue" };
 
-        private readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(PackageAnalyzer));
+        private readonly ILoggerFactory myLoggerFactory;
+        private readonly ILogger<PackageAnalyzer> myLogger;
 
         private SystemPackaging mySpec;
         private CancellationToken myCancellationToken;
@@ -22,9 +23,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         private List<Package> myRelevantPackages;
         private readonly TypesLoader myTypesLoader;
 
-        public PackageAnalyzer(TypesLoader typesLoader)
+        public PackageAnalyzer(ILoggerFactory loggerFactory, TypesLoader typesLoader)
         {
+            Contract.RequiresNotNull(loggerFactory, nameof(loggerFactory));
+            Contract.RequiresNotNull(typesLoader, nameof(typesLoader));
+
+            myLoggerFactory = loggerFactory;
             myTypesLoader = typesLoader;
+
+            myLogger = myLoggerFactory.CreateLogger<PackageAnalyzer>();
 
             PackagesToAnalyze = new List<string>();
         }
@@ -54,7 +61,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 myPackageToTypesMap[package.Name] = Load(package).ToList();
             }
 
-            myLogger.Info("Analyzing ...");
+            myLogger.LogInformation("Analyzing ...");
 
             var monoLoader = new MonoLoader(myTypesLoader.Assemblies);
 
@@ -62,14 +69,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             if (monoLoader.SkippedAssemblies.Any())
             {
-                myLogger.Notice("Skipped assemblies:");
+                myLogger.LogInformation("Skipped assemblies:");
                 foreach (var asm in monoLoader.SkippedAssemblies)
                 {
-                    myLogger.Notice("  {0}", asm);
+                    myLogger.LogInformation("  {0}", asm);
                 }
             }
 
-            myLogger.Info("Building Graph ...");
+            myLogger.LogInformation("Building Graph ...");
 
             return GenerateDocument(references);
         }
@@ -78,8 +85,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         {
             Contract.Requires(!string.IsNullOrEmpty(package.Name), "Package requires a name");
 
-            myLogger.Info("Assembly root {0}", Path.GetFullPath(mySpec.AssemblyRoot));
-            myLogger.Info("Loading package {0}", package.Name);
+            myLogger.LogInformation("Assembly root {0}", Path.GetFullPath(mySpec.AssemblyRoot));
+            myLogger.LogInformation("Loading package {0}", package.Name);
 
             return package.Includes
                 .SelectMany(i => Directory.GetFiles(mySpec.AssemblyRoot, i.Pattern))
@@ -118,7 +125,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             myCancellationToken.ThrowIfCancellationRequested();
 
-            return new Inspector(monoLoader, type).GetUsedTypes()
+            return new Inspector(myLoggerFactory.CreateLogger<Inspector>(), monoLoader, type).GetUsedTypes()
                 .Where(edge => myPackageToTypesMap.Any(e => e.Value.Contains(edge.To)))
                 .Select(edge => GraphUtils.Edge(edge))
                 .Where(edge => edge.From != edge.To);

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Plainion.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Plainion.GraphViz.CodeInspection.AssemblyLoader;
 
 class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
 {
-    private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(CustomMetadataAssemblyResolver));
-
+    private readonly ILogger<CustomMetadataAssemblyResolver> myLogger;
     private readonly HashSet<string> myFolders;
     // we must not add same assembly from different paths to PathAssemblyResolver.
     // it will fail with exception if version isnt exactly same
@@ -21,11 +20,15 @@ class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
     private readonly NugetResolver myNuGetResolver;
     private readonly Func<Assembly> myTryGetRequestingAssembly;
 
-    public CustomMetadataAssemblyResolver(Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly, DotNetRuntime dotnetRuntime)
+    public CustomMetadataAssemblyResolver(ILogger<CustomMetadataAssemblyResolver> logger, Func<Assembly> tryGetRequestingAssembly, Assembly coreAssembly, DotNetRuntime dotnetRuntime)
     {
+        Contract.RequiresNotNull(logger, nameof(logger));
         Contract.RequiresNotNull(tryGetRequestingAssembly, nameof(tryGetRequestingAssembly));
+        Contract.RequiresNotNull(coreAssembly, nameof(coreAssembly));
 
+        myLogger = logger;
         myTryGetRequestingAssembly = tryGetRequestingAssembly;
+
         myAssemblies = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         myFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -40,7 +43,7 @@ class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
     public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
     {
         var assembly = ResolveCore(context, assemblyName);
-        myLogger.Debug($"{assembly} => {assembly?.Location}");
+        myLogger.LogDebug($"{assembly} => {assembly?.Location}");
         return assembly;
     }
 

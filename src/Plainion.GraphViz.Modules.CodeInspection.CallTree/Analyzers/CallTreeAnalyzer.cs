@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Algorithms;
@@ -24,7 +25,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 
     class CallTreeAnalyzer
     {
-        private static readonly ILogger myLogger = LoggerFactory.GetLogger(typeof(CallTreeAnalyzer));
+        private readonly Microsoft.Extensions.Logging.ILoggerFactory myLoggerFactory;
+        private readonly ILogger<CallTreeAnalyzer> myLogger;
 
         private class MethodNode
         {
@@ -52,14 +54,22 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
         }
 
+        public CallTreeAnalyzer(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory)
+        {
+            Contract.RequiresNotNull(loggerFactory, nameof(loggerFactory));
+
+            myLoggerFactory = loggerFactory;
+            myLogger = loggerFactory.CreateLogger<CallTreeAnalyzer>();
+        }
+
         public bool AssemblyReferencesOnly { get; set; }
         public bool StrictCallsOnly { get; set; }
 
-        private IEnumerable<MethodCall> GetCalledMethods(MonoLoader monoLoader, Type t)
+        private IEnumerable<MethodCall> GetCalledMethods(ILogger<Inspector> logger, MonoLoader monoLoader, Type t)
         {
             Console.Write(".");
 
-            var inspector = new Inspector(monoLoader, t);
+            var inspector = new Inspector(logger, monoLoader, t);
             return inspector.GetCalledMethods();
         }
 
@@ -128,11 +138,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             });
         }
 
-        private List<MethodCall> Analyze(MonoLoader monoLoader, IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<Type> analyzed, List<Type> callers)
+        private List<MethodCall> Analyze(ILogger<Inspector> inspectorLogger, MonoLoader monoLoader, IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<Type> analyzed, List<Type> callers)
         {
             var calls = callers.AsParallel()
                 .SelectMany(t =>
-                    GetCalledMethods(monoLoader, t)
+                    GetCalledMethods(inspectorLogger, monoLoader, t)
                         .Where(r => CoveredByAssemblyGraph(relevantNodes, r.To.DeclaringType))
                         .SelectMany(x => interfaceImplementationsMap.ResolveInterface(x)))
                 .ToList();
@@ -150,20 +160,20 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
             else
             {
-                var children = Analyze(monoLoader, relevantNodes, interfaceImplementationsMap, callers.Concat(analyzed).Distinct().ToList(), unknownTypes);
+                var children = Analyze(inspectorLogger, monoLoader, relevantNodes, interfaceImplementationsMap, callers.Concat(analyzed).Distinct().ToList(), unknownTypes);
                 return calls.Concat(children).ToList();
             }
         }
 
         // traces from the given source nodes all calls within the assembly graph
-        private List<MethodCall> TraceCalles(MonoLoader monoLoader, IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<MethodDesc> targets, IEnumerable<Assembly> sources)
+        private List<MethodCall> TraceCalles(ILogger<Inspector> inspectorLogger, MonoLoader monoLoader, IEnumerable<Node> relevantNodes, InterfaceImplementationsMap interfaceImplementationsMap, List<MethodDesc> targets, IEnumerable<Assembly> sources)
         {
             var targetTypes = targets
                 .Select(m => m.myDeclaringType)
                 .Distinct()
                 .ToList();
 
-            return Analyze(monoLoader, relevantNodes, interfaceImplementationsMap, targetTypes,
+            return Analyze(inspectorLogger, monoLoader, relevantNodes, interfaceImplementationsMap, targetTypes,
                 sources.SelectMany(x => x.GetTypes()).ToList())
                 .Distinct()
                 .ToList();
@@ -179,18 +189,19 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 .Concat(targets.Select(x => x.myDeclaringType.Assembly))
                 .ToList();
 
-            var interfaceImplementationsMap = new InterfaceImplementationsMap(assemblies);
+            var interfaceImplementationsMap = new InterfaceImplementationsMap(myLoggerFactory.CreateLogger<InterfaceImplementationsMap>(), assemblies);
             interfaceImplementationsMap.Build(relevantNodes, targets.Select(t => t.myDeclaringType));
 
             var monoLoader = new MonoLoader(assemblies);
-            var calls = TraceCalles(monoLoader, relevantNodes, interfaceImplementationsMap, targets, sources);
+            var inspectorLogger = myLoggerFactory.CreateLogger<Inspector>();
+            var calls = TraceCalles(inspectorLogger, monoLoader, relevantNodes, interfaceImplementationsMap, targets, sources);
 
             Console.WriteLine();
             Console.WriteLine("NOT analyzed assemblies:");
 
             foreach (var x in monoLoader.SkippedAssemblies)
             {
-                myLogger.Warning($"    {x}");
+                myLogger.LogWarning($"    {x}");
             }
 
             return Profile("Generating call graph ...", () =>
@@ -447,17 +458,17 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
                 AssemblyReferencesOnly = assemblyReferencesOnly;
                 StrictCallsOnly = strictCallsOnly;
 
-                var loader = AssemblyLoaderFactory.Create(config.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core);
+                var loader = AssemblyLoaderFactory.Create(myLoggerFactory, config.NetFramework ? DotNetRuntime.Framework : DotNetRuntime.Core);
                 Execute(loader, sources, targets, config.RelevantAssemblies, outputFile);
             }
         }
 
-        private static IEnumerable<string> ResolveAssemblies(string binFolder, string pattern)
+        private IEnumerable<string> ResolveAssemblies(string binFolder, string pattern)
         {
             var files = Directory.GetFiles(binFolder, pattern);
             if (files.Length == 0)
             {
-                myLogger.Warning($"No assemblies found for pattern: {pattern}");
+                myLogger.LogWarning($"No assemblies found for pattern: {pattern}");
                 return Enumerable.Empty<string>();
             }
             else
@@ -468,7 +479,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
         }
 
-        private static IEnumerable<string> ResolveAssemblies(string binFolder, IEnumerable<string> patterns)
+        private IEnumerable<string> ResolveAssemblies(string binFolder, IEnumerable<string> patterns)
         {
             return patterns.SelectMany(p => ResolveAssemblies(binFolder, p)).ToList();
         }

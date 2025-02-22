@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using Plainion.GraphViz.CodeInspection;
 
@@ -34,7 +36,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
         private void Verify(Type callerType, string callerMethod, string hardcodedString)
         {
-            var reflector = new Inspector(new MonoLoader(new[] { typeof(Caller).Assembly }), callerType);
+            var reflector = new Inspector(new NullLoggerFactory().CreateLogger<Inspector>(), new MonoLoader(new[] { typeof(Caller).Assembly }), callerType);
 
             var strings = reflector.GetHardcodedStrings();
 
