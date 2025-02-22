@@ -281,11 +281,11 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 // register for notifications after tree is built to avoid intermediate states getting notified
 
-                foreach (ClusterTreeNode cluster in Root.Children)
+                foreach (var cluster in Root.Children)
                 {
                     PropertyChangedEventManager.AddHandler(cluster, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => cluster.IsSelected));
 
-                    foreach (ClusterTreeNode node in cluster.Children)
+                    foreach (var node in cluster.Children)
                     {
                         PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
                         PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
@@ -455,7 +455,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         string IDropable.DataFormat
         {
-            get { return typeof(NodeItem).FullName; }
+            get { return typeof(NodeView).FullName; }
         }
 
         bool IDropable.IsDropAllowed(object data, DropLocation location)
@@ -465,7 +465,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         void IDropable.Drop(object data, DropLocation location)
         {
-            var droppedElement = data as NodeItem;
+            var droppedElement = data as NodeView;
             if (droppedElement == null)
             {
                 return;

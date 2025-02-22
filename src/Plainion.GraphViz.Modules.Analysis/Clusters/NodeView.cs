@@ -9,11 +9,11 @@ using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-public class NodeItem : TreeViewItem, IDropable, IDragable
+public class NodeView : TreeViewItem, IDropable, IDragable
 {
     private readonly StateContainer myStateContainer;
 
-    internal NodeItem(StateContainer stateContainer)
+    internal NodeView(StateContainer stateContainer)
     {
         if (!DesignerProperties.GetIsInDesignMode(this))
         {
@@ -79,17 +79,17 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
 
     protected override DependencyObject GetContainerForItemOverride()
     {
-        return new NodeItem(myStateContainer);
+        return new NodeView(myStateContainer);
     }
 
     protected override bool IsItemItsOwnContainerOverride(object item)
     {
-        return item is NodeItem;
+        return item is NodeView;
     }
 
     internal NodeState State { get; private set; }
 
-    public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeItem),
+    public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView),
         new FrameworkPropertyMetadata(null));
 
     public string Text
@@ -98,7 +98,7 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
         set { SetValue(TextProperty, value); }
     }
 
-    public static DependencyProperty FormattedTextProperty = DependencyProperty.Register("FormattedText", typeof(string), typeof(NodeItem),
+    public static DependencyProperty FormattedTextProperty = DependencyProperty.Register("FormattedText", typeof(string), typeof(NodeView),
         new FrameworkPropertyMetadata(null));
 
     public string FormattedText
@@ -107,7 +107,7 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
         set { SetValue(FormattedTextProperty, value); }
     }
 
-    public static DependencyProperty IsInEditModeProperty = DependencyProperty.Register("IsInEditMode", typeof(bool), typeof(NodeItem),
+    public static DependencyProperty IsInEditModeProperty = DependencyProperty.Register("IsInEditMode", typeof(bool), typeof(NodeView),
         new FrameworkPropertyMetadata(false));
 
     public bool IsInEditMode
@@ -116,12 +116,12 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
         set { SetValue(IsInEditModeProperty, value); }
     }
 
-    public static DependencyProperty IsFilteredOutProperty = DependencyProperty.Register("IsFilteredOut", typeof(bool), typeof(NodeItem),
+    public static DependencyProperty IsFilteredOutProperty = DependencyProperty.Register("IsFilteredOut", typeof(bool), typeof(NodeView),
         new FrameworkPropertyMetadata(false, OnIsFilteredOutChanged));
 
     private static void OnIsFilteredOutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var self = (NodeItem)d;
+        var self = (NodeView)d;
         self.Visibility = self.IsFilteredOut ? Visibility.Collapsed : Visibility.Visible;
     }
 
@@ -133,12 +133,12 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
 
     string IDropable.DataFormat
     {
-        get { return typeof(NodeItem).FullName; }
+        get { return typeof(NodeView).FullName; }
     }
 
     bool IDropable.IsDropAllowed(object data, DropLocation location)
     {
-        if (!(data is NodeItem))
+        if (!(data is NodeView))
         {
             return false;
         }
@@ -148,7 +148,7 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
 
     void IDropable.Drop(object data, DropLocation location)
     {
-        var droppedElement = data as NodeItem;
+        var droppedElement = data as NodeView;
 
         if (droppedElement == null)
         {
@@ -189,7 +189,7 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
                 return null;
             }
 
-            return typeof(NodeItem);
+            return typeof(NodeView);
         }
     }
 

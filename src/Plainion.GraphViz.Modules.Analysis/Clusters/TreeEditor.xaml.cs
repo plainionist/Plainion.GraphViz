@@ -94,14 +94,14 @@ partial class TreeEditor : UserControl, IDropable
         set { SetValue(FilterProperty, value); }
     }
 
-    string IDropable.DataFormat => typeof(NodeItem).FullName;
+    string IDropable.DataFormat => typeof(NodeView).FullName;
 
     bool IDropable.IsDropAllowed(object data, DropLocation location) =>
         Root == null ? false : myTree.StateContainer.GetOrCreate(Root).IsDropAllowed(location);
 
     void IDropable.Drop(object data, DropLocation location)
     {
-        if (data is not NodeItem droppedElement)
+        if (data is not NodeView droppedElement)
         {
             return;
         }

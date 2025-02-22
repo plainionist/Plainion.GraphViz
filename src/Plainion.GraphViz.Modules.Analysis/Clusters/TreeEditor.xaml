@@ -27,11 +27,11 @@
 
         <tree:ExtendedTreeView x:Name="myTree" Margin="0,3,0,0" ItemsSource="{Binding Root.Children}">
             <tree:ExtendedTreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type tree:NodeItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                <Style TargetType="{x:Type tree:NodeView}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Setter Property="Template">
                         <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type tree:NodeItem}">
+                            <ControlTemplate TargetType="{x:Type tree:NodeView}">
                                 <StackPanel>
                                     <StackPanel.Resources>
                                         <pn:BindingProxy x:Key="RealDataContext" Data="{Binding}"/>

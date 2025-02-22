@@ -19,12 +19,12 @@ class ExtendedTreeView : TreeView
 
     protected override DependencyObject GetContainerForItemOverride()
     {
-        return new NodeItem(StateContainer);
+        return new NodeView(StateContainer);
     }
 
     protected override bool IsItemItsOwnContainerOverride(object item)
     {
-        return item is NodeItem;
+        return item is NodeView;
     }
 
     public static DependencyProperty NodeForContextMenuProperty = DependencyProperty.Register("NodeForContextMenu", typeof(ClusterTreeNode), typeof(ExtendedTreeView),
@@ -41,7 +41,7 @@ class ExtendedTreeView : TreeView
     {
         NodeForContextMenu = null;
 
-        NodeItem nodeItem = null;
+        NodeView nodeItem = null;
 
         if (Keyboard.Modifiers == ModifierKeys.Control)
         {
@@ -52,7 +52,7 @@ class ExtendedTreeView : TreeView
         }
         else
         {
-            nodeItem = ((DependencyObject)e.OriginalSource).FindParentOfType<NodeItem>();
+            nodeItem = ((DependencyObject)e.OriginalSource).FindParentOfType<NodeView>();
         }
 
         if (nodeItem != null)

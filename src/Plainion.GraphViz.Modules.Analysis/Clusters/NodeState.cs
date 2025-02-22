@@ -14,7 +14,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 /// </summary>
 class NodeState
 {
-    private NodeItem myAttachedView;
+    private NodeView myAttachedView;
     private readonly StateContainer myContainer;
     private bool myIsFilteredOut;
     private bool myIsExpanded;
@@ -100,7 +100,7 @@ class NodeState
         return false;
     }
 
-    public void Attach(NodeItem nodeItem)
+    public void Attach(NodeView nodeItem)
     {
         myAttachedView = nodeItem;
 
