@@ -5,6 +5,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:pn="http://github.com/ronin4net/plainion"
+        xmlns:pngv="https://github.com/plainionist/Plainion.GraphViz"
         x:Name="_this">
 
     <UserControl.Resources>
@@ -75,11 +76,11 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <pn:TreeEditor Grid.Row="0" Root="{Binding Root}" FilterLabel="Filter on caption or id"
+            <pngv:TreeEditor Grid.Row="0" Root="{Binding Root}" FilterLabel="Filter on caption or id"
                            CreateChildCommand="{Binding AddClusterCommand}"
                            DeleteCommand="{Binding DeleteClusterCommand}"
                            DropCommand="{Binding DropCommand}">
-                <pn:TreeEditor.NodeStyle>
+                <pngv:TreeEditor.NodeStyle>
                     <Style TargetType="{x:Type pn:NodeItem}" BasedOn="{StaticResource DefaultNodeStyle}">
                         <Setter Property="Text" Value="{Binding Caption, Mode=TwoWay}"/>
                         <Setter Property="ToolTip" Value="{Binding Id}"/>
@@ -87,8 +88,8 @@
                         <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
                         <Setter Property="FormattedText" Value="{Binding DisplayText}"/>
                     </Style>
-                </pn:TreeEditor.NodeStyle>
-            </pn:TreeEditor>
+                </pngv:TreeEditor.NodeStyle>
+            </pngv:TreeEditor>
 
             <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0"
                       IsChecked="{Binding TreeShowId}"/>
