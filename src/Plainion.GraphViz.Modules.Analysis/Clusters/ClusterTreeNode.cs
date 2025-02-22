@@ -17,7 +17,7 @@ class ClusterTreeNode : BindableBase
     {
         myPresentation = presentation;
 
-        Children = new ObservableCollection<ClusterTreeNode>();
+        Children = [];
 
         IsDropAllowed = true;
         IsDragAllowed = true;
@@ -65,7 +65,7 @@ class ClusterTreeNode : BindableBase
 
     public bool IsDropAllowed { get; set; }
 
-    public ObservableCollection<ClusterTreeNode> Children { get; private set; }
+    public ObservableCollection<ClusterTreeNode> Children { get; }
 
     public ClusterTreeNode Parent
     {

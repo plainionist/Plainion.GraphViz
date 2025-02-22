@@ -141,7 +141,7 @@ class NodeViewModel
             }
         }
 
-        foreach (var child in GetChildren())
+        foreach (var child in DataContext.Children.Select(myContainer.GetOrCreate))
         {
             child.ApplyFilter(filter);
 
@@ -172,22 +172,11 @@ class NodeViewModel
         return state.DataContext.Parent == null ? null : myContainer.GetOrCreate(state.DataContext.Parent);
     }
 
-    private IEnumerable<NodeViewModel> GetChildren()
-    {
-        if (DataContext.Children == null)
-        {
-            return Enumerable.Empty<NodeViewModel>();
-        }
-
-        return DataContext.Children
-            .Select(myContainer.GetOrCreate);
-    }
-
     public void ExpandAll()
     {
         IsExpanded = true;
 
-        foreach (var child in GetChildren())
+        foreach (var child in DataContext.Children.Select(myContainer.GetOrCreate))
         {
             child.ExpandAll();
         }
@@ -197,7 +186,7 @@ class NodeViewModel
     {
         IsExpanded = false;
 
-        foreach (var child in GetChildren())
+        foreach (var child in DataContext.Children.Select(myContainer.GetOrCreate))
         {
             child.CollapseAll();
         }
