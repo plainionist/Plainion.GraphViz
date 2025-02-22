@@ -12,7 +12,6 @@
     <PackageReference Include="Akka.Remote" Version="1.5.37" />
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
     <PackageReference Include="Plainion.Prism" Version="9.0.0" />
-    <PackageReference Include="Plainion.Windows.Editors" Version="3.0.0" />
     <PackageReference Include="Prism.Wpf" Version="9.0.537" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.2" />
