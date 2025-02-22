@@ -12,7 +12,35 @@ partial class TreeEditor : UserControl, IDropable
     {
         InitializeComponent();
 
-        TreeEditorCommands.RegisterCommandBindings(this);
+        CommandBindings.Add(new CommandBinding(ExpandAll, (sender, e) => OnExpandAll((ClusterTreeNode)e.Parameter)));
+        CommandBindings.Add(new CommandBinding(CollapseAll, (sender, e) => OnCollapseAll((ClusterTreeNode)e.Parameter)));
+    }
+
+    public static readonly RoutedCommand ExpandAll = new();
+    public static readonly RoutedCommand CollapseAll = new();
+
+    private void OnExpandAll(ClusterTreeNode node)
+    {
+        if (node == null)
+        {
+            node = Root;
+        }
+
+        var nodeState = myTree.StateContainer.GetOrCreate(node);
+
+        nodeState.ExpandAll();
+    }
+
+    private void OnCollapseAll(ClusterTreeNode node)
+    {
+        if (node == null)
+        {
+            node = Root;
+        }
+
+        var nodeState = myTree.StateContainer.GetOrCreate(node);
+
+        nodeState.CollapseAll();
     }
 
     public static DependencyProperty FilterLabelProperty = DependencyProperty.Register("FilterLabel", typeof(string), typeof(TreeEditor),
@@ -121,7 +149,7 @@ partial class TreeEditor : UserControl, IDropable
     }
 
     public static DependencyProperty ExpandAllCommandProperty = DependencyProperty.Register("ExpandAllCommand", typeof(ICommand), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(TreeEditorCommands.ExpandAll));
+        new FrameworkPropertyMetadata(ExpandAll));
 
     public ICommand ExpandAllCommand
     {
@@ -130,7 +158,7 @@ partial class TreeEditor : UserControl, IDropable
     }
 
     public static DependencyProperty CollapseAllCommandProperty = DependencyProperty.Register("CollapseAllCommand", typeof(ICommand), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(TreeEditorCommands.CollapseAll));
+        new FrameworkPropertyMetadata(CollapseAll));
 
     public ICommand CollapseAllCommand
     {
