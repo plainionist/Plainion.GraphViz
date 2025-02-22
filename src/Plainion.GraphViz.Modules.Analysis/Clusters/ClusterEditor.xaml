@@ -12,7 +12,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Plainion.Prism;component/Resources/Templates.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/Plainion.Windows;component/Controls/Tree/TreeEditor.Resources.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Plainion.GraphViz.Controls;component/Tree/TreeEditor.Resources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

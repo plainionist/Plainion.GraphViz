@@ -3,14 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1591,8032</NoWarn>
-    <WarningsNotAsErrors>CS0612,CS0618</WarningsNotAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DisableImplicitAspNetCoreAnalyzers>true</DisableImplicitAspNetCoreAnalyzers>
+    <LangVersion>latest</LangVersion>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>

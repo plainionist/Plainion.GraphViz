@@ -4,7 +4,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {
     partial class ClusterEditor : UserControl
     {
-        public ClusterEditor( ClusterEditorModel model )
+        public ClusterEditor(ClusterEditorModel model)
         {
             InitializeComponent();
 

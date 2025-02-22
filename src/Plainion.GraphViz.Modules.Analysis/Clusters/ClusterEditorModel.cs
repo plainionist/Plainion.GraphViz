@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Input;
+using Plainion;
 using Plainion.Collections;
-using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
+using Plainion.GraphViz.Controls.Tree;
 using Plainion.GraphViz.Presentation;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
-using Plainion.Windows.Controls.Tree;
 using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
-using Plainion;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {

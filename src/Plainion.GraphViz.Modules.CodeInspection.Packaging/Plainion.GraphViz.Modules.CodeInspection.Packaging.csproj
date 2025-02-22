@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
-    <WarningsNotAsErrors>$(WarningsNotAsErrors),SYSLIB0011</WarningsNotAsErrors>
     <UseWPF>true</UseWPF>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>

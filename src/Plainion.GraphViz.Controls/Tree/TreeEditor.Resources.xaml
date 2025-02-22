@@ -82,7 +82,7 @@
                                             DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                     <StackPanel.Resources>
                                         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-                                        
+
                                         <tree:ShowChildrenCountConverter x:Key="ShowChildrenCountConverter"/>
                                     </StackPanel.Resources>
 

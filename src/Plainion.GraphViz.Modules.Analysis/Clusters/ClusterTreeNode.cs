@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Prism.Mvvm;
 using Plainion.GraphViz.Presentation;
-using Plainion.Windows.Controls.Tree;
+using Plainion.GraphViz.Controls.Tree;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {

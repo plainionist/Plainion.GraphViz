@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <UserSecretsId>e296d988-18da-4122-8dea-555d46c9bc2e</UserSecretsId>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
