@@ -131,41 +131,6 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
         set { SetValue(IsFilteredOutProperty, value); State.IsFilteredOut = value; }
     }
 
-    public static DependencyProperty IsCheckedProperty = DependencyProperty.Register("IsChecked", typeof(bool?), typeof(NodeItem),
-        new FrameworkPropertyMetadata(null, OnIsCheckedChanged));
-
-    private static void OnIsCheckedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var self = (NodeItem)d;
-
-        // at first posibility get the property name of the IsChecked binding and remember it
-        if (self.myStateContainer.IsCheckedProperty == null)
-        {
-            var expr = self.GetBindingExpression(IsCheckedProperty);
-
-            string propertyName = expr.ResolvedSourcePropertyName;
-
-            self.myStateContainer.IsCheckedProperty = new DataContextProperty<bool?>(propertyName);
-        }
-
-        if (self.State != null)
-        {
-            // third state cannot be set - just calculated
-            self.State.PropagateIsChecked(self.IsChecked == true);
-        }
-    }
-
-    public bool? IsChecked
-    {
-        get { return (bool?)GetValue(IsCheckedProperty); }
-        set { SetValue(IsCheckedProperty, value); }
-    }
-
-    public bool ShowCheckBox
-    {
-        get { return GetBindingExpression(IsCheckedProperty) != null; }
-    }
-
     string IDropable.DataFormat
     {
         get { return typeof(NodeItem).FullName; }

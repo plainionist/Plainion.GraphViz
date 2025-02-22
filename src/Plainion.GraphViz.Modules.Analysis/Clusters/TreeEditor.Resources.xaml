@@ -90,9 +90,6 @@
                                         <pn:RaiseCommandOnMouseGestureBehavior ClickCount="2" MouseButton="Left" Command="{Binding EditCommand}"/>
                                     </i:Interaction.Behaviors>
 
-                                    <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" IsThreeState="True" Focusable="False" VerticalAlignment="Center" Margin="0,0,3,0"
-                                              Visibility="{Binding ShowCheckBox, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
                                     <pn:EditableTextBlock x:Name="PART_FormattedText" VerticalAlignment="Center" HorizontalAlignment="Stretch"
                                                                 Text="{Binding Text, Mode=TwoWay}" Focusable="False"
                                                                 FormattedText="{Binding FormattedText, Mode=OneWay}" 
