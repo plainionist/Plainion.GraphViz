@@ -44,6 +44,4 @@ class StateContainer
     public bool IsCheckedPropagationRunning { get; set; }
 
     public DataContextProperty<bool?> IsCheckedProperty { get; set; }
-
-    public bool ShowChildrenCount { get; set; }
 }

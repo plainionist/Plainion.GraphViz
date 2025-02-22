@@ -82,8 +82,6 @@
                                             DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                     <StackPanel.Resources>
                                         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-
-                                        <tree:ShowChildrenCountConverter x:Key="ShowChildrenCountConverter"/>
                                     </StackPanel.Resources>
 
                                     <i:Interaction.Behaviors>
@@ -99,17 +97,6 @@
                                                                 Text="{Binding Text, Mode=TwoWay}" Focusable="False"
                                                                 FormattedText="{Binding FormattedText, Mode=OneWay}" 
                                                                 IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}"/>
-
-                                    <TextBlock x:Name="PART_ChildrenCount" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Foreground="Green">
-                                        <TextBlock.Text>
-                                            <MultiBinding Converter="{StaticResource ShowChildrenCountConverter}">
-                                                <Binding Path="."/>
-                                                <Binding Path="Data.Children" Source="{StaticResource RealDataContext}"/>
-                                                <!-- http://stackoverflow.com/questions/5583830/multibinding-with-multivalueconverter-does-not-update -->
-                                                <Binding Path="Data.Children.Count" Source="{StaticResource RealDataContext}"/>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
                                 </StackPanel>
                             </Border>
                             <ItemsPresenter x:Name="ItemsHost" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch"/>

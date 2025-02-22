@@ -18,7 +18,6 @@ class NodeState
     private readonly StateContainer myContainer;
     private bool myIsFilteredOut;
     private bool myIsExpanded;
-    private bool myShowChildrenCount;
 
     public NodeState(ClusterTreeNode dataContext, StateContainer container)
     {
@@ -291,24 +290,5 @@ class NodeState
         }
 
         parent.UpdateParentsIsChecked();
-    }
-
-    public bool ShowChildrenCount
-    {
-        get { return myShowChildrenCount; }
-        set
-        {
-            if (myShowChildrenCount == value)
-            {
-                return;
-            }
-
-            myShowChildrenCount = value;
-
-            foreach (var child in GetChildren())
-            {
-                child.ShowChildrenCount = myShowChildrenCount;
-            }
-        }
     }
 }

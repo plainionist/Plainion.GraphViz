@@ -46,9 +46,7 @@ partial class TreeEditor : UserControl, IDropable
 
         if (Root != null)
         {
-            CollectionChangedEventManager.AddHandler((INotifyCollectionChanged)Root.Children, OnRootChildrenChanged);
-
-            myTree.StateContainer.GetRoot().ShowChildrenCount = ShowChildrenCount;
+            CollectionChangedEventManager.AddHandler(Root.Children, OnRootChildrenChanged);
         }
     }
 
@@ -190,25 +188,5 @@ partial class TreeEditor : UserControl, IDropable
     {
         get { return (Style)GetValue(NodeStyleProperty); }
         set { SetValue(NodeStyleProperty, value); }
-    }
-
-    public static readonly DependencyProperty ShowChildrenCountProperty = DependencyProperty.Register("ShowChildrenCount", typeof(bool), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(false, OnShowChildrenCountChanged));
-
-    private static void OnShowChildrenCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var self = (TreeEditor)d;
-        self.myTree.StateContainer.ShowChildrenCount = self.ShowChildrenCount;
-
-        if (self.Root != null)
-        {
-            self.myTree.StateContainer.GetRoot().ShowChildrenCount = self.ShowChildrenCount;
-        }
-    }
-
-    public bool ShowChildrenCount
-    {
-        get { return (bool)GetValue(ShowChildrenCountProperty); }
-        set { SetValue(ShowChildrenCountProperty, value); }
     }
 }
