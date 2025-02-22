@@ -20,10 +20,10 @@ public class NodeItem : TreeViewItem, IDropable, IDragable
             myStateContainer = stateContainer;
 
             EditCommand = new DelegateCommand(() => IsInEditMode = true, () =>
-           {
-               var expr = GetBindingExpression(TextProperty);
-               return expr != null && expr.ParentBinding.Mode == BindingMode.TwoWay;
-           });
+            {
+                var expr = GetBindingExpression(TextProperty);
+                return expr != null && expr.ParentBinding.Mode == BindingMode.TwoWay;
+            });
 
             Loaded += OnLoaded;
         }
