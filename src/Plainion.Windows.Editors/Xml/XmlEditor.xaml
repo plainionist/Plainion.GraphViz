@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Plainion.Windows.Editors.Xml.XmlEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        mc:Ignorable="d"  
+        d:DesignHeight="300" d:DesignWidth="300"
+        x:Name="_this">
+    <avalonEdit:TextEditor 
+        Name="myTextEditor" 
+        FontFamily="Consolas" 
+        SyntaxHighlighting="XML"  
+        Document="{Binding Document, ElementName=_this}" 
+        ShowLineNumbers="True" 
+        FontSize="10pt"/>
+</UserControl>
