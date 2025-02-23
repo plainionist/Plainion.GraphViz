@@ -91,7 +91,7 @@ partial class TreeEditor : UserControl, IDropable
     string IDropable.DataFormat => typeof(NodeView).FullName;
 
     bool IDropable.IsDropAllowed(object data, DropLocation location) =>
-        Root == null ? false : myTree.StateContainer.GetOrCreate(Root).IsDropAllowed(location);
+        Root == null ? false : myTree.StateContainer.GetOrCreate(Root).IsDropAllowedAt(location);
 
     void IDropable.Drop(object data, DropLocation location)
     {
@@ -102,7 +102,7 @@ partial class TreeEditor : UserControl, IDropable
 
         var arg = new NodeDropRequest
         {
-            DroppedNode = droppedElement.State.DataContext,
+            DroppedNode = droppedElement.State,
             DropTarget = Root,
             Location = location
         };

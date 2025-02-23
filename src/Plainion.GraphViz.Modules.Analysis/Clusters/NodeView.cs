@@ -55,7 +55,6 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         }
 
         State = myStateContainer.GetOrCreate(node);
-        State.Attach(this);
 
         var childrenCount = (TextBlock)GetTemplateChild("PART_ChildrenCount");
         if (childrenCount != null)
@@ -87,7 +86,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         return item is NodeView;
     }
 
-    internal NodeViewModel State { get; private set; }
+    internal ClusterTreeNode State { get; private set; }
 
     public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView),
         new FrameworkPropertyMetadata(null));
@@ -143,7 +142,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
             return false;
         }
 
-        return State.IsDropAllowed(location);
+        return State.IsDropAllowedAt(location);
     }
 
     void IDropable.Drop(object data, DropLocation location)
@@ -163,8 +162,8 @@ public class NodeView : TreeViewItem, IDropable, IDragable
 
         var arg = new NodeDropRequest
         {
-            DroppedNode = droppedElement.State.DataContext,
-            DropTarget = State.DataContext,
+            DroppedNode = droppedElement.State,
+            DropTarget = State,
             Location = location
         };
 
@@ -184,7 +183,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
     {
         get
         {
-            if (State.DataContext != null && !State.DataContext.IsDragAllowed)
+            if (!State.IsDragAllowed)
             {
                 return null;
             }
