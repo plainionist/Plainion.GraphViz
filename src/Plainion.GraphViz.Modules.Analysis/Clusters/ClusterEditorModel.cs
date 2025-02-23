@@ -38,7 +38,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
-            Root = new NodeViewModel(null,null, NodeType.Root);
+            Root = new NodeViewModel(null, null, NodeType.Root);
 
             AddClusterCommand = new DelegateCommand<NodeViewModel>(OnAddCluster, n => n == Root);
             DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteCluster, n => n?.Parent == Root);
@@ -66,7 +66,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             // update tree
             {
-                var clusterNode = new NodeViewModel(myPresentation, newClusterId,NodeType.Cluster)
+                var clusterNode = new NodeViewModel(myPresentation, newClusterId, NodeType.Cluster)
                 {
                     Parent = Root,
                     Caption = captionModule.Get(newClusterId).DisplayText,
@@ -97,7 +97,8 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             // update tree
             {
-                Root.Children.Remove(clusterNode);
+                // the tree might have been rebuilt - we have to search by id
+                Root.Children.Remove(Root.Children.Single(x => x.Id == clusterNode.Id));
 
                 if (clusterNode.Id == SelectedCluster)
                 {
@@ -166,7 +167,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
 
                 var newTreeNodes = nodes
-                    .Select(n => new NodeViewModel(myPresentation,n, NodeType.Node)
+                    .Select(n => new NodeViewModel(myPresentation, n, NodeType.Node)
                     {
                         Parent = clusterNode,
                         Caption = captionModule.Get(n).DisplayText,
@@ -265,7 +266,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
-                    var clusterNode = new NodeViewModel(myPresentation, cluster.Id,NodeType.Cluster)
+                    var clusterNode = new NodeViewModel(myPresentation, cluster.Id, NodeType.Cluster)
                     {
                         Parent = Root,
                         Caption = captionModule.Get(cluster.Id).DisplayText,

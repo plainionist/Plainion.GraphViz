@@ -17,9 +17,9 @@ enum NodeType
 /// In case of "Root" presentation and Id are null.
 /// </summary>
 [DebuggerDisplay("{Id}")]
-class NodeViewModel(IGraphPresentation presentation, string id, NodeType type) : BindableBase
+class NodeViewModel : BindableBase
 {
-    private readonly IGraphPresentation myPresentation = presentation;
+    private readonly IGraphPresentation myPresentation;
     private NodeViewModel myParent;
     private bool myIsSelected;
     private string myCaption;
@@ -27,8 +27,15 @@ class NodeViewModel(IGraphPresentation presentation, string id, NodeType type) :
     private bool myIsExpanded;
     private bool myIsFilteredOut;
 
-    public NodeType Type { get; } = type;
-    public string Id { get; } = id;
+    public NodeViewModel(IGraphPresentation presentation, string id, NodeType type)
+    {
+        myPresentation = presentation;
+        Type = type;
+        Id = id;
+    }
+
+    public NodeType Type { get; }
+    public string Id { get; }
 
     public string Caption
     {
