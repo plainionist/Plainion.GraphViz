@@ -2,9 +2,6 @@
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-/// <summary>
-/// Send as parameter with the <see cref="TreeEditor.DropCommand"/> to specify the requested DragDrop action.
-/// </summary>
 class NodeDropRequest
 {
     public NodeViewModel DroppedNode { get; set; }

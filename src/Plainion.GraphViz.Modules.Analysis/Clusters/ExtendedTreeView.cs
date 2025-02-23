@@ -5,24 +5,9 @@ using System.Windows.Input;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-/// <summary>
-/// Used by the <see cref="TreeEditor"/> to handle certain aspects which are difficult to handle in the Xaml.
-/// </summary>
 class ExtendedTreeView : TreeView
 {
-    private NodeViewModel myRoot;
-
-    public NodeViewModel Root
-    {
-        get { return myRoot; }
-        set
-        {
-            if (myRoot != value)
-            {
-                myRoot = value;
-            }
-        }
-    }
+    public NodeViewModel Root { get; set; }
 
     protected override DependencyObject GetContainerForItemOverride()
     {
@@ -43,7 +28,6 @@ class ExtendedTreeView : TreeView
         set { SetValue(NodeForContextMenuProperty, value); }
     }
 
-    // TODO: into behavior?
     protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
     {
         NodeForContextMenu = null;
