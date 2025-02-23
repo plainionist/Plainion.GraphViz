@@ -164,34 +164,9 @@
 
             <tree:ExtendedTreeView.ContextMenu>
                 <ContextMenu>
-                    <ContextMenu.Resources>
-                        <pn:ConverterChain x:Key="CollapseIfNullConverter">
-                            <pn:IsEmptyConverter/>
-                            <pn:NotConverter/>
-                            <pn:BoolToVisibilityConverter/>
-                        </pn:ConverterChain>
-                        <pn:ConverterChain x:Key="IsBoundConverter">
-                            <pn:IsEmptyConverter/>
-                            <pn:NotConverter/>
-                        </pn:ConverterChain>
-                    </ContextMenu.Resources>
-                    <MenuItem Header="New" Command="{Binding CreateChildCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"
-                              Visibility="{Binding CreateChildCommand, Mode=OneWay, Converter={StaticResource CollapseIfNullConverter}}"/>
-                    <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}"
-                              Visibility="{Binding DeleteCommand, Mode=OneWay, Converter={StaticResource CollapseIfNullConverter}}"/>
-                    <Separator>
-                        <Separator.Visibility>
-                            <MultiBinding>
-                                <Binding Path="CreateChildCommand" Converter="{StaticResource IsBoundConverter}"/>
-                                <Binding Path="DeleteCommand" Converter="{StaticResource IsBoundConverter}"/>
-                                <MultiBinding.Converter>
-                                    <pn:OrConverter>
-                                        <pn:BoolToVisibilityConverter/>
-                                    </pn:OrConverter>
-                                </MultiBinding.Converter>
-                            </MultiBinding>
-                        </Separator.Visibility>
-                    </Separator>
+                    <MenuItem Header="New" Command="{Binding CreateChildCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
+                    <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
+                    <Separator />
                     <MenuItem Header="Expand All" Command="{Binding ExpandAllCommand}"/>
                     <MenuItem Header="Collapse All" Command="{Binding CollapseAllCommand}"/>
                </ContextMenu>
