@@ -11,14 +11,10 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 public class NodeView : TreeViewItem, IDropable, IDragable
 {
-    private readonly StateContainer myStateContainer;
-
-    internal NodeView(StateContainer stateContainer)
+    internal NodeView()
     {
         if (!DesignerProperties.GetIsInDesignMode(this))
         {
-            myStateContainer = stateContainer;
-
             EditCommand = new DelegateCommand(() => IsInEditMode = true, () =>
             {
                 var expr = GetBindingExpression(TextProperty);
@@ -78,7 +74,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
 
     protected override DependencyObject GetContainerForItemOverride()
     {
-        return new NodeView(myStateContainer);
+        return new NodeView();
     }
 
     protected override bool IsItemItsOwnContainerOverride(object item)

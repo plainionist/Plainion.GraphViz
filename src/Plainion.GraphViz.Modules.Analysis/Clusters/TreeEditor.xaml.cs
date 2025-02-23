@@ -39,7 +39,7 @@ partial class TreeEditor : UserControl, IDropable
 
     private void OnRootChanged()
     {
-        myTree.StateContainer.DataContext = Root;
+        myTree.Root = Root;
 
         if (Root != null)
         {
@@ -79,7 +79,7 @@ partial class TreeEditor : UserControl, IDropable
             return;
         }
 
-        myTree.StateContainer.DataContext.ApplyFilter(Filter);
+        myTree.Root.ApplyFilter(Filter);
     }
 
     public string Filter

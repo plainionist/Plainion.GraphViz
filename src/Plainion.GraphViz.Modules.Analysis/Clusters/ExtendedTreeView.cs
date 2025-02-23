@@ -10,16 +10,23 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 /// </summary>
 class ExtendedTreeView : TreeView
 {
-    public ExtendedTreeView()
-    {
-        StateContainer = new StateContainer();
-    }
+    private NodeViewModel myRoot;
 
-    public StateContainer StateContainer { get; private set; }
+    public NodeViewModel Root
+    {
+        get { return myRoot; }
+        set
+        {
+            if (myRoot != value)
+            {
+                myRoot = value;
+            }
+        }
+    }
 
     protected override DependencyObject GetContainerForItemOverride()
     {
-        return new NodeView(StateContainer);
+        return new NodeView();
     }
 
     protected override bool IsItemItsOwnContainerOverride(object item)
@@ -64,7 +71,7 @@ class ExtendedTreeView : TreeView
         else
         {
             // if we click directly into the tree control we pick Root
-            NodeForContextMenu = StateContainer.DataContext;
+            NodeForContextMenu = Root;
         }
 
         RefreshContextMenuCommandsCanExecute();
