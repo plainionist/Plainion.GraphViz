@@ -100,7 +100,7 @@ partial class TreeEditor : UserControl, IDropable
             return;
         }
 
-        var arg = new NodeDropRequest(droppedElement.State, Root, location);
+        var arg = new NodeDropRequest(((NodeViewModel)droppedElement.DataContext), Root, location);
 
         if (DropCommand != null && DropCommand.CanExecute(arg))
         {

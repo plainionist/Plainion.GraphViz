@@ -34,42 +34,6 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         {
             SetBinding(FormattedTextProperty, new Binding { Path = new PropertyPath("Text"), Source = this });
         }
-
-        DataContextChanged += OnDataContextChanged;
-        OnDataContextChanged(null, new DependencyPropertyChangedEventArgs());
-    }
-
-    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        var node = DataContext as NodeViewModel;
-        if (node == null)
-        {
-            // there seem to be reasons where DataContext is MS.Internal.NamedObject
-            // but it is unclear yet which reasons.
-            // -> ignore this invalid state for the moment
-            return;
-        }
-
-        State = node;
-
-        var childrenCount = (TextBlock)GetTemplateChild("PART_ChildrenCount");
-        if (childrenCount != null)
-        {
-            var expr = BindingOperations.GetMultiBindingExpression(childrenCount, TextBlock.TextProperty);
-            expr.UpdateTarget();
-        }
-    }
-
-    public override void OnApplyTemplate()
-    {
-        base.OnApplyTemplate();
-
-        if (State != null)
-        {
-            var childrenCount = (TextBlock)GetTemplateChild("PART_ChildrenCount");
-            var expr = BindingOperations.GetMultiBindingExpression(childrenCount, TextBlock.TextProperty);
-            expr.UpdateTarget();
-        }
     }
 
     protected override DependencyObject GetContainerForItemOverride()
@@ -81,8 +45,6 @@ public class NodeView : TreeViewItem, IDropable, IDragable
     {
         return item is NodeView;
     }
-
-    internal NodeViewModel State { get; private set; }
 
     public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView),
         new FrameworkPropertyMetadata(null));
@@ -123,7 +85,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
     public bool IsFilteredOut
     {
         get { return (bool)GetValue(IsFilteredOutProperty); }
-        set { SetValue(IsFilteredOutProperty, value); State.IsFilteredOut = value; }
+        set { SetValue(IsFilteredOutProperty, value); ((NodeViewModel)DataContext).IsFilteredOut = value; }
     }
 
     string IDropable.DataFormat
@@ -138,7 +100,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
             return false;
         }
 
-        return State.IsDropAllowedAt(location);
+        return ((NodeViewModel)DataContext).IsDropAllowedAt(location);
     }
 
     void IDropable.Drop(object data, DropLocation location)
@@ -156,7 +118,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
             return;
         }
 
-        var arg = new NodeDropRequest(droppedElement.State, State, location);
+        var arg = new NodeDropRequest(((NodeViewModel)droppedElement.DataContext), ((NodeViewModel)DataContext), location);
 
         var editor = this.FindParentOfType<TreeEditor>();
         if (editor.DropCommand != null && editor.DropCommand.CanExecute(arg))
@@ -174,7 +136,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
     {
         get
         {
-            if (!State.IsDragAllowed)
+            if (!((NodeViewModel)DataContext).IsDragAllowed)
             {
                 return null;
             }
