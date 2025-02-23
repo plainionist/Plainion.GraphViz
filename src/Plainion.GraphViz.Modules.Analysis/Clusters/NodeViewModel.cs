@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-// in case of "Root" the presentation can be null
-class NodeViewModel(IGraphPresentation presentation) : BindableBase
+enum NodeType
+{
+    Root,
+    Cluster,
+    Node
+}
+
+/// <summary>
+/// In case of "Root" presentation is null.
+/// </summary>
+class NodeViewModel(IGraphPresentation presentation, NodeType type) : BindableBase
 {
     private readonly IGraphPresentation myPresentation = presentation;
     private NodeViewModel myParent;
@@ -16,6 +26,8 @@ class NodeViewModel(IGraphPresentation presentation) : BindableBase
     private bool myShowId;
     private bool myIsExpanded;
     private bool myIsFilteredOut;
+
+    public NodeType Type { get; } = type;
 
     public string Id { get; set; }
 
@@ -47,7 +59,7 @@ class NodeViewModel(IGraphPresentation presentation) : BindableBase
         }
     }
 
-    public string DisplayText =>ShowId ? Id : Caption;
+    public string DisplayText => ShowId ? Id : Caption;
 
     public bool IsSelected
     {
