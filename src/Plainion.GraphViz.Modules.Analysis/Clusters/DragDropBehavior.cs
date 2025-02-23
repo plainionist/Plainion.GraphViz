@@ -96,7 +96,7 @@ class DragDropBehavior
 
     public DragDropBehavior(NodeViewModel root)
     {
-        Contract.RequiresNotNull(root, "root");
+        System.Contract.RequiresNotNull(root);
 
         myRoot = new NodeWriteAccess(root);
     }
@@ -108,22 +108,21 @@ class DragDropBehavior
 
         if (request.DropTarget == myRoot.Node)
         {
-            ChangeParent(droppedNode, myRoot.Children.Add, myRoot);
+            var oldParent = droppedNode.GetParent();
+            oldParent.Children.Remove(droppedNode);
+
+            myRoot.Children.Add(droppedNode);
+
+            droppedNode.SetParent(myRoot.Node);
         }
         else
         {
-            ChangeParent(droppedNode, dropTarget.Children.Add, dropTarget);
+            var oldParent = droppedNode.GetParent();
+            oldParent.Children.Remove(droppedNode);
+
+            dropTarget.Children.Add(droppedNode);
+
+            droppedNode.SetParent(dropTarget.Node);
         }
-    }
-
-    private void ChangeParent(NodeWriteAccess nodeToMove, Action<NodeWriteAccess> insertionOperation, NodeWriteAccess newParent)
-    {
-        var oldParent = nodeToMove.GetParent();
-
-        oldParent.Children.Remove(nodeToMove);
-
-        insertionOperation(nodeToMove);
-
-        nodeToMove.SetParent(newParent.Node);
     }
 }
