@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Plainion;
 using Plainion.Collections;
+using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
@@ -37,9 +38,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
-            Root = new NodeViewModel(null, NodeType.Root);
-            Root.IsDragAllowed = false;
-            Root.IsDropAllowed = false;
+            Root = new NodeViewModel(null,null, NodeType.Root);
 
             AddClusterCommand = new DelegateCommand<NodeViewModel>(OnAddCluster, n => n == Root);
             DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteCluster, n => n?.Parent == Root);
@@ -67,12 +66,10 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             // update tree
             {
-                var clusterNode = new NodeViewModel(myPresentation, NodeType.Cluster)
+                var clusterNode = new NodeViewModel(myPresentation, newClusterId,NodeType.Cluster)
                 {
                     Parent = Root,
-                    Id = newClusterId,
                     Caption = captionModule.Get(newClusterId).DisplayText,
-                    IsDragAllowed = false
                 };
                 Root.Children.Add(clusterNode);
 
@@ -121,12 +118,21 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private void OnDrop(NodeDropRequest request)
         {
             var targetCluster = request.DropTarget.Type == NodeType.Node ? request.DropTarget.Parent : request.DropTarget;
+            var droppedNodes = request.DroppedNode.Type == NodeType.Cluster ? request.DroppedNode.Children : [request.DroppedNode];
 
-            var oldParent = request.DroppedNode.Parent;
-            oldParent.Children.Remove(request.DroppedNode);
+            // need a copy as we modify the collection in the loop
+            foreach (var droppedNode in droppedNodes.ToList())
+            {
+                droppedNode.Parent.Children.Remove(droppedNode);
 
-            targetCluster.Children.Add(request.DroppedNode);
-            request.DroppedNode.Parent = targetCluster;
+                targetCluster.Children.Add(droppedNode);
+                droppedNode.Parent = targetCluster;
+            }
+
+            if (request.DroppedNode.Type == NodeType.Cluster)
+            {
+                OnDeleteCluster(request.DroppedNode);
+            }
         }
 
         public ICommand MouseDownCommand { get; private set; }
@@ -160,12 +166,10 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
 
                 var newTreeNodes = nodes
-                    .Select(n => new NodeViewModel(myPresentation, NodeType.Node)
+                    .Select(n => new NodeViewModel(myPresentation,n, NodeType.Node)
                     {
                         Parent = clusterNode,
-                        Id = n,
                         Caption = captionModule.Get(n).DisplayText,
-                        IsDropAllowed = false,
                         ShowId = TreeShowId
                     });
                 clusterNode.Children.AddRange(newTreeNodes);
@@ -261,12 +265,10 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
-                    var clusterNode = new NodeViewModel(myPresentation, NodeType.Cluster)
+                    var clusterNode = new NodeViewModel(myPresentation, cluster.Id,NodeType.Cluster)
                     {
                         Parent = Root,
-                        Id = cluster.Id,
                         Caption = captionModule.Get(cluster.Id).DisplayText,
-                        IsDragAllowed = false
                     };
                     Root.Children.Add(clusterNode);
 
@@ -278,12 +280,10 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                     var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
 
                     clusterNode.Children.AddRange(nodes
-                        .Select(n => new NodeViewModel(myPresentation, NodeType.Node)
+                        .Select(n => new NodeViewModel(myPresentation, n.Id, NodeType.Node)
                         {
                             Parent = clusterNode,
-                            Id = n.Id,
                             Caption = captionModule.Get(n.Id).DisplayText,
-                            IsDropAllowed = false,
                             ShowId = TreeShowId
                         }));
                 }
@@ -474,8 +474,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         void IDropable.Drop(object data, DropLocation location)
         {
-            var droppedElement = data as NodeView;
-            if (droppedElement == null)
+            if (data is not NodeView droppedElement)
             {
                 return;
             }

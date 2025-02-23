@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using Plainion.GraphViz.Model;
+using System.Diagnostics;
 using Plainion.GraphViz.Presentation;
-using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
@@ -15,9 +14,10 @@ enum NodeType
 }
 
 /// <summary>
-/// In case of "Root" presentation is null.
+/// In case of "Root" presentation and Id are null.
 /// </summary>
-class NodeViewModel(IGraphPresentation presentation, NodeType type) : BindableBase
+[DebuggerDisplay("{Id}")]
+class NodeViewModel(IGraphPresentation presentation, string id, NodeType type) : BindableBase
 {
     private readonly IGraphPresentation myPresentation = presentation;
     private NodeViewModel myParent;
@@ -28,8 +28,7 @@ class NodeViewModel(IGraphPresentation presentation, NodeType type) : BindableBa
     private bool myIsFilteredOut;
 
     public NodeType Type { get; } = type;
-
-    public string Id { get; set; }
+    public string Id { get; } = id;
 
     public string Caption
     {
@@ -66,10 +65,6 @@ class NodeViewModel(IGraphPresentation presentation, NodeType type) : BindableBa
         get { return myIsSelected; }
         set { SetProperty(ref myIsSelected, value); }
     }
-
-    public bool IsDragAllowed { get; set; } = true;
-
-    public bool IsDropAllowed { get; set; } = true;
 
     public ObservableCollection<NodeViewModel> Children { get; } = [];
 
@@ -172,22 +167,5 @@ class NodeViewModel(IGraphPresentation presentation, NodeType type) : BindableBa
         {
             child.CollapseAll();
         }
-    }
-
-    internal bool IsDropAllowedAt(DropLocation location)
-    {
-        if (location == DropLocation.InPlace)
-        {
-            return IsDropAllowed;
-        }
-        else
-        {
-            if (Parent != null)
-            {
-                return Parent.IsDropAllowed;
-            }
-        }
-
-        return true;
     }
 }

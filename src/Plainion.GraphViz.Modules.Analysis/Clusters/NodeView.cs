@@ -83,15 +83,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         get { return typeof(NodeView).FullName; }
     }
 
-    bool IDropable.IsDropAllowed(object data, DropLocation location)
-    {
-        if (data is not NodeView)
-        {
-            return false;
-        }
-
-        return ((NodeViewModel)DataContext).IsDropAllowedAt(location);
-    }
+    bool IDropable.IsDropAllowed(object data, DropLocation location) => data is NodeView;
 
     void IDropable.Drop(object data, DropLocation _)
     {
@@ -115,18 +107,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         }
     }
 
-    Type IDragable.DataType
-    {
-        get
-        {
-            if (!((NodeViewModel)DataContext).IsDragAllowed)
-            {
-                return null;
-            }
-
-            return typeof(NodeView);
-        }
-    }
+    Type IDragable.DataType => typeof(NodeView);
 
     public ICommand EditCommand { get; }
 

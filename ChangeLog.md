@@ -1,7 +1,7 @@
 
 ## 8.2 - 2025-02-
 
-- 
+- ClusterEditor: dropping of clusters allowed
 
 ## 8.1 - 2025-02-20
 
