@@ -39,7 +39,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
             NewClusterCommand = new DelegateCommand<NodeViewModel>(OnNewCluster, n => n == Root);
-            DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode);
+            DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode, n => n != Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
             myFilterOnId = true;
