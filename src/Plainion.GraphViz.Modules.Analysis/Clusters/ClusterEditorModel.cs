@@ -344,7 +344,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 if (selectedNode != null)
                 {
-                    selectedCluster = (NodeViewModel)selectedNode.Parent;
+                    selectedCluster = selectedNode.Parent;
                 }
             }
 
