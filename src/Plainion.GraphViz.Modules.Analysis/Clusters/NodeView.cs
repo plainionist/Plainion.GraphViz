@@ -45,7 +45,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
 
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        var node = DataContext as ClusterTreeNode;
+        var node = DataContext as NodeViewModel;
         if (node == null)
         {
             // there seem to be reasons where DataContext is MS.Internal.NamedObject
@@ -86,7 +86,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         return item is NodeView;
     }
 
-    internal ClusterTreeNode State { get; private set; }
+    internal NodeViewModel State { get; private set; }
 
     public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView),
         new FrameworkPropertyMetadata(null));

@@ -28,7 +28,7 @@ partial class TreeEditor : UserControl, IDropable
         set { SetValue(FilterLabelProperty, value); }
     }
 
-    public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(ClusterTreeNode), typeof(TreeEditor),
+    public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(NodeViewModel), typeof(TreeEditor),
         new FrameworkPropertyMetadata(null, OnRootChanged));
 
     private static void OnRootChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -53,9 +53,9 @@ partial class TreeEditor : UserControl, IDropable
         OnFilterChanged();
     }
 
-    public ClusterTreeNode Root
+    public NodeViewModel Root
     {
-        get { return (ClusterTreeNode)GetValue(RootProperty); }
+        get { return (NodeViewModel)GetValue(RootProperty); }
         set { SetValue(RootProperty, value); }
     }
 

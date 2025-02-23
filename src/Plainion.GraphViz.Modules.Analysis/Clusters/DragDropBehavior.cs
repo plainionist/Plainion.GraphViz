@@ -23,9 +23,9 @@ class DragDropBehavior
 
     private class ObservableCollection
     {
-        private IEnumerable<ClusterTreeNode> myCollection;
+        private IEnumerable<NodeViewModel> myCollection;
 
-        public ObservableCollection(IEnumerable<ClusterTreeNode> collection)
+        public ObservableCollection(IEnumerable<NodeViewModel> collection)
         {
             Contract.Requires(collection.GetType().IsGenericType
                 && collection.GetType().GetGenericTypeDefinition() == typeof(ObservableCollection<>), "Collection is not of type ObservableCollection<T>");
@@ -68,7 +68,7 @@ class DragDropBehavior
 
     private class NodeWriteAccess
     {
-        public NodeWriteAccess(ClusterTreeNode node)
+        public NodeWriteAccess(NodeViewModel node)
         {
             Contract.RequiresNotNull(node, "node");
 
@@ -77,10 +77,10 @@ class DragDropBehavior
             Contract.Requires(Node.GetType().GetProperty(nameof(Node.Parent)).CanWrite, "Parent is not writable");
 
             Children = new ObservableCollection(Node.Children);
-            Siblings = new ObservableCollection(Node.Parent != null ? Node.Parent.Children : new ObservableCollection<ClusterTreeNode>());
+            Siblings = new ObservableCollection(Node.Parent != null ? Node.Parent.Children : new ObservableCollection<NodeViewModel>());
         }
 
-        public ClusterTreeNode Node { get; private set; }
+        public NodeViewModel Node { get; private set; }
 
         public ObservableCollection Children { get; private set; }
 
@@ -91,13 +91,13 @@ class DragDropBehavior
             return Node.Parent != null ? new NodeWriteAccess(Node.Parent) : null;
         }
 
-        public void SetParent(ClusterTreeNode node)
+        public void SetParent(NodeViewModel node)
         {
             Node.GetType().GetProperty(nameof(Node.Parent)).SetValue(Node, node);
         }
     }
 
-    public DragDropBehavior(ClusterTreeNode root)
+    public DragDropBehavior(NodeViewModel root)
     {
         Contract.RequiresNotNull(root, "root");
 

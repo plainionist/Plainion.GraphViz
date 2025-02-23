@@ -38,22 +38,22 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
-            Root = new ClusterTreeNode(null);
+            Root = new NodeViewModel(null);
             Root.IsDragAllowed = false;
             Root.IsDropAllowed = false;
 
-            AddClusterCommand = new DelegateCommand<ClusterTreeNode>(OnAddCluster, n => n == Root);
-            DeleteClusterCommand = new DelegateCommand<ClusterTreeNode>(OnDeleteCluster, n => n?.Parent == Root);
+            AddClusterCommand = new DelegateCommand<NodeViewModel>(OnAddCluster, n => n == Root);
+            DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteCluster, n => n?.Parent == Root);
 
             myDragDropBehavior = new DragDropBehavior(Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
         }
 
-        public ClusterTreeNode Root { get; private set; }
+        public NodeViewModel Root { get; private set; }
 
-        public DelegateCommand<ClusterTreeNode> AddClusterCommand { get; private set; }
+        public DelegateCommand<NodeViewModel> AddClusterCommand { get; private set; }
 
-        private void OnAddCluster(ClusterTreeNode parent)
+        private void OnAddCluster(NodeViewModel parent)
         {
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
@@ -69,7 +69,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             // update tree
             {
-                var clusterNode = new ClusterTreeNode(myPresentation)
+                var clusterNode = new NodeViewModel(myPresentation)
                 {
                     Parent = Root,
                     Id = newClusterId,
@@ -91,9 +91,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
-        public DelegateCommand<ClusterTreeNode> DeleteClusterCommand { get; private set; }
+        public DelegateCommand<NodeViewModel> DeleteClusterCommand { get; private set; }
 
-        private void OnDeleteCluster(ClusterTreeNode clusterNode)
+        private void OnDeleteCluster(NodeViewModel clusterNode)
         {
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
@@ -151,7 +151,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
 
                 var newTreeNodes = nodes
-                    .Select(n => new ClusterTreeNode(myPresentation)
+                    .Select(n => new NodeViewModel(myPresentation)
                     {
                         Parent = clusterNode,
                         Id = n,
@@ -252,7 +252,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
-                    var clusterNode = new ClusterTreeNode(myPresentation)
+                    var clusterNode = new NodeViewModel(myPresentation)
                     {
                         Parent = Root,
                         Id = cluster.Id,
@@ -269,7 +269,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                     var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
 
                     clusterNode.Children.AddRange(nodes
-                        .Select(n => new ClusterTreeNode(myPresentation)
+                        .Select(n => new NodeViewModel(myPresentation)
                         {
                             Parent = clusterNode,
                             Id = n.Id,
@@ -298,9 +298,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnParentChanged(object sender, PropertyChangedEventArgs e)
         {
-            var node = (ClusterTreeNode)sender;
+            var node = (NodeViewModel)sender;
 
-            myPresentation.DynamicClusters().AddToCluster(node.Id, ((ClusterTreeNode)node.Parent).Id);
+            myPresentation.DynamicClusters().AddToCluster(node.Id, ((NodeViewModel)node.Parent).Id);
         }
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
@@ -314,7 +314,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 if (selectedNode != null)
                 {
-                    selectedCluster = (ClusterTreeNode)selectedNode.Parent;
+                    selectedCluster = (NodeViewModel)selectedNode.Parent;
                 }
             }
 
@@ -416,9 +416,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 myNodeToClusterCache = new Dictionary<string, string>();
 
-                foreach (ClusterTreeNode cluster in Root.Children)
+                foreach (NodeViewModel cluster in Root.Children)
                 {
-                    foreach (ClusterTreeNode treeNode in cluster.Children)
+                    foreach (NodeViewModel treeNode in cluster.Children)
                     {
                         myNodeToClusterCache[treeNode.Id] = cluster.Id;
                     }
@@ -471,7 +471,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 return;
             }
 
-            var nodeId = ((ClusterTreeNode)droppedElement.DataContext).Id;
+            var nodeId = ((NodeViewModel)droppedElement.DataContext).Id;
 
             myPresentation.DynamicClusters().RemoveFromClusters(nodeId);
         }

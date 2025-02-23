@@ -6,17 +6,17 @@ using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-class ClusterTreeNode : BindableBase
+class NodeViewModel : BindableBase
 {
     private readonly IGraphPresentation myPresentation;
-    private ClusterTreeNode myParent;
+    private NodeViewModel myParent;
     private bool myIsSelected;
     private string myCaption;
     private bool myShowId;
     private bool myIsExpanded;
     private bool myIsFilteredOut;
 
-    public ClusterTreeNode(IGraphPresentation presentation)
+    public NodeViewModel(IGraphPresentation presentation)
     {
         myPresentation = presentation;
 
@@ -68,9 +68,9 @@ class ClusterTreeNode : BindableBase
 
     public bool IsDropAllowed { get; set; }
 
-    public ObservableCollection<ClusterTreeNode> Children { get; }
+    public ObservableCollection<NodeViewModel> Children { get; }
 
-    public ClusterTreeNode Parent
+    public NodeViewModel Parent
     {
         get { return myParent; }
         set { SetProperty(ref myParent, value); }

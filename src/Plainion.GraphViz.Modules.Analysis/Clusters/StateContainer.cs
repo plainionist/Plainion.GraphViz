@@ -7,9 +7,9 @@
 /// </summary>
 class StateContainer
 {
-    private ClusterTreeNode myDataContext;
+    private NodeViewModel myDataContext;
 
-    public ClusterTreeNode DataContext
+    public NodeViewModel DataContext
     {
         get { return myDataContext; }
         set
@@ -21,7 +21,7 @@ class StateContainer
         }
     }
 
-    public ClusterTreeNode GetRoot() => DataContext;
+    public NodeViewModel GetRoot() => DataContext;
 
-    public ClusterTreeNode GetOrCreate(ClusterTreeNode dataContext) => dataContext;
+    public NodeViewModel GetOrCreate(NodeViewModel dataContext) => dataContext;
 }
