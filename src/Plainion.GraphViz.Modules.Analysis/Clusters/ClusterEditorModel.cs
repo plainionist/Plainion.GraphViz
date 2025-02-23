@@ -11,6 +11,7 @@ using Plainion.Collections;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
+using Plainion.Windows.Diagnostics;
 using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -267,6 +268,11 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         {
             using (new Profile("BuildTree"))
             {
+                var expandedClusterIds = Root.Children
+                    .Where(x => x.IsExpanded)
+                    .Select(x => x.Id)
+                    .ToHashSet();
+
                 Root.Children.Clear();
 
                 SelectedCluster = null;
@@ -307,6 +313,12 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                         PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
                         PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
                     }
+                }
+
+                // make sure expanded clusters are expanded after node deletion and Drag&Drop
+                foreach (var node in Root.Children.Where(x => expandedClusterIds.Contains(x.Id)))
+                {
+                    node.IsExpanded = true;
                 }
 
                 myNodeToClusterCache = null;
