@@ -273,6 +273,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 var transformationModule = myPresentation.GetModule<ITransformationModule>();
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
+                var clusterFolding = myPresentation.ClusterFolding();
 
                 foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
                 {
@@ -284,11 +285,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                     Root.Children.Add(clusterNode);
 
                     // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
-                    var folding = transformationModule.Items
-                        .OfType<ClusterFoldingTransformation>()
-                        .SingleOrDefault(f => f.Clusters.Contains(cluster.Id));
-
-                    var nodes = folding == null ? cluster.Nodes : folding.GetNodes(cluster.Id);
+                    var nodes = clusterFolding == null ? cluster.Nodes : clusterFolding.GetNodes(cluster.Id);
 
                     clusterNode.Children.AddRange(nodes
                         .Select(n => new NodeViewModel(myPresentation, n.Id, NodeType.Node)
