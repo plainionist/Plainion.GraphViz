@@ -11,13 +11,7 @@ partial class TreeEditor : UserControl, IDropable
     public TreeEditor()
     {
         InitializeComponent();
-
-        CommandBindings.Add(new CommandBinding(ExpandAll, (_, _) => Root.ExpandAll()));
-        CommandBindings.Add(new CommandBinding(CollapseAll, (_, _) => Root.CollapseAll()));
     }
-
-    public static readonly RoutedCommand ExpandAll = new();
-    public static readonly RoutedCommand CollapseAll = new();
 
     public static DependencyProperty FilterLabelProperty = DependencyProperty.Register("FilterLabel", typeof(string), typeof(TreeEditor),
         new FrameworkPropertyMetadata(null));
@@ -105,42 +99,6 @@ partial class TreeEditor : UserControl, IDropable
         {
             DropCommand.Execute(arg);
         }
-    }
-
-    public static DependencyProperty ExpandAllCommandProperty = DependencyProperty.Register("ExpandAllCommand", typeof(ICommand), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(ExpandAll));
-
-    public ICommand ExpandAllCommand
-    {
-        get { return (ICommand)GetValue(ExpandAllCommandProperty); }
-        set { SetValue(ExpandAllCommandProperty, value); }
-    }
-
-    public static DependencyProperty CollapseAllCommandProperty = DependencyProperty.Register("CollapseAllCommand", typeof(ICommand), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(CollapseAll));
-
-    public ICommand CollapseAllCommand
-    {
-        get { return (ICommand)GetValue(CollapseAllCommandProperty); }
-        set { SetValue(CollapseAllCommandProperty, value); }
-    }
-
-    public static DependencyProperty CreateChildCommandProperty = DependencyProperty.Register("CreateChildCommand", typeof(ICommand), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(null));
-
-    public ICommand CreateChildCommand
-    {
-        get { return (ICommand)GetValue(CreateChildCommandProperty); }
-        set { SetValue(CreateChildCommandProperty, value); }
-    }
-
-    public static DependencyProperty DeleteCommandProperty = DependencyProperty.Register("DeleteCommand", typeof(ICommand), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(null));
-
-    public ICommand DeleteCommand
-    {
-        get { return (ICommand)GetValue(DeleteCommandProperty); }
-        set { SetValue(DeleteCommandProperty, value); }
     }
 
     public static DependencyProperty DropCommandProperty = DependencyProperty.Register("DropCommand", typeof(ICommand), typeof(TreeEditor),

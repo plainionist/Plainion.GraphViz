@@ -76,8 +76,6 @@
             </Grid.RowDefinitions>
 
             <pngv:TreeEditor Grid.Row="0" Root="{Binding Root}" FilterLabel="Filter on caption or id"
-                           CreateChildCommand="{Binding NewClusterCommand}"
-                           DeleteCommand="{Binding DeleteNodeCommand}"
                            DropCommand="{Binding DropCommand}" />
 
             <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0" IsChecked="{Binding TreeShowId}"/>

@@ -12,9 +12,6 @@
 
     <DockPanel LastChildFill="True" DataContext="{Binding ElementName=_this}">
         <DockPanel.Resources>
-            <!-- Binds to TreeEditor itself which only works because DockPanel DataContext is set to TreeEditor itself-->
-            <pn:BindingProxy x:Key="ThisProxy" Data="{Binding}"/>
-
             <DataTemplate x:Key="NodeTemplate">
                 <!-- keep empty by intention -->
             </DataTemplate>
@@ -163,9 +160,9 @@
             </i:Interaction.Behaviors>
 
             <tree:ExtendedTreeView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="New" Command="{Binding CreateChildCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
-                    <MenuItem Header="Delete" Command="{Binding DeleteCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
+                <ContextMenu DataContext="{Binding Data.Parent.Parent.DataContext, Source={StaticResource TreeProxy}}">
+                    <MenuItem Header="New" Command="{Binding NewClusterCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
+                    <MenuItem Header="Delete" Command="{Binding DeleteNodeCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
                     <Separator />
                     <MenuItem Header="Expand All" Command="{Binding ExpandAllCommand}"/>
                     <MenuItem Header="Collapse All" Command="{Binding CollapseAllCommand}"/>

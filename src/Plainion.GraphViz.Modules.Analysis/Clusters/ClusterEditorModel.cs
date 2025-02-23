@@ -42,11 +42,17 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode, n => n != Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
+            ExpandAllCommand = new DelegateCommand(() => Root.ExpandAll());
+            CollapseAllCommand = new DelegateCommand(() => Root.CollapseAll());
+
             myFilterOnId = true;
             myTreeShowId = true;
         }
 
         public NodeViewModel Root { get; }
+
+        public DelegateCommand ExpandAllCommand { get; }
+        public DelegateCommand CollapseAllCommand { get; }
 
         public DelegateCommand<NodeViewModel> NewClusterCommand { get; }
 
