@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using Plainion.Collections;

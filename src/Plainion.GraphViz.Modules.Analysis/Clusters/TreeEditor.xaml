@@ -160,12 +160,12 @@
             </i:Interaction.Behaviors>
 
             <tree:ExtendedTreeView.ContextMenu>
-                <ContextMenu DataContext="{Binding Data.Parent.Parent.DataContext, Source={StaticResource TreeProxy}}">
-                    <MenuItem Header="New" Command="{Binding NewClusterCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
-                    <MenuItem Header="Delete" Command="{Binding DeleteNodeCommand}" CommandParameter="{Binding Data.NodeForContextMenu, Source={StaticResource TreeProxy}}" />
+                <ContextMenu DataContext="{Binding Data.Parent.Parent, Source={StaticResource TreeProxy}}">
+                    <MenuItem Header="New" Command="{Binding DataContext.NewClusterCommand}" CommandParameter="{Binding NodeForContextMenu}" />
+                    <MenuItem Header="Delete" Command="{Binding DataContext.DeleteNodeCommand}" CommandParameter="{Binding NodeForContextMenu}" />
                     <Separator />
-                    <MenuItem Header="Expand All" Command="{Binding ExpandAllCommand}"/>
-                    <MenuItem Header="Collapse All" Command="{Binding CollapseAllCommand}"/>
+                    <MenuItem Header="Expand All" Command="{Binding DataContext.ExpandAllCommand}"/>
+                    <MenuItem Header="Collapse All" Command="{Binding DataContext.CollapseAllCommand}"/>
                </ContextMenu>
             </tree:ExtendedTreeView.ContextMenu>
 
