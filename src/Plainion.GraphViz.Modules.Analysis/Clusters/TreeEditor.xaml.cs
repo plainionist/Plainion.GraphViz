@@ -68,12 +68,7 @@ partial class TreeEditor : UserControl, IDropable
 
     private void OnFilterChanged()
     {
-        if (Root == null)
-        {
-            return;
-        }
-
-        myTree.Root.ApplyFilter(Filter);
+        Root?.ApplyFilter(Filter);
     }
 
     public string Filter
