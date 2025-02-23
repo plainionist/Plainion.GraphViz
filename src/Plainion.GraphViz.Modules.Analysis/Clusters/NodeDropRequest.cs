@@ -15,8 +15,6 @@ class NodeDropRequest
     }
 
     public NodeViewModel DroppedNode { get; }
-
     public NodeViewModel DropTarget { get; }
-
     public DropLocation Location { get; }
 }

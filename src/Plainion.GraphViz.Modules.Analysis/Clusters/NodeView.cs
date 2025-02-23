@@ -36,18 +36,11 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         }
     }
 
-    protected override DependencyObject GetContainerForItemOverride()
-    {
-        return new NodeView();
-    }
+    protected override DependencyObject GetContainerForItemOverride() => new NodeView();
 
-    protected override bool IsItemItsOwnContainerOverride(object item)
-    {
-        return item is NodeView;
-    }
+    protected override bool IsItemItsOwnContainerOverride(object item) => item is NodeView;
 
-    public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView),
-        new FrameworkPropertyMetadata(null));
+    public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView), new FrameworkPropertyMetadata(null));
 
     public string Text
     {
@@ -55,8 +48,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         set { SetValue(TextProperty, value); }
     }
 
-    public static DependencyProperty FormattedTextProperty = DependencyProperty.Register("FormattedText", typeof(string), typeof(NodeView),
-        new FrameworkPropertyMetadata(null));
+    public static DependencyProperty FormattedTextProperty = DependencyProperty.Register("FormattedText", typeof(string), typeof(NodeView), new FrameworkPropertyMetadata(null));
 
     public string FormattedText
     {
@@ -64,8 +56,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         set { SetValue(FormattedTextProperty, value); }
     }
 
-    public static DependencyProperty IsInEditModeProperty = DependencyProperty.Register("IsInEditMode", typeof(bool), typeof(NodeView),
-        new FrameworkPropertyMetadata(false));
+    public static DependencyProperty IsInEditModeProperty = DependencyProperty.Register("IsInEditMode", typeof(bool), typeof(NodeView), new FrameworkPropertyMetadata(false));
 
     public bool IsInEditMode
     {
@@ -73,8 +64,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         set { SetValue(IsInEditModeProperty, value); }
     }
 
-    public static DependencyProperty IsFilteredOutProperty = DependencyProperty.Register("IsFilteredOut", typeof(bool), typeof(NodeView),
-        new FrameworkPropertyMetadata(false, OnIsFilteredOutChanged));
+    public static DependencyProperty IsFilteredOutProperty = DependencyProperty.Register("IsFilteredOut", typeof(bool), typeof(NodeView), new FrameworkPropertyMetadata(false, OnIsFilteredOutChanged));
 
     private static void OnIsFilteredOutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -95,7 +85,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
 
     bool IDropable.IsDropAllowed(object data, DropLocation location)
     {
-        if (!(data is NodeView))
+        if (data is not NodeView)
         {
             return false;
         }
@@ -105,9 +95,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
 
     void IDropable.Drop(object data, DropLocation location)
     {
-        var droppedElement = data as NodeView;
-
-        if (droppedElement == null)
+        if (data is not NodeView droppedElement)
         {
             return;
         }
@@ -145,7 +133,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         }
     }
 
-    public ICommand EditCommand { get; private set; }
+    public ICommand EditCommand { get; }
 
     protected override void OnPreviewKeyDown(KeyEventArgs e)
     {

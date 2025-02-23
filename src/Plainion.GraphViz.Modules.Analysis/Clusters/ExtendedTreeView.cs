@@ -9,15 +9,9 @@ class ExtendedTreeView : TreeView
 {
     public NodeViewModel Root { get; set; }
 
-    protected override DependencyObject GetContainerForItemOverride()
-    {
-        return new NodeView();
-    }
+    protected override DependencyObject GetContainerForItemOverride() => new NodeView();
 
-    protected override bool IsItemItsOwnContainerOverride(object item)
-    {
-        return item is NodeView;
-    }
+    protected override bool IsItemItsOwnContainerOverride(object item) => item is NodeView;
 
     public static DependencyProperty NodeForContextMenuProperty = DependencyProperty.Register("NodeForContextMenu", typeof(NodeViewModel), typeof(ExtendedTreeView),
         new FrameworkPropertyMetadata(null));
@@ -32,7 +26,7 @@ class ExtendedTreeView : TreeView
     {
         NodeForContextMenu = null;
 
-        NodeView nodeItem = null;
+        NodeView nodeItem;
 
         if (Keyboard.Modifiers == ModifierKeys.Control)
         {
@@ -67,18 +61,19 @@ class ExtendedTreeView : TreeView
     {
         foreach (var item in ContextMenu.Items.OfType<MenuItem>())
         {
-            var command = item.Command;
-            if (command != null)
+            if (item.Command == null)
             {
-                var raiseMethod = command.GetType().GetMethod("RaiseCanExecuteChanged");
-                if (raiseMethod != null)
-                {
-                    raiseMethod.Invoke(command, null);
-                }
-                else
-                {
-                    item.IsEnabled = command.CanExecute(item.CommandParameter);
-                }
+                continue;
+            }
+
+            var raiseMethod = item.Command.GetType().GetMethod("RaiseCanExecuteChanged");
+            if (raiseMethod != null)
+            {
+                raiseMethod.Invoke(item.Command, null);
+            }
+            else
+            {
+                item.IsEnabled = item.Command.CanExecute(item.CommandParameter);
             }
         }
     }

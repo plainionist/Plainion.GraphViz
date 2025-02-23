@@ -21,8 +21,7 @@
         </DockPanel.Resources>
 
         <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch">
-            <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Filter, Mode=TwoWay}" SearchEventTimeDelay="0" 
-                                    LabelText="{Binding FilterLabel}"/>
+            <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Filter, Mode=TwoWay}" SearchEventTimeDelay="0" LabelText="{Binding FilterLabel}"/>
         </Grid>
 
         <tree:ExtendedTreeView x:Name="myTree" Margin="0,3,0,0" ItemsSource="{Binding Root.Children}">

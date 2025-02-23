@@ -18,6 +18,8 @@ class NodeViewModel : BindableBase
 
     public NodeViewModel(IGraphPresentation presentation)
     {
+        System.Contract.RequiresNotNull(presentation);
+
         myPresentation = presentation;
 
         Children = [];
@@ -53,10 +55,7 @@ class NodeViewModel : BindableBase
         }
     }
 
-    public string DisplayText
-    {
-        get { return ShowId ? Id : Caption; }
-    }
+    public string DisplayText =>ShowId ? Id : Caption;
 
     public bool IsSelected
     {
