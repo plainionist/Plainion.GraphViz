@@ -24,7 +24,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private ICollectionView myPreviewNodes;
         private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
-        private DragDropBehavior myDragDropBehavior;
         private string mySelectedCluster;
         private string myAddButtonCaption;
         private IModuleChangedObserver myTransformationsObserver;
@@ -45,8 +44,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             AddClusterCommand = new DelegateCommand<NodeViewModel>(OnAddCluster, n => n == Root);
             DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteCluster, n => n?.Parent == Root);
 
-            myDragDropBehavior = new DragDropBehavior(Root);
-            DropCommand = new DelegateCommand<NodeDropRequest>(myDragDropBehavior.ApplyDrop);
+            DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
         }
 
         public NodeViewModel Root { get; private set; }
@@ -119,6 +117,28 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         }
 
         public ICommand DropCommand { get; private set; }
+
+        private void OnDrop(NodeDropRequest request)
+        {
+            if (request.DropTarget == Root)
+            {
+                var oldParent = request.DroppedNode.Parent;
+                oldParent.Children.Remove(request.DroppedNode);
+
+                Root.Children.Add(request.DroppedNode);
+
+                request.DroppedNode.Parent = Root;
+            }
+            else
+            {
+                var oldParent = request.DroppedNode.Parent;
+                oldParent.Children.Remove(request.DroppedNode);
+
+                request.DropTarget.Children.Add(request.DroppedNode);
+
+                request.DroppedNode.Parent = request.DropTarget;
+            }
+        }
 
         public ICommand MouseDownCommand { get; private set; }
 
