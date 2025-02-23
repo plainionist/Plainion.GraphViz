@@ -156,12 +156,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
             return;
         }
 
-        var arg = new NodeDropRequest
-        {
-            DroppedNode = droppedElement.State,
-            DropTarget = State,
-            Location = location
-        };
+        var arg = new NodeDropRequest(droppedElement.State, State, location);
 
         var editor = this.FindParentOfType<TreeEditor>();
         if (editor.DropCommand != null && editor.DropCommand.CanExecute(arg))

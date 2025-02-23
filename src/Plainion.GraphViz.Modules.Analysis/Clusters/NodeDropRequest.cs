@@ -4,9 +4,19 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 class NodeDropRequest
 {
-    public NodeViewModel DroppedNode { get; set; }
+    public NodeDropRequest(NodeViewModel droppedNode, NodeViewModel dropTarget, DropLocation location)
+    {
+        System.Contract.RequiresNotNull(droppedNode);
+        System.Contract.RequiresNotNull(dropTarget);
 
-    public NodeViewModel DropTarget { get; set; }
+        DroppedNode = droppedNode;
+        DropTarget = dropTarget;
+        Location = location;
+    }
 
-    public DropLocation Location { get; set; }
+    public NodeViewModel DroppedNode { get; }
+
+    public NodeViewModel DropTarget { get; }
+
+    public DropLocation Location { get; }
 }
