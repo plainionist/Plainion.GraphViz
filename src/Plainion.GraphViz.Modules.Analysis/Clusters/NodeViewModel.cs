@@ -6,27 +6,16 @@ using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-class NodeViewModel : BindableBase
+// in case of "Root" the presentation can be null
+class NodeViewModel(IGraphPresentation presentation) : BindableBase
 {
-    private readonly IGraphPresentation myPresentation;
+    private readonly IGraphPresentation myPresentation = presentation;
     private NodeViewModel myParent;
     private bool myIsSelected;
     private string myCaption;
     private bool myShowId;
     private bool myIsExpanded;
     private bool myIsFilteredOut;
-
-    public NodeViewModel(IGraphPresentation presentation)
-    {
-        System.Contract.RequiresNotNull(presentation);
-
-        myPresentation = presentation;
-
-        Children = [];
-
-        IsDropAllowed = true;
-        IsDragAllowed = true;
-    }
 
     public string Id { get; set; }
 
@@ -38,7 +27,10 @@ class NodeViewModel : BindableBase
             if (SetProperty(ref myCaption, value))
             {
                 RaisePropertyChanged(nameof(DisplayText));
-                myPresentation.GetPropertySetFor<Caption>().Get(Id).DisplayText = myCaption;
+                if (myPresentation != null)
+                {
+                    myPresentation.GetPropertySetFor<Caption>().Get(Id).DisplayText = myCaption;
+                }
             }
         }
     }
@@ -63,11 +55,11 @@ class NodeViewModel : BindableBase
         set { SetProperty(ref myIsSelected, value); }
     }
 
-    public bool IsDragAllowed { get; set; }
+    public bool IsDragAllowed { get; set; } = true;
 
-    public bool IsDropAllowed { get; set; }
+    public bool IsDropAllowed { get; set; } = true;
 
-    public ObservableCollection<NodeViewModel> Children { get; }
+    public ObservableCollection<NodeViewModel> Children { get; } = [];
 
     public NodeViewModel Parent
     {

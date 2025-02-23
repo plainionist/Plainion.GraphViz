@@ -77,14 +77,11 @@ class DragDropBehavior
             Contract.Requires(Node.GetType().GetProperty(nameof(Node.Parent)).CanWrite, "Parent is not writable");
 
             Children = new ObservableCollection(Node.Children);
-            Siblings = new ObservableCollection(Node.Parent != null ? Node.Parent.Children : new ObservableCollection<NodeViewModel>());
         }
 
         public NodeViewModel Node { get; private set; }
 
         public ObservableCollection Children { get; private set; }
-
-        public ObservableCollection Siblings { get; private set; }
 
         public NodeWriteAccess GetParent()
         {
@@ -111,49 +108,11 @@ class DragDropBehavior
 
         if (request.DropTarget == myRoot.Node)
         {
-            ChangeParent(droppedNode, n => myRoot.Children.Add(n), myRoot);
-        }
-        else if (request.Location == DropLocation.Before || request.Location == DropLocation.After)
-        {
-            MoveNode(droppedNode, dropTarget, request.Location);
+            ChangeParent(droppedNode, myRoot.Children.Add, myRoot);
         }
         else
         {
-            ChangeParent(droppedNode, n => dropTarget.Children.Add(n), dropTarget);
-        }
-    }
-
-    private void MoveNode(NodeWriteAccess nodeToMove, NodeWriteAccess targetNode, DropLocation operation)
-    {
-        var siblings = targetNode.Siblings;
-        var dropPos = siblings.IndexOf(targetNode);
-
-        if (operation == DropLocation.After)
-        {
-            dropPos++;
-        }
-
-        if (siblings.Contains(nodeToMove))
-        {
-            var oldPos = siblings.IndexOf(nodeToMove);
-            if (oldPos < dropPos)
-            {
-                // ObservableCollection first removes the item and then reinserts which invalidates the index
-                dropPos--;
-            }
-
-            siblings.Move(oldPos, dropPos);
-        }
-        else
-        {
-            if (dropPos < siblings.Count)
-            {
-                ChangeParent(nodeToMove, n => siblings.Insert(dropPos, n), targetNode.GetParent());
-            }
-            else
-            {
-                ChangeParent(nodeToMove, n => siblings.Add(n), targetNode.GetParent());
-            }
+            ChangeParent(droppedNode, dropTarget.Children.Add, dropTarget);
         }
     }
 

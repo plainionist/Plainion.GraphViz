@@ -91,16 +91,16 @@ partial class TreeEditor : UserControl, IDropable
     string IDropable.DataFormat => typeof(NodeView).FullName;
 
     bool IDropable.IsDropAllowed(object data, DropLocation location) =>
-        Root == null ? false : Root.IsDropAllowedAt(location);
+        Root != null && Root.IsDropAllowedAt(location);
 
-    void IDropable.Drop(object data, DropLocation location)
+    void IDropable.Drop(object data, DropLocation _)
     {
         if (data is not NodeView droppedElement)
         {
             return;
         }
 
-        var arg = new NodeDropRequest(((NodeViewModel)droppedElement.DataContext), Root, location);
+        var arg = new NodeDropRequest((NodeViewModel)droppedElement.DataContext, Root);
 
         if (DropCommand != null && DropCommand.CanExecute(arg))
         {

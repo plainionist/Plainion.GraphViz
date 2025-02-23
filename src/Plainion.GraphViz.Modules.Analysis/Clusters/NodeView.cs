@@ -93,7 +93,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
         return ((NodeViewModel)DataContext).IsDropAllowedAt(location);
     }
 
-    void IDropable.Drop(object data, DropLocation location)
+    void IDropable.Drop(object data, DropLocation _)
     {
         if (data is not NodeView droppedElement)
         {
@@ -106,17 +106,12 @@ public class NodeView : TreeViewItem, IDropable, IDragable
             return;
         }
 
-        var arg = new NodeDropRequest(((NodeViewModel)droppedElement.DataContext), ((NodeViewModel)DataContext), location);
+        var arg = new NodeDropRequest((NodeViewModel)droppedElement.DataContext, (NodeViewModel)DataContext);
 
         var editor = this.FindParentOfType<TreeEditor>();
         if (editor.DropCommand != null && editor.DropCommand.CanExecute(arg))
         {
             editor.DropCommand.Execute(arg);
-        }
-
-        if (location == DropLocation.InPlace)
-        {
-            IsExpanded = true;
         }
     }
 
