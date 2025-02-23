@@ -33,24 +33,23 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         public ClusterEditorModel(IDomainModel model)
             : base(model)
         {
+            Root = new NodeViewModel(null, null, NodeType.Root);
+
             AddButtonCaption = "Add ...";
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
-            Root = new NodeViewModel(null, null, NodeType.Root);
-
             AddClusterCommand = new DelegateCommand<NodeViewModel>(OnAddCluster, n => n == Root);
             DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode);
-
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
             myFilterOnId = true;
             myTreeShowId = true;
         }
 
-        public NodeViewModel Root { get; private set; }
+        public NodeViewModel Root { get; }
 
-        public DelegateCommand<NodeViewModel> AddClusterCommand { get; private set; }
+        public DelegateCommand<NodeViewModel> AddClusterCommand { get; }
 
         private void OnAddCluster(NodeViewModel parent)
         {
@@ -88,7 +87,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
-        public DelegateCommand<NodeViewModel> DeleteClusterCommand { get; private set; }
+        public DelegateCommand<NodeViewModel> DeleteClusterCommand { get; }
 
         private void OnDeleteNode(NodeViewModel node)
         {
@@ -124,7 +123,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             }
         }
 
-        public ICommand DropCommand { get; private set; }
+        public ICommand DropCommand { get; }
 
         private void OnDrop(NodeDropRequest request)
         {
@@ -147,7 +146,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             }
         }
 
-        public ICommand MouseDownCommand { get; private set; }
+        public ICommand MouseDownCommand { get; }
 
         private void OnMouseDown(MouseButtonEventArgs args)
         {
@@ -157,7 +156,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             }
         }
 
-        public DelegateCommand AddNodesToClusterCommand { get; private set; }
+        public DelegateCommand AddNodesToClusterCommand { get; }
 
         private void OnAddNodesToCluster()
         {
