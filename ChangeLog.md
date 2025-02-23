@@ -1,9 +1,10 @@
 
 ## 8.2 - 2025-02-
 
-- ClusterEditor:
+- Cluster Editor
   - dropping of clusters allowed
-  - removl of nodes allowed
+  - removal of nodes allowed
+  - shows node ids by default
 
 ## 8.1 - 2025-02-20
 

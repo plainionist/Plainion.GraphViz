@@ -8,8 +8,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using Plainion;
 using Plainion.Collections;
-using Plainion.GraphViz.Algorithms;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
@@ -45,6 +43,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode);
 
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
+
+            myFilterOnId = true;
+            myTreeShowId = true;
         }
 
         public NodeViewModel Root { get; private set; }
