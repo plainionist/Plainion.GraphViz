@@ -1,7 +1,9 @@
 
 ## 8.2 - 2025-02-
 
-- ClusterEditor: dropping of clusters allowed
+- ClusterEditor:
+  - dropping of clusters allowed
+  - removl of nodes allowed
 
 ## 8.1 - 2025-02-20
 

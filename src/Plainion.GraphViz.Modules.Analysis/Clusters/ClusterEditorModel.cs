@@ -9,6 +9,7 @@ using System.Windows.Input;
 using Plainion;
 using Plainion.Collections;
 using Plainion.GraphViz.Algorithms;
+using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
@@ -41,7 +42,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             Root = new NodeViewModel(null, null, NodeType.Root);
 
             AddClusterCommand = new DelegateCommand<NodeViewModel>(OnAddCluster, n => n == Root);
-            DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteCluster, n => n?.Parent == Root);
+            DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode);
 
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
         }
@@ -88,30 +89,38 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         public DelegateCommand<NodeViewModel> DeleteClusterCommand { get; private set; }
 
-        private void OnDeleteCluster(NodeViewModel clusterNode)
+        private void OnDeleteNode(NodeViewModel node)
         {
-            // avoid many intermediate updates
-            myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
-
-            myPresentation.DynamicClusters().HideCluster(clusterNode.Id);
-
-            // update tree
+            if (node.Type == NodeType.Cluster)
             {
-                // the tree might have been rebuilt - we have to search by id
-                Root.Children.Remove(Root.Children.Single(x => x.Id == clusterNode.Id));
+                // avoid many intermediate updates
+                myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
-                if (clusterNode.Id == SelectedCluster)
+                myPresentation.DynamicClusters().HideCluster(node.Id);
+
+                // update tree
                 {
-                    SelectedCluster = null;
+                    // the tree might have been rebuilt - we have to search by id
+                    Root.Children.Remove(Root.Children.Single(x => x.Id == node.Id));
+
+                    if (node.Id == SelectedCluster)
+                    {
+                        SelectedCluster = null;
+                    }
+
+                    foreach (var treeNode in node.Children)
+                    {
+                        myNodeToClusterCache.Remove(treeNode.Id);
+                    }
                 }
 
-                foreach (var treeNode in clusterNode.Children)
-                {
-                    myNodeToClusterCache.Remove(treeNode.Id);
-                }
+                myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
             }
-
-            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
+            else
+            {
+                // remove node
+                myPresentation.DynamicClusters().RemoveFromClusters(node.Id);
+            }
         }
 
         public ICommand DropCommand { get; private set; }
@@ -127,12 +136,13 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 droppedNode.Parent.Children.Remove(droppedNode);
 
                 targetCluster.Children.Add(droppedNode);
+
                 droppedNode.Parent = targetCluster;
             }
 
             if (request.DroppedNode.Type == NodeType.Cluster)
             {
-                OnDeleteCluster(request.DroppedNode);
+                OnDeleteNode(request.DroppedNode);
             }
         }
 
@@ -310,7 +320,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         {
             var node = (NodeViewModel)sender;
 
-            myPresentation.DynamicClusters().AddToCluster(node.Id, ((NodeViewModel)node.Parent).Id);
+            myPresentation.DynamicClusters().AddToCluster(node.Id, node.Parent.Id);
         }
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
@@ -468,11 +478,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             get { return typeof(NodeView).FullName; }
         }
 
-        bool IDropable.IsDropAllowed(object data, DropLocation location)
-        {
-            return true;
-        }
+        bool IDropable.IsDropAllowed(object data, DropLocation location) => true;
 
+        // move node out from tree into preview
         void IDropable.Drop(object data, DropLocation location)
         {
             if (data is not NodeView droppedElement)
@@ -480,9 +488,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 return;
             }
 
-            var nodeId = ((NodeViewModel)droppedElement.DataContext).Id;
-
-            myPresentation.DynamicClusters().RemoveFromClusters(nodeId);
+            OnDeleteNode((NodeViewModel)droppedElement.DataContext);
         }
     }
 }
