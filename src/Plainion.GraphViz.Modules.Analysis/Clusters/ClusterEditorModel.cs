@@ -6,12 +6,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Input;
-using Plainion;
 using Plainion.Collections;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
-using Plainion.Windows.Diagnostics;
 using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -40,8 +38,8 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
             MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
-            AddClusterCommand = new DelegateCommand<NodeViewModel>(OnAddCluster, n => n == Root);
-            DeleteClusterCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode);
+            NewClusterCommand = new DelegateCommand<NodeViewModel>(OnNewCluster, n => n == Root);
+            DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode);
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
             myFilterOnId = true;
@@ -50,9 +48,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         public NodeViewModel Root { get; }
 
-        public DelegateCommand<NodeViewModel> AddClusterCommand { get; }
+        public DelegateCommand<NodeViewModel> NewClusterCommand { get; }
 
-        private void OnAddCluster(NodeViewModel parent)
+        private void OnNewCluster(NodeViewModel parent)
         {
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
@@ -88,7 +86,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
-        public DelegateCommand<NodeViewModel> DeleteClusterCommand { get; }
+        public DelegateCommand<NodeViewModel> DeleteNodeCommand { get; }
 
         private void OnDeleteNode(NodeViewModel node)
         {
@@ -122,6 +120,8 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 // remove node
                 myPresentation.DynamicClusters().RemoveFromClusters(node.Id);
             }
+
+            PreviewNodes.Refresh();
         }
 
         public ICommand DropCommand { get; }
@@ -197,9 +197,10 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 }
             }
 
-            Filter = null;
-
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
+
+            Filter = null;
+            PreviewNodes.Refresh();
         }
 
         public string SelectedCluster

@@ -5,6 +5,8 @@
   - dropping of clusters allowed
   - removal of nodes allowed
   - shows node ids by default
+  - Clusters remain expanded after D&D
+  - Nodes list refresh problems fixed
 
 ## 8.1 - 2025-02-20
 
