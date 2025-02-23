@@ -54,7 +54,7 @@ public class NodeView : TreeViewItem, IDropable, IDragable
             return;
         }
 
-        State = myStateContainer.GetOrCreate(node);
+        State = node;
 
         var childrenCount = (TextBlock)GetTemplateChild("PART_ChildrenCount");
         if (childrenCount != null)

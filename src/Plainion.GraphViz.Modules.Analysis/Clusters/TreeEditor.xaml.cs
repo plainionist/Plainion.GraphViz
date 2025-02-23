@@ -12,8 +12,8 @@ partial class TreeEditor : UserControl, IDropable
     {
         InitializeComponent();
 
-        CommandBindings.Add(new CommandBinding(ExpandAll, (_, _) => myTree.StateContainer.GetOrCreate(Root).ExpandAll()));
-        CommandBindings.Add(new CommandBinding(CollapseAll, (_, _) => myTree.StateContainer.GetOrCreate(Root).CollapseAll()));
+        CommandBindings.Add(new CommandBinding(ExpandAll, (_, _) => Root.ExpandAll()));
+        CommandBindings.Add(new CommandBinding(CollapseAll, (_, _) => Root.CollapseAll()));
     }
 
     public static readonly RoutedCommand ExpandAll = new();
@@ -79,7 +79,7 @@ partial class TreeEditor : UserControl, IDropable
             return;
         }
 
-        myTree.StateContainer.GetRoot().ApplyFilter(Filter);
+        myTree.StateContainer.DataContext.ApplyFilter(Filter);
     }
 
     public string Filter
@@ -91,7 +91,7 @@ partial class TreeEditor : UserControl, IDropable
     string IDropable.DataFormat => typeof(NodeView).FullName;
 
     bool IDropable.IsDropAllowed(object data, DropLocation location) =>
-        Root == null ? false : myTree.StateContainer.GetOrCreate(Root).IsDropAllowedAt(location);
+        Root == null ? false : Root.IsDropAllowedAt(location);
 
     void IDropable.Drop(object data, DropLocation location)
     {
