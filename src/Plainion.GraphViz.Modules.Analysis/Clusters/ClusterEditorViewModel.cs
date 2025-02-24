@@ -6,13 +6,12 @@ using System.Windows.Input;
 using Plainion.Collections;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {
-    class ClusterEditorViewModel : ViewModelBase, IDropable
+    class ClusterEditorViewModel : ViewModelBase
     {
         private IGraphPresentation myPresentation;
         private IModuleChangedObserver myTransformationsObserver;
@@ -268,24 +267,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         {
             BuildTree();
             Preview.OnTransformationsChanged();
-        }
-
-        string IDropable.DataFormat
-        {
-            get { return typeof(NodeView).FullName; }
-        }
-
-        bool IDropable.IsDropAllowed(object data, DropLocation location) => true;
-
-        // move node out from tree into preview
-        void IDropable.Drop(object data, DropLocation location)
-        {
-            if (data is not NodeView droppedElement)
-            {
-                return;
-            }
-
-            OnDeleteNode((NodeViewModel)droppedElement.DataContext);
         }
 
         internal void OnClusterSelected(string clusterId)

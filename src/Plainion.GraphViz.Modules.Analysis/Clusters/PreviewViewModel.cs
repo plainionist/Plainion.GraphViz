@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
+using Plainion.Windows.Interactivity.DragDrop;
 using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-internal class PreviewViewModel : ViewModelBase
+internal class PreviewViewModel : ViewModelBase, IDropable
 {
     private readonly ClusterEditorViewModel myParentVM;
     private NodeWithCaption mySelectedPreviewItem;
@@ -209,5 +208,23 @@ internal class PreviewViewModel : ViewModelBase
     internal void OnNodeRemovedFromCluster(NodeViewModel node)
     {
         PreviewNodes.Refresh();
+    }
+
+    string IDropable.DataFormat
+    {
+        get { return typeof(NodeView).FullName; }
+    }
+
+    bool IDropable.IsDropAllowed(object data, DropLocation location) => true;
+
+    // move node out from tree into preview
+    void IDropable.Drop(object data, DropLocation location)
+    {
+        if (data is not NodeView droppedElement)
+        {
+            return;
+        }
+
+        myParentVM.OnDeleteNode((NodeViewModel)droppedElement.DataContext);
     }
 }

@@ -48,8 +48,8 @@
                 <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Content="Filter on identifier" IsChecked="{Binding Preview.FilterOnId}"/>
             </Grid>
             <ListView Name="myPreview" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                      Margin="0,5,0,0" MinHeight="200" 
-                      ItemsSource="{Binding Preview.PreviewNodes}" SelectedItem="{Binding Preview.SelectedPreviewItem}">
+                      Margin="0,5,0,0" MinHeight="200" DataContext="{Binding Preview}"
+                      ItemsSource="{Binding PreviewNodes}" SelectedItem="{Binding SelectedPreviewItem}">
                 <i:Interaction.Behaviors>
                     <pn:FrameworkElementDropBehavior/>
                 </i:Interaction.Behaviors>
