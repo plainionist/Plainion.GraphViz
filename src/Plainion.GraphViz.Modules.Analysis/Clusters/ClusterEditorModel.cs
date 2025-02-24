@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 using Plainion.Collections;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.Prism.Mvvm;
 using Plainion.Windows.Interactivity.DragDrop;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -20,16 +14,13 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {
     class ClusterEditorModel : ViewModelBase, IDropable
     {
-        private string myFilter;
-        private bool myFilterOnId;
-        private ICollectionView myPreviewNodes;
         private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
         private string mySelectedCluster;
         private string myAddButtonCaption;
         private IModuleChangedObserver myTransformationsObserver;
-        private Dictionary<string, string> myNodeToClusterCache;
         private bool myTreeShowId;
+        private readonly PreviewViewModel myPreviewViewModel;
 
         public ClusterEditorModel(IDomainModel model)
             : base(model)
@@ -47,11 +38,13 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             ExpandAllCommand = new DelegateCommand(() => Root.ExpandAll());
             CollapseAllCommand = new DelegateCommand(() => Root.CollapseAll());
 
-            myFilterOnId = true;
             myTreeShowId = true;
+
+            myPreviewViewModel = new PreviewViewModel(model, Root);
         }
 
         public NodeViewModel Root { get; }
+        public PreviewViewModel Preview => myPreviewViewModel;
 
         public DelegateCommand ExpandAllCommand { get; }
         public DelegateCommand CollapseAllCommand { get; }
@@ -115,10 +108,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                         SelectedCluster = null;
                     }
 
-                    foreach (var treeNode in node.Children)
-                    {
-                        myNodeToClusterCache.Remove(treeNode.Id);
-                    }
+                    myPreviewViewModel.OnNodeDeleted(node);
                 }
 
                 myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
@@ -129,7 +119,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 myPresentation.DynamicClusters().RemoveFromClusters(node.Id);
             }
 
-            PreviewNodes.Refresh();
+            myPreviewViewModel.PreviewNodes.Refresh();
         }
 
         public ICommand DropCommand { get; }
@@ -161,7 +151,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         {
             if (args.ClickCount == 2)
             {
-                Filter = SelectedPreviewItem.DisplayText;
+                myPreviewViewModel.Filter = SelectedPreviewItem.DisplayText;
             }
         }
 
@@ -172,7 +162,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
-            var nodes = PreviewNodes
+            var nodes = myPreviewViewModel.PreviewNodes
                 .Cast<NodeWithCaption>()
                 .Select(n => n.Node.Id)
                 .ToList();
@@ -201,14 +191,14 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                     PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
                     PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
 
-                    myNodeToClusterCache[node.Id] = clusterNode.Id;
+                    myPreviewViewModel.OnNodeAddedToCluster(node, clusterNode);
                 }
             }
 
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
 
-            Filter = null;
-            PreviewNodes.Refresh();
+            myPreviewViewModel.Filter = null;
+            myPreviewViewModel.PreviewNodes.Refresh();
         }
 
         public string SelectedCluster
@@ -255,17 +245,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             // first build tree - master for preview
             BuildTree();
-
-            // rebuild preview
-            myPreviewNodes = null;
-            if (Filter == null)
-            {
-                PreviewNodes.Refresh();
-            }
-            else
-            {
-                Filter = null;
-            }
 
             // register for updates only AFTER tree is built up completely to avoid getting notified by the built up process
             var transformationModule = Model.Presentation.GetModule<ITransformationModule>();
@@ -329,8 +308,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 {
                     node.IsExpanded = true;
                 }
-
-                myNodeToClusterCache = null;
             }
         }
 
@@ -369,7 +346,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private void OnTransformationsChanged(object sender, EventArgs e)
         {
             BuildTree();
-            PreviewNodes.Refresh();
+            myPreviewViewModel.OnTransformationsChanged();
         }
 
         public bool TreeShowId
@@ -387,107 +364,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                         }
                     }
                 }
-            }
-        }
-
-        public string Filter
-        {
-            get { return myFilter; }
-            set
-            {
-                if (SetProperty(ref myFilter, value))
-                {
-                    ClearErrors();
-                    PreviewNodes.Refresh();
-                }
-            }
-        }
-
-        public bool FilterOnId
-        {
-            get { return myFilterOnId; }
-            set
-            {
-                if (SetProperty(ref myFilterOnId, value))
-                {
-                    ClearErrors();
-                    PreviewNodes.Refresh();
-                }
-            }
-        }
-
-        public ICollectionView PreviewNodes
-        {
-            get
-            {
-                if (myPreviewNodes == null && myPresentation != null)
-                {
-                    var captionModule = myPresentation.GetPropertySetFor<Caption>();
-
-                    var nodes = myPresentation.Graph.Nodes
-                        .Select(n => new NodeWithCaption(n, myFilterOnId ? n.Id : captionModule.Get(n.Id).DisplayText));
-
-                    myPreviewNodes = CollectionViewSource.GetDefaultView(nodes);
-                    myPreviewNodes.Filter = FilterPreview;
-                    myPreviewNodes.SortDescriptions.Add(new SortDescription("DisplayText", ListSortDirection.Ascending));
-
-                    RaisePropertyChanged(nameof(PreviewNodes));
-                }
-                return myPreviewNodes;
-            }
-        }
-
-        private bool FilterPreview(object item)
-        {
-            if (GetErrors("Filters").OfType<object>().Any())
-            {
-                return true;
-            }
-
-            var node = (NodeWithCaption)item;
-
-            // we do not look into model because handlign the ITransformationModule esp. with folding
-            // is too complex. anyhow the "model" for the preview can also be the tree in this case.
-            if (myNodeToClusterCache == null)
-            {
-                Debug.WriteLine("Rebuilding NodeClusterCache");
-
-                myNodeToClusterCache = new Dictionary<string, string>();
-
-                foreach (NodeViewModel cluster in Root.Children)
-                {
-                    foreach (NodeViewModel treeNode in cluster.Children)
-                    {
-                        myNodeToClusterCache[treeNode.Id] = cluster.Id;
-                    }
-                }
-            }
-
-            if (myNodeToClusterCache.ContainsKey(node.Node.Id))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(Filter))
-            {
-                return true;
-            }
-
-            var pattern = Filter;
-
-            if (!pattern.Contains('*'))
-            {
-                pattern = "*" + pattern + "*";
-            }
-
-            try
-            {
-                return new Text.Wildcard(pattern, RegexOptions.IgnoreCase).IsMatch(node.DisplayText);
-            }
-            catch
-            {
-                SetError(ValidationFailure.Error, "Filter");
-                return true;
             }
         }
 
