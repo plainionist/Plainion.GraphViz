@@ -18,7 +18,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private string mySelectedCluster;
         private IModuleChangedObserver myTransformationsObserver;
         private bool myTreeShowId;
-        private readonly PreviewViewModel myPreviewViewModel;
 
         public ClusterEditorModel(IDomainModel model)
             : base(model)
@@ -36,11 +35,11 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             myTreeShowId = true;
 
-            myPreviewViewModel = new PreviewViewModel(model, Root);
+            Preview = new PreviewViewModel(model, Root);
         }
 
         public NodeViewModel Root { get; }
-        public PreviewViewModel Preview => myPreviewViewModel;
+        public PreviewViewModel Preview { get; }
 
         public DelegateCommand ExpandAllCommand { get; }
         public DelegateCommand CollapseAllCommand { get; }
@@ -104,7 +103,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                         SelectedCluster = null;
                     }
 
-                    myPreviewViewModel.OnNodeDeleted(node);
+                    Preview.OnNodeDeleted(node);
                 }
 
                 myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
@@ -115,7 +114,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 myPresentation.DynamicClusters().RemoveFromClusters(node.Id);
             }
 
-            myPreviewViewModel.PreviewNodes.Refresh();
+            Preview.PreviewNodes.Refresh();
         }
 
         public ICommand DropCommand { get; }
@@ -148,7 +147,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
 
-            var nodes = myPreviewViewModel.PreviewNodes
+            var nodes = Preview.PreviewNodes
                 .Cast<NodeWithCaption>()
                 .Select(n => n.Node.Id)
                 .ToList();
@@ -177,14 +176,14 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                     PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
                     PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
 
-                    myPreviewViewModel.OnNodeAddedToCluster(node, clusterNode);
+                    Preview.OnNodeAddedToCluster(node, clusterNode);
                 }
             }
 
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
 
-            myPreviewViewModel.Filter = null;
-            myPreviewViewModel.PreviewNodes.Refresh();
+            Preview.Filter = null;
+            Preview.PreviewNodes.Refresh();
         }
 
         public string SelectedCluster
@@ -320,7 +319,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private void OnTransformationsChanged(object sender, EventArgs e)
         {
             BuildTree();
-            myPreviewViewModel.OnTransformationsChanged();
+            Preview.OnTransformationsChanged();
         }
 
         public bool TreeShowId
