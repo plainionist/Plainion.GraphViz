@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using Plainion.GraphViz.Presentation;
@@ -180,27 +182,32 @@ internal class PreviewViewModel : ViewModelBase
         set { SetProperty(ref mySelectedPreviewItem, value); }
     }
 
-    internal void OnNodeDeleted(NodeViewModel node)
+    internal void OnClusterDeleted(NodeViewModel node)
     {
-        if (myNodeToClusterCache == null)
-        {
-            return;
-        }
-
         foreach (var treeNode in node.Children)
         {
-            myNodeToClusterCache.Remove(treeNode.Id);
+            myNodeToClusterCache?.Remove(treeNode.Id);
         }
+
+        PreviewNodes.Refresh();
     }
 
     internal void OnNodeAddedToCluster(NodeViewModel node, NodeViewModel clusterNode)
     {
-        myNodeToClusterCache[node.Id] = clusterNode.Id;
+        if (myNodeToClusterCache != null)
+        {
+            myNodeToClusterCache[node.Id] = clusterNode.Id;
+        }
     }
 
     internal void OnTransformationsChanged()
     {
         myNodeToClusterCache = null;
+        PreviewNodes.Refresh();
+    }
+
+    internal void OnNodeRemovedFromCluster(NodeViewModel node)
+    {
         PreviewNodes.Refresh();
     }
 }

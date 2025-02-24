@@ -85,28 +85,24 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 myPresentation.DynamicClusters().HideCluster(node.Id);
 
-                // update tree
+                // the tree might have been rebuilt - we have to search by id
+                Root.Children.Remove(Root.Children.Single(x => x.Id == node.Id));
+
+                if (node.Id == Tree.SelectedCluster)
                 {
-                    // the tree might have been rebuilt - we have to search by id
-                    Root.Children.Remove(Root.Children.Single(x => x.Id == node.Id));
-
-                    if (node.Id == Tree.SelectedCluster)
-                    {
-                        Tree.SelectedCluster = null;
-                    }
-
-                    Preview.OnNodeDeleted(node);
+                    Tree.SelectedCluster = null;
                 }
+
+                Preview.OnClusterDeleted(node);
 
                 myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
             }
             else
             {
-                // remove node
                 myPresentation.DynamicClusters().RemoveFromClusters(node.Id);
-            }
 
-            Preview.PreviewNodes.Refresh();
+                Preview.OnNodeRemovedFromCluster(node);
+            }
         }
 
         public ICommand DropCommand { get; }
