@@ -4,14 +4,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
+using System.Windows.Input;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Mvvm;
+using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 internal class PreviewViewModel : ViewModelBase
 {
+    private NodeWithCaption mySelectedPreviewItem;
     private string myFilter;
     private bool myFilterOnId;
     private ICollectionView myPreviewNodes;
@@ -25,6 +28,9 @@ internal class PreviewViewModel : ViewModelBase
         System.Contract.RequiresNotNull(root);
 
         myRoot = root;
+
+        MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
+
         myFilterOnId = true;
     }
 
@@ -148,6 +154,22 @@ internal class PreviewViewModel : ViewModelBase
             SetError(ValidationFailure.Error, "Filter");
             return true;
         }
+    }
+
+    public ICommand MouseDownCommand { get; }
+
+    private void OnMouseDown(MouseButtonEventArgs args)
+    {
+        if (args.ClickCount == 2)
+        {
+            Filter = SelectedPreviewItem.DisplayText;
+        }
+    }
+
+    public NodeWithCaption SelectedPreviewItem
+    {
+        get { return mySelectedPreviewItem; }
+        set { SetProperty(ref mySelectedPreviewItem, value); }
     }
 
     internal void OnNodeDeleted(NodeViewModel node)

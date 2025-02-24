@@ -14,7 +14,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {
     class ClusterEditorModel : ViewModelBase, IDropable
     {
-        private NodeWithCaption mySelectedPreviewItem;
         private IGraphPresentation myPresentation;
         private string mySelectedCluster;
         private string myAddButtonCaption;
@@ -29,7 +28,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             AddButtonCaption = "Add ...";
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
-            MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
             NewClusterCommand = new DelegateCommand<NodeViewModel>(OnNewCluster, n => n == Root);
             DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode, n => n != Root);
@@ -145,16 +143,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             }
         }
 
-        public ICommand MouseDownCommand { get; }
-
-        private void OnMouseDown(MouseButtonEventArgs args)
-        {
-            if (args.ClickCount == 2)
-            {
-                myPreviewViewModel.Filter = SelectedPreviewItem.DisplayText;
-            }
-        }
-
         public DelegateCommand AddNodesToClusterCommand { get; }
 
         private void OnAddNodesToCluster()
@@ -220,12 +208,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         {
             get { return myAddButtonCaption; }
             set { SetProperty(ref myAddButtonCaption, value); }
-        }
-
-        public NodeWithCaption SelectedPreviewItem
-        {
-            get { return mySelectedPreviewItem; }
-            set { SetProperty(ref mySelectedPreviewItem, value); }
         }
 
         protected override void OnPresentationChanged()
