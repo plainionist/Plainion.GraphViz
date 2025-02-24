@@ -16,7 +16,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
     {
         private IGraphPresentation myPresentation;
         private string mySelectedCluster;
-        private string myAddButtonCaption;
         private IModuleChangedObserver myTransformationsObserver;
         private bool myTreeShowId;
         private readonly PreviewViewModel myPreviewViewModel;
@@ -26,7 +25,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         {
             Root = new NodeViewModel(null, null, NodeType.Root);
 
-            AddButtonCaption = "Add ...";
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
 
             NewClusterCommand = new DelegateCommand<NodeViewModel>(OnNewCluster, n => n == Root);
@@ -197,17 +195,11 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 if (SetProperty(ref mySelectedCluster, value))
                 {
                     var captionModule = myPresentation.GetModule<ICaptionModule>();
-                    AddButtonCaption = SelectedCluster != null ? "Add to '" + captionModule.Get(mySelectedCluster).DisplayText + "'" : "Add ...";
+                    Preview.AddButtonCaption = SelectedCluster != null ? "Add to '" + captionModule.Get(mySelectedCluster).DisplayText + "'" : "Add ...";
 
                     AddNodesToClusterCommand.RaiseCanExecuteChanged();
                 }
             }
-        }
-
-        public string AddButtonCaption
-        {
-            get { return myAddButtonCaption; }
-            set { SetProperty(ref myAddButtonCaption, value); }
         }
 
         protected override void OnPresentationChanged()

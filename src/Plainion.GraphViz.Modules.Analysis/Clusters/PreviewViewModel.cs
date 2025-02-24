@@ -21,6 +21,7 @@ internal class PreviewViewModel : ViewModelBase
     private IGraphPresentation myPresentation;
     private Dictionary<string, string> myNodeToClusterCache;
     private readonly NodeViewModel myRoot;
+    private string myAddButtonCaption;
 
     public PreviewViewModel(IDomainModel model, NodeViewModel root)
         : base(model)
@@ -29,6 +30,7 @@ internal class PreviewViewModel : ViewModelBase
 
         myRoot = root;
 
+        AddButtonCaption = "Add ...";
         MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
 
         myFilterOnId = true;
@@ -53,6 +55,12 @@ internal class PreviewViewModel : ViewModelBase
             Filter = null;
         }
         myNodeToClusterCache = null;
+    }
+
+    public string AddButtonCaption
+    {
+        get { return myAddButtonCaption; }
+        set { SetProperty(ref myAddButtonCaption, value); }
     }
 
     public string Filter
