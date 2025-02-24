@@ -22,6 +22,8 @@ class TreeEditorViewModel : ViewModelBase
 
         myShowNodeId = true;
 
+        NewClusterCommand = new DelegateCommand<NodeViewModel>(x=>myParentVM.OnNewCluster(x), n => n == myParentVM.Root);
+        DeleteNodeCommand = new DelegateCommand<NodeViewModel>(x=>myParentVM.OnDeleteNode(x), n => n != myParentVM.Root);
         ExpandAllCommand = new DelegateCommand(() => myParentVM.Root.ExpandAll());
         CollapseAllCommand = new DelegateCommand(() => myParentVM.Root.CollapseAll());
     }
@@ -60,6 +62,8 @@ class TreeEditorViewModel : ViewModelBase
         }
     }
 
+    public DelegateCommand<NodeViewModel> NewClusterCommand { get; }
+    public DelegateCommand<NodeViewModel> DeleteNodeCommand { get; }
     public DelegateCommand ExpandAllCommand { get; }
     public DelegateCommand CollapseAllCommand { get; }
 

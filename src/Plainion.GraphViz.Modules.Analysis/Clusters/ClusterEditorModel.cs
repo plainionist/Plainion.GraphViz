@@ -24,8 +24,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => Tree.SelectedCluster != null);
 
-            NewClusterCommand = new DelegateCommand<NodeViewModel>(OnNewCluster, n => n == Root);
-            DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode, n => n != Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
             Preview = new PreviewViewModel(model, this);
@@ -36,9 +34,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         public PreviewViewModel Preview { get; }
         public TreeEditorViewModel Tree { get; }
 
-        public DelegateCommand<NodeViewModel> NewClusterCommand { get; }
-
-        private void OnNewCluster(NodeViewModel parent)
+        public void OnNewCluster(NodeViewModel parent)
         {
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
@@ -74,9 +70,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
-        public DelegateCommand<NodeViewModel> DeleteNodeCommand { get; }
-
-        private void OnDeleteNode(NodeViewModel node)
+        public void OnDeleteNode(NodeViewModel node)
         {
             if (node.Type == NodeType.Cluster)
             {

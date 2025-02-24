@@ -155,8 +155,8 @@
 
             <tree:ExtendedTreeView.ContextMenu>
                 <ContextMenu DataContext="{Binding Data.Parent.Parent, Source={StaticResource TreeProxy}}">
-                    <MenuItem Header="New" Command="{Binding DataContext.NewClusterCommand}" CommandParameter="{Binding NodeForContextMenu}" />
-                    <MenuItem Header="Delete" Command="{Binding DataContext.DeleteNodeCommand}" CommandParameter="{Binding NodeForContextMenu}" />
+                    <MenuItem Header="New" Command="{Binding DataContext.Tree.NewClusterCommand}" CommandParameter="{Binding NodeForContextMenu}" />
+                    <MenuItem Header="Delete" Command="{Binding DataContext.Tree.DeleteNodeCommand}" CommandParameter="{Binding NodeForContextMenu}" />
                     <Separator />
                     <MenuItem Header="Expand All" Command="{Binding DataContext.Tree.ExpandAllCommand}"/>
                     <MenuItem Header="Collapse All" Command="{Binding DataContext.Tree.CollapseAllCommand}"/>
