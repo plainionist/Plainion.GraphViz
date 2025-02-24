@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -81,57 +80,12 @@ partial class TreeEditor : UserControl, IDropable
         }
     }
 
-    public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(NodeViewModel), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(null, OnRootChanged));
-
-    private static void OnRootChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var self = (TreeEditor)d;
-        self.OnRootChanged();
-    }
-
-    private void OnRootChanged()
-    {
-        if (Root != null)
-        {
-            CollectionChangedEventManager.AddHandler(Root.Children, OnRootChildrenChanged);
-        }
-    }
-
-    private void OnRootChildrenChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        // looks like tree was rebuilt -> reapply filter
-        OnFilterChanged();
-    }
+    public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(NodeViewModel), typeof(TreeEditor), new FrameworkPropertyMetadata(null));
 
     public NodeViewModel Root
     {
         get { return (NodeViewModel)GetValue(RootProperty); }
         set { SetValue(RootProperty, value); }
-    }
-
-    public static DependencyProperty FilterProperty = DependencyProperty.Register("Filter", typeof(string), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(OnFilterChanged));
-
-    private static void OnFilterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (e.NewValue == e.OldValue)
-        {
-            return;
-        }
-
-        ((TreeEditor)d).OnFilterChanged();
-    }
-
-    private void OnFilterChanged()
-    {
-        Root?.ApplyFilter(Filter);
-    }
-
-    public string Filter
-    {
-        get { return (string)GetValue(FilterProperty); }
-        set { SetValue(FilterProperty, value); }
     }
 
     string IDropable.DataFormat => typeof(NodeView).FullName;

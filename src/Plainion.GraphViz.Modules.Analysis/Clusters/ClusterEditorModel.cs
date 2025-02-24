@@ -200,61 +200,62 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void BuildTree()
         {
-            using (new Profile("BuildTree"))
+            using var _ = new Profile("BuildTree");
+
+            var expandedClusterIds = Root.Children
+                .Where(x => x.IsExpanded)
+                .Select(x => x.Id)
+                .ToHashSet();
+
+            Root.Children.Clear();
+
+            Tree.SelectedCluster = null;
+
+            var transformationModule = myPresentation.GetModule<ITransformationModule>();
+            var captionModule = myPresentation.GetModule<ICaptionModule>();
+            var clusterFolding = myPresentation.ClusterFolding();
+
+            foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
             {
-                var expandedClusterIds = Root.Children
-                    .Where(x => x.IsExpanded)
-                    .Select(x => x.Id)
-                    .ToHashSet();
-
-                Root.Children.Clear();
-
-                Tree.SelectedCluster = null;
-
-                var transformationModule = myPresentation.GetModule<ITransformationModule>();
-                var captionModule = myPresentation.GetModule<ICaptionModule>();
-                var clusterFolding = myPresentation.ClusterFolding();
-
-                foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
+                var clusterNode = new NodeViewModel(myPresentation, cluster.Id, NodeType.Cluster)
                 {
-                    var clusterNode = new NodeViewModel(myPresentation, cluster.Id, NodeType.Cluster)
+                    Parent = Root,
+                    Caption = captionModule.Get(cluster.Id).DisplayText,
+                };
+                Root.Children.Add(clusterNode);
+
+                // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
+                var nodes = clusterFolding == null ? cluster.Nodes : clusterFolding.GetNodes(cluster.Id);
+
+                clusterNode.Children.AddRange(nodes
+                    .Select(n => new NodeViewModel(myPresentation, n.Id, NodeType.Node)
                     {
-                        Parent = Root,
-                        Caption = captionModule.Get(cluster.Id).DisplayText,
-                    };
-                    Root.Children.Add(clusterNode);
+                        Parent = clusterNode,
+                        Caption = captionModule.Get(n.Id).DisplayText,
+                        ShowId = Tree.ShowNodeId
+                    }));
+            }
 
-                    // we do not want to see the pseudo node added for folding but the full expanded list of nodes of this cluster
-                    var nodes = clusterFolding == null ? cluster.Nodes : clusterFolding.GetNodes(cluster.Id);
+            // register for notifications after tree is built to avoid intermediate states getting notified
 
-                    clusterNode.Children.AddRange(nodes
-                        .Select(n => new NodeViewModel(myPresentation, n.Id, NodeType.Node)
-                        {
-                            Parent = clusterNode,
-                            Caption = captionModule.Get(n.Id).DisplayText,
-                            ShowId = Tree.ShowNodeId
-                        }));
-                }
+            foreach (var cluster in Root.Children)
+            {
+                PropertyChangedEventManager.AddHandler(cluster, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => cluster.IsSelected));
 
-                // register for notifications after tree is built to avoid intermediate states getting notified
-
-                foreach (var cluster in Root.Children)
+                foreach (var node in cluster.Children)
                 {
-                    PropertyChangedEventManager.AddHandler(cluster, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => cluster.IsSelected));
-
-                    foreach (var node in cluster.Children)
-                    {
-                        PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
-                        PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
-                    }
-                }
-
-                // make sure expanded clusters are expanded after node deletion and Drag&Drop
-                foreach (var node in Root.Children.Where(x => expandedClusterIds.Contains(x.Id)))
-                {
-                    node.IsExpanded = true;
+                    PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
+                    PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
                 }
             }
+
+            // make sure expanded clusters are expanded after node deletion and Drag&Drop
+            foreach (var node in Root.Children.Where(x => expandedClusterIds.Contains(x.Id)))
+            {
+                node.IsExpanded = true;
+            }
+
+            Root.ApplyFilter(Tree.Filter);
         }
 
         private void OnParentChanged(object sender, PropertyChangedEventArgs e)

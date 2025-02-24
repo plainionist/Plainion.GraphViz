@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Mvvm;
@@ -11,6 +12,7 @@ class TreeEditorViewModel : ViewModelBase
     private readonly ClusterEditorModel myParentVM;
     private bool myShowNodeId;
     private string mySelectedCluster;
+    private string myFilter;
     private IGraphPresentation myPresentation;
 
     public TreeEditorViewModel(IDomainModel model, ClusterEditorModel parent)
@@ -89,6 +91,18 @@ class TreeEditorViewModel : ViewModelBase
             if (SetProperty(ref mySelectedCluster, value))
             {
                 myParentVM.OnClusterSelected(mySelectedCluster);
+            }
+        }
+    }
+
+    public string Filter
+    {
+        get { return myFilter; }
+        set
+        {
+            if (SetProperty(ref myFilter, value))
+            {
+                myParentVM.Root.ApplyFilter(myFilter);
             }
         }
     }
