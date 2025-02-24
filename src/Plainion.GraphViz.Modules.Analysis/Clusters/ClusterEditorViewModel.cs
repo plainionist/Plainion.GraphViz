@@ -33,7 +33,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         public PreviewViewModel Preview { get; }
         public TreeEditorViewModel Tree { get; }
 
-        public void OnNewCluster(NodeViewModel parent)
+        public void CreateNewCluster(NodeViewModel parent)
         {
             // avoid many intermediate updates
             myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
@@ -69,7 +69,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
-        public void OnDeleteNode(NodeViewModel node)
+        public void DeleteNode(NodeViewModel node)
         {
             if (node.Type == NodeType.Cluster)
             {
@@ -117,7 +117,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             if (request.DroppedNode.Type == NodeType.Cluster)
             {
-                OnDeleteNode(request.DroppedNode);
+                DeleteNode(request.DroppedNode);
             }
         }
 
@@ -269,7 +269,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             Preview.OnTransformationsChanged();
         }
 
-        internal void OnClusterSelected(string clusterId)
+        internal void SelectCluster(string clusterId)
         {
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             Preview.AddButtonCaption = clusterId != null ? "Add to '" + captionModule.Get(clusterId).DisplayText + "'" : "Add ...";

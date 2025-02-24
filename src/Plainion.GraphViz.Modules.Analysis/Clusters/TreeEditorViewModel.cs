@@ -25,8 +25,8 @@ class TreeEditorViewModel : ViewModelBase, IDropable
         myShowNodeId = true;
 
         // "null" means root
-        NewClusterCommand = new DelegateCommand(() => myParentVM.OnNewCluster(NodeForContextMenu), () => NodeForContextMenu == null);
-        DeleteNodeCommand = new DelegateCommand(() => myParentVM.OnDeleteNode(NodeForContextMenu), () => NodeForContextMenu != null);
+        NewClusterCommand = new DelegateCommand(() => myParentVM.CreateNewCluster(NodeForContextMenu), () => NodeForContextMenu == null);
+        DeleteNodeCommand = new DelegateCommand(() => myParentVM.DeleteNode(NodeForContextMenu), () => NodeForContextMenu != null);
         ExpandAllCommand = new DelegateCommand(Root.ExpandAll);
         CollapseAllCommand = new DelegateCommand(Root.CollapseAll);
     }
@@ -97,7 +97,7 @@ class TreeEditorViewModel : ViewModelBase, IDropable
         {
             if (SetProperty(ref mySelectedCluster, value))
             {
-                myParentVM.OnClusterSelected(mySelectedCluster);
+                myParentVM.SelectCluster(mySelectedCluster);
             }
         }
     }

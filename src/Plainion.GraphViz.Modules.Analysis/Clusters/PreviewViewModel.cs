@@ -225,6 +225,6 @@ internal class PreviewViewModel : ViewModelBase, IDropable
             return;
         }
 
-        myParentVM.OnDeleteNode((NodeViewModel)droppedElement.DataContext);
+        myParentVM.DeleteNode((NodeViewModel)droppedElement.DataContext);
     }
 }
