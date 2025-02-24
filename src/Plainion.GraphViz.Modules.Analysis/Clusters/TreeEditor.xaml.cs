@@ -81,15 +81,6 @@ partial class TreeEditor : UserControl, IDropable
         }
     }
 
-    public static DependencyProperty FilterLabelProperty = DependencyProperty.Register("FilterLabel", typeof(string), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(null));
-
-    public string FilterLabel
-    {
-        get { return (string)GetValue(FilterLabelProperty); }
-        set { SetValue(FilterLabelProperty, value); }
-    }
-
     public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(NodeViewModel), typeof(TreeEditor),
         new FrameworkPropertyMetadata(null, OnRootChanged));
 
