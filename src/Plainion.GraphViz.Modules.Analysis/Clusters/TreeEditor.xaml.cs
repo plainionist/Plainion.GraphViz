@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Plainion.Windows.Interactivity.DragDrop;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
@@ -12,8 +10,6 @@ partial class TreeEditor : UserControl
     {
         InitializeComponent();
     }
-
-    private TreeEditorViewModel ViewModel => (TreeEditorViewModel)DataContext;
 
     protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
     {
@@ -31,26 +27,20 @@ partial class TreeEditor : UserControl
             nodeItem = ((DependencyObject)e.OriginalSource).FindParentOfType<NodeView>();
         }
 
+        var viewModel = (TreeEditorViewModel)DataContext;
+
         if (nodeItem != null)
         {
-            ViewModel.NodeForContextMenu = (NodeViewModel)nodeItem.DataContext;
+            viewModel.NodeForContextMenu = (NodeViewModel)nodeItem.DataContext;
 
             nodeItem.Focus();
         }
         else
         {
             // if we click directly into the tree control we pick Root
-            ViewModel.NodeForContextMenu = Root;
+            viewModel.NodeForContextMenu = null;
         }
 
         e.Handled = true;
-    }
-
-    public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(NodeViewModel), typeof(TreeEditor), new FrameworkPropertyMetadata(null));
-
-    public NodeViewModel Root
-    {
-        get { return (NodeViewModel)GetValue(RootProperty); }
-        set { SetValue(RootProperty, value); }
     }
 }
