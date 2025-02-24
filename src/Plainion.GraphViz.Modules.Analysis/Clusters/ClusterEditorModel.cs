@@ -15,25 +15,21 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
     class ClusterEditorModel : ViewModelBase, IDropable
     {
         private IGraphPresentation myPresentation;
-        private string mySelectedCluster;
         private IModuleChangedObserver myTransformationsObserver;
-        private bool myTreeShowId;
 
         public ClusterEditorModel(IDomainModel model)
             : base(model)
         {
             Root = new NodeViewModel(null, null, NodeType.Root);
 
-            AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => SelectedCluster != null);
+            AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => Tree.SelectedCluster != null);
 
             NewClusterCommand = new DelegateCommand<NodeViewModel>(OnNewCluster, n => n == Root);
             DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode, n => n != Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
-            myTreeShowId = true;
-
             Preview = new PreviewViewModel(model, Root);
-            Tree = new TreeEditorViewModel(model, Root);
+            Tree = new TreeEditorViewModel(model, this);
         }
 
         public NodeViewModel Root { get; }
@@ -94,9 +90,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                     // the tree might have been rebuilt - we have to search by id
                     Root.Children.Remove(Root.Children.Single(x => x.Id == node.Id));
 
-                    if (node.Id == SelectedCluster)
+                    if (node.Id == Tree.SelectedCluster)
                     {
-                        SelectedCluster = null;
+                        Tree.SelectedCluster = null;
                     }
 
                     Preview.OnNodeDeleted(node);
@@ -148,11 +144,11 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 .Select(n => n.Node.Id)
                 .ToList();
 
-            myPresentation.DynamicClusters().AddToCluster(nodes, SelectedCluster);
+            myPresentation.DynamicClusters().AddToCluster(nodes, Tree.SelectedCluster);
 
             // update tree
             {
-                var clusterNode = Root.Children.Single(n => n.Id == SelectedCluster);
+                var clusterNode = Root.Children.Single(n => n.Id == Tree.SelectedCluster);
 
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
 
@@ -161,7 +157,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                     {
                         Parent = clusterNode,
                         Caption = captionModule.Get(n).DisplayText,
-                        ShowId = TreeShowId
+                        ShowId = Tree.ShowNodeId
                     });
                 clusterNode.Children.AddRange(newTreeNodes);
 
@@ -180,21 +176,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             Preview.Filter = null;
             Preview.PreviewNodes.Refresh();
-        }
-
-        public string SelectedCluster
-        {
-            get { return mySelectedCluster; }
-            set
-            {
-                if (SetProperty(ref mySelectedCluster, value))
-                {
-                    var captionModule = myPresentation.GetModule<ICaptionModule>();
-                    Preview.AddButtonCaption = SelectedCluster != null ? "Add to '" + captionModule.Get(mySelectedCluster).DisplayText + "'" : "Add ...";
-
-                    AddNodesToClusterCommand.RaiseCanExecuteChanged();
-                }
-            }
         }
 
         protected override void OnPresentationChanged()
@@ -232,7 +213,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 Root.Children.Clear();
 
-                SelectedCluster = null;
+                Tree.SelectedCluster = null;
 
                 var transformationModule = myPresentation.GetModule<ITransformationModule>();
                 var captionModule = myPresentation.GetModule<ICaptionModule>();
@@ -255,7 +236,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                         {
                             Parent = clusterNode,
                             Caption = captionModule.Get(n.Id).DisplayText,
-                            ShowId = TreeShowId
+                            ShowId = Tree.ShowNodeId
                         }));
                 }
 
@@ -289,51 +270,13 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
         {
-            var selectedCluster = Root.Children.FirstOrDefault(n => n.IsSelected);
-            if (selectedCluster == null)
-            {
-                var selectedNode = Root.Children
-                    .SelectMany(n => n.Children)
-                    .FirstOrDefault(n => n.IsSelected);
-
-                if (selectedNode != null)
-                {
-                    selectedCluster = selectedNode.Parent;
-                }
-            }
-
-            if (selectedCluster == null)
-            {
-                SelectedCluster = null;
-            }
-            else
-            {
-                SelectedCluster = selectedCluster.Id;
-            }
+            Tree.SelectCluster(Root.Children.FirstOrDefault(n => n.IsSelected));
         }
 
         private void OnTransformationsChanged(object sender, EventArgs e)
         {
             BuildTree();
             Preview.OnTransformationsChanged();
-        }
-
-        public bool TreeShowId
-        {
-            get { return myTreeShowId; }
-            set
-            {
-                if (SetProperty(ref myTreeShowId, value))
-                {
-                    foreach (var clusterNode in Root.Children)
-                    {
-                        foreach (var node in clusterNode.Children)
-                        {
-                            node.ShowId = myTreeShowId;
-                        }
-                    }
-                }
-            }
         }
 
         string IDropable.DataFormat
@@ -352,6 +295,13 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             }
 
             OnDeleteNode((NodeViewModel)droppedElement.DataContext);
+        }
+
+        internal void OnClusterSelected(string clusterId)
+        {
+            var captionModule = myPresentation.GetModule<ICaptionModule>();
+            Preview.AddButtonCaption = clusterId != null ? "Add to '" + captionModule.Get(clusterId).DisplayText + "'" : "Add ...";
+            AddNodesToClusterCommand.RaiseCanExecuteChanged();
         }
     }
 }

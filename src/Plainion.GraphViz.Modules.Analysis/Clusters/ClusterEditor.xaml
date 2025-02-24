@@ -77,7 +77,7 @@
 
             <pngv:TreeEditor Grid.Row="0" Root="{Binding Root}" DropCommand="{Binding DropCommand}" />
 
-            <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0" IsChecked="{Binding TreeShowId}"/>
+            <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0" IsChecked="{Binding Tree.ShowNodeId}"/>
         </Grid>
     </Grid>
 </UserControl>
