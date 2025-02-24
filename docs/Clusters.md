@@ -23,6 +23,8 @@ You can use the Cluster Editor to manage clusters.
 
 ![](Screenshots/ClusterEditor.png) 
 
+Hint: Use CTRL+RMB to open the context menu without selecting a node automatically to allow creation of new clusters.
+
 ## Manage clusters within the graph
 
 You can use the context menu on a node to add (selected) nodes(s) to a cluster from within the graph.
