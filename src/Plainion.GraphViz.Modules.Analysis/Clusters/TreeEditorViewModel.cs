@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
+﻿using System.Linq;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Mvvm;

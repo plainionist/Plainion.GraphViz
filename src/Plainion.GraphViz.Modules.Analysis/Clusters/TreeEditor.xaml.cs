@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -51,7 +50,6 @@ partial class TreeEditor : UserControl, IDropable
         {
             // if we click directly into the tree control we pick Root
             NodeForContextMenu = Root;
-            Debug.WriteLine("NodeForContextMenu: " + Root);
         }
 
         RefreshContextMenuCommandsCanExecute();
