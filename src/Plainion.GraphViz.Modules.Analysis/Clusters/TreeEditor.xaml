@@ -11,12 +11,6 @@
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
 
     <DockPanel LastChildFill="True" DataContext="{Binding ElementName=_this}">
-        <DockPanel.Resources>
-            <DataTemplate x:Key="NodeTemplate">
-                <!-- keep empty by intention -->
-            </DataTemplate>
-        </DockPanel.Resources>
-
         <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch">
             <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Filter, Mode=TwoWay}" SearchEventTimeDelay="0" LabelText="{Binding FilterLabel}"/>
         </Grid>
@@ -171,7 +165,13 @@
 
             <tree:ExtendedTreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource NodeTemplate}"/>
+                    <ContentControl Content="{Binding}">
+                        <ContentControl.ContentTemplate>
+                            <DataTemplate>
+                                <!-- keep empty by intention -->
+                            </DataTemplate>
+                        </ContentControl.ContentTemplate>
+                    </ContentControl>
                 </HierarchicalDataTemplate>
             </tree:ExtendedTreeView.ItemTemplate>
         </tree:ExtendedTreeView>
