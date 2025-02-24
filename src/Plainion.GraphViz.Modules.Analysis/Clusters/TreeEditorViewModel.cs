@@ -1,22 +1,24 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
+using Plainion.Windows.Interactivity.DragDrop;
 using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-class TreeEditorViewModel : ViewModelBase
+class TreeEditorViewModel : ViewModelBase, IDropable
 {
-    private readonly ClusterEditorModel myParentVM;
+    private readonly ClusterEditorViewModel myParentVM;
     private bool myShowNodeId;
     private string mySelectedCluster;
     private string myFilter;
     private NodeViewModel myNodeForContextMenu;
     private IGraphPresentation myPresentation;
 
-    public TreeEditorViewModel(IDomainModel model, ClusterEditorModel parent)
+    public TreeEditorViewModel(IDomainModel model, ClusterEditorViewModel parent)
         : base(model)
     {
         System.Contract.RequiresNotNull(parent);
@@ -126,6 +128,25 @@ class TreeEditorViewModel : ViewModelBase
                 ExpandAllCommand.RaiseCanExecuteChanged();
                 CollapseAllCommand.RaiseCanExecuteChanged();
             }
+        }
+    }
+
+    string IDropable.DataFormat => typeof(NodeView).FullName;
+
+    bool IDropable.IsDropAllowed(object data, DropLocation location) => true;
+
+    void IDropable.Drop(object data, DropLocation _)
+    {
+        if (data is not NodeView droppedElement)
+        {
+            return;
+        }
+
+        var arg = new NodeDropRequest((NodeViewModel)droppedElement.DataContext, Root);
+
+        if (myParentVM.DropCommand.CanExecute(arg))
+        {
+            myParentVM.DropCommand.Execute(arg);
         }
     }
 }

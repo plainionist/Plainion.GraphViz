@@ -6,7 +6,7 @@ using Plainion.Windows.Interactivity.DragDrop;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
-partial class TreeEditor : UserControl, IDropable
+partial class TreeEditor : UserControl
 {
     public TreeEditor()
     {
@@ -52,33 +52,5 @@ partial class TreeEditor : UserControl, IDropable
     {
         get { return (NodeViewModel)GetValue(RootProperty); }
         set { SetValue(RootProperty, value); }
-    }
-
-    string IDropable.DataFormat => typeof(NodeView).FullName;
-
-    bool IDropable.IsDropAllowed(object data, DropLocation location) => true;
-
-    void IDropable.Drop(object data, DropLocation _)
-    {
-        if (data is not NodeView droppedElement)
-        {
-            return;
-        }
-
-        var arg = new NodeDropRequest((NodeViewModel)droppedElement.DataContext, Root);
-
-        if (DropCommand != null && DropCommand.CanExecute(arg))
-        {
-            DropCommand.Execute(arg);
-        }
-    }
-
-    public static DependencyProperty DropCommandProperty = DependencyProperty.Register("DropCommand", typeof(ICommand), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(null));
-
-    public ICommand DropCommand
-    {
-        get { return (ICommand)GetValue(DropCommandProperty); }
-        set { SetValue(DropCommandProperty, value); }
     }
 }

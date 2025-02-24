@@ -16,7 +16,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 internal class PreviewViewModel : ViewModelBase
 {
-    private readonly ClusterEditorModel myParentVM;
+    private readonly ClusterEditorViewModel myParentVM;
     private NodeWithCaption mySelectedPreviewItem;
     private string myFilter;
     private bool myFilterOnId;
@@ -25,7 +25,7 @@ internal class PreviewViewModel : ViewModelBase
     private Dictionary<string, string> myNodeToClusterCache;
     private string myAddButtonCaption;
 
-    public PreviewViewModel(IDomainModel model, ClusterEditorModel parent)
+    public PreviewViewModel(IDomainModel model, ClusterEditorViewModel parent)
         : base(model)
     {
         System.Contract.RequiresNotNull(parent);

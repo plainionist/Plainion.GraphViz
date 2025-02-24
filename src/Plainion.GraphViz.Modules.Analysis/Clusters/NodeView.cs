@@ -100,10 +100,11 @@ public class NodeView : TreeViewItem, IDropable, IDragable
 
         var arg = new NodeDropRequest((NodeViewModel)droppedElement.DataContext, (NodeViewModel)DataContext);
 
-        var editor = this.FindParentOfType<TreeEditor>();
-        if (editor.DropCommand != null && editor.DropCommand.CanExecute(arg))
+        var editor = this.FindParentOfType<ClusterEditor>();
+        var viewModel = (ClusterEditorViewModel)editor.DataContext;
+        if (viewModel.DropCommand.CanExecute(arg))
         {
-            editor.DropCommand.Execute(arg);
+            viewModel.DropCommand.Execute(arg);
         }
     }
 

@@ -12,12 +12,12 @@ using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters
 {
-    class ClusterEditorModel : ViewModelBase, IDropable
+    class ClusterEditorViewModel : ViewModelBase, IDropable
     {
         private IGraphPresentation myPresentation;
         private IModuleChangedObserver myTransformationsObserver;
 
-        public ClusterEditorModel(IDomainModel model)
+        public ClusterEditorViewModel(IDomainModel model)
             : base(model)
         {
             Root = new NodeViewModel(null, null, NodeType.Root);
