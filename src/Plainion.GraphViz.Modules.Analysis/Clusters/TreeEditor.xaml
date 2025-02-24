@@ -10,9 +10,9 @@
              x:Name="_this"
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
 
-    <DockPanel LastChildFill="True" DataContext="{Binding ElementName=_this}">
+    <DockPanel LastChildFill="True">
         <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch">
-            <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=DataContext.Tree.Filter, Mode=TwoWay}" SearchEventTimeDelay="0" LabelText="Filter on caption or id"/>
+            <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Tree.Filter, Mode=TwoWay}" SearchEventTimeDelay="0" LabelText="Filter on caption or id"/>
         </Grid>
 
         <tree:ExtendedTreeView x:Name="myTree" Margin="0,3,0,0" ItemsSource="{Binding Root.Children}">
