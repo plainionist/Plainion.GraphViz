@@ -14,21 +14,21 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 
 internal class PreviewViewModel : ViewModelBase
 {
+    private readonly ClusterEditorModel myParentVM;
     private NodeWithCaption mySelectedPreviewItem;
     private string myFilter;
     private bool myFilterOnId;
     private ICollectionView myPreviewNodes;
     private IGraphPresentation myPresentation;
     private Dictionary<string, string> myNodeToClusterCache;
-    private readonly NodeViewModel myRoot;
     private string myAddButtonCaption;
 
-    public PreviewViewModel(IDomainModel model, NodeViewModel root)
+    public PreviewViewModel(IDomainModel model, ClusterEditorModel parent)
         : base(model)
     {
-        System.Contract.RequiresNotNull(root);
+        System.Contract.RequiresNotNull(parent);
 
-        myRoot = root;
+        myParentVM = parent;
 
         AddButtonCaption = "Add ...";
         MouseDownCommand = new DelegateCommand<MouseButtonEventArgs>(OnMouseDown);
@@ -127,7 +127,7 @@ internal class PreviewViewModel : ViewModelBase
 
             myNodeToClusterCache = [];
 
-            foreach (NodeViewModel cluster in myRoot.Children)
+            foreach (NodeViewModel cluster in myParentVM.Root.Children)
             {
                 foreach (NodeViewModel treeNode in cluster.Children)
                 {

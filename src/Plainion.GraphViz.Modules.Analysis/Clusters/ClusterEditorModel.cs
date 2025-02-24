@@ -28,7 +28,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             DeleteNodeCommand = new DelegateCommand<NodeViewModel>(OnDeleteNode, n => n != Root);
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
-            Preview = new PreviewViewModel(model, Root);
+            Preview = new PreviewViewModel(model, this);
             Tree = new TreeEditorViewModel(model, this);
         }
 
