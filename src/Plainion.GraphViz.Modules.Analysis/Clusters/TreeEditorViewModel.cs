@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Windows;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Mvvm;
@@ -22,11 +23,13 @@ class TreeEditorViewModel : ViewModelBase
 
         myShowNodeId = true;
 
-        NewClusterCommand = new DelegateCommand<NodeViewModel>(x=>myParentVM.OnNewCluster(x), n => n == myParentVM.Root);
-        DeleteNodeCommand = new DelegateCommand<NodeViewModel>(x=>myParentVM.OnDeleteNode(x), n => n != myParentVM.Root);
-        ExpandAllCommand = new DelegateCommand(() => myParentVM.Root.ExpandAll());
-        CollapseAllCommand = new DelegateCommand(() => myParentVM.Root.CollapseAll());
+        NewClusterCommand = new DelegateCommand(() => myParentVM.OnNewCluster(NodeForContextMenu), () => NodeForContextMenu == Root);
+        DeleteNodeCommand = new DelegateCommand(() => myParentVM.OnDeleteNode(NodeForContextMenu), () => NodeForContextMenu != Root);
+        ExpandAllCommand = new DelegateCommand(Root.ExpandAll);
+        CollapseAllCommand = new DelegateCommand(Root.CollapseAll);
     }
+
+    public NodeViewModel Root => myParentVM.Root;
 
     protected override void OnPresentationChanged()
     {
@@ -42,7 +45,7 @@ class TreeEditorViewModel : ViewModelBase
     {
         if (selectedCluster == null)
         {
-            var selectedNode = myParentVM.Root.Children
+            var selectedNode = Root.Children
                 .SelectMany(n => n.Children)
                 .FirstOrDefault(n => n.IsSelected);
 
@@ -62,8 +65,8 @@ class TreeEditorViewModel : ViewModelBase
         }
     }
 
-    public DelegateCommand<NodeViewModel> NewClusterCommand { get; }
-    public DelegateCommand<NodeViewModel> DeleteNodeCommand { get; }
+    public DelegateCommand NewClusterCommand { get; }
+    public DelegateCommand DeleteNodeCommand { get; }
     public DelegateCommand ExpandAllCommand { get; }
     public DelegateCommand CollapseAllCommand { get; }
 
@@ -74,7 +77,7 @@ class TreeEditorViewModel : ViewModelBase
         {
             if (SetProperty(ref myShowNodeId, value))
             {
-                foreach (var clusterNode in myParentVM.Root.Children)
+                foreach (var clusterNode in Root.Children)
                 {
                     foreach (var node in clusterNode.Children)
                     {
@@ -104,8 +107,10 @@ class TreeEditorViewModel : ViewModelBase
         {
             if (SetProperty(ref myFilter, value))
             {
-                myParentVM.Root.ApplyFilter(myFilter);
+                Root.ApplyFilter(myFilter);
             }
         }
     }
+
+    public NodeViewModel NodeForContextMenu { get; set; }
 }

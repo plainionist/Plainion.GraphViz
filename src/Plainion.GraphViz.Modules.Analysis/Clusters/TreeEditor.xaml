@@ -12,7 +12,7 @@
 
     <DockPanel LastChildFill="True">
         <Grid DockPanel.Dock="Top"  HorizontalAlignment="Stretch">
-            <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Tree.Filter, Mode=TwoWay}" SearchEventTimeDelay="0" LabelText="Filter on caption or id"/>
+            <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Filter, Mode=TwoWay}" SearchEventTimeDelay="0" LabelText="Filter on caption or id"/>
         </Grid>
 
         <tree:ExtendedTreeView x:Name="myTree" Margin="0,3,0,0" ItemsSource="{Binding Root.Children}">
@@ -154,12 +154,12 @@
             </i:Interaction.Behaviors>
 
             <tree:ExtendedTreeView.ContextMenu>
-                <ContextMenu DataContext="{Binding Data.Parent.Parent, Source={StaticResource TreeProxy}}">
-                    <MenuItem Header="New" Command="{Binding DataContext.Tree.NewClusterCommand}" CommandParameter="{Binding NodeForContextMenu}" />
-                    <MenuItem Header="Delete" Command="{Binding DataContext.Tree.DeleteNodeCommand}" CommandParameter="{Binding NodeForContextMenu}" />
+                <ContextMenu DataContext="{Binding Data.Parent, Source={StaticResource TreeProxy}}">
+                    <MenuItem Header="New" Command="{Binding DataContext.NewClusterCommand}" />
+                    <MenuItem Header="Delete" Command="{Binding DataContext.DeleteNodeCommand}" />
                     <Separator />
-                    <MenuItem Header="Expand All" Command="{Binding DataContext.Tree.ExpandAllCommand}"/>
-                    <MenuItem Header="Collapse All" Command="{Binding DataContext.Tree.CollapseAllCommand}"/>
+                    <MenuItem Header="Expand All" Command="{Binding DataContext.ExpandAllCommand}"/>
+                    <MenuItem Header="Collapse All" Command="{Binding DataContext.CollapseAllCommand}"/>
                </ContextMenu>
             </tree:ExtendedTreeView.ContextMenu>
 

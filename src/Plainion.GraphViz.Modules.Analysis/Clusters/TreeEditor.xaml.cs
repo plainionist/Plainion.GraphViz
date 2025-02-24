@@ -13,18 +13,11 @@ partial class TreeEditor : UserControl, IDropable
         InitializeComponent();
     }
 
-    public static DependencyProperty NodeForContextMenuProperty = DependencyProperty.Register("NodeForContextMenu", typeof(NodeViewModel), typeof(TreeEditor),
-        new FrameworkPropertyMetadata(null));
-
-    public NodeViewModel NodeForContextMenu
-    {
-        get { return (NodeViewModel)GetValue(NodeForContextMenuProperty); }
-        set { SetValue(NodeForContextMenuProperty, value); }
-    }
+    private TreeEditorViewModel ViewModel => (TreeEditorViewModel)DataContext;
 
     protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
     {
-        NodeForContextMenu = null;
+        ViewModel.NodeForContextMenu = null;
 
         NodeView nodeItem;
 
@@ -42,14 +35,14 @@ partial class TreeEditor : UserControl, IDropable
 
         if (nodeItem != null)
         {
-            NodeForContextMenu = (NodeViewModel)nodeItem.DataContext;
+            ViewModel.NodeForContextMenu = (NodeViewModel)nodeItem.DataContext;
 
             nodeItem.Focus();
         }
         else
         {
             // if we click directly into the tree control we pick Root
-            NodeForContextMenu = Root;
+            ViewModel.NodeForContextMenu = Root;
         }
 
         RefreshContextMenuCommandsCanExecute();

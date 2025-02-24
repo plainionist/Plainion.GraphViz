@@ -75,7 +75,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <pngv:TreeEditor Grid.Row="0" Root="{Binding Root}" DropCommand="{Binding DropCommand}" />
+            <pngv:TreeEditor Grid.Row="0" Root="{Binding Root}" DropCommand="{Binding DropCommand}" DataContext="{Binding Tree}" />
 
             <CheckBox Grid.Row="1" Content="Show node identifier instead of caption" Margin="0,5,0,0" IsChecked="{Binding Tree.ShowNodeId}"/>
         </Grid>
