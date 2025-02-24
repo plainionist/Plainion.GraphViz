@@ -17,8 +17,6 @@ partial class TreeEditor : UserControl, IDropable
 
     protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
     {
-        ViewModel.NodeForContextMenu = null;
-
         NodeView nodeItem;
 
         if (Keyboard.Modifiers == ModifierKeys.Control)
@@ -45,30 +43,7 @@ partial class TreeEditor : UserControl, IDropable
             ViewModel.NodeForContextMenu = Root;
         }
 
-        RefreshContextMenuCommandsCanExecute();
-
         e.Handled = true;
-    }
-
-    private void RefreshContextMenuCommandsCanExecute()
-    {
-        foreach (var item in myTree.ContextMenu.Items.OfType<MenuItem>())
-        {
-            if (item.Command == null)
-            {
-                continue;
-            }
-
-            var raiseMethod = item.Command.GetType().GetMethod("RaiseCanExecuteChanged");
-            if (raiseMethod != null)
-            {
-                raiseMethod.Invoke(item.Command, null);
-            }
-            else
-            {
-                item.IsEnabled = item.Command.CanExecute(item.CommandParameter);
-            }
-        }
     }
 
     public static DependencyProperty RootProperty = DependencyProperty.Register("Root", typeof(NodeViewModel), typeof(TreeEditor), new FrameworkPropertyMetadata(null));

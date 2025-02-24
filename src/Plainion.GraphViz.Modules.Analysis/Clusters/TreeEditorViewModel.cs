@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Mvvm;
@@ -12,6 +13,7 @@ class TreeEditorViewModel : ViewModelBase
     private bool myShowNodeId;
     private string mySelectedCluster;
     private string myFilter;
+    private NodeViewModel myNodeForContextMenu;
     private IGraphPresentation myPresentation;
 
     public TreeEditorViewModel(IDomainModel model, ClusterEditorModel parent)
@@ -112,5 +114,18 @@ class TreeEditorViewModel : ViewModelBase
         }
     }
 
-    public NodeViewModel NodeForContextMenu { get; set; }
+    public NodeViewModel NodeForContextMenu
+    {
+        get { return myNodeForContextMenu; }
+        set
+        {
+            if (SetProperty(ref myNodeForContextMenu, value))
+            {
+                NewClusterCommand.RaiseCanExecuteChanged();
+                DeleteNodeCommand.RaiseCanExecuteChanged();
+                ExpandAllCommand.RaiseCanExecuteChanged();
+                CollapseAllCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
 }
