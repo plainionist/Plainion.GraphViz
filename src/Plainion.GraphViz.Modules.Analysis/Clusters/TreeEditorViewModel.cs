@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Plainion.GraphViz.Presentation;
+﻿using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Interactivity.DragDrop;
 using Plainion.Windows.Mvvm;
@@ -29,8 +28,6 @@ class TreeEditorViewModel : ViewModelBase, IDropable
         ExpandAllCommand = new DelegateCommand(Root.ExpandAll);
         CollapseAllCommand = new DelegateCommand(Root.CollapseAll);
     }
-
-    public ObservableCollection<NodeViewModel> SelectedItems { get; set; } = [];
 
     public NodeViewModel Root => myParentVM.Root;
 
