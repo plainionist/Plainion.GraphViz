@@ -255,14 +255,13 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private void OnParentChanged(object sender, PropertyChangedEventArgs e)
         {
             var node = (NodeViewModel)sender;
-
             myPresentation.DynamicClusters().AddToCluster(node.Id, node.Parent.Id);
         }
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine(Root.Children.Count(x => x.IsSelected));
-            Tree.SelectCluster(Root.Children.FirstOrDefault(n => n.IsSelected));
+            var node = (NodeViewModel)sender;
+            Tree.SelectCluster(node);
         }
 
         private void OnTransformationsChanged(object sender, EventArgs e)

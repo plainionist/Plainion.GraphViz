@@ -46,27 +46,17 @@ class TreeEditorViewModel : ViewModelBase, IDropable
         myPresentation = Model.Presentation;
     }
 
-    internal void SelectCluster(NodeViewModel selectedCluster)
+    internal void SelectCluster(NodeViewModel cluster)
     {
-        if (selectedCluster == null)
-        {
-            var selectedNode = Root.Children
-                .SelectMany(n => n.Children)
-                .FirstOrDefault(n => n.IsSelected);
+        System.Contract.RequiresNotNull(cluster);
 
-            if (selectedNode != null)
-            {
-                selectedCluster = selectedNode.Parent;
-            }
-        }
-
-        if (selectedCluster == null)
+        if (cluster == null)
         {
             SelectedCluster = null;
         }
         else
         {
-            SelectedCluster = selectedCluster.Id;
+            SelectedCluster = cluster.Id;
         }
     }
 
