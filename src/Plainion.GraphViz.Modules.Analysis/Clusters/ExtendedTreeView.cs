@@ -11,22 +11,15 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters;
 // MultiSelect support based on: https://stackoverflow.com/questions/459375/customizing-the-treeview-to-allow-multi-select
 class ExtendedTreeView : TreeView
 {
+    private NodeView myLastItemSelected;
+
     protected override DependencyObject GetContainerForItemOverride() => new NodeView();
 
     protected override bool IsItemItsOwnContainerOverride(object item) => item is NodeView;
 
-    private TreeViewItem myLastItemSelected;
-
     public static readonly DependencyProperty IsItemSelectedProperty = DependencyProperty.RegisterAttached("IsItemSelected", typeof(bool), typeof(ExtendedTreeView));
-
-    public static void SetIsItemSelected(UIElement element, bool value) =>
-        element.SetValue(IsItemSelectedProperty, value);
-
-    public static bool GetIsItemSelected(UIElement element) =>
-        (bool)element.GetValue(IsItemSelectedProperty);
-
-    private static bool IsCtrlPressed => Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-    private static bool IsShiftPressed => Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+    public static void SetIsItemSelected(UIElement element, bool value) => element.SetValue(IsItemSelectedProperty, value);
+    public static bool GetIsItemSelected(UIElement element) => (bool)element.GetValue(IsItemSelectedProperty);
 
     public IList SelectedItems
     {
@@ -49,17 +42,17 @@ class ExtendedTreeView : TreeView
             return;
         }
 
-        var item = ((FrameworkElement)e.OriginalSource).FindParentOfType<TreeViewItem>();
+        var item = ((FrameworkElement)e.OriginalSource).FindParentOfType<NodeView>();
         if (item != null)
         {
             SelectedItemChangedInternal(item);
         }
     }
 
-    private void SelectedItemChangedInternal(TreeViewItem selectedItem)
+    private void SelectedItemChangedInternal(NodeView selectedItem)
     {
         // Clear all previous selected item states if ctrl is NOT being held down
-        if (!IsCtrlPressed)
+        if (!(Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
         {
             foreach (var item in GetTreeViewItems(this, true))
             {
@@ -68,7 +61,7 @@ class ExtendedTreeView : TreeView
         }
 
         // Is this an item range selection?
-        if (IsShiftPressed && myLastItemSelected != null)
+        if ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) && myLastItemSelected != null)
         {
             var items = GetTreeViewItemRange(myLastItemSelected, selectedItem);
             if (items.Count > 0)
@@ -89,13 +82,13 @@ class ExtendedTreeView : TreeView
         }
     }
 
-    private static List<TreeViewItem> GetTreeViewItems(ItemsControl parentItem, bool includeCollapsedItems, List<TreeViewItem> itemList = null)
+    private static List<NodeView> GetTreeViewItems(ItemsControl parentItem, bool includeCollapsedItems, List<NodeView> itemList = null)
     {
         itemList ??= [];
 
         for (var index = 0; index < parentItem.Items.Count; index++)
         {
-            var tvItem = parentItem.ItemContainerGenerator.ContainerFromIndex(index) as TreeViewItem;
+            var tvItem = parentItem.ItemContainerGenerator.ContainerFromIndex(index) as NodeView;
             if (tvItem == null) continue;
 
             itemList.Add(tvItem);
@@ -108,7 +101,7 @@ class ExtendedTreeView : TreeView
         return itemList;
     }
 
-    private List<TreeViewItem> GetTreeViewItemRange(TreeViewItem start, TreeViewItem end)
+    private List<NodeView> GetTreeViewItemRange(NodeView start, NodeView end)
     {
         var items = GetTreeViewItems(this, false);
 
