@@ -21,7 +21,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         {
             Root = new NodeViewModel(null, null, NodeType.Root);
 
-            AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => ClusterToAddNodesTo != null);
+            AddNodesToClusterCommand = new DelegateCommand(OnAddNodesToCluster, () => ClusterToUpdate != null);
 
             DropCommand = new DelegateCommand<NodeDropRequest>(OnDrop);
 
@@ -33,7 +33,8 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         public PreviewViewModel Preview { get; }
         public TreeEditorViewModel Tree { get; }
 
-        public NodeViewModel ClusterToAddNodesTo => Root.Children.LastOrDefault(x => x.IsSelected);
+        public NodeViewModel ClusterToUpdate => Root.Children.LastOrDefault(x => x.IsSelected);
+        public int SelectedNodesCount => Root.Children.Sum(x => (x.IsSelected ? 1 : 0) + x.Children.Count(y => y.IsSelected));
 
         public void CreateNewCluster(NodeViewModel parent)
         {
@@ -101,21 +102,26 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private void OnDrop(NodeDropRequest request)
         {
             var targetCluster = request.DropTarget.Type == NodeType.Node ? request.DropTarget.Parent : request.DropTarget;
-            var droppedNodes = request.DroppedNode.Type == NodeType.Cluster ? request.DroppedNode.Children : [request.DroppedNode];
+            MergeInto(request.DroppedNode, targetCluster);
+        }
+
+        public void MergeInto(NodeViewModel node, NodeViewModel cluster)
+        {
+            var droppedNodes = node.Type == NodeType.Cluster ? node.Children : [node];
 
             // need a copy as we modify the collection in the loop
             foreach (var droppedNode in droppedNodes.ToList())
             {
                 droppedNode.Parent.Children.Remove(droppedNode);
 
-                targetCluster.Children.Add(droppedNode);
+                cluster.Children.Add(droppedNode);
 
-                droppedNode.Parent = targetCluster;
+                droppedNode.Parent = cluster;
             }
 
-            if (request.DroppedNode.Type == NodeType.Cluster)
+            if (node.Type == NodeType.Cluster)
             {
-                DeleteNode(request.DroppedNode);
+                DeleteNode(node);
             }
         }
 
@@ -131,7 +137,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 .Select(n => n.Node.Id)
                 .ToList();
 
-            var clusterId = ClusterToAddNodesTo.Id;
+            var clusterId = ClusterToUpdate.Id;
 
             myPresentation.DynamicClusters().AddToCluster(nodes, clusterId);
 
@@ -259,16 +265,61 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
         {
-            var clusterId = ClusterToAddNodesTo?.Id;
+            var clusterId = ClusterToUpdate?.Id;
+
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             Preview.AddButtonCaption = clusterId != null ? "Add to '" + captionModule.Get(clusterId).DisplayText + "'" : "Add ...";
             AddNodesToClusterCommand.RaiseCanExecuteChanged();
+
+            Tree.MergeClustersCaption = clusterId != null ? "Merge into '" + captionModule.Get(clusterId).DisplayText + "'" : "Merge into ...";
+            Tree.MergeClustersCommand.RaiseCanExecuteChanged();
         }
 
         private void OnTransformationsChanged(object sender, EventArgs e)
         {
             BuildTree();
             Preview.OnTransformationsChanged();
+        }
+
+        public void DeleteSelectedNodes()
+        {
+            foreach (var cluster in Root.Children.ToList())
+            {
+                if (cluster.IsSelected)
+                {
+                    DeleteNode(cluster);
+                }
+                else
+                {
+                    foreach (var node in cluster.Children.Where(x => x.IsSelected).ToList())
+                    {
+                        DeleteNode(node);
+                    }
+                }
+            }
+        }
+
+        public void MergeSelectedClusters()
+        {
+            // is computed dynamically so we need a copy
+            var targetCluster = ClusterToUpdate;
+
+            Contract.Invariant(targetCluster != null, "ClusterToUpdate == null");
+
+            foreach (var cluster in Root.Children.ToList())
+            {
+                if (cluster.IsSelected && cluster != targetCluster)
+                {
+                    MergeInto(cluster, targetCluster);
+                }
+                else
+                {
+                    foreach (var node in cluster.Children.Where(x => x.IsSelected).ToList())
+                    {
+                        MergeInto(node, targetCluster);
+                    }
+                }
+            }
         }
     }
 }

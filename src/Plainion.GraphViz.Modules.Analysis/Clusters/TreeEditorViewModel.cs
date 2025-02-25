@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Plainion.GraphViz.Presentation;
-using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
+﻿using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Interactivity.DragDrop;
 using Plainion.Windows.Mvvm;
 
@@ -12,7 +10,7 @@ class TreeEditorViewModel : ViewModelBase, IDropable
     private bool myShowNodeId;
     private string myFilter;
     private NodeViewModel myNodeForContextMenu;
-    private IGraphPresentation myPresentation;
+    private string myMergeClustersCaption;
 
     public TreeEditorViewModel(IDomainModel model, ClusterEditorViewModel parent)
         : base(model)
@@ -23,45 +21,27 @@ class TreeEditorViewModel : ViewModelBase, IDropable
 
         myShowNodeId = true;
 
+        MergeClustersCaption = "Merge into ...";
+
         // "null" means root
         NewClusterCommand = new DelegateCommand(() => myParentVM.CreateNewCluster(NodeForContextMenu), () => NodeForContextMenu == null);
-        DeleteNodeCommand = new DelegateCommand(OnDeleteNotes, () => NodeForContextMenu != null);
+        DeleteNodeCommand = new DelegateCommand(myParentVM.DeleteSelectedNodes, () => NodeForContextMenu != null);
+        MergeClustersCommand = new DelegateCommand(myParentVM.MergeSelectedClusters, () => myParentVM.ClusterToUpdate != null && myParentVM.SelectedNodesCount > 1);
         ExpandAllCommand = new DelegateCommand(Root.ExpandAll);
         CollapseAllCommand = new DelegateCommand(Root.CollapseAll);
     }
 
-    private void OnDeleteNotes()
+    public string MergeClustersCaption
     {
-        foreach (var cluster in Root.Children.ToList())
-        {
-            if (cluster.IsSelected)
-            {
-                myParentVM.DeleteNode(cluster);
-            }
-            else
-            {
-                foreach (var node in cluster.Children.Where(x => x.IsSelected).ToList())
-                {
-                    myParentVM.DeleteNode(node);
-                }
-            }
-        }
+        get { return myMergeClustersCaption; }
+        set { SetProperty(ref myMergeClustersCaption, value); }
     }
 
     public NodeViewModel Root => myParentVM.Root;
 
-    protected override void OnPresentationChanged()
-    {
-        if (myPresentation == Model.Presentation)
-        {
-            return;
-        }
-
-        myPresentation = Model.Presentation;
-    }
-
     public DelegateCommand NewClusterCommand { get; }
     public DelegateCommand DeleteNodeCommand { get; }
+    public DelegateCommand MergeClustersCommand { get; }
     public DelegateCommand ExpandAllCommand { get; }
     public DelegateCommand CollapseAllCommand { get; }
 

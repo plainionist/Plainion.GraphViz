@@ -157,6 +157,7 @@
                 <ContextMenu DataContext="{Binding Data.Parent.DataContext, Source={StaticResource TreeProxy}}">
                     <MenuItem Header="New" Command="{Binding NewClusterCommand}" />
                     <MenuItem Header="Delete" Command="{Binding DeleteNodeCommand}" />
+                    <MenuItem Header="{Binding MergeClustersCaption}" Command="{Binding MergeClustersCommand}" />
                     <Separator />
                     <MenuItem Header="Expand All" Command="{Binding ExpandAllCommand}"/>
                     <MenuItem Header="Collapse All" Command="{Binding CollapseAllCommand}"/>
