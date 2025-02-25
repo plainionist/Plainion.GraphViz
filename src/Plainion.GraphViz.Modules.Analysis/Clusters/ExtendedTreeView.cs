@@ -20,11 +20,38 @@ class ExtendedTreeView : TreeView
     public static void SetIsItemSelected(UIElement element, bool value) => element.SetValue(IsItemSelectedProperty, value);
     public static bool GetIsItemSelected(UIElement element) => (bool)element.GetValue(IsItemSelectedProperty);
 
-    public IList<NodeViewModel> SelectedItems =>
-        GetTreeViewItems(this, true)
-            .Where(GetIsItemSelected)
-            .Select(x => x.ViewModel)
-            .ToList();
+    protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
+    {
+        NodeView nodeItem;
+
+        if (Keyboard.Modifiers == ModifierKeys.Control)
+        {
+            // in case the full treeview is filled with nodes there is no option to 
+            // open context menu without selecting any node (because nodes stretch horizontally)
+            // -> use a modifier to signal that context menu should be opened with the full tree as context
+            nodeItem = null;
+        }
+        else
+        {
+            nodeItem = ((DependencyObject)e.OriginalSource).FindParentOfType<NodeView>();
+        }
+
+        var viewModel = (TreeEditorViewModel)DataContext;
+
+        if (nodeItem != null)
+        {
+            viewModel.NodeForContextMenu = (NodeViewModel)nodeItem.DataContext;
+
+            nodeItem.Focus();
+        }
+        else
+        {
+            // if we click directly into the tree control we pick Root
+            viewModel.NodeForContextMenu = null;
+        }
+
+        e.Handled = true;
+    }
 
     protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
     {
@@ -115,38 +142,4 @@ class ExtendedTreeView : TreeView
 
         return rangeCount > 0 ? items.GetRange(rangeStart, rangeCount) : [];
     }
-
-    protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
-    {
-        NodeView nodeItem;
-
-        if (Keyboard.Modifiers == ModifierKeys.Control)
-        {
-            // in case the full treeview is filled with nodes there is no option to 
-            // open context menu without selecting any node (because nodes stretch horizontally)
-            // -> use a modifier to signal that context menu should be opened with the full tree as context
-            nodeItem = null;
-        }
-        else
-        {
-            nodeItem = ((DependencyObject)e.OriginalSource).FindParentOfType<NodeView>();
-        }
-
-        var viewModel = (TreeEditorViewModel)DataContext;
-
-        if (nodeItem != null)
-        {
-            viewModel.NodeForContextMenu = (NodeViewModel)nodeItem.DataContext;
-
-            nodeItem.Focus();
-        }
-        else
-        {
-            // if we click directly into the tree control we pick Root
-            viewModel.NodeForContextMenu = null;
-        }
-
-        e.Handled = true;
-    }
-
 }
