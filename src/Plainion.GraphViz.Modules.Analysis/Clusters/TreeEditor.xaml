@@ -134,7 +134,7 @@
                     </Setter>
                     <Setter Property="Text" Value="{Binding Caption, Mode=TwoWay}"/>
                     <Setter Property="ToolTip" Value="{Binding Id}"/>
-                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                    <Setter Property="local:ExtendedTreeView.IsItemSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                     <Setter Property="IsFilteredOut" Value="{Binding IsFilteredOut}"/>
                     <Setter Property="FormattedText" Value="{Binding DisplayText}"/>

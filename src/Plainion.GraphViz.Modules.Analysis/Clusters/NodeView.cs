@@ -40,6 +40,8 @@ public class NodeView : TreeViewItem, IDropable, IDragable
 
     protected override bool IsItemItsOwnContainerOverride(object item) => item is NodeView;
 
+    internal NodeViewModel ViewModel => (NodeViewModel)DataContext;
+
     public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(NodeView), new FrameworkPropertyMetadata(null));
 
     public string Text

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,16 +20,11 @@ class ExtendedTreeView : TreeView
     public static void SetIsItemSelected(UIElement element, bool value) => element.SetValue(IsItemSelectedProperty, value);
     public static bool GetIsItemSelected(UIElement element) => (bool)element.GetValue(IsItemSelectedProperty);
 
-    public IList SelectedItems
-    {
-        get
-        {
-            var selectedTreeViewItems = GetTreeViewItems(this, true).Where(GetIsItemSelected);
-            var selectedModelItems = selectedTreeViewItems.Select(treeViewItem => treeViewItem.Header);
-
-            return selectedModelItems.ToList();
-        }
-    }
+    public IList<NodeViewModel> SelectedItems =>
+        GetTreeViewItems(this, true)
+            .Where(GetIsItemSelected)
+            .Select(x => x.ViewModel)
+            .ToList();
 
     protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
     {

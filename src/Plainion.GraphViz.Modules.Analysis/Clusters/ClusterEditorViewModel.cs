@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
 using Plainion.Collections;
@@ -260,6 +261,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
         {
+            Debug.WriteLine(Root.Children.Count(x => x.IsSelected));
             Tree.SelectCluster(Root.Children.FirstOrDefault(n => n.IsSelected));
         }
 
