@@ -1,4 +1,5 @@
-﻿using Plainion.GraphViz.Presentation;
+﻿using System.Linq;
+using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Interactivity.DragDrop;
 using Plainion.Windows.Mvvm;
@@ -24,9 +25,27 @@ class TreeEditorViewModel : ViewModelBase, IDropable
 
         // "null" means root
         NewClusterCommand = new DelegateCommand(() => myParentVM.CreateNewCluster(NodeForContextMenu), () => NodeForContextMenu == null);
-        DeleteNodeCommand = new DelegateCommand(() => myParentVM.DeleteNode(NodeForContextMenu), () => NodeForContextMenu != null);
+        DeleteNodeCommand = new DelegateCommand(OnDeleteNotes, () => NodeForContextMenu != null);
         ExpandAllCommand = new DelegateCommand(Root.ExpandAll);
         CollapseAllCommand = new DelegateCommand(Root.CollapseAll);
+    }
+
+    private void OnDeleteNotes()
+    {
+        foreach (var cluster in Root.Children.ToList())
+        {
+            if (cluster.IsSelected)
+            {
+                myParentVM.DeleteNode(cluster);
+            }
+            else
+            {
+                foreach (var node in cluster.Children.Where(x => x.IsSelected).ToList())
+                {
+                    myParentVM.DeleteNode(node);
+                }
+            }
+        }
     }
 
     public NodeViewModel Root => myParentVM.Root;

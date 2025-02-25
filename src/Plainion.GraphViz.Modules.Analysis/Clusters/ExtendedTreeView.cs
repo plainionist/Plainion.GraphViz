@@ -22,27 +22,28 @@ class ExtendedTreeView : TreeView
 
     protected override void OnPreviewMouseRightButtonDown(MouseButtonEventArgs e)
     {
-        NodeView nodeItem;
+        NodeView selectedItem;
 
         if (Keyboard.Modifiers == ModifierKeys.Control)
         {
             // in case the full treeview is filled with nodes there is no option to 
             // open context menu without selecting any node (because nodes stretch horizontally)
             // -> use a modifier to signal that context menu should be opened with the full tree as context
-            nodeItem = null;
+            selectedItem = null;
         }
         else
         {
-            nodeItem = ((DependencyObject)e.OriginalSource).FindParentOfType<NodeView>();
+            selectedItem = ((DependencyObject)e.OriginalSource).FindParentOfType<NodeView>();
         }
 
         var viewModel = (TreeEditorViewModel)DataContext;
 
-        if (nodeItem != null)
+        if (selectedItem != null)
         {
-            viewModel.NodeForContextMenu = (NodeViewModel)nodeItem.DataContext;
+            viewModel.NodeForContextMenu = (NodeViewModel)selectedItem.DataContext;
 
-            nodeItem.Focus();
+            SetIsItemSelected(selectedItem, true);
+            selectedItem.Focus();
         }
         else
         {
@@ -53,7 +54,7 @@ class ExtendedTreeView : TreeView
         e.Handled = true;
     }
 
-    protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
+    protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
     {
         base.OnPreviewMouseDown(e);
 
