@@ -7,6 +7,8 @@
   - shows node ids by default
   - Clusters remain expanded after D&D
   - Nodes list refresh problems fixed
+  - Multiple clusters can be deleted
+  - Clusters can be merged via context menu
 - Obfuscation can preserve "name structure"
 
 

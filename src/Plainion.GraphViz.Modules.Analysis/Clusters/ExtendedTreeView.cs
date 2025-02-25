@@ -42,7 +42,17 @@ class ExtendedTreeView : TreeView
         {
             viewModel.NodeForContextMenu = (NodeViewModel)selectedItem.DataContext;
 
-            SetIsItemSelected(selectedItem, true);
+            // if only one item is selected then reselect automatically with re-select
+            var selectedItems = GetTreeViewItems(this, true).Where(GetIsItemSelected).ToList();
+            if (selectedItems.Count == 1)
+            {
+                foreach (var item in selectedItems)
+                {
+                    SetIsItemSelected(item, false);
+                }
+                SetIsItemSelected(selectedItem, true);
+            }
+
             selectedItem.Focus();
         }
         else
@@ -141,6 +151,7 @@ class ExtendedTreeView : TreeView
             rangeCount = 1;
         }
 
-        return rangeCount > 0 ? items.GetRange(rangeStart, rangeCount) : [];
+        var range = rangeCount > 0 ? items.GetRange(rangeStart, rangeCount) : [];
+        return startIndex > endIndex ? range.Reverse<NodeView>().ToList() : range;
     }
 }

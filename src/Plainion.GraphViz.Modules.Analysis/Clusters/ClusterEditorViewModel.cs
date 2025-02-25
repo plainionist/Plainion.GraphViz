@@ -33,7 +33,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         public PreviewViewModel Preview { get; }
         public TreeEditorViewModel Tree { get; }
 
-        public NodeViewModel ClusterToUpdate => Root.Children.LastOrDefault(x => x.IsSelected);
+        public NodeViewModel ClusterToUpdate { get; set; }
         public int SelectedNodesCount => Root.Children.Sum(x => (x.IsSelected ? 1 : 0) + x.Children.Count(y => y.IsSelected));
 
         public void CreateNewCluster(NodeViewModel parent)
@@ -265,6 +265,16 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
         {
+            var node = (NodeViewModel)sender;
+            if (node.Parent == Root)
+            {
+                ClusterToUpdate = node;
+            }
+            else
+            {
+                ClusterToUpdate = Root.Children.LastOrDefault(x => x.IsSelected);
+            }
+
             var clusterId = ClusterToUpdate?.Id;
 
             var captionModule = myPresentation.GetModule<ICaptionModule>();
@@ -301,22 +311,19 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         public void MergeSelectedClusters()
         {
-            // is computed dynamically so we need a copy
-            var targetCluster = ClusterToUpdate;
-
-            Contract.Invariant(targetCluster != null, "ClusterToUpdate == null");
+            Contract.Invariant(ClusterToUpdate != null, "ClusterToUpdate == null");
 
             foreach (var cluster in Root.Children.ToList())
             {
-                if (cluster.IsSelected && cluster != targetCluster)
+                if (cluster.IsSelected && cluster != ClusterToUpdate)
                 {
-                    MergeInto(cluster, targetCluster);
+                    MergeInto(cluster, ClusterToUpdate);
                 }
                 else
                 {
                     foreach (var node in cluster.Children.Where(x => x.IsSelected).ToList())
                     {
-                        MergeInto(node, targetCluster);
+                        MergeInto(node, ClusterToUpdate);
                     }
                 }
             }
