@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Interactivity.DragDrop;
@@ -11,7 +10,6 @@ class TreeEditorViewModel : ViewModelBase, IDropable
 {
     private readonly ClusterEditorViewModel myParentVM;
     private bool myShowNodeId;
-    private string mySelectedCluster;
     private string myFilter;
     private NodeViewModel myNodeForContextMenu;
     private IGraphPresentation myPresentation;
@@ -67,12 +65,6 @@ class TreeEditorViewModel : ViewModelBase, IDropable
                 }
             }
         }
-    }
-
-    public string SelectedCluster
-    {
-        get { return mySelectedCluster; }
-        set { SetProperty(ref mySelectedCluster, value); }
     }
 
     public string Filter
