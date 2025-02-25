@@ -6,7 +6,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:pn="http://github.com/ronin4net/plainion"
-             xmlns:tree="clr-namespace:Plainion.GraphViz.Modules.Analysis.Clusters"
+             xmlns:local="clr-namespace:Plainion.GraphViz.Modules.Analysis.Clusters"
              x:Name="_this"
              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
 
@@ -15,13 +15,13 @@
             <pn:SearchTextBox SearchMode="Instant" Text="{Binding Path=Filter, Mode=TwoWay}" SearchEventTimeDelay="0" LabelText="Filter on caption or id"/>
         </Grid>
 
-        <tree:ExtendedTreeView x:Name="myTree" Margin="0,3,0,0" ItemsSource="{Binding Root.Children}">
-            <tree:ExtendedTreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type tree:NodeView}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+        <local:ExtendedTreeView x:Name="myTree" Margin="0,3,0,0" ItemsSource="{Binding Root.Children}">
+            <local:ExtendedTreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type local:NodeView}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Setter Property="Template">
                         <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type tree:NodeView}">
+                            <ControlTemplate TargetType="{x:Type local:NodeView}">
                                 <StackPanel>
                                     <StackPanel.Resources>
                                         <pn:BindingProxy x:Key="RealDataContext" Data="{Binding}"/>
@@ -139,10 +139,10 @@
                     <Setter Property="IsFilteredOut" Value="{Binding IsFilteredOut}"/>
                     <Setter Property="FormattedText" Value="{Binding DisplayText}"/>
                 </Style>
-            </tree:ExtendedTreeView.ItemContainerStyle>
-            <tree:ExtendedTreeView.Resources>
+            </local:ExtendedTreeView.ItemContainerStyle>
+            <local:ExtendedTreeView.Resources>
                 <pn:BindingProxy x:Key="TreeProxy" Data="{Binding ElementName=myTree}"/>
-            </tree:ExtendedTreeView.Resources>
+            </local:ExtendedTreeView.Resources>
 
             <i:Interaction.Behaviors>
                 <!--
@@ -151,9 +151,10 @@
                 <interactivity:FocusOnClickBehavior/>
                 -->
                 <pn:FrameworkElementDropBehavior/>
+                <local:TreeEditorMultiSelectBehavior SelectedItems="{Binding SelectedItems}" />
             </i:Interaction.Behaviors>
 
-            <tree:ExtendedTreeView.ContextMenu>
+            <local:ExtendedTreeView.ContextMenu>
                 <ContextMenu DataContext="{Binding Data.Parent.DataContext, Source={StaticResource TreeProxy}}">
                     <MenuItem Header="New" Command="{Binding NewClusterCommand}" />
                     <MenuItem Header="Delete" Command="{Binding DeleteNodeCommand}" />
@@ -161,9 +162,9 @@
                     <MenuItem Header="Expand All" Command="{Binding ExpandAllCommand}"/>
                     <MenuItem Header="Collapse All" Command="{Binding CollapseAllCommand}"/>
                </ContextMenu>
-            </tree:ExtendedTreeView.ContextMenu>
+            </local:ExtendedTreeView.ContextMenu>
 
-            <tree:ExtendedTreeView.ItemTemplate>
+            <local:ExtendedTreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                     <ContentControl Content="{Binding}">
                         <ContentControl.ContentTemplate>
@@ -173,7 +174,7 @@
                         </ContentControl.ContentTemplate>
                     </ContentControl>
                 </HierarchicalDataTemplate>
-            </tree:ExtendedTreeView.ItemTemplate>
-        </tree:ExtendedTreeView>
+            </local:ExtendedTreeView.ItemTemplate>
+        </local:ExtendedTreeView>
     </DockPanel>
 </UserControl>

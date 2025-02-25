@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Windows.Interactivity.DragDrop;
@@ -30,6 +31,8 @@ class TreeEditorViewModel : ViewModelBase, IDropable
         ExpandAllCommand = new DelegateCommand(Root.ExpandAll);
         CollapseAllCommand = new DelegateCommand(Root.CollapseAll);
     }
+
+    public ObservableCollection<NodeViewModel> SelectedItems { get; set; } = [];
 
     public NodeViewModel Root => myParentVM.Root;
 
@@ -97,7 +100,7 @@ class TreeEditorViewModel : ViewModelBase, IDropable
         {
             if (SetProperty(ref mySelectedCluster, value))
             {
-                myParentVM.SelectCluster(mySelectedCluster);
+                myParentVM.OnCusterSelected(mySelectedCluster);
             }
         }
     }

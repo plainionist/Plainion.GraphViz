@@ -269,7 +269,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             Preview.OnTransformationsChanged();
         }
 
-        public void SelectCluster(string clusterId)
+        public void OnCusterSelected(string clusterId)
         {
             var captionModule = myPresentation.GetModule<ICaptionModule>();
             Preview.AddButtonCaption = clusterId != null ? "Add to '" + captionModule.Get(clusterId).DisplayText + "'" : "Add ...";
