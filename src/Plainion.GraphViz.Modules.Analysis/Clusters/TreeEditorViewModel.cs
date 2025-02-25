@@ -46,20 +46,6 @@ class TreeEditorViewModel : ViewModelBase, IDropable
         myPresentation = Model.Presentation;
     }
 
-    internal void SelectCluster(NodeViewModel cluster)
-    {
-        System.Contract.RequiresNotNull(cluster);
-
-        if (cluster == null)
-        {
-            SelectedCluster = null;
-        }
-        else
-        {
-            SelectedCluster = cluster.Id;
-        }
-    }
-
     public DelegateCommand NewClusterCommand { get; }
     public DelegateCommand DeleteNodeCommand { get; }
     public DelegateCommand ExpandAllCommand { get; }
@@ -86,13 +72,7 @@ class TreeEditorViewModel : ViewModelBase, IDropable
     public string SelectedCluster
     {
         get { return mySelectedCluster; }
-        set
-        {
-            if (SetProperty(ref mySelectedCluster, value))
-            {
-                myParentVM.OnCusterSelected(mySelectedCluster);
-            }
-        }
+        set { SetProperty(ref mySelectedCluster, value); }
     }
 
     public string Filter

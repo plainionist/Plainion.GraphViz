@@ -261,20 +261,17 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
         private void OnSelectionChanged(object sender, PropertyChangedEventArgs e)
         {
             var node = (NodeViewModel)sender;
-            Tree.SelectCluster(node);
+            Tree.SelectedCluster = Root.Children.LastOrDefault(x => x.IsSelected)?.Id;
+
+            var captionModule = myPresentation.GetModule<ICaptionModule>();
+            Preview.AddButtonCaption = Tree.SelectedCluster != null ? "Add to '" + captionModule.Get(Tree.SelectedCluster).DisplayText + "'" : "Add ...";
+            AddNodesToClusterCommand.RaiseCanExecuteChanged();
         }
 
         private void OnTransformationsChanged(object sender, EventArgs e)
         {
             BuildTree();
             Preview.OnTransformationsChanged();
-        }
-
-        public void OnCusterSelected(string clusterId)
-        {
-            var captionModule = myPresentation.GetModule<ICaptionModule>();
-            Preview.AddButtonCaption = clusterId != null ? "Add to '" + captionModule.Get(clusterId).DisplayText + "'" : "Add ...";
-            AddNodesToClusterCommand.RaiseCanExecuteChanged();
         }
     }
 }
