@@ -7,7 +7,7 @@ static class VisualTreeUtils
 {
     public static T FindParentOfType<T>(this DependencyObject self) where T : DependencyObject
     {
-        while (self != null && !(self is T))
+        while (self != null && self is not T)
         {
             self = VisualTreeHelper.GetParent(self);
         }

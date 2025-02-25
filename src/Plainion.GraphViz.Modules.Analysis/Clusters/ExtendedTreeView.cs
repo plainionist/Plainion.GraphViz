@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace Plainion.GraphViz.Modules.Analysis.Clusters;
@@ -16,7 +15,6 @@ class ExtendedTreeView : TreeView
 
     protected override bool IsItemItsOwnContainerOverride(object item) => item is NodeView;
 
-    // Used in shift selections
     private TreeViewItem myLastItemSelected;
 
     public static readonly DependencyProperty IsItemSelectedProperty = DependencyProperty.RegisterAttached("IsItemSelected", typeof(bool), typeof(ExtendedTreeView));
@@ -51,34 +49,33 @@ class ExtendedTreeView : TreeView
             return;
         }
 
-        var item = GetTreeViewItemClicked((FrameworkElement)e.OriginalSource);
+        var item = ((FrameworkElement)e.OriginalSource).FindParentOfType<TreeViewItem>();
         if (item != null)
         {
             SelectedItemChangedInternal(item);
         }
     }
 
-    private void SelectedItemChangedInternal(TreeViewItem tvItem)
+    private void SelectedItemChangedInternal(TreeViewItem selectedItem)
     {
         // Clear all previous selected item states if ctrl is NOT being held down
         if (!IsCtrlPressed)
         {
-            var items = GetTreeViewItems(this, true);
-            foreach (var treeViewItem in items)
+            foreach (var item in GetTreeViewItems(this, true))
             {
-                SetIsItemSelected(treeViewItem, false);
+                SetIsItemSelected(item, false);
             }
         }
 
         // Is this an item range selection?
         if (IsShiftPressed && myLastItemSelected != null)
         {
-            var items = GetTreeViewItemRange(myLastItemSelected, tvItem);
+            var items = GetTreeViewItemRange(myLastItemSelected, selectedItem);
             if (items.Count > 0)
             {
-                foreach (var treeViewItem in items)
+                foreach (var item in items)
                 {
-                    SetIsItemSelected(treeViewItem, true);
+                    SetIsItemSelected(item, true);
                 }
 
                 myLastItemSelected = items.Last();
@@ -87,26 +84,14 @@ class ExtendedTreeView : TreeView
         // Otherwise, individual selection
         else
         {
-            SetIsItemSelected(tvItem, !GetIsItemSelected(tvItem));
-            myLastItemSelected = tvItem;
+            SetIsItemSelected(selectedItem, !GetIsItemSelected(selectedItem));
+            myLastItemSelected = selectedItem;
         }
-    }
-
-    private static TreeViewItem GetTreeViewItemClicked(DependencyObject sender)
-    {
-        while (sender != null && !(sender is TreeViewItem))
-        {
-            sender = VisualTreeHelper.GetParent(sender);
-        }
-        return sender as TreeViewItem;
     }
 
     private static List<TreeViewItem> GetTreeViewItems(ItemsControl parentItem, bool includeCollapsedItems, List<TreeViewItem> itemList = null)
     {
-        if (itemList == null)
-        {
-            itemList = new List<TreeViewItem>();
-        }
+        itemList ??= [];
 
         for (var index = 0; index < parentItem.Items.Count; index++)
         {
@@ -119,6 +104,7 @@ class ExtendedTreeView : TreeView
                 GetTreeViewItems(tvItem, includeCollapsedItems, itemList);
             }
         }
+
         return itemList;
     }
 
@@ -140,6 +126,6 @@ class ExtendedTreeView : TreeView
             rangeCount = 1;
         }
 
-        return rangeCount > 0 ? items.GetRange(rangeStart, rangeCount) : new List<TreeViewItem>();
+        return rangeCount > 0 ? items.GetRange(rangeStart, rangeCount) : [];
     }
 }
