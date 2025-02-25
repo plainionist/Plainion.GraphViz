@@ -113,13 +113,13 @@
                                     <Trigger Property="ItemsControl.HasItems" Value="False">
                                         <Setter TargetName="Expander" Property="UIElement.Visibility" Value="Hidden" />
                                     </Trigger>
-                                    <Trigger Property="TreeViewItem.IsSelected" Value="True">
+                                    <Trigger Property="local:ExtendedTreeView.IsItemSelected" Value="true">
                                         <Setter TargetName="Bd" Property="Panel.Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                                         <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
                                     </Trigger>
                                     <MultiTrigger>
                                         <MultiTrigger.Conditions>
-                                            <Condition Property="TreeViewItem.IsSelected" Value="True" />
+                                            <Condition Property="local:ExtendedTreeView.IsItemSelected" Value="true"/>
                                             <Condition Property="Selector.IsSelectionActive" Value="False" />
                                         </MultiTrigger.Conditions>
                                         <Setter TargetName="Bd" Property="Panel.Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
@@ -151,7 +151,6 @@
                 <interactivity:FocusOnClickBehavior/>
                 -->
                 <pn:FrameworkElementDropBehavior/>
-                <local:TreeEditorMultiSelectBehavior SelectedItems="{Binding SelectedItems}" />
             </i:Interaction.Behaviors>
 
             <local:ExtendedTreeView.ContextMenu>
