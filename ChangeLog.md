@@ -7,6 +7,8 @@
   - shows node ids by default
   - Clusters remain expanded after D&D
   - Nodes list refresh problems fixed
+- Obfuscation can preserve "name structure"
+
 
 ## 8.1 - 2025-02-20
 

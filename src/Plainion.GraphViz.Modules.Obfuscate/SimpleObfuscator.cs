@@ -2,12 +2,12 @@
 
 using System.Collections.Generic;
 
-internal class Obfuscator
+internal class SimpleObfuscator : IObfuscator
 {
     private readonly Dictionary<string, string> myMap = [];
     private int myCounter = 0;
 
-    internal string Obfuscate(string value)
+    public string Obfuscate(string value)
     {
         if (myMap.TryGetValue(value, out var obfuscated))
         {

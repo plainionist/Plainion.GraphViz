@@ -1,10 +1,13 @@
 ﻿<MenuItem x:Class="Plainion.GraphViz.Modules.Obfuscate.ToolsMenuItem"
           x:ClassModifier="internal"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             Header="Obfuscate"
-             Command="{Binding StartAnalysisCommand}">
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+          mc:Ignorable="d" 
+          Header="Obfuscate">
+
+    <MenuItem Header="Simple" Command="{Binding SimpleAlgoCommand}" />
+    <MenuItem Header="Preserve structure" Command="{Binding PreserveStructureAlgoCommand}" />
+
 </MenuItem>

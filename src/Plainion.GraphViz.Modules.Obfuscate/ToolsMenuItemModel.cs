@@ -20,18 +20,22 @@ class ToolsMenuItemModel : BindableBase
 
         myModel.PresentationChanged += OnPresentationChanged;
 
-        StartAnalysisCommand = new DelegateCommand(OnStartAnalysis, () => myModel.Presentation != null);
+        SimpleAlgoCommand = new DelegateCommand(() => Obfuscate(new SimpleObfuscator()), () => myModel.Presentation != null);
+        PreserveStructureAlgoCommand = new DelegateCommand(() => Obfuscate(new StructureAwareObfuscator()), () => myModel.Presentation != null);
     }
 
     private void OnPresentationChanged(object sender, System.EventArgs e)
     {
-        StartAnalysisCommand.RaiseCanExecuteChanged();
+        SimpleAlgoCommand.RaiseCanExecuteChanged();
+        PreserveStructureAlgoCommand.RaiseCanExecuteChanged();
     }
 
-    private void OnStartAnalysis()
+    public DelegateCommand SimpleAlgoCommand { get; }
+    public DelegateCommand PreserveStructureAlgoCommand { get; }
+
+    private void Obfuscate(IObfuscator obfuscator)
     {
         var builder = new RelaxedGraphBuilder();
-        var obfuscator = new Obfuscator();
 
         foreach (var node in myModel.Presentation.Graph.Nodes)
         {
@@ -53,6 +57,4 @@ class ToolsMenuItemModel : BindableBase
 
         myModel.Presentation = presentation;
     }
-
-    public DelegateCommand StartAnalysisCommand { get; }
 }
