@@ -163,7 +163,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 .Select(e => new
                 {
                     Node = e.Type,
-                    Cluster = GetCluster(e.Package, e.Type),
+                    Cluster = TryGetCluster(e.Package, e.Type),
                     PackageIndex = e.PackageIndex
                 });
 
@@ -197,28 +197,48 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             return doc;
         }
 
-        private Cluster GetCluster(Package package, Type type)
+        private Cluster TryGetCluster(Package package, Type type)
         {
             // if there is no namespace (compiler generated types with "<>") then "best match" would be the assembly name
             // to get the clustering as good as possible
             var fullName = type.Namespace != null ? type.FullName : type.Assembly.GetName().Name;
 
-            // For AutoClusters:
-            // ID needs to be derived from assembly/namespace to auto-magically match the next type 
-            // of the same assembly/namespace into this cluster later on when building the graph
+            var cluster =  TryGetAutoCluster(package, type);
+            if (cluster != null)
+            {
+                return cluster;
+            }
 
-            if ("assembly".Equals(package.AutoClusters, StringComparison.OrdinalIgnoreCase))
+            cluster = package.Clusters.FirstOrDefault(c => c.Matches(fullName));
+            if (cluster != null)
+            {
+                return cluster;
+            }
+
+            return null;
+        }
+
+        // ID needs to be derived from assembly/namespace to auto-magically match the next type 
+        // of the same assembly/namespace into this cluster later on when building the graph
+        private static Cluster TryGetAutoCluster(Package package, Type type)
+        {
+            if (string.IsNullOrWhiteSpace(package.AutoClusters))
+            {
+                return null;
+            }
+
+            if (package.AutoClusters.Equals("assembly", StringComparison.OrdinalIgnoreCase))
             {
                 return new Cluster { Name = type.Assembly.GetName().Name, Id = type.Assembly.FullName };
             }
 
-            if ("namespace".Equals(package.AutoClusters, StringComparison.OrdinalIgnoreCase))
+            if (package.AutoClusters.Equals("namespace", StringComparison.OrdinalIgnoreCase))
             {
                 var id = type.Namespace ?? type.Assembly.FullName;
                 return new Cluster { Name = id, Id = id };
             }
 
-            if (package.AutoClusters != null && package.AutoClusters.StartsWith("rootnamespace+", StringComparison.OrdinalIgnoreCase))
+            if (package.AutoClusters.StartsWith("rootnamespace+", StringComparison.OrdinalIgnoreCase))
             {
                 var assemblyName = type.Assembly.GetName().Name;
                 if (!type.Namespace.StartsWith(assemblyName))
@@ -230,12 +250,6 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 var numSubNamespaces = Int32.Parse(package.AutoClusters.Split('+').Last());
                 var id = string.Join(".", tokens.Take(Math.Min(assemblyName.Split('.').Length + numSubNamespaces, tokens.Length)));
                 return new Cluster { Name = id, Id = id };
-            }
-
-            var cluster = package.Clusters.FirstOrDefault(c => c.Matches(fullName));
-            if (cluster != null)
-            {
-                return cluster;
             }
 
             return null;
