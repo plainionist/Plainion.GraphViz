@@ -179,7 +179,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void BuildTree()
         {
-            using var _ = myTransformationsObserver.Mute();
+            using var _ = myTransformationsObserver?.Mute();
 
             var expandedClusterIds = Root.Children
                 .Where(x => x.IsExpanded)
