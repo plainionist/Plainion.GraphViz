@@ -50,22 +50,15 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             // start new clusters folded
             myPresentation.ClusterFolding().Toggle(newClusterId);
 
-            // update tree
+            var clusterNode = new NodeViewModel(myPresentation, newClusterId, NodeType.Cluster)
             {
-                var clusterNode = new NodeViewModel(myPresentation, newClusterId, NodeType.Cluster)
-                {
-                    Parent = Root,
-                    Caption = captionModule.Get(newClusterId).DisplayText,
-                };
-                Root.Children.Add(clusterNode);
+                Parent = Root,
+                Caption = captionModule.Get(newClusterId).DisplayText,
+            };
+            Root.Children.Add(clusterNode);
 
-                // register for notifications after tree is built to avoid intermediate states getting notified
-
-                PropertyChangedEventManager.AddHandler(clusterNode, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => clusterNode.IsSelected));
-
-                // nothing ot update
-                //myNodeClusterCache = null;
-            }
+            // register for notifications after tree is built to avoid intermediate states getting notified
+            PropertyChangedEventManager.AddHandler(clusterNode, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => clusterNode.IsSelected));
 
             Root.Children.Single(n => n.Id == newClusterId).IsSelected = true;
 
@@ -141,30 +134,26 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             myPresentation.DynamicClusters().AddToCluster(nodes, clusterId);
 
-            // update tree
-            {
-                var clusterNode = Root.Children.Single(n => n.Id == clusterId);
+            var clusterNode = Root.Children.Single(n => n.Id == clusterId);
 
-                var captionModule = myPresentation.GetModule<ICaptionModule>();
+            var captionModule = myPresentation.GetModule<ICaptionModule>();
 
-                var newTreeNodes = nodes
-                    .Select(n => new NodeViewModel(myPresentation, n, NodeType.Node)
-                    {
-                        Parent = clusterNode,
-                        Caption = captionModule.Get(n).DisplayText,
-                        ShowId = Tree.ShowNodeId
-                    });
-                clusterNode.Children.AddRange(newTreeNodes);
-
-                // register for notifications after tree is built to avoid intermediate states getting notified
-
-                foreach (var node in newTreeNodes)
+            var newTreeNodes = nodes
+                .Select(n => new NodeViewModel(myPresentation, n, NodeType.Node)
                 {
-                    PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
-                    PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
+                    Parent = clusterNode,
+                    Caption = captionModule.Get(n).DisplayText,
+                    ShowId = Tree.ShowNodeId
+                });
+            clusterNode.Children.AddRange(newTreeNodes);
 
-                    Preview.OnNodeAddedToCluster(node, clusterNode);
-                }
+            // register for notifications after tree is built to avoid intermediate states getting notified
+            foreach (var node in newTreeNodes)
+            {
+                PropertyChangedEventManager.AddHandler(node, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => node.IsSelected));
+                PropertyChangedEventManager.AddHandler(node, OnParentChanged, PropertySupport.ExtractPropertyName(() => node.Parent));
+
+                Preview.OnNodeAddedToCluster(node, clusterNode);
             }
 
             myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
@@ -236,7 +225,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             }
 
             // register for notifications after tree is built to avoid intermediate states getting notified
-
             foreach (var cluster in Root.Children)
             {
                 PropertyChangedEventManager.AddHandler(cluster, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => cluster.IsSelected));
