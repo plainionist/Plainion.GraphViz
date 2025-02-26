@@ -254,16 +254,14 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
             var logicalClusters = package.AutoClusters.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries);
             {
-                var id = type.Namespace ?? type.Assembly.FullName;
+                var fullName = type.FullName ?? type.Assembly.FullName;
 
                 // intentionally use "First()" to have a deterministic behavior and then allow combined cluster names
                 // because those could then come first
-                var clusterName = logicalClusters
-                    .FirstOrDefault(x => id.Contains($".{x}.", StringComparison.OrdinalIgnoreCase)
-                        || id.EndsWith($".{x}", StringComparison.OrdinalIgnoreCase));
+                var clusterName = logicalClusters.FirstOrDefault(x => fullName.Contains(x, StringComparison.OrdinalIgnoreCase));
                 if (clusterName != null)
                 {
-                    return new Cluster { Name = clusterName, Id = id };
+                    return new Cluster { Name = clusterName, Id = clusterName };
                 }
             }
             return null;
