@@ -23,7 +23,10 @@ You can use the Cluster Editor to manage clusters.
 
 ![](Screenshots/ClusterEditor.png) 
 
-Hint: Use CTRL+RMB to open the context menu without selecting a node automatically to allow creation of new clusters.
+- Use the filter on the left side to select nodes outside clusters and the "Add" button to add those to the selected cluster
+- Use the context menu on the right side to delete and merge clusters
+- Use CTRL+RMB to open the context menu without selecting a node automatically to allow creation of new clusters.
+- Use Drag & Drop on the right side to move nodes and clusters into clusters
 
 ## Manage clusters within the graph
 
