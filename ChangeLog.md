@@ -10,7 +10,8 @@
   - Multiple clusters can be deleted
   - Clusters can be merged via context menu
 - Obfuscation can preserve "name structure"
-
+- Package analysis: "AutoCluster" supports list of namespace substrings to allow feature-wise
+  clustering independent of technical layers
 
 ## 8.1 - 2025-02-20
 

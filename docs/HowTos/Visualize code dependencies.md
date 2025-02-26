@@ -82,6 +82,8 @@ You can use the following options to customize the structure of the graph:
   - "assembly": a cluster will be created for each assembly, containing all types of that assembly
   - "rootNamespace+n" (n=number): a cluster will be created for each namespace starting with the root namespace (the assembly name)
     followed by the number of sub namespaces specified, containing all types of this namespace and all sub namespaces
+  - list of namespace substrings separated by "," or ";": a cluster will be created for each of these names, if types exit
+    which namespace matches ".{name}." or end with ".{name}"
 
 ## Generating the graph
 

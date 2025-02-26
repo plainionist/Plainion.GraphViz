@@ -203,7 +203,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             // to get the clustering as good as possible
             var fullName = type.Namespace != null ? type.FullName : type.Assembly.GetName().Name;
 
-            var cluster =  TryGetAutoCluster(package, type);
+            var cluster = TryGetAutoCluster(package, type);
             if (cluster != null)
             {
                 return cluster;
@@ -252,6 +252,20 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
                 return new Cluster { Name = id, Id = id };
             }
 
+            var logicalClusters = package.AutoClusters.Split([',', ';'], StringSplitOptions.RemoveEmptyEntries);
+            {
+                var id = type.Namespace ?? type.Assembly.FullName;
+
+                // intentionally use "First()" to have a deterministic behavior and then allow combined cluster names
+                // because those could then come first
+                var clusterName = logicalClusters
+                    .FirstOrDefault(x => id.Contains($".{x}.", StringComparison.OrdinalIgnoreCase)
+                        || id.EndsWith($".{x}", StringComparison.OrdinalIgnoreCase));
+                if (clusterName != null)
+                {
+                    return new Cluster { Name = clusterName, Id = id };
+                }
+            }
             return null;
         }
 
