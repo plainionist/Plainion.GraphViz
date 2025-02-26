@@ -92,7 +92,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             MergeInto(request.DroppedNode, targetCluster);
         }
 
-        public void MergeInto(NodeViewModel node, NodeViewModel cluster)
+        private void MergeInto(NodeViewModel node, NodeViewModel cluster)
         {
             var droppedNodes = node.Type == NodeType.Cluster ? node.Children : [node];
 
