@@ -47,6 +47,7 @@ internal class PreviewViewModel : ViewModelBase, IDropable
         myPresentation = Model.Presentation;
 
         myPreviewNodes = null;
+
         if (Filter == null)
         {
             PreviewNodes.Refresh();
@@ -55,6 +56,7 @@ internal class PreviewViewModel : ViewModelBase, IDropable
         {
             Filter = null;
         }
+        
         myNodeToClusterCache = null;
     }
 
@@ -107,6 +109,7 @@ internal class PreviewViewModel : ViewModelBase, IDropable
 
                 RaisePropertyChanged(nameof(PreviewNodes));
             }
+
             return myPreviewNodes;
         }
     }

@@ -38,8 +38,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         public void CreateNewCluster(NodeViewModel parent)
         {
-            // avoid many intermediate updates
-            myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+            using var _ = myTransformationsObserver.Mute();
 
             var newClusterId = Guid.NewGuid().ToString();
             var captionModule = myPresentation.GetModule<ICaptionModule>();
@@ -61,17 +60,14 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             PropertyChangedEventManager.AddHandler(clusterNode, OnSelectionChanged, PropertySupport.ExtractPropertyName(() => clusterNode.IsSelected));
 
             Root.Children.Single(n => n.Id == newClusterId).IsSelected = true;
-
-            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
         }
 
         public void DeleteNode(NodeViewModel node)
         {
+            using var _ = myTransformationsObserver.Mute();
+
             if (node.Type == NodeType.Cluster)
             {
-                // avoid many intermediate updates
-                myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
-
                 myPresentation.DynamicClusters().HideCluster(node.Id);
 
                 // the tree might have been rebuilt - we have to search by id
@@ -79,8 +75,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
                 AddNodesToClusterCommand.RaiseCanExecuteChanged();
                 Preview.OnClusterDeleted(node);
-
-                myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
             }
             else
             {
@@ -122,8 +116,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnAddNodesToCluster()
         {
-            // avoid many intermediate updates
-            myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+            using var _ = myTransformationsObserver.Mute();
 
             var nodes = Preview.PreviewNodes
                 .Cast<NodeWithCaption>()
@@ -156,8 +149,6 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
                 Preview.OnNodeAddedToCluster(node, clusterNode);
             }
 
-            myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
-
             Preview.Filter = null;
             Preview.PreviewNodes.Refresh();
         }
@@ -188,7 +179,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void BuildTree()
         {
-            using var _ = new Profile("BuildTree");
+            using var _ = myTransformationsObserver.Mute();
 
             var expandedClusterIds = Root.Children
                 .Where(x => x.IsExpanded)
@@ -281,6 +272,8 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         public void DeleteSelectedNodes()
         {
+            using var _ = myTransformationsObserver.Mute();
+
             foreach (var cluster in Root.Children.ToList())
             {
                 if (cluster.IsSelected)
@@ -299,6 +292,8 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         public void MergeSelectedClusters()
         {
+            using var _ = myTransformationsObserver.Mute();
+
             Contract.Invariant(ClusterToUpdate != null, "ClusterToUpdate == null");
 
             foreach (var cluster in Root.Children.ToList())

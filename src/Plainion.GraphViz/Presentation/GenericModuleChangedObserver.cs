@@ -5,25 +5,14 @@ using System.Linq;
 
 namespace Plainion.GraphViz.Presentation
 {
-    class GenericModuleChangedObserver<T> : IModuleChangedObserver
+    class GenericModuleChangedObserver<T> : AbstractModuleChangedObserver<T>
     {
-        private IModule<T> myModule;
-
         public GenericModuleChangedObserver(IModule<T> module)
+            : base(module)
         {
-            myModule = module;
-
-            myModule.CollectionChanged += OnCollectionChanged;
-
-            foreach (var entry in myModule.Items.OfType<INotifyPropertyChanged>())
-            {
-                entry.PropertyChanged += OnPropertyChanged;
-            }
         }
 
-        public event EventHandler ModuleChanged;
-
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
@@ -39,9 +28,9 @@ namespace Plainion.GraphViz.Presentation
                     item.PropertyChanged -= OnPropertyChanged;
                 }
             }
-            else if (e.Action ==  NotifyCollectionChangedAction.Reset)
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                foreach (var entry in myModule.Items.OfType<INotifyPropertyChanged>())
+                foreach (var entry in Module.Items.OfType<INotifyPropertyChanged>())
                 {
                     entry.PropertyChanged -= OnPropertyChanged;
                 }
@@ -58,31 +47,6 @@ namespace Plainion.GraphViz.Presentation
             RaiseModuleChanged();
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            RaiseModuleChanged();
-        }
-
-        private void RaiseModuleChanged()
-        {
-            ModuleChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void Dispose()
-        {
-            if (myModule != null)
-            {
-                foreach (var entry in myModule.Items.OfType<INotifyPropertyChanged>())
-                {
-                    entry.PropertyChanged -= OnPropertyChanged;
-                }
-
-                myModule.CollectionChanged -= OnCollectionChanged;
-
-                ModuleChanged = null;
-
-                myModule = null;
-            }
-        }
+        protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => RaiseModuleChanged();
     }
 }

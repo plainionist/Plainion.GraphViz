@@ -6,28 +6,20 @@ using System.Linq;
 
 namespace Plainion.GraphViz.Presentation
 {
-    class GenericModuleChangedJournal<T> : IModuleChangedJournal<T>
+    class GenericModuleChangedJournal<T> : AbstractModuleChangedObserver<T>, IModuleChangedJournal<T>
     {
-        private IModule<T> myModule;
-        private List<T> myEntries;
-        private IEqualityComparer<T> myComparer;
+        private readonly List<T> myEntries;
+        private readonly IEqualityComparer<T> myComparer;
 
         public GenericModuleChangedJournal(IModule<T> module, IEqualityComparer<T> comparer)
+            :base(module)
         {
-            myModule = module;
             myComparer = comparer;
 
             myEntries = new List<T>();
-
-            myModule.CollectionChanged += OnCollectionChanged;
-
-            foreach (var entry in myModule.Items.OfType<INotifyPropertyChanged>())
-            {
-                entry.PropertyChanged += OnPropertyChanged;
-            }
         }
 
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
@@ -40,7 +32,7 @@ namespace Plainion.GraphViz.Presentation
                     item.PropertyChanged += OnPropertyChanged;
                 }
             }
-            else if (e.Action == NotifyCollectionChangedAction.Remove )
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 foreach (var item in e.OldItems.Cast<T>())
                 {
@@ -53,11 +45,11 @@ namespace Plainion.GraphViz.Presentation
             }
             else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                foreach (var item in myModule.Items)
+                foreach (var item in Module.Items)
                 {
                     RecordItem(item);
                 }
-                foreach (var item in myModule.Items.OfType<INotifyPropertyChanged>())
+                foreach (var item in Module.Items.OfType<INotifyPropertyChanged>())
                 {
                     item.PropertyChanged -= OnPropertyChanged;
                 }
@@ -92,10 +84,10 @@ namespace Plainion.GraphViz.Presentation
                 myEntries.Add(item);
             }
 
-            ModuleChanged?.Invoke(this, EventArgs.Empty);
+            RaiseModuleChanged();
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var item = (T)sender;
             RecordItem(item);
@@ -121,17 +113,5 @@ namespace Plainion.GraphViz.Presentation
         {
             myEntries.Clear();
         }
-
-        public void Dispose()
-        {
-            foreach (var entry in myModule.Items.OfType<INotifyPropertyChanged>())
-            {
-                entry.PropertyChanged -= OnPropertyChanged;
-            }
-
-            myModule.CollectionChanged -= OnCollectionChanged;
-        }
-
-        public event EventHandler ModuleChanged;
     }
 }
