@@ -1,5 +1,5 @@
 
-## 8.2 - 2025-02-
+## 8.2 - 2025-02-26
 
 - Cluster Editor
   - dropping of clusters allowed
