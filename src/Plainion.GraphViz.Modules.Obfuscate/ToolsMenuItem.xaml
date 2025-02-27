@@ -9,5 +9,6 @@
 
     <MenuItem Header="Simple" Command="{Binding SimpleAlgoCommand}" />
     <MenuItem Header="Preserve structure" Command="{Binding PreserveStructureAlgoCommand}" />
+    <MenuItem Header="Remove all captions" Command="{Binding RemoveAllCaptionsCommand}" />
 
 </MenuItem>

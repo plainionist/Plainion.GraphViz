@@ -58,24 +58,30 @@ namespace Plainion.GraphViz.Presentation
             myCaptionsJournal = myPresentation.GetPropertySetFor<Caption>().CreateJournal();
             myCaptionsJournal.ModuleChanged += OnCaptionChanged;
 
-            myFoldedClusters = new HashSet<string>();
-            myComputedEdges = new Dictionary<string, ComputedEdge>();
+            myFoldedClusters = [];
+            myComputedEdges = [];
         }
 
+        // if the caption of the cluster changes we need to align the
+        // caption of the "cluster node" shown when the cluster is folded
         private void OnCaptionChanged(object sender, EventArgs e)
         {
             var captions = myPresentation.GetPropertySetFor<Caption>();
 
-            foreach (var entry in myCaptionsJournal.Entries)
+            // need a copy as we modify the captions module in the loop
+            foreach (var entry in myCaptionsJournal.Entries.ToList())
             {
                 var clusterNodeId = GetClusterNodeId(entry.OwnerId);
 
                 var caption = captions.TryGet(clusterNodeId);
+                // support obfuscation (removal of all captions)
                 if (caption != null)
                 {
-                    caption.DisplayText = "[" + entry.DisplayText + "]";
+                    caption.DisplayText = string.IsNullOrWhiteSpace(entry.DisplayText) ? " " : "[" + entry.DisplayText + "]";
                 }
             }
+
+            myCaptionsJournal.Clear();
         }
 
         // If visibility of nodes/edges of a folded cluster changes that way that 
@@ -162,7 +168,8 @@ namespace Plainion.GraphViz.Presentation
             var captions = myPresentation.GetPropertySetFor<Caption>();
             if (!captions.Contains(clusterNodeId))
             {
-                captions.Add(new Caption(clusterNodeId, "[" + captions.Get(clusterId).DisplayText + "]"));
+                var displayText = captions.Get(clusterId).DisplayText;
+                captions.Add(new Caption(clusterNodeId, string.IsNullOrWhiteSpace(displayText) ? " " : "[" + displayText + "]"));
             }
 
             myFoldedClusters.Add(clusterId);
@@ -352,7 +359,7 @@ namespace Plainion.GraphViz.Presentation
             }
 
             // add folded/redirected edges
-            foreach(var edge in myComputedEdges.Values)
+            foreach (var edge in myComputedEdges.Values)
             {
                 // Only visible edges otherwise we would draw an edge which should not exist based on actual node visibility.
                 // This makes the folding respect node visibility.

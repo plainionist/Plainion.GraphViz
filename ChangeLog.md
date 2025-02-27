@@ -1,4 +1,8 @@
 
+## 8.3 - 2025-02-
+
+- Obfuscation supports removing all captions
+
 ## 8.2 - 2025-02-26
 
 - Cluster Editor

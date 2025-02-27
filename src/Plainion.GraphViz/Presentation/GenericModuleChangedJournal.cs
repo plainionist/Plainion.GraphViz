@@ -16,7 +16,7 @@ namespace Plainion.GraphViz.Presentation
         {
             myComparer = comparer;
 
-            myEntries = new List<T>();
+            myEntries = [];
         }
 
         protected override void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
