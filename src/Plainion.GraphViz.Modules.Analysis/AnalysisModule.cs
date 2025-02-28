@@ -12,7 +12,7 @@ public class AnalysisModule(IRegionManager regionManager) : IModule
 {
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SearchBox, typeof(SearchBox));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_SearchBox, typeof(SearchBox));
         regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
         regionManager.RegisterViewWithRegion(RegionNames.NodeMasksView, typeof(NodeMasksView));
         regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ClusterEditor, typeof(ClusterEditor));

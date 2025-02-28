@@ -82,8 +82,8 @@
                     </ObjectDataProvider>
                 </StackPanel.Resources>
 
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.OpenDocuments}"/>
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.SaveDocuments}"/>
+                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Open}"/>
+                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Save}"/>
 
                 <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.ExportGraphCommand}" Padding="1" Margin="2"
                         ToolTip="Export visible graph">
@@ -99,7 +99,7 @@
                     <Image Source="/Resources/Settings.png" Width="16"/>
                 </Button>
 
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.SearchBox}" Width="300"/>
+                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_SearchBox}" Width="300"/>
                 
                 <Button Command="{Binding OpenFilterEditor}" Padding="1" Margin="2" IsEnabled="{Binding Path=IsEnabled}"
                         ToolTip="Filter nodes by caption or identifier">
@@ -123,7 +123,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.OpenProperties}"/>
+                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Properties}"/>
 
                 <Menu VerticalAlignment="Stretch" Margin="2" Padding="1">
                     <MenuItem Header="Tools" prism:RegionManager.RegionName="{x:Static inf:RegionNames.AddIns}" VerticalAlignment="Center"/>

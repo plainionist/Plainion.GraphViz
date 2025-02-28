@@ -20,8 +20,8 @@ namespace Plainion.GraphViz.Modules.Documents
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.OpenDocuments, typeof(OpenDocumentsView));
-            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SaveDocuments, typeof(SaveDocumentsView));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_Open, typeof(OpenDocumentsView));
+            myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_Save, typeof(SaveDocumentsView));
 
             myContainer.RegisterType<IDocumentLoader, OpenDocumentsViewModel>(new ContainerControlledLifetimeManager());
         }
