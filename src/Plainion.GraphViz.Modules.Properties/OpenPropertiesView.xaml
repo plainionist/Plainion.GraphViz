@@ -8,11 +8,24 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
              xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:local="clr-namespace:Plainion.GraphViz.Modules.Properties"
              mc:Ignorable="d" Focusable="True">
     <UserControl.InputBindings>
         <KeyBinding Modifiers="Ctrl+Alt" Key="Enter" Command="{Binding OpenPropertiesCommand}"/>
     </UserControl.InputBindings>
-    <Button Command="{Binding OpenPropertiesCommand}" Padding="1" Margin="2" ToolTip="Open graph properties">
+    <i:Interaction.Triggers>
+        <pn:InteractionRequestTrigger SourceObject="{Binding PropertiesRequest, Mode=OneWay}">
+            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static local:RegionNames.Properties}" IsIndependent="True">
+                <pn:PopupViewAction.WindowStyle>
+                    <Style TargetType="{x:Type Window}">
+                        <Setter Property="Width" Value="1000"/>
+                        <Setter Property="Height" Value="700"/>
+                    </Style>
+                </pn:PopupViewAction.WindowStyle>
+            </pn:PopupViewAction>
+        </pn:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    <Button Command="{Binding OpenPropertiesCommand}" Padding="1" Margin="2" ToolTip="Open properties">
         <Button.Content>
             <Image Source="/Plainion.GraphViz.Modules.Properties;Component/Resources/Properties.png" Width="16"/>
         </Button.Content>

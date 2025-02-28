@@ -8,7 +8,8 @@ public class PropertiesModule(IRegionManager regionManager) : IModule
 {
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.GraphProperties, typeof(OpenPropertiesView));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.OpenProperties, typeof(OpenPropertiesView));
+        regionManager.RegisterViewWithRegion(RegionNames.Properties, typeof(PropertiesView));
     }
 
     public void OnInitialized(IContainerProvider containerProvider) { }
