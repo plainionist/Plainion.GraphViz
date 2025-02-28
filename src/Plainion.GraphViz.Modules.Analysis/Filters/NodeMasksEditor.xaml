@@ -7,6 +7,7 @@
              xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
              xmlns:pn="http://github.com/ronin4net/plainion"
              xmlns:inf="clr-namespace:Plainion.GraphViz.Viewer.Abstractions;assembly=Plainion.GraphViz.Viewer.Abstractions"
+             xmlns:local="clr-namespace:Plainion.GraphViz.Modules.Analysis"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              x:Name="_this" mc:Ignorable="d" 
@@ -27,7 +28,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="0" prism:RegionManager.RegionName="{x:Static inf:RegionNames.NodeMasksView}"
+        <ContentControl Grid.Row="0" prism:RegionManager.RegionName="{x:Static local:RegionNames.NodeMasksView}"
                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,0,0"/>
 
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
