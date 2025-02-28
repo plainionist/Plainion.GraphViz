@@ -11,8 +11,11 @@
              xmlns:local="clr-namespace:Plainion.GraphViz.Modules.Properties"
              mc:Ignorable="d" Focusable="True">
     <UserControl.InputBindings>
-        <KeyBinding Key="F4" Command="{Binding OpenPropertiesCommand}"/>
+        <KeyBinding Modifiers="Control" Key="P" Command="{Binding OpenPropertiesCommand}"/>
     </UserControl.InputBindings>
+    <i:Interaction.Behaviors>
+        <pn:PropagateInputBindingsToWindowBehavior/>
+    </i:Interaction.Behaviors>
     <i:Interaction.Triggers>
         <pn:InteractionRequestTrigger SourceObject="{Binding PropertiesRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static local:RegionNames.Properties}" IsIndependent="True">
