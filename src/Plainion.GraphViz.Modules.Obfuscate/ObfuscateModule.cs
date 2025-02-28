@@ -4,21 +4,12 @@ using Prism.Navigation.Regions;
 
 namespace Plainion.GraphViz.Modules.Obfuscate;
 
-public class ObfuscateModule : IModule
+public class ObfuscateModule(IRegionManager regionManager) : IModule
 {
-    private readonly IRegionManager myRegionManager;
-
-    public ObfuscateModule(IRegionManager regionManager)
-    {
-        myRegionManager = regionManager;
-    }
-
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(ToolsMenuItem));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(ToolsMenuItem));
     }
 
-    public void OnInitialized(IContainerProvider containerProvider)
-    {
-    }
+    public void OnInitialized(IContainerProvider containerProvider) { }
 }
