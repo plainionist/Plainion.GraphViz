@@ -6,7 +6,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:pn="http://github.com/ronin4net/plainion"
         xmlns:prism="http://prismlibrary.com/"
-        Width="600" Height="600" x:Name="_this">
+        x:Name="_this">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,7 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel LastChildFill="True">
+    <DockPanel LastChildFill="True" Background="#FDFDF5">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" FlowDirection="RightToLeft">
             <Button Content="Cancel" Margin="5" HorizontalAlignment="Right" Command="{Binding CancelCommand}"/>
             <Button Content="Ok" Margin="5" HorizontalAlignment="Right" Command="{Binding OkCommand}"/>

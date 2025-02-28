@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Input;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;

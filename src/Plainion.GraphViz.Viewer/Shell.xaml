@@ -16,7 +16,14 @@
         WindowStartupLocation="CenterScreen" Background="{Binding WindowBackground, Source={x:Static g:Themes.Current}}">
     <i:Interaction.Triggers>
         <pn:InteractionRequestTrigger SourceObject="{Binding SettingsEditorRequest, Mode=OneWay}">
-            <pn:PopupWindowAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.SettingsEditor}"/>
+            <pn:PopupViewAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.SettingsEditor}">
+                <pn:PopupViewAction.WindowStyle>
+                    <Style TargetType="{x:Type Window}">
+                        <Setter Property="Width" Value="600"/>
+                        <Setter Property="Height" Value="600"/>
+                    </Style>
+                </pn:PopupViewAction.WindowStyle>
+            </pn:PopupViewAction>
         </pn:InteractionRequestTrigger>
         <pn:InteractionRequestTrigger SourceObject="{Binding ShowStatusMessagesRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="True" prism:RegionManager.RegionName="{x:Static v:RegionNames.StatusMessagesViewer}">

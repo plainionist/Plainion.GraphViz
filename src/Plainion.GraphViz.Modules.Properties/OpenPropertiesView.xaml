@@ -11,15 +11,15 @@
              xmlns:local="clr-namespace:Plainion.GraphViz.Modules.Properties"
              mc:Ignorable="d" Focusable="True">
     <UserControl.InputBindings>
-        <KeyBinding Modifiers="Ctrl+Alt" Key="Enter" Command="{Binding OpenPropertiesCommand}"/>
+        <KeyBinding Key="F4" Command="{Binding OpenPropertiesCommand}"/>
     </UserControl.InputBindings>
     <i:Interaction.Triggers>
         <pn:InteractionRequestTrigger SourceObject="{Binding PropertiesRequest, Mode=OneWay}">
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static local:RegionNames.Properties}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
-                        <Setter Property="Width" Value="1000"/>
-                        <Setter Property="Height" Value="700"/>
+                        <Setter Property="Width" Value="600"/>
+                        <Setter Property="Height" Value="600"/>
                     </Style>
                 </pn:PopupViewAction.WindowStyle>
             </pn:PopupViewAction>
