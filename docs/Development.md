@@ -6,15 +6,9 @@ navigation_weight: 200
 
 # Development
 
-Plainion.GraphViz is developed based on the .NET framework 4.7, mostly in C#.
-
-As some dependencies of this project already reference .NET Core 2.0 assemblies you also need to install .Net Core 2.0 SDK.
-See also [Announcing .Net Core 2.0](https://blogs.msdn.microsoft.com/dotnet/2017/08/14/announcing-net-core-2-0/).
+Plainion.GraphViz is developed based on the .NET 8.0 in C#, so you need to install .NET 8.0 SDK.
 
 All other dependencies are handled via NuGet.
-
-Tests are written in [NUnit](http://nunit.org/). I recommend [NUnit 3 Test Adapter](https://marketplace.visualstudio.com/items?itemName=NUnitDevelopers.NUnit3TestAdapter)
-for Visual Studio to run the tests. Of course you can also run the tests with NUnit runners directly.
 
 # Extensibility
 
