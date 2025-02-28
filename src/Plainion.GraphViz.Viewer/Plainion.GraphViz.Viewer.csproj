@@ -8,19 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="GraphIcon.ico" />
-    <None Remove="Resources\Bookmarks.png" />
-    <None Remove="Resources\Clusters.png" />
-    <None Remove="Resources\Export.png" />
-    <None Remove="Resources\Filter.png" />
-    <None Remove="Resources\GraphIcon.png" />
-    <None Remove="Resources\Print.png" />
-    <None Remove="Resources\Refresh.png" />
-    <None Remove="Resources\Settings.png" />
-    <None Remove="Resources\StatusMessages.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Remove="Plainion.GraphViz.Viewer.xaml" />
   </ItemGroup>
 
