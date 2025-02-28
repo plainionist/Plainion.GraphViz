@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="Plainion.GraphViz.Modules.Analysis.Clusters.OpenClustersView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
+             xmlns:pn="http://github.com/ronin4net/plainion"
+             xmlns:local="clr-namespace:Plainion.GraphViz.Modules.Analysis"
+             mc:Ignorable="d" Focusable="True">
+    <i:Interaction.Triggers>
+        <pn:InteractionRequestTrigger SourceObject="{Binding ClusterEditorRequest, Mode=OneWay}">
+            <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static local:RegionNames.ClusterEditor}" IsIndependent="True">
+                <pn:PopupViewAction.WindowStyle>
+                    <Style TargetType="{x:Type Window}">
+                        <Setter Property="Width" Value="1000"/>
+                        <Setter Property="Height" Value="700"/>
+                    </Style>
+                </pn:PopupViewAction.WindowStyle>
+            </pn:PopupViewAction>
+        </pn:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    <Button Command="{Binding OpenClusterEditorCommand}" Padding="1" Margin="2" ToolTip="Cluster nodes">
+        <Button.Content>
+            <Image Source="/Plainion.GraphViz.Modules.Analysis;Component/Resources/Clusters.png" Width="16"/>
+        </Button.Content>
+    </Button>
+</UserControl>

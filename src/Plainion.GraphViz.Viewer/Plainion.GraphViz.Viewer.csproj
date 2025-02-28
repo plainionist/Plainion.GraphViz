@@ -35,9 +35,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="GraphIcon.ico" />
-    <Resource Include="Resources\Bookmarks.png" />
-    <Resource Include="Resources\Clusters.png" />
-    <Resource Include="Resources\Filter.png" />
     <Resource Include="Resources\GraphIcon.png" />
     <Resource Include="Resources\Export.png" />
     <Resource Include="Resources\Print.png" />

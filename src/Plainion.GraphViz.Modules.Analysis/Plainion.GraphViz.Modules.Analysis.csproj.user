@@ -2,7 +2,16 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Page Update="Bookmarks\OpenBookmarksView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Clusters\OpenClustersView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Clusters\TreeEditor.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="NodeMasks\OpenNodeMasksView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

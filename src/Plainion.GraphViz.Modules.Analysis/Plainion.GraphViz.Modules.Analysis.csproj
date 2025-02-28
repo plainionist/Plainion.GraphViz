@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Bookmarks.png" />
+    <None Remove="Resources\Clusters.png" />
+    <None Remove="Resources\Filter.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Plainion.Prism" Version="9.0.0" />
@@ -15,6 +21,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plainion.GraphViz.Viewer.Abstractions\Plainion.GraphViz.Viewer.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Bookmarks.png" />
+    <Resource Include="Resources\Clusters.png" />
+    <Resource Include="Resources\Filter.png" />
   </ItemGroup>
 
 </Project>

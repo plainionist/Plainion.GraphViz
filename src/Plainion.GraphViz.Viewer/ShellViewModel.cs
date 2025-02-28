@@ -5,9 +5,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Plainion.GraphViz.Dot;
+using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Windows;
 using Plainion.Windows.Interactivity.DragDrop;
@@ -27,15 +27,6 @@ namespace Plainion.GraphViz.Viewer
         {
             myStatusMessageService = statusMessageService;
             myStatusMessageService.Messages.CollectionChanged += OnStatusMessagesChanged;
-
-            NodeMasksEditorRequest = new InteractionRequest<INotification>();
-            OpenFilterEditor = new DelegateCommand(OnOpenFilterEditor);
-
-            ClusterEditorRequest = new InteractionRequest<INotification>();
-            OpenClusterEditor = new DelegateCommand(OnOpenClusterEditor);
-
-            BookmarksRequest = new InteractionRequest<INotification>();
-            OpenBookmarks = new DelegateCommand(OnOpenBookmarks);
 
             SettingsEditorRequest = new InteractionRequest<IConfirmation>();
             OpenSettingsEditor = new DelegateCommand(OnOpenSettingsEditor);
@@ -76,42 +67,6 @@ namespace Plainion.GraphViz.Viewer
                    }
                });
         }
-
-        public ICommand OpenFilterEditor { get; private set; }
-
-        private void OnOpenFilterEditor()
-        {
-            var notification = new Notification();
-            notification.Title = "Filters";
-
-            NodeMasksEditorRequest.Raise(notification, c => { });
-        }
-
-        public InteractionRequest<INotification> NodeMasksEditorRequest { get; private set; }
-
-        public ICommand OpenClusterEditor { get; private set; }
-
-        private void OnOpenClusterEditor()
-        {
-            var notification = new Notification();
-            notification.Title = "Clusters";
-
-            ClusterEditorRequest.Raise(notification, c => { });
-        }
-
-        public InteractionRequest<INotification> ClusterEditorRequest { get; private set; }
-
-        public ICommand OpenBookmarks { get; private set; }
-
-        private void OnOpenBookmarks()
-        {
-            var notification = new Notification();
-            notification.Title = "Bookmarks";
-
-            BookmarksRequest.Raise(notification, c => { });
-        }
-
-        public InteractionRequest<INotification> BookmarksRequest { get; private set; }
 
         public ICommand OpenSettingsEditor { get; private set; }
 
