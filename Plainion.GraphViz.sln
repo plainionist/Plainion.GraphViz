@@ -62,6 +62,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.CodeInspection.PathFinder.Tests", "src\Plainion.GraphViz.Modules.CodeInspection.PathFinder.Tests\Plainion.GraphViz.Modules.CodeInspection.PathFinder.Tests.csproj", "{68B9F40F-0EB2-424B-BF29-8A9D7497BF96}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Properties", "src\Plainion.GraphViz.Modules.Properties\Plainion.GraphViz.Modules.Properties.csproj", "{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,6 +170,10 @@ Global
 		{68B9F40F-0EB2-424B-BF29-8A9D7497BF96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68B9F40F-0EB2-424B-BF29-8A9D7497BF96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68B9F40F-0EB2-424B-BF29-8A9D7497BF96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
