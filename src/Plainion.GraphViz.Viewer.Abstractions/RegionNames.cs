@@ -11,5 +11,6 @@ namespace Plainion.GraphViz.Viewer.Abstractions
         public static readonly string NodeMasksView = "Region.Node.Masks.View";
         public static readonly string ClusterEditor = "Region.Cluster.Editor";
         public static readonly string Bookmarks = "Region.Bookmarks";
+        public static readonly string GraphProperties = "Region.Graph.Properties";
     }
 }

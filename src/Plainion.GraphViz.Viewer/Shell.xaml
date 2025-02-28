@@ -123,6 +123,8 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
+                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.GraphProperties}"/>
+
                 <Menu VerticalAlignment="Stretch" Margin="2" Padding="1">
                     <MenuItem Header="Tools" prism:RegionManager.RegionName="{x:Static inf:RegionNames.AddIns}" VerticalAlignment="Center"/>
                 </Menu>

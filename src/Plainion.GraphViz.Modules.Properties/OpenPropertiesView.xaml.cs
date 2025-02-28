@@ -2,9 +2,9 @@
 
 namespace Plainion.GraphViz.Modules.Properties;
 
-partial class ToolsMenuItem : MenuItem
+partial class OpenPropertiesView : UserControl
 {
-    public ToolsMenuItem(ToolsMenuItemModel model)
+    public OpenPropertiesView(OpenPropertiesViewModel model)
     {
         InitializeComponent();
 

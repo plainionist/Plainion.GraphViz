@@ -6,11 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Open.png" />
-    <None Remove="Resources\Save.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Plainion.Prism" Version="9.0.0" />
     <PackageReference Include="Prism.Wpf" Version="9.0.537" />
     <PackageReference Include="Unity" Version="5.11.10" />

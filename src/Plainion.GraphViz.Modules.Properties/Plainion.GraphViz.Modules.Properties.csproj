@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Plainion.GraphViz.Viewer.Abstractions\Plainion.GraphViz.Viewer.Abstractions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="Resources\Properties.png" />
+  </ItemGroup>
+
 </Project>

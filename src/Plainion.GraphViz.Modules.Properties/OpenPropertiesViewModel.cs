@@ -5,11 +5,11 @@ using Prism.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Properties;
 
-class ToolsMenuItemModel : BindableBase
+class OpenPropertiesViewModel : BindableBase
 {
     private readonly IDomainModel myModel;
 
-    public ToolsMenuItemModel(IDomainModel model)
+    public OpenPropertiesViewModel(IDomainModel model)
     {
         myModel = model;
 

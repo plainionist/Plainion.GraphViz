@@ -4,21 +4,12 @@ using Prism.Navigation.Regions;
 
 namespace Plainion.GraphViz.Modules.Properties;
 
-public class PropertiesModule : IModule
+public class PropertiesModule(IRegionManager regionManager) : IModule
 {
-    private readonly IRegionManager myRegionManager;
-
-    public PropertiesModule(IRegionManager regionManager)
-    {
-        myRegionManager = regionManager;
-    }
-
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        myRegionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(ToolsMenuItem));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.GraphProperties, typeof(OpenPropertiesView));
     }
 
-    public void OnInitialized(IContainerProvider containerProvider)
-    {
-    }
+    public void OnInitialized(IContainerProvider containerProvider) { }
 }
