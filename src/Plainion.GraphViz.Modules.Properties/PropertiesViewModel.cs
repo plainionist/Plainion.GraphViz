@@ -1,32 +1,55 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Input;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 
-namespace Plainion.GraphViz.Modules.Properties
+namespace Plainion.GraphViz.Modules.Properties;
+
+class PropertiesViewModel : ViewModelBase, IInteractionRequestAware
 {
-    class PropertiesViewModel : ViewModelBase, IInteractionRequestAware
+    private ToolProperties myGraphProperties;
+
+    public PropertiesViewModel(IDomainModel model)
+         : base(model)
     {
-        public PropertiesViewModel(IDomainModel model)
-             : base(model)
-        {
-            OkCommand = new DelegateCommand(OnOk);
-        }
+        OkCommand = new DelegateCommand(OnOk);
 
-        public ICommand OkCommand { get; }
+        GraphProperties = new ToolProperties();
+    }
 
-        private void OnOk()
-        {
-            FinishInteraction();
-        }
+    public ICommand OkCommand { get; }
 
-        protected override void OnPresentationChanged()
-        {
-        }
+    private void OnOk()
+    {
+        FinishInteraction();
+    }
 
-        public Action FinishInteraction { get; set; }
+    protected override void OnPresentationChanged()
+    {
+    }
 
-        public INotification Notification { get; set; }
+    public Action FinishInteraction { get; set; }
+
+    public INotification Notification { get; set; }
+
+    public ToolProperties GraphProperties
+    {
+        get { return myGraphProperties; }
+        set { SetProperty(ref myGraphProperties, value); }
     }
 }
+
+public class ToolProperties
+{
+    public string Name { get; set; } = "Default Tool";
+
+    [ReadOnly(true)] // Make this read-only in UI
+    public string ID { get; set; } = "Tool123";
+
+    public int Speed { get; set; } = 100;
+
+    public bool IsEnabled { get; set; } = true;
+}
+

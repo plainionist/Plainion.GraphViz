@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetProjects.WpfToolkit.Input" Version="6.1.94" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25103.5738" />
     <PackageReference Include="Plainion.Prism" Version="9.0.0" />
     <PackageReference Include="Prism.Wpf" Version="9.0.537" />
   </ItemGroup>
