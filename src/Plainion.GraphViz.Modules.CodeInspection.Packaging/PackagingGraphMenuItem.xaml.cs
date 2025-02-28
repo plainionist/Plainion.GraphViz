@@ -3,7 +3,7 @@ using Prism.Navigation.Regions;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
 {
-    [ViewSortHint("tool-0030")]
+    [ViewSortHint(Viewer.Abstractions.RegionNames.AddIns + ".0030")]
     partial class PackagingGraphMenuItem : MenuItem
     {
         public PackagingGraphMenuItem( PackagingGraphMenuItemModel model )

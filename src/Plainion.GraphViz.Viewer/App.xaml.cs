@@ -18,6 +18,8 @@ using Prism.Navigation.Regions;
 using Prism.Navigation.Regions.Behaviors;
 using Prism.Unity;
 using Unity;
+using Plainion.Prism.Regions;
+using System.Windows.Controls;
 
 namespace PlainionGraphViz.Viewer
 {
@@ -87,6 +89,7 @@ namespace PlainionGraphViz.Viewer
             base.ConfigureRegionAdapterMappings(regionAdapterMappings);
 
             regionAdapterMappings.RegisterMapping(typeof(PopupWindowAction), Container.Resolve<PopupWindowActionRegionAdapter>());
+            regionAdapterMappings.RegisterMapping(typeof(StackPanel), Container.Resolve<StackPanelRegionAdapter>());
         }
 
         protected override void OnInitialized()

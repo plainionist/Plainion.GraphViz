@@ -52,16 +52,15 @@
                     </ObjectDataProvider>
                 </StackPanel.Resources>
 
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Open}"/>
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Save}"/>
+                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Left" Orientation="Horizontal" Margin ="0"
+                            prism:RegionManager.RegionName="{x:Static inf:RegionNames.PrimaryToolBox}"
+                            Height="Auto" />
 
-                <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.ExportGraphCommand}" Padding="1" Margin="2"
-                        ToolTip="Export visible graph">
+                <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.ExportGraphCommand}" Padding="1" Margin="2" ToolTip="Export visible graph">
                     <Image Source="/Resources/Export.png" Width="16"/>
                 </Button>
 
-                <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.PrintGraphCommand}" Padding="1" Margin="2"
-                        ToolTip="Print visible graph">
+                <Button Command="{Binding ElementName=myGraphViewerContainer, Path=Content.DataContext.PrintGraphCommand}" Padding="1" Margin="2" ToolTip="Print visible graph">
                     <Image Source="/Resources/Print.png" Width="16"/>
                 </Button>
                 
