@@ -68,11 +68,9 @@
                     <Image Source="/Resources/Settings.png" Width="16"/>
                 </Button>
 
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_SearchBox}" Width="300"/>
-
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_NodeMasks}"/>
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Clusters}"/>
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Bookmarks}"/>
+                <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Left" Orientation="Horizontal" Margin ="0"
+                            prism:RegionManager.RegionName="{x:Static inf:RegionNames.SecondaryToolBox}"
+                            Height="Auto" />
 
                 <ComboBox Margin="2" ItemsSource="{Binding Source={StaticResource LayoutAlgorithms}}"
                           SelectedItem="{Binding LayoutAlgorithm}" IsEnabled="{Binding Path=IsEnabled}">
@@ -82,8 +80,6 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-
-                <ContentControl prism:RegionManager.RegionName="{x:Static inf:RegionNames.ToolBox_Properties}"/>
 
                 <Menu VerticalAlignment="Stretch" Margin="2" Padding="1">
                     <MenuItem Header="Tools" prism:RegionManager.RegionName="{x:Static inf:RegionNames.AddIns}" VerticalAlignment="Center"/>

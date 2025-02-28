@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:a="clr-namespace:Plainion.GraphViz.Modules.Analysis.Search"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="300">
+             d:DesignHeight="30" d:DesignWidth="300" Width="300">
     <Grid>
         <!-- http://www.jeff.wilcox.name/2008/10/introducing-autocompletebox/ -->
         <a:ExtendedAutoCompleteBox Width="300" ToolTip="Enter substring matching node label" 

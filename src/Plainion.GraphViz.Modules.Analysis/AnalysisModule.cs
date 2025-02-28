@@ -13,16 +13,16 @@ public class AnalysisModule(IRegionManager regionManager) : IModule
 {
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_SearchBox, typeof(SearchBox));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SecondaryToolBox, typeof(SearchBox));
 
-        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_NodeMasks, typeof(OpenNodeMasksView));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SecondaryToolBox, typeof(OpenNodeMasksView));
         regionManager.RegisterViewWithRegion(RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
         regionManager.RegisterViewWithRegion(RegionNames.NodeMasksView, typeof(NodeMasksView));
 
-        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_Clusters, typeof(OpenClustersView));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SecondaryToolBox, typeof(OpenClustersView));
         regionManager.RegisterViewWithRegion(RegionNames.ClusterEditor, typeof(ClusterEditor));
 
-        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_Bookmarks, typeof(OpenBookmarksView));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SecondaryToolBox, typeof(OpenBookmarksView));
         regionManager.RegisterViewWithRegion(RegionNames.Bookmarks, typeof(BookmarksView));
     }
 

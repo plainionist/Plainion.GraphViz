@@ -8,7 +8,7 @@ public class PropertiesModule(IRegionManager regionManager) : IModule
 {
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.ToolBox_Properties, typeof(OpenPropertiesView));
+        regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SecondaryToolBox, typeof(OpenPropertiesView));
         regionManager.RegisterViewWithRegion(RegionNames.Properties, typeof(PropertiesView));
     }
 
