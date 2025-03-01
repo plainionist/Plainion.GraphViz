@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
@@ -17,7 +18,6 @@ namespace Plainion.GraphViz.Dot
             Contract.RequiresNotNull(path, "path");
 
             myPath = path;
-            Settings = DotSettings.Default;
         }
 
         public int? FastRenderingNodeCountLimit { get; set; }
@@ -25,8 +25,6 @@ namespace Plainion.GraphViz.Dot
         public bool IgnoreStyle { get; set; }
 
         public bool PrettyPrint { get; set; }
-
-        public DotSettings Settings { get; set; }
 
         // http://www.graphviz.org/Gallery/directed/cluster.html
         // returns written nodes
@@ -47,6 +45,7 @@ namespace Plainion.GraphViz.Dot
             private readonly IPropertySetModule<Caption> myCaptions;
             private readonly IPropertySetModule<NodeStyle> myNodeStyles;
             private readonly IPropertySetModule<EdgeStyle> myEdgeStyles;
+            private readonly Dictionary<string,string> myGraphAttributes;
             private TextWriter myWriter;
 
             public WriteAction(DotWriter owner, IGraph graph, IGraphPicking picking, IModuleRepository modules)
@@ -58,6 +57,10 @@ namespace Plainion.GraphViz.Dot
                 myCaptions = modules.GetPropertySetFor<Caption>();
                 myNodeStyles = modules.GetPropertySetFor<NodeStyle>();
                 myEdgeStyles = modules.GetPropertySetFor<EdgeStyle>();
+
+                var algorithm = modules.GetModule<IGraphLayoutModule>().Algorithm;
+                myGraphAttributes = modules.GetModule<IGraphAttributesModule>().ItemsFor(algorithm)
+                    .ToDictionary(x => x.Name, x => x.Value);
             }
 
             public int Execute()
@@ -71,18 +74,16 @@ namespace Plainion.GraphViz.Dot
                         .OrderByIf(n => n.Id, myOwner.PrettyPrint)
                         .ToList();
 
-                    var attributes = myOwner.Settings?.GraphAttributes ?? [];
-
                     if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
                     {
                         // https://graphviz.org/docs/attrs/nslimit/
-                        attributes["nslimit"] = "0.2";
-                        attributes["nslimit1"] = "0.2";
-                        attributes["splines"] = "line";
-                        attributes["mclimit"] = "0.5";
+                        myGraphAttributes["nslimit"] = "0.2";
+                        myGraphAttributes["nslimit1"] = "0.2";
+                        myGraphAttributes["splines"] = "line";
+                        myGraphAttributes["mclimit"] = "0.5";
                     }
 
-                    WriteGraphAttributes(attributes);
+                    WriteGraphAttributes(myGraphAttributes);
 
                     foreach (var cluster in myGraph.Clusters)
                     {

@@ -161,10 +161,6 @@ namespace Plainion.GraphViz.Modules.Documents
 
                 var writer = new DotWriter(path);
                 writer.PrettyPrint = true;
-                if (p.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Flow)
-                {
-                    writer.Settings = DotSettings.Flow;
-                }
 
                 writer.Write(graph, new NullGraphPicking(), p);
             }

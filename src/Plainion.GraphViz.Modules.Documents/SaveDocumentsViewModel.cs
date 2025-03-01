@@ -104,12 +104,6 @@ namespace Plainion.GraphViz.Modules.Documents
         private void SaveAsDot(string path)
         {
             var writer = new DotWriter(path);
-
-            if (Model.Presentation.GetModule<IGraphLayoutModule>().Algorithm == LayoutAlgorithm.Flow)
-            {
-                writer.Settings = DotSettings.Flow;
-            }
-
             writer.Write(Model.Presentation.GetModule<ITransformationModule>().Graph, Model.Presentation.Picking, Model.Presentation);
         }
 

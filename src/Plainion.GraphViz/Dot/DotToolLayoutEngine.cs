@@ -34,7 +34,6 @@ namespace Plainion.GraphViz.Dot
             {
                 FastRenderingNodeCountLimit = FastRenderingNodeCountLimit,
                 IgnoreStyle = true,
-                Settings = DotSettings.FromAlgorithm(layoutAlgorithm)
             };
 
             var graph = presentation.GetModule<ITransformationModule>().Graph;
