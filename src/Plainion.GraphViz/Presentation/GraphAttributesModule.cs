@@ -18,8 +18,8 @@ class GraphAttributesModule : AbstractModule<GraphAttribute>, IGraphAttributesMo
             new GraphAttribute(LayoutAlgorithm.Flow, "RankDir", "LR"),
 
             new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "overlap", "prism"),
-            //new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "start", "rand"),
-            //new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "splines", "true"),
+            new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "start", "rand"),
+            new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "splines", "lines"),
             //new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "edgeweight", "2"),
             //new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "K", "0.5"),
             //new GraphAttribute(LayoutAlgorithm.ScalableForceDirectedPlancement, "compound", "true"),
