@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Windows;
 using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
@@ -38,10 +39,10 @@ namespace Plainion.GraphViz.Dot
             // "Auto" is a hierarchical layout which does not make much sense when exceeding certain node limit
             // For historical reasons: 300
             layoutAlgorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > 300
-                ? LayoutAlgorithm.ScalableForcceDirectedPlancement
+                ? LayoutAlgorithm.ScalableForceDirectedPlancement
                 : layoutAlgorithm;
 
-            layoutAlgorithm = myConverter.Convert(layoutAlgorithm, myDotFile, myPlainFile);
+            layoutAlgorithm = ConvertWithFallback(layoutAlgorithm);
 
             // if converter changed algo (e.g. because of issues) we want to re-apply it to the presentation
             presentation.GetModule<IGraphLayoutModule>().Algorithm = layoutAlgorithm;
@@ -52,6 +53,28 @@ namespace Plainion.GraphViz.Dot
             ParsePlainFile(nodeLayouts, edgeLayouts);
 
             SetLayouts(graph, presentation, nodeLayouts, edgeLayouts);
+        }
+
+        private LayoutAlgorithm ConvertWithFallback(LayoutAlgorithm algorithm)
+        {
+            try
+            {
+                myConverter.Convert(algorithm, myDotFile, myPlainFile);
+                return algorithm;
+            }
+            catch
+            {
+                if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
+                {
+                    // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
+                    // -> try fallback with sfdp.exe
+                    return ConvertWithFallback(LayoutAlgorithm.ScalableForceDirectedPlancement);
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         private void ParsePlainFile(List<NodeLayout> nodeLayouts, List<EdgeLayout> edgeLayouts)

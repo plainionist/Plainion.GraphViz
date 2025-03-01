@@ -29,7 +29,7 @@ namespace Plainion.GraphViz.Viewer.Views
             {
                 return "Flow";
             }
-            else if (algo == LayoutAlgorithm.ScalableForcceDirectedPlancement)
+            else if (algo == LayoutAlgorithm.ScalableForceDirectedPlancement)
             {
                 return "Large Galaxies";
             }

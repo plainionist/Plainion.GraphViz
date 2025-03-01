@@ -24,69 +24,51 @@ namespace Plainion.GraphViz.Dot
             }
         }
 
-        public LayoutAlgorithm Convert(LayoutAlgorithm algorithm, FileInfo dotFile, FileInfo plainFile)
+        public void Convert(LayoutAlgorithm algorithm, FileInfo dotFile, FileInfo plainFile)
         {
-            try
+            string arguments;
+
+            if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
             {
-                string arguments;
-
-                if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
-                {
-                    arguments = CreateArgumentsForDot(dotFile, plainFile);
-                }
-                else if (algorithm == LayoutAlgorithm.ForceDirectedPlacement)
-                {
-                    arguments = CreateArgumentsForFdp(dotFile, plainFile);
-                }
-                else if (algorithm == LayoutAlgorithm.NeatSpring)
-                {
-                    arguments = CreateArgumentsForNeato(dotFile, plainFile);
-                }
-                else
-                {
-                    arguments = CreateArgumentsForSfdp(dotFile, plainFile);
-                }
-
-                var startInfo = new ProcessStartInfo("cmd", arguments);
-                startInfo.UseShellExecute = false;
-                startInfo.CreateNoWindow = true;
-                startInfo.WorkingDirectory = Path.GetTempPath();
-
-                var stdErr = new StringWriter();
-                var ret = Processes.Execute(startInfo, null, stdErr);
-
-                if (algorithm == LayoutAlgorithm.ScalableForcceDirectedPlancement)
-                {
-                    // ignore the error code for this engine - it mostly still works :)
-                    ret = 0;
-                }
-
-                if (ret != 0 || !plainFile.Exists || dotFile.LastWriteTime > plainFile.LastWriteTime)
-                {
-                    // limit the size of the error message otherwise we will blow the messagebox window
-                    // showing this unhandled exception later on
-                    var msg = stdErr.ToString();
-                    if (msg.Length > 512)
-                    {
-                        msg = msg.Substring(0, 512);
-                    }
-                    throw new InvalidOperationException("Dot plain file generation failed: " + msg);
-                }
-
-                return algorithm;
+                arguments = CreateArgumentsForDot(dotFile, plainFile);
             }
-            catch
+            else if (algorithm == LayoutAlgorithm.ForceDirectedPlacement)
             {
-                if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
+                arguments = CreateArgumentsForFdp(dotFile, plainFile);
+            }
+            else if (algorithm == LayoutAlgorithm.NeatSpring)
+            {
+                arguments = CreateArgumentsForNeato(dotFile, plainFile);
+            }
+            else
+            {
+                arguments = CreateArgumentsForSfdp(dotFile, plainFile);
+            }
+
+            var startInfo = new ProcessStartInfo("cmd", arguments);
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = true;
+            startInfo.WorkingDirectory = Path.GetTempPath();
+
+            var stdErr = new StringWriter();
+            var ret = Processes.Execute(startInfo, null, stdErr);
+
+            if (algorithm == LayoutAlgorithm.ScalableForceDirectedPlancement)
+            {
+                // ignore the error code for this engine - it mostly still works :)
+                ret = 0;
+            }
+
+            if (ret != 0 || !plainFile.Exists || dotFile.LastWriteTime > plainFile.LastWriteTime)
+            {
+                // limit the size of the error message otherwise we will blow the messagebox window
+                // showing this unhandled exception later on
+                var msg = stdErr.ToString();
+                if (msg.Length > 512)
                 {
-                    // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
-                    // -> try fallback with sfdp.exe
-                    return Convert(LayoutAlgorithm.ScalableForcceDirectedPlancement, dotFile, plainFile);
+                    msg = msg.Substring(0, 512);
                 }
-                else
-                {
-                    throw;
-                }
+                throw new InvalidOperationException("Dot plain file generation failed: " + msg);
             }
         }
 
