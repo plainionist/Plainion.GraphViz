@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace Plainion.GraphViz.Presentation
-{
-    public interface IModule<T> : INotifyCollectionChanged
-    {
-        IEnumerable<T> Items { get; }
+namespace Plainion.GraphViz.Presentation;
 
-        IModuleChangedObserver CreateObserver();
-        IModuleChangedJournal<T> CreateJournal();
-    }
+public interface IModule<T> : INotifyCollectionChanged
+{
+    IEnumerable<T> Items { get; }
+
+    IModuleChangedObserver CreateObserver();
+    IModuleChangedJournal<T> CreateJournal();
 }

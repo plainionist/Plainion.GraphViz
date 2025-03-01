@@ -1,18 +1,17 @@
 ﻿using System;
 using Plainion.GraphViz.Model;
 
-namespace Plainion.GraphViz.Presentation
+namespace Plainion.GraphViz.Presentation;
+
+public interface IGraphPresentation : IModuleRepository, IDisposable
 {
-    public interface IGraphPresentation : IModuleRepository, IDisposable
-    {
-        IGraph Graph { get; set; }
+    IGraph Graph { get; set; }
 
-        IGraphPicking Picking { get; }
+    IGraphPicking Picking { get; }
 
-        void InvalidateLayout();
+    void InvalidateLayout();
 
-        event EventHandler GraphVisibilityChanged;
+    event EventHandler GraphVisibilityChanged;
 
-        IGraphPresentation UnionWith( IGraphPresentation other, Func<IGraphPresentation> presentationCreator );
-    }
+    IGraphPresentation UnionWith(IGraphPresentation other, Func<IGraphPresentation> presentationCreator);
 }
