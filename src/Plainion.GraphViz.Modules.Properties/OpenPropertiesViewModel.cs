@@ -16,7 +16,7 @@ class OpenPropertiesViewModel : BindableBase
 
         myModel.PresentationChanged += OnPresentationChanged;
 
-        OpenPropertiesCommand = new DelegateCommand(OnOpenProperties);//, () => myModel.Presentation != null);
+        OpenPropertiesCommand = new DelegateCommand(OnOpenProperties, () => myModel.Presentation != null);
         PropertiesRequest = new InteractionRequest<INotification>();
     }
 

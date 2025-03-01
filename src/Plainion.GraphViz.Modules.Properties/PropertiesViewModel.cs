@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -19,17 +18,10 @@ class PropertiesViewModel : ViewModelBase, IInteractionRequestAware
     {
         OkCommand = new DelegateCommand(OnOk);
 
-        var attributes =
-
-        GraphAttributes = new GraphAttributeCollection(
-        [
-            new GraphAttribute(Dot.LayoutAlgorithm.Auto, "RankDir", "BT"),
-            new GraphAttribute(Dot.LayoutAlgorithm.Auto, "Ratio", "Compress"),
-            new GraphAttribute(Dot.LayoutAlgorithm.Auto, "RankSep", "2.0 equally"),
-            new GraphAttribute(Dot.LayoutAlgorithm.Flow, "RankDir", "LR")
-        ]);
-
-        //GraphAttributes = Model.Presentation?.GetModule<IGraphAttributesModule>();
+        if (Model.Presentation != null)
+        {
+            GraphAttributes = new GraphAttributeCollection(Model.Presentation.GetModule<IGraphAttributesModule>());
+        }
     }
 
     public ICommand OkCommand { get; }
@@ -41,7 +33,10 @@ class PropertiesViewModel : ViewModelBase, IInteractionRequestAware
 
     protected override void OnPresentationChanged()
     {
-        //GraphAttributes = Model.Presentation?.GetModule<IGraphAttributesModule>();
+        if (Model.Presentation != null)
+        {
+            GraphAttributes = new GraphAttributeCollection(Model.Presentation.GetModule<IGraphAttributesModule>());
+        }
     }
 
     public Action FinishInteraction { get; set; }
@@ -56,9 +51,9 @@ class PropertiesViewModel : ViewModelBase, IInteractionRequestAware
 }
 
 [DisplayName("Graph Attributes")]
-public class GraphAttributeCollection(IEnumerable<GraphAttribute> items) : ICustomTypeDescriptor
+public class GraphAttributeCollection(IGraphAttributesModule module) : ICustomTypeDescriptor
 {
-    private readonly PropertyDescriptorCollection myProperties = new(items.Select(x => new CustomItemPropertyDescriptor(x)).ToArray());
+    private readonly PropertyDescriptorCollection myProperties = new(module.Items.Select(x => new CustomItemPropertyDescriptor(x)).ToArray());
 
     public PropertyDescriptorCollection GetProperties() => myProperties;
     public PropertyDescriptorCollection GetProperties(Attribute[] attributes) => GetProperties();
@@ -79,8 +74,9 @@ public class CustomItemPropertyDescriptor : PropertyDescriptor
     private readonly GraphAttribute myItem;
     private readonly AttributeCollection myAttributes;
 
+    // prefix name with layout algorithm so that we can have same property multiple times
     public CustomItemPropertyDescriptor(GraphAttribute item)
-        : base(item.Name, null)
+        : base($"{item.Algorithm}_{item.Name}", null)
     {
         myItem = item;
         myAttributes = new AttributeCollection(new CategoryAttribute(myItem.Algorithm.ToString()));
