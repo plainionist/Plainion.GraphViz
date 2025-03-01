@@ -50,7 +50,7 @@ namespace Plainion.GraphViz.Viewer
         }
 
         public Visibility NakedVisibility => Themes.Naked.IsEnabled ? Visibility.Hidden : Visibility.Visible;
-        
+
         [OptionalDependency]
         public IDocumentLoader DocumentLoader { get; set; }
 
@@ -101,15 +101,9 @@ namespace Plainion.GraphViz.Viewer
 
             myPresentation = Model.Presentation;
 
-            // Automatically fold all clusters if more than 500 nodes (random bigger number)
-            if (myPresentation.Graph.Nodes.Count() > 500)
-            {
-                myPresentation.ToogleFoldingOfVisibleClusters();
-            }
-
-            var graphLayoutModule = myPresentation.GetModule<IGraphLayoutModule>();
-            graphLayoutModule.Algorithm = LayoutAlgorithm;
-            PropertyBinding.Bind(() => LayoutAlgorithm, () => graphLayoutModule.Algorithm);
+            var layoutModule = myPresentation.GetModule<IGraphLayoutModule>();
+            PropertyBinding.Bind(() => LayoutAlgorithm, () => layoutModule.Algorithm);
+            LayoutAlgorithm = layoutModule.Algorithm;
 
             RaisePropertyChanged(nameof(IsEnabled));
         }

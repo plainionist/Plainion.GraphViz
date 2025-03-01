@@ -17,11 +17,7 @@ namespace Plainion.GraphViz.Viewer.Views
             }
 
             var algo = (LayoutAlgorithm)value;
-            if (algo == LayoutAlgorithm.Auto)
-            {
-                return "Auto";
-            }
-            else if (algo == LayoutAlgorithm.Hierarchy)
+            if (algo == LayoutAlgorithm.Hierarchy)
             {
                 return "Trees";
             }

@@ -28,7 +28,7 @@ namespace Plainion.GraphViz.Dot
         {
             string arguments;
 
-            if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
+            if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow)
             {
                 arguments = CreateArgumentsForDot(dotFile, plainFile);
             }

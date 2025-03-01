@@ -50,15 +50,8 @@ class GraphAttributesModule : AbstractModule<GraphAttribute>, IGraphAttributesMo
 
     public override IEnumerable<GraphAttribute> Items => myAttributes;
 
-    public IEnumerable<GraphAttribute> ItemsFor(LayoutAlgorithm algo)
-    {
-        if (algo == LayoutAlgorithm.Auto)
-        {
-            algo = LayoutAlgorithm.Hierarchy;
-        }
-
-        return myAttributes
+    public IEnumerable<GraphAttribute> ItemsFor(LayoutAlgorithm algo) =>
+        myAttributes
             .Where(x => x.Algorithm == algo)
             .Where(x => x.Value != null);
-    }
 }

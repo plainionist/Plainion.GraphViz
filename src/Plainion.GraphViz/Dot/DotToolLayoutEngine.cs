@@ -28,14 +28,6 @@ namespace Plainion.GraphViz.Dot
         {
             var graph = presentation.GetModule<ITransformationModule>().Graph;
 
-            // "Auto" is a hierarchical layout which does not make much sense when exceeding certain node limit
-            // For historical reasons: 300
-            var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
-            presentation.GetModule<IGraphLayoutModule>().Algorithm =
-                layoutAlgorithm == LayoutAlgorithm.Auto && graph.Nodes.Count(presentation.Picking.Pick) > 300
-                    ? LayoutAlgorithm.ScalableForceDirectedPlancement
-                    : layoutAlgorithm;
-
             ConvertWithFallback(presentation, graph);
 
             var nodeLayouts = new List<NodeLayout>();
@@ -61,7 +53,7 @@ namespace Plainion.GraphViz.Dot
             }
             catch
             {
-                if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
+                if (algorithm != LayoutAlgorithm.ScalableForceDirectedPlancement)
                 {
                     // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
                     // -> try fallback with sfdp.exe

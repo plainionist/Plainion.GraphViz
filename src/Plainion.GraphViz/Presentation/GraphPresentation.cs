@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation;
@@ -82,20 +83,42 @@ public class GraphPresentation : IGraphPresentation
 
             // fill up the Captions module here directly to avoid performance issues by
             // "on demand" adding which then fires "changed" events
-            var captions = GetPropertySetFor<Caption>();
+            FillCaptions();
 
-            foreach (var x in myGraph.Nodes)
-            {
-                captions.Get(x.Id);
-            }
-            foreach (var x in myGraph.Edges)
-            {
-                captions.Get(x.Id);
-            }
-            foreach (var x in myGraph.Clusters)
-            {
-                captions.Get(x.Id);
-            }
+            DetectOptimalSettings();
+        }
+    }
+
+    private void DetectOptimalSettings()
+    {
+        // Automatically fold all clusters if more than 500 nodes (random bigger number)
+        if (myGraph.Nodes.Count() > 500)
+        {
+            this.ToogleFoldingOfVisibleClusters();
+        }
+
+        // A hierarchical layout does not perform well when the graph exceeds certain node limit.
+        // Let's choose something more performant. Node limit for historical reasons: 300
+        GetModule<IGraphLayoutModule>().Algorithm = myGraph.Nodes.Count() > 300
+            ? LayoutAlgorithm.ScalableForceDirectedPlancement
+            : LayoutAlgorithm.Hierarchy;
+    }
+
+    private void FillCaptions()
+    {
+        var captions = GetPropertySetFor<Caption>();
+
+        foreach (var x in myGraph.Nodes)
+        {
+            captions.Get(x.Id);
+        }
+        foreach (var x in myGraph.Edges)
+        {
+            captions.Get(x.Id);
+        }
+        foreach (var x in myGraph.Clusters)
+        {
+            captions.Get(x.Id);
         }
     }
 
