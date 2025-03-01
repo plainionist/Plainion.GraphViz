@@ -37,14 +37,14 @@ namespace Plainion.GraphViz.Dot
 
             // "Auto" is a hierarchical layout which does not make much sense when exceeding certain node limit
             // For historical reasons: 300
-            myConverter.Algorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > 300
+            layoutAlgorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > 300
                 ? LayoutAlgorithm.ScalableForcceDirectedPlancement
                 : layoutAlgorithm;
 
-            myConverter.Convert(myDotFile, myPlainFile);
+            layoutAlgorithm = myConverter.Convert(layoutAlgorithm, myDotFile, myPlainFile);
 
             // if converter changed algo (e.g. because of issues) we want to re-apply it to the presentation
-            presentation.GetModule<IGraphLayoutModule>().Algorithm = myConverter.Algorithm;
+            presentation.GetModule<IGraphLayoutModule>().Algorithm = layoutAlgorithm;
 
             var nodeLayouts = new List<NodeLayout>();
             var edgeLayouts = new List<EdgeLayout>();

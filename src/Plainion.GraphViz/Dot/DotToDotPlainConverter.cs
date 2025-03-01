@@ -22,27 +22,23 @@ namespace Plainion.GraphViz.Dot
             {
                 throw new IOException("DotToolsHome invalid. Dot.exe not found");
             }
-
-            Algorithm = LayoutAlgorithm.Auto;
         }
 
-        public LayoutAlgorithm Algorithm { get; set; }
-
-        public void Convert(FileInfo dotFile, FileInfo plainFile)
+        public LayoutAlgorithm Convert(LayoutAlgorithm algorithm, FileInfo dotFile, FileInfo plainFile)
         {
             try
             {
                 string arguments;
 
-                if (Algorithm == LayoutAlgorithm.Hierarchy || Algorithm == LayoutAlgorithm.Flow || Algorithm == LayoutAlgorithm.Auto)
+                if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
                 {
                     arguments = CreateArgumentsForDot(dotFile, plainFile);
                 }
-                else if (Algorithm == LayoutAlgorithm.ForceDirectedPlacement)
+                else if (algorithm == LayoutAlgorithm.ForceDirectedPlacement)
                 {
                     arguments = CreateArgumentsForFdp(dotFile, plainFile);
                 }
-                else if (Algorithm == LayoutAlgorithm.NeatSpring)
+                else if (algorithm == LayoutAlgorithm.NeatSpring)
                 {
                     arguments = CreateArgumentsForNeato(dotFile, plainFile);
                 }
@@ -59,7 +55,7 @@ namespace Plainion.GraphViz.Dot
                 var stdErr = new StringWriter();
                 var ret = Processes.Execute(startInfo, null, stdErr);
 
-                if (Algorithm == LayoutAlgorithm.ScalableForcceDirectedPlancement)
+                if (algorithm == LayoutAlgorithm.ScalableForcceDirectedPlancement)
                 {
                     // ignore the error code for this engine - it mostly still works :)
                     ret = 0;
@@ -76,15 +72,16 @@ namespace Plainion.GraphViz.Dot
                     }
                     throw new InvalidOperationException("Dot plain file generation failed: " + msg);
                 }
+
+                return algorithm;
             }
             catch
             {
-                if (Algorithm == LayoutAlgorithm.Hierarchy || Algorithm == LayoutAlgorithm.Flow || Algorithm == LayoutAlgorithm.Auto)
+                if (algorithm == LayoutAlgorithm.Hierarchy || algorithm == LayoutAlgorithm.Flow || algorithm == LayoutAlgorithm.Auto)
                 {
                     // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
                     // -> try fallback with sfdp.exe
-                    Algorithm = LayoutAlgorithm.ScalableForcceDirectedPlancement;
-                    Convert(dotFile, plainFile);
+                    return Convert(LayoutAlgorithm.ScalableForcceDirectedPlancement, dotFile, plainFile);
                 }
                 else
                 {
