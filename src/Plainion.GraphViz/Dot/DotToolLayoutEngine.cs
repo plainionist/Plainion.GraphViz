@@ -31,19 +31,12 @@ namespace Plainion.GraphViz.Dot
             // "Auto" is a hierarchical layout which does not make much sense when exceeding certain node limit
             // For historical reasons: 300
             var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
-            layoutAlgorithm = layoutAlgorithm == LayoutAlgorithm.Auto && graph.Nodes.Count(presentation.Picking.Pick) > 300
-                ? LayoutAlgorithm.ScalableForceDirectedPlancement
-                : layoutAlgorithm;
+            presentation.GetModule<IGraphLayoutModule>().Algorithm =
+                layoutAlgorithm == LayoutAlgorithm.Auto && graph.Nodes.Count(presentation.Picking.Pick) > 300
+                    ? LayoutAlgorithm.ScalableForceDirectedPlancement
+                    : layoutAlgorithm;
 
-            var writer = new DotWriter(myDotFile.FullName)
-            {
-                IgnoreStyle = true,
-            };
-            writer.Write(graph, presentation.Picking, presentation);
-            layoutAlgorithm = ConvertWithFallback(layoutAlgorithm);
-
-            // if converter changed algo (e.g. because of issues) we want to re-apply it to the presentation
-            presentation.GetModule<IGraphLayoutModule>().Algorithm = layoutAlgorithm;
+            ConvertWithFallback(presentation, graph);
 
             var nodeLayouts = new List<NodeLayout>();
             var edgeLayouts = new List<EdgeLayout>();
@@ -53,12 +46,18 @@ namespace Plainion.GraphViz.Dot
             SetLayouts(graph, presentation, nodeLayouts, edgeLayouts);
         }
 
-        private LayoutAlgorithm ConvertWithFallback(LayoutAlgorithm algorithm)
+        private void ConvertWithFallback(IGraphPresentation presentation, IGraph graph)
         {
+            var algorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
+
             try
             {
+                var writer = new DotWriter(myDotFile.FullName)
+                {
+                    IgnoreStyle = true,
+                };
+                writer.Write(graph, presentation.Picking, presentation);
                 myConverter.Convert(algorithm, myDotFile, myPlainFile);
-                return algorithm;
             }
             catch
             {
@@ -66,7 +65,8 @@ namespace Plainion.GraphViz.Dot
                 {
                     // unfort dot.exe dies quite often with "trouble in init_rank" if graph is too complex
                     // -> try fallback with sfdp.exe
-                    return ConvertWithFallback(LayoutAlgorithm.ScalableForceDirectedPlancement);
+                    presentation.GetModule<IGraphLayoutModule>().Algorithm = LayoutAlgorithm.ScalableForceDirectedPlancement;
+                    ConvertWithFallback(presentation, graph);
                 }
                 else
                 {
