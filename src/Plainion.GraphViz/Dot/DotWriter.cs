@@ -24,15 +24,13 @@ namespace Plainion.GraphViz.Dot
 
         public bool PrettyPrint { get; set; }
 
-        // http://www.graphviz.org/Gallery/directed/cluster.html
-        // returns written nodes
-        public int Write(IGraph graph, IGraphPicking picking, IModuleRepository modules)
+        public void Write(IGraph graph, IGraphPicking picking, IModuleRepository modules)
         {
             Contract.RequiresNotNull(graph, "graph");
             Contract.RequiresNotNull(picking, "picking");
             Contract.RequiresNotNull(modules, "modules");
 
-            return new WriteAction(this, graph, picking, modules).Execute();
+            new WriteAction(this, graph, picking, modules).Execute();
         }
 
         private class WriteAction
@@ -61,7 +59,7 @@ namespace Plainion.GraphViz.Dot
                     .ToDictionary(x => x.Name, x => x.Value);
             }
 
-            public int Execute()
+            public void Execute()
             {
                 using (myWriter = new StreamWriter(myOwner.myPath))
                 {
@@ -114,8 +112,6 @@ namespace Plainion.GraphViz.Dot
                     }
 
                     myWriter.WriteLine("}");
-
-                    return relevantNodes.Count;
                 }
             }
 

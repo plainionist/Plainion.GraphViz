@@ -26,22 +26,20 @@ namespace Plainion.GraphViz.Dot
 
         public void Relayout(IGraphPresentation presentation)
         {
+            var graph = presentation.GetModule<ITransformationModule>().Graph;
+
+            // "Auto" is a hierarchical layout which does not make much sense when exceeding certain node limit
+            // For historical reasons: 300
+            var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
+            layoutAlgorithm = layoutAlgorithm == LayoutAlgorithm.Auto && graph.Nodes.Count(presentation.Picking.Pick) > 300
+                ? LayoutAlgorithm.ScalableForceDirectedPlancement
+                : layoutAlgorithm;
+
             var writer = new DotWriter(myDotFile.FullName)
             {
                 IgnoreStyle = true,
             };
-
-            var graph = presentation.GetModule<ITransformationModule>().Graph;
-            var writtenNodesCount = writer.Write(graph, presentation.Picking, presentation);
-
-            var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
-
-            // "Auto" is a hierarchical layout which does not make much sense when exceeding certain node limit
-            // For historical reasons: 300
-            layoutAlgorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > 300
-                ? LayoutAlgorithm.ScalableForceDirectedPlancement
-                : layoutAlgorithm;
-
+            writer.Write(graph, presentation.Picking, presentation);
             layoutAlgorithm = ConvertWithFallback(layoutAlgorithm);
 
             // if converter changed algo (e.g. because of issues) we want to re-apply it to the presentation
