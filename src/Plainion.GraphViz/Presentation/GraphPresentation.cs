@@ -24,7 +24,8 @@ public class GraphPresentation : IGraphPresentation
             new CaptionModule(id => new Caption(id, null)),
             new GraphLayoutModule(),
             new NodeMaskModule(),
-            new TransformationModule(this)
+            new TransformationModule(this),
+            new GraphAttributesModule()
         ];
 
         Picking = new PickingCache(this, new GraphPicking(this));

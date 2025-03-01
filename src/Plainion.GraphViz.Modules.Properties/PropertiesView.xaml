@@ -20,12 +20,12 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
+        
         <!-- 
             without "Name" there will be a FileNotFoundException
             https://stackoverflow.com/questions/22108712/could-not-load-file-or-assembly-xceed-wpf-toolkit
         -->
-        <xctk:PropertyGrid Grid.Row="0" Name="GraphProperties" SelectedObject="{Binding GraphProperties}"
+        <xctk:PropertyGrid Grid.Row="0" Name="_some_name_" SelectedObject="{Binding GraphAttributes}"
                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" />
         
         <StackPanel Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft">
