@@ -21,6 +21,7 @@ namespace Plainion.GraphViz.Visuals
         private IModuleChangedJournal<INodeMask> myNodeMaskJournal;
         private IModuleChangedJournal<IGraphTransformation> myTransformationsJournal;
         private IModuleChangedJournal<Caption> myCaptionJournal;
+        private IModuleChangedJournal<GraphAttribute> myGraphAttributesJournal;
 
         private double myOldScaling;
         private double myCurrentScaling;
@@ -54,6 +55,7 @@ namespace Plainion.GraphViz.Visuals
                     myNodeMaskJournal.Dispose();
                     myTransformationsJournal.Dispose();
                     myCaptionJournal.Dispose();
+                    myGraphAttributesJournal.Dispose();
 
                     myDrawingElements.Clear();
                 }
@@ -66,8 +68,14 @@ namespace Plainion.GraphViz.Visuals
                     myNodeMaskJournal = myPresentation.GetModule<INodeMaskModule>().CreateJournal();
                     myTransformationsJournal = myPresentation.GetModule<ITransformationModule>().CreateJournal();
                     myCaptionJournal = myPresentation.GetPropertySetFor<Caption>().CreateJournal();
+                    myGraphAttributesJournal = myPresentation.GetModule<IGraphAttributesModule>().CreateJournal();
                 }
             }
+        }
+
+        private void MyGraphAttributesObserver_ModuleChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public event EventHandler RenderingFinished;
@@ -96,9 +104,11 @@ namespace Plainion.GraphViz.Visuals
                 return;
             }
 
+            // updated attributes are automatically considered during rendering in "DotWriter"
             var reLayout = visibleNodes
                 .Any(node => layoutModule.GetLayout(node) == null)
-                || !myTransformationsJournal.IsEmpty;
+                || !myTransformationsJournal.IsEmpty
+                || !myGraphAttributesJournal.IsEmpty;
 
             if (reLayout)
             {
@@ -191,6 +201,7 @@ namespace Plainion.GraphViz.Visuals
                 myNodeMaskJournal.Clear();
                 mySelectionJournal.Clear();
                 myCaptionJournal.Clear();
+                myGraphAttributesJournal.Clear();
 
                 InvalidateMeasure();
 

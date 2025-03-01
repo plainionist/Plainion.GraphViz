@@ -7,7 +7,7 @@ namespace Plainion.GraphViz.Presentation;
 
 class GraphAttributesModule : AbstractModule<GraphAttribute>, IGraphAttributesModule
 {
-    private readonly ObservableCollection<GraphAttribute> myAttributes;
+    private readonly List<GraphAttribute> myAttributes;
 
     public GraphAttributesModule()
     {

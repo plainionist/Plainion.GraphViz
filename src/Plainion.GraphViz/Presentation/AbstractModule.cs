@@ -9,19 +9,19 @@ namespace Plainion.GraphViz.Presentation
 
         public IModuleChangedObserver CreateObserver()
         {
-            return new GenericModuleChangedObserver<T>( this );
+            return new GenericModuleChangedObserver<T>(this);
         }
 
         public IModuleChangedJournal<T> CreateJournal()
         {
-            return new GenericModuleChangedJournal<T>( this, CreateEqualityComparer() );
+            return new GenericModuleChangedJournal<T>(this, CreateEqualityComparer());
         }
 
         private IEqualityComparer<T> CreateEqualityComparer()
         {
-            if( typeof( AbstractPropertySet ).IsAssignableFrom( typeof( T ) ) )
+            if (typeof(AbstractPropertySet).IsAssignableFrom(typeof(T)))
             {
-                return ( IEqualityComparer<T> )new PropertySetComparer();
+                return (IEqualityComparer<T>)new PropertySetComparer();
             }
             else
             {
@@ -31,7 +31,7 @@ namespace Plainion.GraphViz.Presentation
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        protected void OnCollectionChanged( NotifyCollectionChangedEventArgs args )
+        protected void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
             CollectionChanged?.Invoke(this, args);
         }

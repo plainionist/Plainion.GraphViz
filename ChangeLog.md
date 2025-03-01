@@ -2,6 +2,7 @@
 ## 8.3 - 2025-02-
 
 - Obfuscation supports removing all captions
+- Properties dialog for graph properties added
 
 ## 8.2 - 2025-02-26
 
