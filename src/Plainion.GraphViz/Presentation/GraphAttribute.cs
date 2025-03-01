@@ -2,7 +2,7 @@
 
 namespace Plainion.GraphViz.Presentation;
 
-public class GraphAttribute
+public class GraphAttribute : NotifyPropertyChangedBase
 {
     private string myValue;
 
@@ -25,14 +25,8 @@ public class GraphAttribute
         get { return myValue; }
         set
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                myValue = null;
-            }
-            else
-            {
-                myValue = value.Trim();
-            }
+            var normalizedValue = string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+            SetProperty(ref myValue, normalizedValue);
         }
     }
 }
