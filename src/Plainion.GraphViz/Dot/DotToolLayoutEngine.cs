@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,8 +14,6 @@ namespace Plainion.GraphViz.Dot
         private readonly FileInfo myPlainFile;
         private readonly DotToDotPlainConverter myConverter;
 
-        public static readonly int FastRenderingNodeCountLimit = 300;
-
         public DotToolLayoutEngine(DotToDotPlainConverter converter)
         {
             myConverter = converter;
@@ -28,18 +25,16 @@ namespace Plainion.GraphViz.Dot
 
         public void Relayout(IGraphPresentation presentation)
         {
-            var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
-
             var writer = new DotWriter(myDotFile.FullName)
             {
-                FastRenderingNodeCountLimit = FastRenderingNodeCountLimit,
                 IgnoreStyle = true,
             };
 
             var graph = presentation.GetModule<ITransformationModule>().Graph;
             var writtenNodesCount = writer.Write(graph, presentation.Picking, presentation);
 
-            myConverter.Algorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > FastRenderingNodeCountLimit
+            var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
+            myConverter.Algorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > 300
                 ? LayoutAlgorithm.ScalableForcceDirectedPlancement
                 : presentation.GetModule<IGraphLayoutModule>().Algorithm;
 

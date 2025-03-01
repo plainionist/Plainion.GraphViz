@@ -101,7 +101,8 @@ namespace Plainion.GraphViz.Viewer
 
             myPresentation = Model.Presentation;
 
-            if (myPresentation.Graph.Nodes.Count() > DotToolLayoutEngine.FastRenderingNodeCountLimit)
+            // Automatically fold all clusters if more than 500 nodes (random bigger number)
+            if (myPresentation.Graph.Nodes.Count() > 500)
             {
                 myPresentation.ToogleFoldingOfVisibleClusters();
             }

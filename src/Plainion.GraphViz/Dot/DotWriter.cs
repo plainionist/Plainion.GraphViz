@@ -20,8 +20,6 @@ namespace Plainion.GraphViz.Dot
             myPath = path;
         }
 
-        public int? FastRenderingNodeCountLimit { get; set; }
-
         public bool IgnoreStyle { get; set; }
 
         public bool PrettyPrint { get; set; }
@@ -73,15 +71,6 @@ namespace Plainion.GraphViz.Dot
                         .Where(myPicking.Pick)
                         .OrderByIf(n => n.Id, myOwner.PrettyPrint)
                         .ToList();
-
-                    if (myOwner.FastRenderingNodeCountLimit.HasValue && relevantNodes.Count > myOwner.FastRenderingNodeCountLimit.Value)
-                    {
-                        // https://graphviz.org/docs/attrs/nslimit/
-                        myGraphAttributes["nslimit"] = "0.2";
-                        myGraphAttributes["nslimit1"] = "0.2";
-                        myGraphAttributes["splines"] = "line";
-                        myGraphAttributes["mclimit"] = "0.5";
-                    }
 
                     WriteGraphAttributes(myGraphAttributes);
 
