@@ -34,9 +34,12 @@ namespace Plainion.GraphViz.Dot
             var writtenNodesCount = writer.Write(graph, presentation.Picking, presentation);
 
             var layoutAlgorithm = presentation.GetModule<IGraphLayoutModule>().Algorithm;
+
+            // "Auto" is a hierarchical layout which does not make much sense when exceeding certain node limit
+            // For historical reasons: 300
             myConverter.Algorithm = layoutAlgorithm == LayoutAlgorithm.Auto && writtenNodesCount > 300
                 ? LayoutAlgorithm.ScalableForcceDirectedPlancement
-                : presentation.GetModule<IGraphLayoutModule>().Algorithm;
+                : layoutAlgorithm;
 
             myConverter.Convert(myDotFile, myPlainFile);
 
