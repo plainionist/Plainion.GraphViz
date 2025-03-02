@@ -1,32 +1,31 @@
 ﻿using System.Linq;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Algorithms
+namespace Plainion.Graphs.Algorithms;
+
+/// <summary>
+/// Generates "hide mask" removing all visible clusters and their nodes.
+/// </summary>
+public class RemoveClusters : AbstractAlgorithm
 {
-    /// <summary>
-    /// Generates "hide mask" removing all visible clusters and their nodes.
-    /// </summary>
-    public class RemoveClusters : AbstractAlgorithm
+    public RemoveClusters(IGraphPresentation presentation)
+        : base(presentation)
     {
-        public RemoveClusters(IGraphPresentation presentation)
-            : base(presentation)
-        {
-        }
+    }
 
-        public INodeMask Compute()
-        {
-            var graph = Presentation.GetModule<ITransformationModule>().Graph;
-            var clusterNodes = graph.Nodes
-                // do not process hidden nodes
-                .Where(Presentation.Picking.Pick)
-                .Where(node => !(graph.Clusters.Any(c => c.Nodes.Any(n => n.Id == node.Id))));
+    public INodeMask Compute()
+    {
+        var graph = Presentation.GetModule<ITransformationModule>().Graph;
+        var clusterNodes = graph.Nodes
+            // do not process hidden nodes
+            .Where(Presentation.Picking.Pick)
+            .Where(node => !graph.Clusters.Any(c => c.Nodes.Any(n => n.Id == node.Id)));
 
-            var mask = new NodeMask();
-            mask.IsShowMask = false;
-            mask.Set(clusterNodes);
-            mask.Label = "Nodes of clusters";
+        var mask = new NodeMask();
+        mask.IsShowMask = false;
+        mask.Set(clusterNodes);
+        mask.Label = "Nodes of clusters";
 
-            return mask;
-        }
+        return mask;
     }
 }

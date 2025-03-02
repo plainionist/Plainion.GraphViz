@@ -3,7 +3,7 @@ using System.Linq;
 using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 
-namespace Plainion.GraphViz.Algorithms;
+namespace Plainion.Graphs.Algorithms;
 
 public class SpecialGraphBuilder
 {

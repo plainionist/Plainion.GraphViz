@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Plainion.GraphViz.Algorithms;
+using Plainion.Graphs.Algorithms;
 using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Plainion.Graphs;
 using Plainion.GraphViz.Actors.Client;
-using Plainion.GraphViz.Algorithms;
+using Plainion.Graphs.Algorithms;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
 using Plainion.GraphViz.Presentation;

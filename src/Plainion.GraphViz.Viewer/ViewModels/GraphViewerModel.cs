@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using Plainion.GraphViz.Algorithms;
+using Plainion.Graphs.Algorithms;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;

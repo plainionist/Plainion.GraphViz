@@ -1,37 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plainion.Graphs;
 
-namespace Plainion.GraphViz.Algorithms
+namespace Plainion.Graphs.Algorithms;
+
+class Traverse
 {
-    class Traverse
+    public static IEnumerable<Edge> BreathFirst(IEnumerable<Node> roots, Func<Node, IEnumerable<Edge>> siblingsSelector)
     {
-        public static IEnumerable<Edge> BreathFirst(IEnumerable<Node> roots, Func<Node, IEnumerable<Edge>> siblingsSelector)
+        var unvisitedNodes = new HashSet<Node>(roots);
+        var visitedNodes = new HashSet<Node>();
+
+        while (unvisitedNodes.Count > 0)
         {
-            var unvisitedNodes = new HashSet<Node>(roots);
-            var visitedNodes = new HashSet<Node>();
+            var currentNodes = unvisitedNodes.ToList();
+            unvisitedNodes.Clear();
 
-            while (unvisitedNodes.Count > 0)
+            foreach (var node in currentNodes)
             {
-                var currentNodes = unvisitedNodes.ToList();
-                unvisitedNodes.Clear();
-
-                foreach (var node in currentNodes)
+                foreach (var edge in siblingsSelector(node))
                 {
-                    foreach (var edge in siblingsSelector(node))
-                    {
-                        unvisitedNodes.Add(edge.Source);
-                        unvisitedNodes.Add(edge.Target);
+                    unvisitedNodes.Add(edge.Source);
+                    unvisitedNodes.Add(edge.Target);
 
-                        yield return edge;
-                    }
-
-                    visitedNodes.Add(node);
+                    yield return edge;
                 }
 
-                unvisitedNodes.ExceptWith(visitedNodes);
+                visitedNodes.Add(node);
             }
+
+            unvisitedNodes.ExceptWith(visitedNodes);
         }
     }
 }
