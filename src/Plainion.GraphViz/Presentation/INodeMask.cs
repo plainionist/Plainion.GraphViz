@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.Serialization;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Presentation
 {

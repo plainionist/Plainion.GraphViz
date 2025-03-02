@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Plainion.Graphs;
 using Plainion.GraphViz.Dot;
-using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation
 {

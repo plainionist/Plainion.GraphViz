@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Plainion.GraphViz.Model
+namespace Plainion.Graphs;
+
+public interface IGraph
 {
-    public interface IGraph
-    {
-        IEnumerable<Node> Nodes { get; }
-        IEnumerable<Edge> Edges { get; }
+    IReadOnlyCollection<Node> Nodes { get; }
+    IReadOnlyCollection<Edge> Edges { get; }
+    IReadOnlyCollection<Cluster> Clusters { get; }
 
-        IEnumerable<Cluster> Clusters { get; }
-
-        Node FindNode( string nodeId );
-    }
+    Node FindNode(string nodeId);
 }

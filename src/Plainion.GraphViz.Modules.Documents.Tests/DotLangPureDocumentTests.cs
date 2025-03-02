@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using NUnit.Framework;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Documents.Tests
 {

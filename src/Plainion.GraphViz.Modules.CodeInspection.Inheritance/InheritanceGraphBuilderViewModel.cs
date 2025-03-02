@@ -9,7 +9,7 @@ using System.Windows.Media;
 using Plainion.Collections;
 using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Inheritance.Analyzers;

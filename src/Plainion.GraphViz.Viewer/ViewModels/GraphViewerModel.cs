@@ -10,11 +10,11 @@ using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.Dot;
 using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 using Prism.Events;
+using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Viewer.ViewModels
 {

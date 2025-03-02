@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Plainion.Graphs;
 using Plainion.GraphViz.Actors.Client;
 using Plainion.GraphViz.Algorithms;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.CodeInspection.AssemblyLoader;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers

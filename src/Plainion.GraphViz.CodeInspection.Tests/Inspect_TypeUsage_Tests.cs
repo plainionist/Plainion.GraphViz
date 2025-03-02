@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Plainion.GraphViz.Algorithms;
-using Plainion.GraphViz.Model;
 using Plainion.GraphViz.CodeInspection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Logging;
+using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {

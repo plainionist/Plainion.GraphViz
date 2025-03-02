@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
 using Plainion.Collections;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;

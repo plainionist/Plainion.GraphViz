@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Plainion.GraphViz.Viewer.Abstractions;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Documents
 {

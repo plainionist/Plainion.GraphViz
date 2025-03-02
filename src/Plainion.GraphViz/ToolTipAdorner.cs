@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Visuals;
 

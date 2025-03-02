@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;

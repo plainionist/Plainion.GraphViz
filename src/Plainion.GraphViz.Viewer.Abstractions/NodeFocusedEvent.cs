@@ -1,4 +1,4 @@
-﻿using Plainion.GraphViz.Model;
+﻿using Plainion.Graphs;
 using Prism.Events;
 
 namespace Plainion.GraphViz.Viewer.Abstractions

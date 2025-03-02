@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Dot

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using Plainion.Graphs;
 using Plainion.GraphViz.CodeInspection;
-using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
 {

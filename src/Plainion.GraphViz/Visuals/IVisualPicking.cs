@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Visuals
 {

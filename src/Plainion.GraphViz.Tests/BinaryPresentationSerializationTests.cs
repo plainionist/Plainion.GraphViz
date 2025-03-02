@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Media;
 using NUnit.Framework;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Tests

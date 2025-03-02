@@ -2,7 +2,7 @@
 using System.Linq;
 using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.GraphViz.Model;
+using Plainion.Graphs;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;

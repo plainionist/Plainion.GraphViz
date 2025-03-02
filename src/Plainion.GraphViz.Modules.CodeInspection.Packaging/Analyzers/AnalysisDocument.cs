@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Plainion.Graphs;
 using Plainion.GraphViz.CodeInspection;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
@@ -66,7 +67,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
 
         public void AddEdgeColor(Reference edge, string color)
         {
-            var edgeId = Model.Edge.CreateId(NodeId(edge.From), NodeId(edge.To));
+            var edgeId = Edge.CreateId(NodeId(edge.From), NodeId(edge.To));
             if (!myEdgeStyles.ContainsKey(edgeId))
             {
                 myEdgeStyles.Add(edgeId, color);
@@ -85,7 +86,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
             }
         }
 
-        public void AddToCluster(Type node, Cluster cluster)
+        public void AddToCluster(Type node, Spec.Cluster cluster)
         {
             IEnumerable<string> existing;
             if (!myClusters.TryGetValue(cluster.Id, out existing))

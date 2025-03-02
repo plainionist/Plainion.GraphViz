@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Plainion.Graphs;
 using Plainion.GraphViz.Dot;
-using Plainion.GraphViz.Model;
 
 namespace Plainion.GraphViz.Presentation;
 

@@ -162,7 +162,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging
             }
         }
 
-        private void HandleClusterRenames(SystemPackaging spec, IEnumerable<Model.Cluster> potentiallyRenamedClusters)
+        private void HandleClusterRenames(SystemPackaging spec, IEnumerable<Graphs.Cluster> potentiallyRenamedClusters)
         {
             var specClusters = spec.Packages
                 .SelectMany(p => p.Clusters)
