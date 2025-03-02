@@ -1,0 +1,9 @@
+<NsDepCopConfig IsEnabled="true" ChildCanDependOnParentImplicitly="true">
+	<Allowed From="Company.App.*" To="Company.App.Foundation.*" />
+	<Allowed From="Company.App.*" To="Company.App.Feature.Common.*" />
+
+	<Disallowed From="Company.App.Feature.A.*" To="Company.App.Feature.B.*" />
+	<Disallowed From="Company.App.Feature.B.*" To="Company.App.Feature.A.*" />
+
+	<Allowed From="Company.App.CLI" To="Company.App.*" />
+</NsDepCopConfig>

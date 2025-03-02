@@ -40,7 +40,7 @@ let root = XElement(ns + "SystemPackaging",
     XAttribute("UsedTypesOnly", "true"),
     XElement(ns + "Package",
         XAttribute("Name", "System"),
-        XElement(ns + "Package.Clusters", createClusters() ),
+        XElement(ns + "Package.Clusters", createClusters()),
         XElement(ns + "Include", XAttribute("Pattern", "*.dll"))
     )
 )
