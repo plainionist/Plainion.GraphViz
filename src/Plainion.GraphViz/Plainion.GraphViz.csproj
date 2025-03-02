@@ -14,5 +14,9 @@
   <ItemGroup>
     <None Include="Algorithms\ReadMe.md" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plainion.Graphs\Plainion.Graphs.csproj" />
+  </ItemGroup>
   
 </Project>

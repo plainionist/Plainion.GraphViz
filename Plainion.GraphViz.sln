@@ -64,6 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.GraphViz.Modules.Properties", "src\Plainion.GraphViz.Modules.Properties\Plainion.GraphViz.Modules.Properties.csproj", "{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.Graphs", "src\Plainion.Graphs\Plainion.Graphs.csproj", "{E60C1C56-D531-41E4-B254-2582ABA96A08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +176,10 @@ Global
 		{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B20D8113-0FAF-4598-B0E2-2D6D84F912FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E60C1C56-D531-41E4-B254-2582ABA96A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E60C1C56-D531-41E4-B254-2582ABA96A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E60C1C56-D531-41E4-B254-2582ABA96A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E60C1C56-D531-41E4-B254-2582ABA96A08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
