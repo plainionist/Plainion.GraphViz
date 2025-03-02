@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plainion.Graphs;
-using Plainion.Graphs.Algorithms;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.Graphs.Algorithms;
