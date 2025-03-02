@@ -4,6 +4,7 @@
 - Obfuscation supports removing all captions
 - Properties dialog for graph properties added
 - "FastRenderingNodeCountLimit" optimization removed, seems no longer be needed
+- Package spec: wildcard handling improved
 
 ## 8.2 - 2025-02-26
 

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Categories: Shared, Leaf, Composition, (None), (Ignore) -->
+<Rules>
+
+  <Rule Namespace="Company.App.Foundation" Category="Shared" />
+  <Rule Namespace="Company.App.Feature.Common" Category="Shared" />
+
+  <Rule Namespace="Company.App.Feature.A" Category="Leaf" />
+  <Rule Namespace="Company.App.Feature.B" Category="Leaf" />
+  <Rule Namespace="Company.App.Feature.C" Category="Leaf" />
+
+  <Rule Class="Company.App.Program" Category="Composition" />
+  <Rule Namespace="Company.App.Extensions" Category="Composition" />
+
+</Rules>

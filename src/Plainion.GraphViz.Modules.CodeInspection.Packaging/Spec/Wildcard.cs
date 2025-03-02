@@ -16,9 +16,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
 
             public FastWildcard(string pattern)
             {
-                if (pattern.Contains("*"))
+                if (pattern.Contains('*'))
                 {
-                    myWildcard = new GraphViz.CodeInspection.Wildcard("*" + pattern + "*", RegexOptions.IgnoreCase);
+                    myWildcard = new GraphViz.CodeInspection.Wildcard(pattern, RegexOptions.IgnoreCase);
                 }
                 else
                 {

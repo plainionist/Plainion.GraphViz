@@ -8,8 +8,8 @@ namespace Plainion.GraphViz.Presentation;
 
 class GraphLayoutModule : AbstractModule<AbstractPropertySet>, IGraphLayoutModule
 {
-    private Dictionary<string, NodeLayout> myNodeLayouts;
-    private Dictionary<string, EdgeLayout> myEdgeLayouts;
+    private readonly Dictionary<string, NodeLayout> myNodeLayouts;
+    private readonly Dictionary<string, EdgeLayout> myEdgeLayouts;
     private LayoutAlgorithm myLayoutAlgorithm;
 
     public GraphLayoutModule()
