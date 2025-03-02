@@ -26,10 +26,9 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec
                 }
             }
 
-            public bool IsMatch(string str)
-            {
-                return myWildcard != null ? myWildcard.IsMatch(str) : str.Contains(mySubstring, StringComparison.OrdinalIgnoreCase);
-            }
+            // "contains" is achieved through wildcards and then user has better control what exactly is meant
+            public bool IsMatch(string str) =>
+                myWildcard != null ? myWildcard.IsMatch(str) : str.Equals(mySubstring, StringComparison.OrdinalIgnoreCase);
         }
 
         public string Pattern
