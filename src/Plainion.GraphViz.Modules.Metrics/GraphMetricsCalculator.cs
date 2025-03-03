@@ -47,41 +47,29 @@ static class GraphMetricsCalculator
     public static Dictionary<string, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
         var betweenness = graph.Nodes.ToDictionary(n => n.Id, _ => 0.0);
-        var pairCount = new Dictionary<(string, string), int>(); // (source, target) -> path count
+        var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
 
-        // Count paths between each pair
         foreach (var path in shortestPaths.Paths)
         {
             var source = path[0].Source.Id;
             var target = path.Last().Target.Id;
-            var key = (source, target);
-            pairCount[key] = pairCount.GetValueOrDefault(key) + 1;
-        }
+            var pathNodes = path.Select(e => e.Source.Id).Concat(new[] { target }).ToList();
 
-        // Calculate betweenness for each node
-        foreach (var path in shortestPaths.Paths)
-        {
-            var source = path[0].Source.Id;
-            var target = path.Last().Target.Id;
-            var pathCount = pairCount[(source, target)];
-
-            // Increment betweenness for intermediate nodes
-            foreach (var edge in path)
+            // Count intermediate nodes (not source or target)
+            for (int i = 1; i < pathNodes.Count - 1; i++) // Skip first (source) and last (target)
             {
-                var nodeId = edge.Source.Id;
-                if (nodeId != source && nodeId != target) // Exclude endpoints
-                {
-                    betweenness[nodeId] += 1.0 / pathCount; // Fraction of paths through this node
-                }
+                var nodeId = pathNodes[i];
+                betweenness[nodeId] += 1.0; // Add 1 for each path it’s on
             }
         }
 
-        // Normalize by number of pairs (n-1)(n-2) for directed graph
-        var n = graph.Nodes.Count;
-        var normalization = n > 2 ? (n - 1) * (n - 2) : 1;
-        foreach (var nodeId in betweenness.Keys)
+        // Normalize by max possible directed pairs
+        if (maxPairs > 0)
         {
-            betweenness[nodeId] /= normalization;
+            foreach (var nodeId in betweenness.Keys)
+            {
+                betweenness[nodeId] /= maxPairs;
+            }
         }
 
         return betweenness;

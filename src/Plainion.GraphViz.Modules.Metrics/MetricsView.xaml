@@ -46,7 +46,7 @@
                     <TextBlock Text="Edge Count:" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
                     <TextBlock Text="{Binding GraphDensity.EdgeCount, TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
 
-                    <TextBlock Text="Density:" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0"/>
+                    <TextBlock Text="Density [0;1]:" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0"/>
                     <TextBlock Text="{Binding GraphDensity.Density, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
                 </Grid>
             </GroupBox>

@@ -51,9 +51,9 @@ public class GraphMetricsCalculatorTests
         Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(2)); // e.g., A -> B -> C
         Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(builder.Graph, paths), Is.EqualTo(1.5)); // 9 hops / 6 paths
         var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths);
-        Assert.That(betweenness["A"], Is.EqualTo(0.5)); // A on B -> C
-        Assert.That(betweenness["B"], Is.EqualTo(0.5)); // B on C -> A
-        Assert.That(betweenness["C"], Is.EqualTo(0.5)); // C on A -> B
+        Assert.That(betweenness["A"], Is.EqualTo(1.0 / 6.0)); // C -> B
+        Assert.That(betweenness["B"], Is.EqualTo(1.0 / 6.0)); // A -> C
+        Assert.That(betweenness["C"], Is.EqualTo(1.0 / 6.0)); // B -> A
     }
 
     [Test]
@@ -71,9 +71,9 @@ public class GraphMetricsCalculatorTests
         var avg = (1 + 2 + 3 + 1 + 2 + 1) / 12.0; // A->B, A->C, A->D, B->C, B->D, C->D
         Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(builder.Graph, paths), Is.EqualTo(avg));
         var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths);
-        Assert.That(betweenness["A"], Is.EqualTo(0.0)); // Endpoint
-        Assert.That(betweenness["B"], Is.EqualTo(2.0 / 6.0)); // On A->C, A->D
-        Assert.That(betweenness["C"], Is.EqualTo(2.0 / 6.0)); // On A->D, B->D
-        Assert.That(betweenness["D"], Is.EqualTo(0.0)); // Endpoint
+        Assert.That(betweenness["A"], Is.EqualTo(0.0));
+        Assert.That(betweenness["B"], Is.EqualTo(2.0 / 12.0)); // A -> C, A -> D
+        Assert.That(betweenness["C"], Is.EqualTo(2.0 / 12.0)); // A -> D, B -> D
+        Assert.That(betweenness["D"], Is.EqualTo(0.0));
     }
 }
