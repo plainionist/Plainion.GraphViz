@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
 
-        <DataGrid Grid.Row="0" ItemsSource="{Binding KeyValuePairs}" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column">
+        <DataGrid Grid.Row="0" ItemsSource="{Binding Results}" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=OneWay}" Width="Auto"/>
                 <DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=OneWay}" Width="*"/>
