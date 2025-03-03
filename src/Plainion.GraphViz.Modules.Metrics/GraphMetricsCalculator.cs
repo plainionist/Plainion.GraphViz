@@ -41,6 +41,9 @@ static class GraphMetricsCalculator
         return (double)totalLength / maxPairs;
     }
 
+    /// <summary>
+    /// Measures how often a node is a member of the shortest path between other nodes
+    /// </summary>
     public static Dictionary<string, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
         var betweenness = graph.Nodes.ToDictionary(n => n.Id, _ => 0.0);
