@@ -4,22 +4,24 @@ using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
-public class ShortestPathsResult(List<List<Edge>> paths)
+class Path : List<Edge> { }
+
+class ShortestPathsResult(List<Path> paths)
 {
-    public List<List<Edge>> Paths { get; } = paths;
+    public List<Path> Paths { get; } = paths;
 }
 
-public static class ShortestPathsFinder
+static class ShortestPathsFinder
 {
     public static ShortestPathsResult FindAllShortestPaths(IGraph graph)
     {
-        var allPaths = new List<List<Edge>>();
+        var allPaths = new List<Path>();
         var lockObj = new object();
 
         Parallel.ForEach(graph.Nodes, source =>
         {
             var (visited, edges) = BFS(graph, source);
-            var sourcePaths = new List<List<Edge>>();
+            var sourcePaths = new List<Path>();
 
             foreach (var target in graph.Nodes)
             {
@@ -27,7 +29,9 @@ public static class ShortestPathsFinder
                 {
                     var path = ReconstructPath(source, target, edges);
                     if (path.Count > 0)
+                    {
                         sourcePaths.Add(path);
+                    }
                 }
             }
 
@@ -40,8 +44,7 @@ public static class ShortestPathsFinder
         return new ShortestPathsResult(allPaths);
     }
 
-    private static (HashSet<string> visited, Dictionary<string, Edge> edges)
-        BFS(IGraph graph, Node source)
+    private static (HashSet<string> visited, Dictionary<string, Edge> edges) BFS(IGraph graph, Node source)
     {
         var visited = new HashSet<string>();
         var edges = new Dictionary<string, Edge>(); // Edge leading to each node
@@ -68,9 +71,9 @@ public static class ShortestPathsFinder
         return (visited, edges);
     }
 
-    private static List<Edge> ReconstructPath(Node start, Node end, Dictionary<string, Edge> edges)
+    private static Path ReconstructPath(Node start, Node end, Dictionary<string, Edge> edges)
     {
-        var path = new List<Edge>();
+        var path = new Path();
         var currentId = end.Id;
 
         while (edges.ContainsKey(currentId))
@@ -82,6 +85,6 @@ public static class ShortestPathsFinder
         }
 
         path.Reverse();
-        return path.Count > 0 && path[0].Source.Id == start.Id ? path : new List<Edge>();
+        return path.Count > 0 && path[0].Source.Id == start.Id ? path : [];
     }
 }

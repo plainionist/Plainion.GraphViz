@@ -4,7 +4,7 @@ using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
-public class CycleDetectionAlgorithm
+class CycleDetectionAlgorithm
 {
     public List<List<Node>> Compute(IGraph graph)
     {

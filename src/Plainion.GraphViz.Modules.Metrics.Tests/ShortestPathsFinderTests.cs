@@ -12,9 +12,8 @@ public class ShortestPathsFinderTests
     {
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");
-        var graph = builder.Graph;
 
-        var result = ShortestPathsFinder.FindAllShortestPaths(graph);
+        var result = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
         var ab = result.Paths.FirstOrDefault(p => p[0].Source.Id == "A" && p.Last().Target.Id == "B");
         Assert.That(ab, Is.Not.Null);
