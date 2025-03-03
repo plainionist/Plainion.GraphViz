@@ -33,7 +33,7 @@ namespace Plainion.GraphViz.Presentation
             public string SourceId;
             public string TargetId;
             public bool IsVisible;
-            public List<Edge> Originals = new List<Edge>();
+            public List<Edge> Originals = [];
 
             public int Weight => Originals.Sum(x => x.Weight);
 
