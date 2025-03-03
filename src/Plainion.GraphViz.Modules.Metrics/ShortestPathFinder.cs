@@ -1,20 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
-public class ShortestPathsResult
+public class ShortestPathsResult(List<List<Edge>> paths)
 {
-    public List<List<Edge>> Paths { get; }
-
-    public ShortestPathsResult(List<List<Edge>> paths)
-    {
-        Paths = paths;
-    }
-
-    public static int GetDistance(List<Edge> path) => path.Sum(e => e.Weight);
+    public List<List<Edge>> Paths { get; } = paths;
 }
 
 public static class ShortestPathsFinder
@@ -26,15 +18,15 @@ public static class ShortestPathsFinder
 
         Parallel.ForEach(graph.Nodes, source =>
         {
-            var (dist, prev, edges) = Dijkstra(graph, source);
+            var (visited, edges) = BFS(graph, source);
             var sourcePaths = new List<List<Edge>>();
 
             foreach (var target in graph.Nodes)
             {
-                if (target.Id != source.Id && dist.TryGetValue(target.Id, out int distance) && distance != int.MaxValue)
+                if (target.Id != source.Id && visited.Contains(target.Id))
                 {
-                    var path = ReconstructPath(source, target, prev, edges);
-                    if (path.Count > 0) // Only add non-empty paths
+                    var path = ReconstructPath(source, target, edges);
+                    if (path.Count > 0)
                         sourcePaths.Add(path);
                 }
             }
@@ -48,52 +40,44 @@ public static class ShortestPathsFinder
         return new ShortestPathsResult(allPaths);
     }
 
-    private static (Dictionary<string, int> dist, Dictionary<string, string> prev, Dictionary<string, Edge> edges) Dijkstra(IGraph graph, Node source)
+    private static (HashSet<string> visited, Dictionary<string, Edge> edges)
+        BFS(IGraph graph, Node source)
     {
-        var dist = graph.Nodes.ToDictionary(n => n.Id, _ => int.MaxValue);
-        var prev = new Dictionary<string, string>();
-        var edges = new Dictionary<string, Edge>(); // Tracks edge leading to each node
-        var pq = new PriorityQueue<string, int>();
+        var visited = new HashSet<string>();
+        var edges = new Dictionary<string, Edge>(); // Edge leading to each node
+        var queue = new Queue<Node>();
 
-        dist[source.Id] = 0;
-        pq.Enqueue(source.Id, 0);
+        visited.Add(source.Id);
+        queue.Enqueue(source);
 
-        while (pq.Count > 0)
+        while (queue.Count > 0)
         {
-            var u = pq.Dequeue();
-            var uNode = graph.FindNode(u);
-
-            foreach (var edge in uNode.Out)
+            var u = queue.Dequeue();
+            foreach (var edge in u.Out)
             {
-                var v = edge.Target.Id;
-                int alt = dist[u] == int.MaxValue ? int.MaxValue : dist[u] + edge.Weight;
-
-                if (alt < dist[v])
+                var v = edge.Target;
+                if (!visited.Contains(v.Id))
                 {
-                    dist[v] = alt;
-                    prev[v] = u;
-                    edges[v] = edge; // Store the edge used to reach v
-                    pq.Enqueue(v, alt);
+                    visited.Add(v.Id);
+                    edges[v.Id] = edge;
+                    queue.Enqueue(v);
                 }
             }
         }
 
-        return (dist, prev, edges);
+        return (visited, edges);
     }
 
-    private static List<Edge> ReconstructPath(Node start, Node end, Dictionary<string, string> prev, Dictionary<string, Edge> edges)
+    private static List<Edge> ReconstructPath(Node start, Node end, Dictionary<string, Edge> edges)
     {
         var path = new List<Edge>();
         var currentId = end.Id;
 
-        while (prev.ContainsKey(currentId))
+        while (edges.ContainsKey(currentId))
         {
-            var prevId = prev[currentId];
-            if (edges.TryGetValue(currentId, out var edge))
-            {
-                path.Add(edge);
-            }
-            currentId = prevId;
+            var edge = edges[currentId];
+            path.Add(edge);
+            currentId = edge.Source.Id;
             if (currentId == start.Id) break;
         }
 
@@ -101,4 +85,3 @@ public static class ShortestPathsFinder
         return path.Count > 0 && path[0].Source.Id == start.Id ? path : new List<Edge>();
     }
 }
-
