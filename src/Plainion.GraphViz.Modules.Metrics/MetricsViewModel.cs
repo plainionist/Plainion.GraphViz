@@ -17,7 +17,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     private CancellationTokenSource myCTS;
     private IReadOnlyCollection<NodeDegrees> myDegreeCentrality;
     private GraphDensity myGraphDensity;
-    private IReadOnlyCollection<GraphCycle> myCycles;
+    private IReadOnlyCollection<CycleVM> myCycles;
 
     public MetricsViewModel(IDomainModel model)
          : base(model)
@@ -37,7 +37,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         set { SetProperty(ref myGraphDensity, value); }
     }
 
-    public IReadOnlyCollection<GraphCycle> Cycles
+    public IReadOnlyCollection<CycleVM> Cycles
     {
         get { return myCycles; }
         set { SetProperty(ref myCycles, value); }
@@ -120,19 +120,19 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             .ToList();
     }
 
-    private IReadOnlyCollection<GraphCycle> ComputeCycles()
+    private IReadOnlyCollection<CycleVM> ComputeCycles()
     {
         var captions = Model.Presentation.GetPropertySetFor<Caption>();
 
-        GraphCycle CreateCycle(IReadOnlyCollection<Node> nodes) =>
+        CycleVM CreateCycleVM(Cycle cycle) =>
             new()
             {
-                Start = captions.Get(nodes.First().Id).DisplayText,
-                Path = nodes.Skip(1).Select(n => captions.Get(n.Id).DisplayText).ToList()
+                Start = captions.Get(cycle.Start.Id).DisplayText,
+                Path = cycle.Path.Skip(1).Select(n => captions.Get(n.Id).DisplayText).ToList()
             };
 
         return CycleFinder.FindAllCycles(Model.Presentation.Graph)
-            .Select(CreateCycle)
+            .Select(CreateCycleVM)
             .ToList();
     }
 }

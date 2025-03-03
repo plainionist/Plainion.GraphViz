@@ -70,7 +70,7 @@ public class GraphCycleDetectorTests
 
     private static List<List<string>> DetectCycles(RelaxedGraphBuilder builder) =>
         CycleFinder.FindAllCycles(builder.Graph)
-            .Select(x => x.Select(y => y.Id).ToList())
+            .Select(x => new List<string> { x.Start.Id }.Concat(x.Path.Select(x => x.Id)).ToList())
             .OrderBy(x => x.Count)
             .ToList();
 

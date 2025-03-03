@@ -1,19 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
+class Cycle
+{
+    public required Node Start { get; init; }
+    public required IReadOnlyCollection<Node> Path { get; init; }
+}
+
 class CycleFinder
 {
-    public static List<List<Node>> FindAllCycles(IGraph graph)
+    public static List<Cycle> FindAllCycles(IGraph graph)
     {
         var unvisited = new HashSet<Node>(graph.Nodes);
 
         // nodes without edges can be ignored
         unvisited.RemoveWhere(n => n.In.Count == 0 || n.Out.Count == 0);
 
-        var cycles = new List<List<Node>>();
+        var cycles = new List<Cycle>();
 
         while (unvisited.Count > 0)
         {
@@ -26,7 +33,7 @@ class CycleFinder
         return cycles;
     }
 
-    private static void FindCycles(HashSet<Node> unvisited, Node current, List<Node> path, List<List<Node>> cycles)
+    private static void FindCycles(HashSet<Node> unvisited, Node current, List<Node> path, List<Cycle> cycles)
     {
         foreach (var edge in current.Out)
         {
@@ -35,13 +42,18 @@ class CycleFinder
             // node exists in tracked path -> cycle detected
             if (targetNodeIdx >= 0)
             {
+                var cycleStartNode = path[targetNodeIdx];
+
                 // ignore everything up to the cycle start
-                var cycleNodes = path.Skip(targetNodeIdx).ToList();
-
+                var cyclePath = path.Skip(targetNodeIdx + 1).ToList();
                 // close the cycle with the start node
-                cycleNodes.Add(cycleNodes.First());
+                cyclePath.Add(cycleStartNode);
 
-                cycles.Add(cycleNodes);
+                cycles.Add(new Cycle
+                {
+                    Start = cycleStartNode,
+                    Path = cyclePath
+                });
             }
             else if (unvisited.Contains(edge.Target))
             {
