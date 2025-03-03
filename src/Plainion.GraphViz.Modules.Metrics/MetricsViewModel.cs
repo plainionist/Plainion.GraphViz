@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
@@ -15,25 +14,32 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 {
     private Action myFinishAction;
     private CancellationTokenSource myCTS;
-    private IReadOnlyCollection<NodeDegrees> myNodeDegrees;
+    private IReadOnlyCollection<NodeDegrees> myDegreeCentrality;
+    private GraphDensity myGraphDensity;
 
     public MetricsViewModel(IDomainModel model)
          : base(model)
     {
-        myNodeDegrees = [];
+        myDegreeCentrality = [];
     }
 
-    public IReadOnlyCollection<NodeDegrees> NodeDegrees
+    public IReadOnlyCollection<NodeDegrees> DegreeCentrality
     {
-        get { return myNodeDegrees; }
-        set { SetProperty(ref myNodeDegrees, value); }
+        get { return myDegreeCentrality; }
+        set { SetProperty(ref myDegreeCentrality, value); }
+    }
+
+    public GraphDensity GraphDensity
+    {
+        get { return myGraphDensity; }
+        set { SetProperty(ref myGraphDensity, value); }
     }
 
     protected override void OnPresentationChanged()
     {
         myCTS?.Cancel();
 
-        myNodeDegrees = [];
+        myDegreeCentrality = [];
     }
 
     public INotification Notification { get; set; }
@@ -52,7 +58,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
     private void TriggerAnalysis()
     {
-        if (myNodeDegrees.Count != 0)
+        if (myDegreeCentrality.Count != 0)
         {
             // results already available
             return;
@@ -79,12 +85,17 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
     private void RunAnalysis(CancellationToken token)
     {
-        var report = ComputeDegrees();
-        Application.Current.Dispatcher.BeginInvoke(() => { NodeDegrees = report; });
-        token.ThrowIfCancellationRequested();
+        void Step(Action action)
+        {
+            Application.Current.Dispatcher.BeginInvoke(action);
+            token.ThrowIfCancellationRequested();
+        }
+
+        Step(() => { DegreeCentrality = ComputeDegreeCentrality(); });
+        Step(() => { GraphDensity = ComputeGraphDensity(); });
     }
 
-    private IReadOnlyCollection<NodeDegrees> ComputeDegrees()
+    private IReadOnlyCollection<NodeDegrees> ComputeDegreeCentrality()
     {
         var captions = Model.Presentation.GetPropertySetFor<Caption>();
 
@@ -99,5 +110,13 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             .OrderByDescending(x => x.Total)
             .ToList();
     }
+
+    private GraphDensity ComputeGraphDensity() =>
+        new()
+        {
+            NodeCount = Model.Presentation.Graph.Nodes.Count,
+            EdgeCount = Model.Presentation.Graph.Edges.Count,
+            Density = (double)Model.Presentation.Graph.Edges.Count / (Model.Presentation.Graph.Nodes.Count * (Model.Presentation.Graph.Nodes.Count - 1))
+        };
 }
 

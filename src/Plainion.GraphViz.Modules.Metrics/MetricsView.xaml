@@ -16,9 +16,9 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel Background="#FDFDF5" Orientation="Vertical" HorizontalAlignment="Stretch">
-            <GroupBox Header="Node Degrees" Height="300">
-                <DataGrid Grid.Row="0" ItemsSource="{Binding NodeDegrees}" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column">
+        <StackPanel Background="#FDFDF5" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="5">
+            <GroupBox Header="Degree Centrality" Height="300">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding DegreeCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Node" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
                         <DataGridTextColumn Header="In" Binding="{Binding In, Mode=OneWay}" Width="*"/>
@@ -26,6 +26,29 @@
                         <DataGridTextColumn Header="Total" Binding="{Binding Total, Mode=OneWay}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="Graph Density" Margin="0,5,0,0">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Node Count:" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding GraphDensity.NodeCount, TargetNullValue='-'}" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"/>
+
+                    <TextBlock Text="Edge Count:" FontWeight="Bold" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
+                    <TextBlock Text="{Binding GraphDensity.EdgeCount, TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
+
+                    <TextBlock Text="Density:" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0"/>
+                    <TextBlock Text="{Binding GraphDensity.Density, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
+                </Grid>
             </GroupBox>
         </StackPanel>
     </ScrollViewer>
