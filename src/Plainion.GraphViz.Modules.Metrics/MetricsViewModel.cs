@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
@@ -16,6 +18,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     private CancellationTokenSource myCTS;
     private IReadOnlyCollection<NodeDegrees> myDegreeCentrality;
     private GraphDensity myGraphDensity;
+    private IReadOnlyCollection<GraphCycle> myCycles;
 
     public MetricsViewModel(IDomainModel model)
          : base(model)
@@ -33,6 +36,12 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     {
         get { return myGraphDensity; }
         set { SetProperty(ref myGraphDensity, value); }
+    }
+
+    public IReadOnlyCollection<GraphCycle> Cycles
+    {
+        get { return myCycles; }
+        set { SetProperty(ref myCycles, value); }
     }
 
     protected override void OnPresentationChanged()
@@ -93,6 +102,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
         Step(() => { DegreeCentrality = ComputeDegreeCentrality(); });
         Step(() => { GraphDensity = ComputeGraphDensity(); });
+        Step(() => { Cycles = ComputeCycles(); });
     }
 
     private IReadOnlyCollection<NodeDegrees> ComputeDegreeCentrality()
@@ -118,5 +128,21 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             EdgeCount = Model.Presentation.Graph.Edges.Count,
             Density = (double)Model.Presentation.Graph.Edges.Count / (Model.Presentation.Graph.Nodes.Count * (Model.Presentation.Graph.Nodes.Count - 1))
         };
+
+    private IReadOnlyCollection<GraphCycle> ComputeCycles()
+    {
+        var captions = Model.Presentation.GetPropertySetFor<Caption>();
+
+        GraphCycle CreateCycle(IReadOnlyCollection<Node> nodes) =>
+            new()
+            {
+                Start = captions.Get(nodes.First().Id).DisplayText,
+                Path = nodes.Skip(1).Select(n => captions.Get(n.Id).DisplayText).ToList()
+            };
+
+        return new CycleDetectionAlgorithm().Compute(Model.Presentation.Graph)
+            .Select(CreateCycle)
+            .ToList();
+    }
 }
 

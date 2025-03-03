@@ -40,16 +40,36 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Node Count:" FontWeight="Bold" Grid.Row="0" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBlock Text="Node Count:" Grid.Row="0" Grid.Column="0" Margin="0,0,5,0"/>
                     <TextBlock Text="{Binding GraphDensity.NodeCount, TargetNullValue='-'}" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"/>
 
-                    <TextBlock Text="Edge Count:" FontWeight="Bold" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
+                    <TextBlock Text="Edge Count:" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
                     <TextBlock Text="{Binding GraphDensity.EdgeCount, TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
 
-                    <TextBlock Text="Density:" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0"/>
+                    <TextBlock Text="Density:" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0"/>
                     <TextBlock Text="{Binding GraphDensity.Density, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
                 </Grid>
             </GroupBox>
+
+            <GroupBox Header="Cycles" Margin="0,5,0,0" Height="300">
+                <ListView ItemsSource="{Binding Cycles}" BorderThickness="1" Margin="5">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Start}"/>
+                                <ItemsControl ItemsSource="{Binding Path}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Margin="15,0,0,0"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </GroupBox>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>
