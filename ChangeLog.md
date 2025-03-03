@@ -1,5 +1,5 @@
 
-## 8.3 - 2025-02-
+## 8.3 - 2025-03-03
 
 - Obfuscation supports removing all captions
 - Properties dialog for graph properties added
@@ -7,6 +7,7 @@
 - Package spec
   - wildcard handling improved
   - patterns without wildcards changed to "equals" match
+- Basic "Graph metrics" added
 
 ## 8.2 - 2025-02-26
 
