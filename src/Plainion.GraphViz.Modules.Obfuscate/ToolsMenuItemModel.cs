@@ -1,13 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
+using Plainion.Graphs;
+using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.Graphs;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
-using Plainion.GraphViz.Presentation;
-using System.Xml.Linq;
 
 namespace Plainion.GraphViz.Modules.Obfuscate;
 
