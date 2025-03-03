@@ -4,9 +4,9 @@ using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
-class CycleDetectionAlgorithm
+class CycleFinder
 {
-    public List<List<Node>> Compute(IGraph graph)
+    public static List<List<Node>> FindAllCycles(IGraph graph)
     {
         var unvisited = new HashSet<Node>(graph.Nodes);
 

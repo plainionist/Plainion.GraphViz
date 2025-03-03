@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -101,7 +100,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         }
 
         Step(() => { DegreeCentrality = ComputeDegreeCentrality(); });
-        Step(() => { GraphDensity = ComputeGraphDensity(); });
+        Step(() => { GraphDensity = GraphMetricsCalculator.ComputeGraphDensity(Model.Presentation.Graph); });
         Step(() => { Cycles = ComputeCycles(); });
     }
 
@@ -121,14 +120,6 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             .ToList();
     }
 
-    private GraphDensity ComputeGraphDensity() =>
-        new()
-        {
-            NodeCount = Model.Presentation.Graph.Nodes.Count,
-            EdgeCount = Model.Presentation.Graph.Edges.Count,
-            Density = (double)Model.Presentation.Graph.Edges.Count / (Model.Presentation.Graph.Nodes.Count * (Model.Presentation.Graph.Nodes.Count - 1))
-        };
-
     private IReadOnlyCollection<GraphCycle> ComputeCycles()
     {
         var captions = Model.Presentation.GetPropertySetFor<Caption>();
@@ -140,7 +131,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 Path = nodes.Skip(1).Select(n => captions.Get(n.Id).DisplayText).ToList()
             };
 
-        return new CycleDetectionAlgorithm().Compute(Model.Presentation.Graph)
+        return CycleFinder.FindAllCycles(Model.Presentation.Graph)
             .Select(CreateCycle)
             .ToList();
     }
