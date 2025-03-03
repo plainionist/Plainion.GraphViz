@@ -9,12 +9,10 @@ namespace Plainion.GraphViz.Presentation
     /// <summary>
     /// Manages folding of clusters
     /// </summary>
-    public class ClusterFoldingTransformation : NotifyPropertyChangedBase, IGraphTransformation, IDisposable, IClusterFolding
+    public class ClusterFoldingTransformation : ClusterFolding, IGraphTransformation, IDisposable
     {
         private readonly IGraphPresentation myPresentation;
-        private readonly HashSet<string> myFoldedClusters;
         private IModuleChangedObserver myNodeMaskModuleObserver;
-        private bool myChangeNotified;
         private IModuleChangedJournal<Caption> myCaptionsJournal;
 
         // we remember the most recent input graph so that we can figure out
@@ -49,6 +47,7 @@ namespace Plainion.GraphViz.Presentation
         private readonly Dictionary<string, ComputedEdge> myComputedEdges;
 
         public ClusterFoldingTransformation(IGraphPresentation presentation)
+            :base(presentation)
         {
             myPresentation = presentation;
 
@@ -58,7 +57,6 @@ namespace Plainion.GraphViz.Presentation
             myCaptionsJournal = myPresentation.GetPropertySetFor<Caption>().CreateJournal();
             myCaptionsJournal.ModuleChanged += OnCaptionChanged;
 
-            myFoldedClusters = [];
             myComputedEdges = [];
         }
 
@@ -97,7 +95,7 @@ namespace Plainion.GraphViz.Presentation
                 return;
             }
 
-            if (myChangeNotified)
+            if (IsChangeNotified)
             {
                 // no need to notify again
                 return;
@@ -110,12 +108,6 @@ namespace Plainion.GraphViz.Presentation
             }
 
             NotifyTransformationHasChanged();
-        }
-
-        private void NotifyTransformationHasChanged()
-        {
-            myChangeNotified = true;
-            OnPropertyChanged(nameof(Clusters));
         }
 
         public void Dispose()
@@ -131,36 +123,14 @@ namespace Plainion.GraphViz.Presentation
             myCaptionsJournal = null;
         }
 
-        public IReadOnlyCollection<string> Clusters
-        {
-            get { return myFoldedClusters; }
-        }
-
-        public string GetClusterNodeId(string clusterId)
-        {
-            return "[" + clusterId + "]";
-        }
-
-        public IReadOnlyCollection<Node> GetNodes(string clusterId)
+        public override IReadOnlyCollection<Node> GetNodes(string clusterId)
         {
             var graph = myGraph ?? myPresentation.Graph;
 
             return graph.Clusters.Single(c => c.Id == clusterId).Nodes;
         }
 
-        public void Add(string clusterId)
-        {
-            if (myFoldedClusters.Contains(clusterId))
-            {
-                return;
-            }
-
-            AddInternal(clusterId);
-
-            NotifyTransformationHasChanged();
-        }
-
-        private void AddInternal(string clusterId)
+        protected override void AddInternal(string clusterId)
         {
             var clusterNodeId = GetClusterNodeId(clusterId);
 
@@ -172,67 +142,7 @@ namespace Plainion.GraphViz.Presentation
                 captions.Add(new Caption(clusterNodeId, string.IsNullOrWhiteSpace(displayText) ? " " : "[" + displayText + "]"));
             }
 
-            myFoldedClusters.Add(clusterId);
-        }
-
-        public void Add(IEnumerable<string> clusterIds)
-        {
-            var clustersToAdd = clusterIds
-                .Except(myFoldedClusters)
-                .ToList();
-
-            if (clustersToAdd.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var cluster in clustersToAdd)
-            {
-                AddInternal(cluster);
-            }
-
-            NotifyTransformationHasChanged();
-        }
-
-        public void Remove(string clusterId)
-        {
-            var removed = myFoldedClusters.Remove(clusterId);
-
-            if (removed)
-            {
-                NotifyTransformationHasChanged();
-            }
-        }
-
-        public void Remove(IEnumerable<string> clusterIds)
-        {
-            var clustersToRemove = clusterIds
-                .Intersect(myFoldedClusters)
-                .ToList();
-
-            if (clustersToRemove.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var cluster in clustersToRemove)
-            {
-                myFoldedClusters.Remove(cluster);
-            }
-
-            NotifyTransformationHasChanged();
-        }
-
-        public void Toggle(string clusterId)
-        {
-            if (myFoldedClusters.Contains(clusterId))
-            {
-                Remove(clusterId);
-            }
-            else
-            {
-                Add(clusterId);
-            }
+            base.AddInternal(clusterId);
         }
 
         public IGraph Transform(IGraph graph)
@@ -242,7 +152,7 @@ namespace Plainion.GraphViz.Presentation
                 myGraph = graph;
                 myComputedEdges.Clear();
 
-                if (myFoldedClusters.Count == 0)
+                if (FoldedClusters.Count == 0)
                 {
                     return graph;
                 }
@@ -251,7 +161,7 @@ namespace Plainion.GraphViz.Presentation
             }
             finally
             {
-                myChangeNotified = false;
+                IsChangeNotified = false;
             }
         }
 
@@ -262,7 +172,7 @@ namespace Plainion.GraphViz.Presentation
             var nodesToClusterMap = new Dictionary<string, string>();
 
             // add unfolded clusters
-            foreach (var cluster in graph.Clusters.Where(c => !myFoldedClusters.Contains(c.Id)))
+            foreach (var cluster in graph.Clusters.Where(c => !FoldedClusters.Contains(c.Id)))
             {
                 var nodes = cluster.Nodes
                     .Select(n => n.Id)
@@ -282,7 +192,7 @@ namespace Plainion.GraphViz.Presentation
                 clusterMap.Add(cluster.Id, cluster);
             }
 
-            foreach (var clusterId in myFoldedClusters.ToList())
+            foreach (var clusterId in FoldedClusters.ToList())
             {
                 var clusterNodeId = GetClusterNodeId(clusterId);
 
@@ -293,7 +203,7 @@ namespace Plainion.GraphViz.Presentation
                 if (!clusterMap.TryGetValue(clusterId, out cluster))
                 {
                     // this cluster was deleted
-                    myFoldedClusters.Remove(clusterId);
+                    FoldedClusters.Remove(clusterId);
                     continue;
                 }
 
@@ -313,7 +223,7 @@ namespace Plainion.GraphViz.Presentation
             // "redirect" source/target in case source/target is inside folded cluster
             string GetNodeId(Node node)
             {
-                return nodesToClusterMap.TryGetValue(node.Id, out var clusterId) && myFoldedClusters.Contains(clusterId)
+                return nodesToClusterMap.TryGetValue(node.Id, out var clusterId) && FoldedClusters.Contains(clusterId)
                     ? GetClusterNodeId(clusterId)
                     : node.Id;
             }

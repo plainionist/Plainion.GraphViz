@@ -14,4 +14,6 @@ public interface IClusterFolding
     void Remove(IEnumerable<string> clusterIds);
 
     void Toggle(string clusterId);
+
+    string GetClusterNodeId(string clusterId);
 }
