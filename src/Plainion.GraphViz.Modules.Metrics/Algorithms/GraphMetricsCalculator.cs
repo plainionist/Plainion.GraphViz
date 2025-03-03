@@ -51,12 +51,9 @@ static class GraphMetricsCalculator
 
         foreach (var path in shortestPaths.Paths)
         {
-            var pathNodes = path.Select(e => e.Source.Id).Concat([path.End.Id]).ToList();
-
-            // Count intermediate nodes (not source or target)
-            for (int i = 1; i < pathNodes.Count - 1; i++) // Skip first (source) and last (target)
+            // skip start and end, ignore target nodes as target of one edge is the source of the next
+            foreach(var nodeId in path.Skip(1).Select(e => e.Source.Id))
             {
-                var nodeId = pathNodes[i];
                 betweenness[nodeId] += 1.0; // Add 1 for each path it’s on
             }
         }
