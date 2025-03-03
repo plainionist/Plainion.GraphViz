@@ -12,7 +12,7 @@ public class CycleDetectionAlgorithm
 
         // nodes without edges can be ignored
         unvisited.RemoveWhere(n => n.In.Count == 0 || n.Out.Count == 0);
-        
+
         var cycles = new List<List<Node>>();
 
         while (unvisited.Count > 0)
@@ -28,27 +28,26 @@ public class CycleDetectionAlgorithm
 
     private static void FindCycles(HashSet<Node> unvisited, Node current, List<Node> path, List<List<Node>> cycles)
     {
-        foreach (var edge in current.In) 
+        foreach (var edge in current.Out)
         {
-            var sourceNodeIdx = path.IndexOf(edge.Source);
+            var targetNodeIdx = path.IndexOf(edge.Target);
 
             // node exists in tracked path -> cycle detected
-            if (sourceNodeIdx >= 0) 
+            if (targetNodeIdx >= 0)
             {
                 // ignore everything up to the cycle start
-                var cycleNodes = path.Skip(sourceNodeIdx).ToList();
+                var cycleNodes = path.Skip(targetNodeIdx).ToList();
 
-                // reverse to match forward order
-                var cycle = cycleNodes.Select(n => n).Reverse().ToList();
-                cycle.Add(cycleNodes.Last()); // Close the cycle with the start node
-                
-                cycles.Add(cycle);
+                // close the cycle with the start node
+                cycleNodes.Add(cycleNodes.First());
+
+                cycles.Add(cycleNodes);
             }
-            else if (unvisited.Contains(edge.Source)) // Continue exploration
+            else if (unvisited.Contains(edge.Target))
             {
-                unvisited.Remove(edge.Source);
-                var newPath = new List<Node>(path) { edge.Source };
-                FindCycles(unvisited, edge.Source, newPath, cycles);
+                // Continue walking the path
+                unvisited.Remove(edge.Target);
+                FindCycles(unvisited, edge.Target, new List<Node>(path) { edge.Target }, cycles);
             }
         }
     }
