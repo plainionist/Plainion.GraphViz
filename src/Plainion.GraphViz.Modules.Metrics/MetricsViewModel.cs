@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
+using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
 
@@ -14,17 +15,25 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 {
     private Action myFinishAction;
     private CancellationTokenSource myCTS;
+    private IReadOnlyCollection<NodeDegrees> myNodeDegrees;
 
     public MetricsViewModel(IDomainModel model)
          : base(model)
     {
+        myNodeDegrees = [];
     }
 
-    public ObservableCollection<KeyValuePair<string, string>> Results { get; } = [];
+    public IReadOnlyCollection<NodeDegrees> NodeDegrees
+    {
+        get { return myNodeDegrees; }
+        set { SetProperty(ref myNodeDegrees, value); }
+    }
 
     protected override void OnPresentationChanged()
     {
         myCTS?.Cancel();
+
+        myNodeDegrees = [];
     }
 
     public INotification Notification { get; set; }
@@ -43,7 +52,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
     private void TriggerAnalysis()
     {
-        if (Results.Count != 0)
+        if (myNodeDegrees.Count != 0)
         {
             // results already available
             return;
@@ -63,34 +72,32 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
         myCTS = new CancellationTokenSource();
 
+        Task.Run(() => RunAnalysis(myCTS.Token), myCTS.Token)
+            .ContinueWith(_ => { myCTS = null; });
 
-        Task.Run(async () => await RunAnalysis(myCTS.Token), myCTS.Token);
     }
 
-    private async Task RunAnalysis(CancellationToken token)
+    private void RunAnalysis(CancellationToken token)
     {
-        Debug.WriteLine("running analysis");
+        var report = ComputeDegrees();
+        Application.Current.Dispatcher.BeginInvoke(() => { NodeDegrees = report; });
+        token.ThrowIfCancellationRequested();
+    }
 
-        await Task.Delay(2000);
+    private IReadOnlyCollection<NodeDegrees> ComputeDegrees()
+    {
+        var captions = Model.Presentation.GetPropertySetFor<Caption>();
 
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            Results.Add(new KeyValuePair<string, string>("1", "a"));
-        });
-
-        await Task.Delay(2000);
-
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            Results.Add(new KeyValuePair<string, string>("2", "b"));
-        });
-
-        await Task.Delay(2000);
-
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            Results.Add(new KeyValuePair<string, string>("3", "c"));
-        });
+        return Model.Presentation.Graph.Nodes
+            .Select(x => new NodeDegrees
+            {
+                Caption = captions.Get(x.Id).DisplayText,
+                In = x.In.Count,
+                Out = x.Out.Count,
+                Total = x.In.Count + x.Out.Count
+            })
+            .OrderByDescending(x => x.Total)
+            .ToList();
     }
 }
 

@@ -15,18 +15,18 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="#FDFDF5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-
-        <DataGrid Grid.Row="0" ItemsSource="{Binding Results}" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Key" Binding="{Binding Key, Mode=OneWay}" Width="Auto"/>
-                <DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=OneWay}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Background="#FDFDF5" Orientation="Vertical" HorizontalAlignment="Stretch">
+            <GroupBox Header="Node Degrees" Height="300">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding NodeDegrees}" AutoGenerateColumns="False" Margin="5" HeadersVisibility="Column">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Node" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
+                        <DataGridTextColumn Header="In" Binding="{Binding In, Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Out" Binding="{Binding Out, Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Total" Binding="{Binding Total, Mode=OneWay}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

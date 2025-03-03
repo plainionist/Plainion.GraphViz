@@ -16,7 +16,7 @@
             <pn:PopupViewAction IsModal="False" prism:RegionManager.RegionName="{x:Static v:RegionNames.Metrics}" IsIndependent="True">
                 <pn:PopupViewAction.WindowStyle>
                     <Style TargetType="{x:Type Window}">
-                        <Setter Property="Width" Value="600"/>
+                        <Setter Property="Width" Value="1000"/>
                         <Setter Property="Height" Value="800"/>
                     </Style>
                 </pn:PopupViewAction.WindowStyle>
