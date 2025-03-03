@@ -11,6 +11,7 @@ using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.GraphViz.Modules.Documents
 {

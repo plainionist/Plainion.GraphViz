@@ -68,6 +68,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.Graphs", "src\Plai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.Graphs.Algorithms", "src\Plainion.Graphs.Algorithms\Plainion.Graphs.Algorithms.csproj", "{8F9A3176-3175-4129-860C-75D4389316E8}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plainion.Graphs.Algorithms.Tests", "src\Plainion.Graphs.Algorithms.Tests\Plainion.Graphs.Algorithms.Tests.csproj", "{45A3B2BB-CC1E-4234-B46B-E6C88D6C42CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -186,6 +188,10 @@ Global
 		{8F9A3176-3175-4129-860C-75D4389316E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F9A3176-3175-4129-860C-75D4389316E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F9A3176-3175-4129-860C-75D4389316E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45A3B2BB-CC1E-4234-B46B-E6C88D6C42CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45A3B2BB-CC1E-4234-B46B-E6C88D6C42CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45A3B2BB-CC1E-4234-B46B-E6C88D6C42CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45A3B2BB-CC1E-4234-B46B-E6C88D6C42CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

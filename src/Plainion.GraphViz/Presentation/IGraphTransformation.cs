@@ -1,9 +1,8 @@
 ﻿using Plainion.Graphs;
 
-namespace Plainion.GraphViz.Presentation
+namespace Plainion.GraphViz.Presentation;
+
+public interface IGraphTransformation
 {
-    public interface IGraphTransformation
-    {
-        IGraph Transform( IGraph graph );
-    }
+    IGraph Transform(IGraph graph);
 }

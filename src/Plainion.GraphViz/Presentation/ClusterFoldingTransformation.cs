@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Plainion.Graphs;
 using Plainion.Graphs.Projections;
-using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Presentation
 {
     /// <summary>
     /// Manages folding of clusters
     /// </summary>
-    public class ClusterFoldingTransformation : BindableBase, IGraphTransformation, IDisposable, IClusterFolding
+    public class ClusterFoldingTransformation : NotifyPropertyChangedBase, IGraphTransformation, IDisposable, IClusterFolding
     {
         private readonly IGraphPresentation myPresentation;
         private readonly HashSet<string> myFoldedClusters;

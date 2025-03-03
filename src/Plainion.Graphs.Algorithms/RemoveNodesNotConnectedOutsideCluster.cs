@@ -22,7 +22,6 @@ public class RemoveNodesNotConnectedOutsideCluster : AbstractAlgorithm
 
     public INodeMask Compute(Cluster cluster)
     {
-
         var folding = Projections.ClusterFolding;
         var clusterIsFolded = folding.Clusters.Contains(cluster.Id);
         if (clusterIsFolded)
