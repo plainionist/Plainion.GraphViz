@@ -288,7 +288,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             CopyCaptions(presentation, inputPresentation);
 
             // find all nodes from which the targets can be reached
-            var algo = new AddRemoveTransitiveHull(presentation);
+            var algo = new AddRemoveTransitiveHull(presentation, presentation);
             algo.Add = false;
             algo.Reverse = true;
 
@@ -332,7 +332,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             }
 
             // 4. find all nodes from which the targets can be reached
-            var algo = new AddRemoveTransitiveHull(presentation);
+            var algo = new AddRemoveTransitiveHull(presentation, presentation);
             algo.Add = false;
             algo.Reverse = true;
 

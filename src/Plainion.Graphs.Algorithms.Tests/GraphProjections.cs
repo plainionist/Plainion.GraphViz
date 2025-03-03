@@ -21,6 +21,4 @@ internal class GraphProjections : IGraphProjections
     public IGraphPicking Picking { get; } = new NullGraphPicking();
 
     public IClusterFolding ClusterFolding { get; }
-
-    public string GetCaption(string id) => id;
 }

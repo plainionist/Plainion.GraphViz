@@ -16,7 +16,7 @@ public class RemoveNodesNotConnectedOutsideClusterTests
 
         var projections = new GraphProjections(builder.Graph);
 
-        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, SiblingsType.Any);
+        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, new CaptionProvider(), SiblingsType.Any);
 
         var mask = algo.Compute(projections.GetCluster("c1"));
 
@@ -37,7 +37,7 @@ public class RemoveNodesNotConnectedOutsideClusterTests
 
         var projections = new GraphProjections(builder.Graph);
 
-        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, SiblingsType.Sources);
+        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, new CaptionProvider(), SiblingsType.Sources);
 
         var mask = algo.Compute(projections.GetCluster("c2"));
 
@@ -60,7 +60,7 @@ public class RemoveNodesNotConnectedOutsideClusterTests
         projections.ClusterFolding.Toggle("c1");
         projections.ClusterFolding.Toggle("c2");
 
-        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, SiblingsType.Sources);
+        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, new CaptionProvider(), SiblingsType.Sources);
 
         var mask = algo.Compute(projections.GetCluster("c2"));
 
@@ -81,7 +81,7 @@ public class RemoveNodesNotConnectedOutsideClusterTests
 
         var projections = new GraphProjections(builder.Graph);
 
-        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, SiblingsType.Any);
+        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, new CaptionProvider(), SiblingsType.Any);
 
         var mask = algo.Compute(projections.GetCluster("c1"));
 
@@ -100,7 +100,7 @@ public class RemoveNodesNotConnectedOutsideClusterTests
 
         var projections = new GraphProjections(builder.Graph);
 
-        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, SiblingsType.Any);
+        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, new CaptionProvider(), SiblingsType.Any);
 
         var mask = algo.Compute(projections.GetCluster("c1"));
 
@@ -122,7 +122,7 @@ public class RemoveNodesNotConnectedOutsideClusterTests
 
         var projections = new GraphProjections(builder.Graph);
 
-        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, SiblingsType.Any);
+        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, new CaptionProvider(), SiblingsType.Any);
 
         var mask = algo.Compute(projections.GetCluster("c1"));
 
@@ -143,7 +143,7 @@ public class RemoveNodesNotConnectedOutsideClusterTests
 
         var projections = new GraphProjections(builder.Graph);
 
-        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, SiblingsType.Any);
+        var algo = new RemoveNodesNotConnectedOutsideCluster(projections, new CaptionProvider(), SiblingsType.Any);
 
         var mask = algo.Compute(projections.GetCluster("c1"));
 

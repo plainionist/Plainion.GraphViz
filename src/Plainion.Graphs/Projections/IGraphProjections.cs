@@ -7,6 +7,4 @@ public interface IGraphProjections
 
     IGraphPicking Picking { get; }
     IClusterFolding ClusterFolding { get; }
-
-    string GetCaption(string id);
 }

@@ -10,9 +10,15 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class AddRemoveNodes : AbstractAlgorithm
 {
-    public AddRemoveNodes(IGraphProjections presentation)
-        : base(presentation)
+    private readonly ICaptionProvider myCaptionProvider;
+
+    public AddRemoveNodes(IGraphProjections projections, ICaptionProvider captionProvider)
+        : base(projections)
     {
+        Contract.RequiresNotNull(captionProvider);
+
+        myCaptionProvider = captionProvider;
+
         SiblingsType = SiblingsType.None;
     }
 
@@ -45,7 +51,7 @@ public class AddRemoveNodes : AbstractAlgorithm
             mask.Label = "Siblings of ";
         }
 
-        mask.Label += Projections.GetCaption(nodes.First().Id);
+        mask.Label += myCaptionProvider.GetCaption(nodes.First().Id);
 
         if (nodes.Count() > 1)
         {

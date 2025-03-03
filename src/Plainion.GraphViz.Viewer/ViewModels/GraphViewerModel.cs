@@ -29,7 +29,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             : base(model)
         {
             RemoveNodeCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation).Compute(GetSelectedNodes(n))),
+                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation).Compute(GetSelectedNodes(n))),
                 n => Presentation != null);
 
             RemoveAllButCommand = new DelegateCommand<Node>(
@@ -37,25 +37,25 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n => Presentation != null);
 
             AddSourcesCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Sources }.Compute(n)));
+                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = true, SiblingsType = SiblingsType.Sources }.Compute(n)));
 
             AddTargetsCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Targets }.Compute(n)));
+                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = true, SiblingsType = SiblingsType.Targets }.Compute(n)));
 
             AddSiblingsCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Any }.Compute(n)));
+                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = true, SiblingsType = SiblingsType.Any }.Compute(n)));
 
             AddReachablesCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveTransitiveHull(Presentation) { Add = true }.Compute(GetSelectedNodes(n))));
+                n => Presentation.Masks().Push(new AddRemoveTransitiveHull(Presentation, Presentation) { Add = true }.Compute(GetSelectedNodes(n))));
 
             RemoveSourcesCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = false, SiblingsType = SiblingsType.Sources }.Compute(n)));
+                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = false, SiblingsType = SiblingsType.Sources }.Compute(n)));
 
             RemoveTargetsCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = false, SiblingsType = SiblingsType.Targets }.Compute(n)));
+                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = false, SiblingsType = SiblingsType.Targets }.Compute(n)));
 
             RemoveSiblingsCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = false, SiblingsType = SiblingsType.Any }.Compute(n)));
+                n => Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = false, SiblingsType = SiblingsType.Any }.Compute(n)));
 
             RemoveUnreachableNodesCommand = new DelegateCommand<Node>(
                 n => OnRemoveUnreachableNodes(GetSelectedNodes(n)));
@@ -67,21 +67,21 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 n =>
                 {
                     OnRemoveAllBut(n);
-                    Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Sources }.Compute(n));
+                    Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = true, SiblingsType = SiblingsType.Sources }.Compute(n));
                 });
 
             ShowNodeWithTargetsCommand = new DelegateCommand<Node>(
                 n =>
                 {
                     OnRemoveAllBut(n);
-                    Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Targets }.Compute(n));
+                    Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = true, SiblingsType = SiblingsType.Targets }.Compute(n));
                 });
 
             ShowNodeWithSiblingsCommand = new DelegateCommand<Node>(
                 n =>
                 {
                     OnRemoveAllBut(n);
-                    Presentation.Masks().Push(new AddRemoveNodes(Presentation) { Add = true, SiblingsType = SiblingsType.Any }.Compute(n));
+                    Presentation.Masks().Push(new AddRemoveNodes(Presentation, Presentation) { Add = true, SiblingsType = SiblingsType.Any }.Compute(n));
                 });
 
             SelectNodeCommand = new DelegateCommand<Node>(
@@ -118,13 +118,13 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 c => ToggleClusterFolding(c));
 
             RemoveNodesNotConnectedWithOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, SiblingsType.Any).Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, Presentation, SiblingsType.Any).Compute(c)));
 
             RemoveNodesNotReachableFromOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, SiblingsType.Sources).Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, Presentation, SiblingsType.Sources).Compute(c)));
 
             RemoveNodesNotReachingOutsideCommand = new DelegateCommand<Cluster>(
-                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, SiblingsType.Targets).Compute(c)));
+                c => Presentation.Masks().Push(new RemoveNodesNotConnectedOutsideCluster(Presentation, Presentation, SiblingsType.Targets).Compute(c)));
 
             SelectNodesOfClusterCommand = new DelegateCommand<Cluster>(
                 c => SelectVisibleNodesFrom(c));
@@ -189,7 +189,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 node => Presentation.DynamicClusters().RemoveFromClusters(GetSelectedNodes(node).Select(n => n.Id)));
 
             TraceToCommand = new DelegateCommand<Node>(
-                n => Presentation.Masks().Push(new ShowPath(Presentation).Compute((Node)GraphItemForContextMenu, n)));
+                n => Presentation.Masks().Push(new ShowPath(Presentation, Presentation).Compute((Node)GraphItemForContextMenu, n)));
 
             PrintGraphRequest = new InteractionRequest<IConfirmation>();
             PrintGraphCommand = new DelegateCommand(OnPrintGrpah, () => Presentation != null);
@@ -213,7 +213,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         private void OnRemoveAllBut(IEnumerable<Node> nodes)
         {
-            var mask = new AddRemoveNodes(Presentation).Compute(nodes);
+            var mask = new AddRemoveNodes(Presentation, Presentation).Compute(nodes);
             mask.Invert(Presentation.TransformedGraph, Presentation.Picking);
 
             Presentation.Masks().Push(mask);
@@ -250,7 +250,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         private void OnRemoveUnreachableNodes(IReadOnlyCollection<Node> nodes)
         {
-            var mask = new AddRemoveTransitiveHull(Presentation) { Add = false }.Compute(nodes);
+            var mask = new AddRemoveTransitiveHull(Presentation, Presentation) { Add = false }.Compute(nodes);
             mask.Invert(Presentation.TransformedGraph, Presentation.Picking);
 
             Presentation.Masks().Push(mask);
@@ -259,7 +259,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private void SelectReachables(IReadOnlyCollection<Node> nodes)
         {
             // pass "Add = false" as we want the transitive hull of the visible nodes
-            var mask = new AddRemoveTransitiveHull(Presentation) { Add = false }.Compute(nodes);
+            var mask = new AddRemoveTransitiveHull(Presentation, Presentation) { Add = false }.Compute(nodes);
 
             var selection = Presentation.GetPropertySetFor<Selection>();
             var edges = Presentation.GetModule<ITransformationModule>().Graph.Edges
@@ -278,7 +278,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private void SelectReaching(IReadOnlyCollection<Node> nodes)
         {
             // pass "Add = false" as we want the transitive hull of the visible nodes
-            var mask = new AddRemoveTransitiveHull(Presentation)
+            var mask = new AddRemoveTransitiveHull(Presentation, Presentation)
             {
                 Add = false,
                 Reverse = true

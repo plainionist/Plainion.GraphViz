@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plainion;
 using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
@@ -12,9 +11,15 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class RemoveNodesNotConnectedOutsideCluster : AbstractAlgorithm
 {
-    public RemoveNodesNotConnectedOutsideCluster(IGraphProjections presentation, SiblingsType siblingsType)
-        : base(presentation)
+    private readonly ICaptionProvider myCaptionProvider;
+
+    public RemoveNodesNotConnectedOutsideCluster(IGraphProjections projections, ICaptionProvider captionProvider, SiblingsType siblingsType)
+        : base(projections)
     {
+        Contract.RequiresNotNull(captionProvider);
+
+        myCaptionProvider = captionProvider;
+
         SiblingsType = siblingsType;
     }
 
@@ -61,7 +66,7 @@ public class RemoveNodesNotConnectedOutsideCluster : AbstractAlgorithm
 
     private string GetMaskLabel(Cluster cluster)
     {
-        var caption = Projections.GetCaption(cluster.Id);
+        var caption = myCaptionProvider.GetCaption(cluster.Id);
         if (SiblingsType == SiblingsType.Any)
         {
             return $"Nodes not connected with outside {caption}";

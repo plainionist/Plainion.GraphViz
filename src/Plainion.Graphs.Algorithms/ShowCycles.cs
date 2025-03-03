@@ -9,8 +9,8 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class ShowCycles : AbstractAlgorithm
 {
-    public ShowCycles(IGraphProjections presentation)
-        : base(presentation)
+    public ShowCycles(IGraphProjections projections)
+        : base(projections)
     {
     }
 

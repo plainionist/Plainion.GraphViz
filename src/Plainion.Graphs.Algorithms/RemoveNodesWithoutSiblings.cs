@@ -9,8 +9,8 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class RemoveNodesWithoutSiblings : AbstractAlgorithm
 {
-    public RemoveNodesWithoutSiblings(IGraphProjections presentation)
-        : base(presentation)
+    public RemoveNodesWithoutSiblings(IGraphProjections projections)
+        : base(projections)
     {
         SiblingsType = SiblingsType.Any;
     }

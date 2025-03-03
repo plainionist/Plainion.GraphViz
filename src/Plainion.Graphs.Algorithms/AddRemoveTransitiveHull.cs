@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Plainion.Graphs.Projections;
 
@@ -9,9 +10,15 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class AddRemoveTransitiveHull : AbstractAlgorithm
 {
-    public AddRemoveTransitiveHull(IGraphProjections presentation)
-        : base(presentation)
+    private readonly ICaptionProvider myCaptionProvider;
+
+    public AddRemoveTransitiveHull(IGraphProjections projections, ICaptionProvider captionProvider)
+        : base(projections)
     {
+        Contract.RequiresNotNull(captionProvider);
+
+        myCaptionProvider = captionProvider;
+
         Add = true;
         Reverse = false;
     }
@@ -47,12 +54,12 @@ public class AddRemoveTransitiveHull : AbstractAlgorithm
         }
         else if (nodes.Count == 1)
         {
-            var caption = Projections.GetCaption(nodes.First().Id);
+            var caption = myCaptionProvider.GetCaption(nodes.First().Id);
             mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption;
         }
         else
         {
-            var caption = Projections.GetCaption(nodes.First().Id);
+            var caption = myCaptionProvider.GetCaption(nodes.First().Id);
             mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption + " and ...";
         }
 

@@ -10,16 +10,21 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class ShowPath : AbstractAlgorithm
 {
-    public ShowPath(IGraphProjections presentation)
-        : base(presentation)
+    private readonly ICaptionProvider myCaptionProvider;
+
+    public ShowPath(IGraphProjections projections, ICaptionProvider captionProvider)
+        : base(projections)
     {
+        Contract.RequiresNotNull(captionProvider);
+
+        myCaptionProvider = captionProvider;
     }
 
     public INodeMask Compute(Node from, Node to)
     {
         var mask = new NodeMask();
         mask.IsShowMask = false;
-        mask.Label = $"Path from {Projections.GetCaption(from.Id)} to {Projections.GetCaption(to.Id)}";
+        mask.Label = $"Path from {myCaptionProvider.GetCaption(from.Id)} to {myCaptionProvider.GetCaption(to.Id)}";
 
         mask.Set(GetPaths(from, to));
         mask.Invert(Projections.TransformedGraph, Projections.Picking);

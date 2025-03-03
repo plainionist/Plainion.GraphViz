@@ -9,8 +9,8 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class GetNodesOutsideCluster : AbstractAlgorithm
 {
-    public GetNodesOutsideCluster(IGraphProjections presentation)
-        : base(presentation)
+    public GetNodesOutsideCluster(IGraphProjections projections)
+        : base(projections)
     {
     }
 

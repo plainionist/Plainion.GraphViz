@@ -8,8 +8,8 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class RemoveClusters : AbstractAlgorithm
 {
-    public RemoveClusters(IGraphProjections presentation)
-        : base(presentation)
+    public RemoveClusters(IGraphProjections projections)
+        : base(projections)
     {
     }
 

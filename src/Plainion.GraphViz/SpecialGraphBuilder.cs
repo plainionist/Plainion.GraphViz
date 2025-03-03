@@ -45,7 +45,7 @@ public class SpecialGraphBuilder
 
     private static void RemoveUnreachableNodes(GraphPresentation presentation, Cluster targetCluster)
     {
-        var algo = new AddRemoveTransitiveHull(presentation)
+        var algo = new AddRemoveTransitiveHull(presentation, presentation)
         {
             Add = false,
             Reverse = true
