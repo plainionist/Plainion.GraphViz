@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Plainion.Graphs;
+using Plainion.GraphViz.Modules.Metrics.Algorithms;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
@@ -15,7 +16,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 {
     private Action myFinishAction;
     private CancellationTokenSource myCTS;
-    private IReadOnlyCollection<NodeDegrees> myDegreeCentrality;
+    private IReadOnlyCollection<NodeDegreesVM> myDegreeCentrality;
     private GraphDensity myGraphDensity;
     private IReadOnlyCollection<CycleVM> myCycles;
 
@@ -25,7 +26,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         myDegreeCentrality = [];
     }
 
-    public IReadOnlyCollection<NodeDegrees> DegreeCentrality
+    public IReadOnlyCollection<NodeDegreesVM> DegreeCentrality
     {
         get { return myDegreeCentrality; }
         set { SetProperty(ref myDegreeCentrality, value); }
@@ -104,12 +105,12 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         Step(() => { Cycles = ComputeCycles(); });
     }
 
-    private IReadOnlyCollection<NodeDegrees> ComputeDegreeCentrality()
+    private IReadOnlyCollection<NodeDegreesVM> ComputeDegreeCentrality()
     {
         var captions = Model.Presentation.GetPropertySetFor<Caption>();
 
         return Model.Presentation.Graph.Nodes
-            .Select(x => new NodeDegrees
+            .Select(x => new NodeDegreesVM
             {
                 Caption = captions.Get(x.Id).DisplayText,
                 In = x.In.Count,

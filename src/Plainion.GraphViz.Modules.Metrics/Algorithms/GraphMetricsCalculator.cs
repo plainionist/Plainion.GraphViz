@@ -2,7 +2,7 @@
 using System.Linq;
 using Plainion.Graphs;
 
-namespace Plainion.GraphViz.Modules.Metrics;
+namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
 
 static class GraphMetricsCalculator
 {

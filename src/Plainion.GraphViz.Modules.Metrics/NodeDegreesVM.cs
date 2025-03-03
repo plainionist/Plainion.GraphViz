@@ -1,6 +1,6 @@
 ﻿namespace Plainion.GraphViz.Modules.Metrics;
 
-internal class NodeDegrees
+internal class NodeDegreesVM
 {
     public required string Caption { get; init; }
 

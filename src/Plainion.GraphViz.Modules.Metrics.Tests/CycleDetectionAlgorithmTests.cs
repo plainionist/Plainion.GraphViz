@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Plainion.Graphs;
+using Plainion.GraphViz.Modules.Metrics.Algorithms;
 
 namespace Plainion.GraphViz.Modules.Metrics.Tests;
 

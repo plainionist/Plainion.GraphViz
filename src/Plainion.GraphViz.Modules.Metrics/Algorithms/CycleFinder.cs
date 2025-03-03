@@ -1,15 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Plainion.Graphs;
 
-namespace Plainion.GraphViz.Modules.Metrics;
-
-class Cycle
-{
-    public required Node Start { get; init; }
-    public required IReadOnlyCollection<Node> Path { get; init; }
-}
+namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
 
 class CycleFinder
 {

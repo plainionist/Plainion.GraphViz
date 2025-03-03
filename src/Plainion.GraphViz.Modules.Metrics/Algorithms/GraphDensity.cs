@@ -1,4 +1,4 @@
-﻿namespace Plainion.GraphViz.Modules.Metrics;
+﻿namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
 
 internal class GraphDensity
 {

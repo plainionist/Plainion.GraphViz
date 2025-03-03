@@ -1,19 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Plainion.Graphs;
 
-namespace Plainion.GraphViz.Modules.Metrics;
-
-class Path : List<Edge> { }
-
-class ShortestPaths(IReadOnlyCollection<Path> paths)
-{
-    public IReadOnlyCollection<Path> Paths { get; } = paths;
-
-    public IReadOnlyCollection<Path> Get(string sourceId, string targetId) =>
-        Paths.Where(p => p[0].Source.Id == sourceId && p.Last().Target.Id == targetId).ToList();
-}
+namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
 
 static class ShortestPathsFinder
 {
