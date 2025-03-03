@@ -60,8 +60,8 @@ namespace Plainion.GraphViz.Tests.Algorithms
             builder.TryAddCluster("c2", new[] { "b", "x", "y" });
 
             var presentation = new GraphPresentation(builder.Graph);
-            presentation.ClusterFolding().Toggle("c1");
-            presentation.ClusterFolding().Toggle("c2");
+            presentation.ClusterFolding.Toggle("c1");
+            presentation.ClusterFolding.Toggle("c2");
 
             var algo = new RemoveNodesNotConnectedOutsideCluster(presentation, SiblingsType.Sources);
 

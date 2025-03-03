@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
@@ -8,17 +8,18 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class RemoveClusters : AbstractAlgorithm
 {
-    public RemoveClusters(IGraphPresentation presentation)
+    public RemoveClusters(IGraphProjections presentation)
         : base(presentation)
     {
     }
 
     public INodeMask Compute()
     {
-        var graph = Presentation.GetModule<ITransformationModule>().Graph;
+        var graph = Projections.TransformedGraph;
+
         var clusterNodes = graph.Nodes
             // do not process hidden nodes
-            .Where(Presentation.Picking.Pick)
+            .Where(Projections.Picking.Pick)
             .Where(node => !graph.Clusters.Any(c => c.Nodes.Any(n => n.Id == node.Id)));
 
         var mask = new NodeMask();

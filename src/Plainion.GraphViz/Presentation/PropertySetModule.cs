@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.GraphViz.Presentation
 {

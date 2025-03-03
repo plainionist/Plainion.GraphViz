@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plainion.Graphs\Plainion.Graphs.csproj" />
-    <ProjectReference Include="..\Plainion.GraphViz\Plainion.GraphViz.csproj" />
   </ItemGroup>
   
 </Project>

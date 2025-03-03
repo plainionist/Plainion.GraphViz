@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.GraphViz.Presentation
 {

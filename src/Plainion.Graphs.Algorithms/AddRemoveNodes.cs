@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
@@ -10,7 +10,7 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class AddRemoveNodes : AbstractAlgorithm
 {
-    public AddRemoveNodes(IGraphPresentation presentation)
+    public AddRemoveNodes(IGraphProjections presentation)
         : base(presentation)
     {
         SiblingsType = SiblingsType.None;
@@ -32,8 +32,6 @@ public class AddRemoveNodes : AbstractAlgorithm
 
         mask.Set(nodes.SelectMany(SelectNodes));
 
-        var caption = Presentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-
         if (SiblingsType == SiblingsType.Sources)
         {
             mask.Label = "Sources of ";
@@ -47,7 +45,7 @@ public class AddRemoveNodes : AbstractAlgorithm
             mask.Label = "Siblings of ";
         }
 
-        mask.Label += caption.DisplayText;
+        mask.Label += Projections.GetCaption(nodes.First().Id);
 
         if (nodes.Count() > 1)
         {
@@ -67,19 +65,19 @@ public class AddRemoveNodes : AbstractAlgorithm
         {
             return node.In
                 .Select(e => e.Source)
-                .Where(n => Presentation.Picking.Pick(n) != Add);
+                .Where(n => Projections.Picking.Pick(n) != Add);
         }
         else if (SiblingsType == SiblingsType.Targets)
         {
             return node.Out
                 .Select(e => e.Target)
-                .Where(n => Presentation.Picking.Pick(n) != Add);
+                .Where(n => Projections.Picking.Pick(n) != Add);
         }
         else if (SiblingsType == SiblingsType.Any)
         {
             return node.In.Select(e => e.Source)
                 .Concat(node.Out.Select(e => e.Target))
-                .Where(n => Presentation.Picking.Pick(n) != Add);
+                .Where(n => Projections.Picking.Pick(n) != Add);
         }
         else
         {

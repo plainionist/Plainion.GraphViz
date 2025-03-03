@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using NUnit.Framework;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Tests

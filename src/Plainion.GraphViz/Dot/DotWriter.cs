@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Dot

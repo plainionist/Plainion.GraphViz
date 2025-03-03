@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
@@ -9,28 +9,28 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class ShowCycles : AbstractAlgorithm
 {
-    public ShowCycles(IGraphPresentation presentation)
+    public ShowCycles(IGraphProjections presentation)
         : base(presentation)
     {
     }
 
     public INodeMask Compute()
     {
-        var graph = Presentation.GetModule<ITransformationModule>().Graph;
+        var graph = Projections.TransformedGraph;
 
         var mask = new NodeMask();
         mask.IsShowMask = false;
         mask.Label = "Cycles";
 
         mask.Set(FindCycles(graph));
-        mask.Invert(Presentation);
+        mask.Invert(graph, Projections.Picking);
 
         return mask;
     }
 
     private IEnumerable<Node> FindCycles(IGraph graph)
     {
-        var unvisited = new HashSet<Node>(graph.Nodes.Where(Presentation.Picking.Pick));
+        var unvisited = new HashSet<Node>(graph.Nodes.Where(Projections.Picking.Pick));
         unvisited.RemoveWhere(n => n.In.Count == 0 || n.Out.Count == 0);
 
         while (unvisited.Count > 0)
@@ -47,7 +47,7 @@ public class ShowCycles : AbstractAlgorithm
 
     private IEnumerable<IList<Node>> FindCycles(HashSet<Node> unvisited, Node current, HashSet<Node> visited)
     {
-        foreach (var inNode in current.In.Select(edge => edge.Source).Where(Presentation.Picking.Pick))
+        foreach (var inNode in current.In.Select(edge => edge.Source).Where(Projections.Picking.Pick))
         {
             if (visited.Contains(inNode))
             {

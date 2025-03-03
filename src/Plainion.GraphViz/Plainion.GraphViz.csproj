@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Plainion.Graphs\Plainion.Graphs.csproj" />
+    <ProjectReference Include="..\Plainion.Graphs.Algorithms\Plainion.Graphs.Algorithms.csproj" />
   </ItemGroup>
   
 </Project>

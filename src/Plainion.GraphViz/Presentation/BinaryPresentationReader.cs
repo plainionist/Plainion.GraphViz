@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Media;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.GraphViz.Presentation
 {

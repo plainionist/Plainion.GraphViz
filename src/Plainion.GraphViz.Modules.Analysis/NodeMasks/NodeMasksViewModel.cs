@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Prism.Commands;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.GraphViz.Modules.Analysis.Filters
 {

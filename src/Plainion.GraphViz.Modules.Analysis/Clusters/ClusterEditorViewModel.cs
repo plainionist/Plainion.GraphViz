@@ -47,7 +47,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             myPresentation.DynamicClusters().AddCluster(newClusterId);
 
             // start new clusters folded
-            myPresentation.ClusterFolding().Toggle(newClusterId);
+            myPresentation.ClusterFolding.Toggle(newClusterId);
 
             var clusterNode = new NodeViewModel(myPresentation, newClusterId, NodeType.Cluster)
             {
@@ -192,7 +192,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
             var transformationModule = myPresentation.GetModule<ITransformationModule>();
             var captionModule = myPresentation.GetModule<ICaptionModule>();
-            var clusterFolding = myPresentation.ClusterFolding();
+            var clusterFolding = myPresentation.ClusterFolding;
 
             foreach (var cluster in transformationModule.Graph.Clusters.OrderBy(c => c.Id))
             {

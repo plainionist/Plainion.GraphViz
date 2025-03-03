@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
@@ -9,7 +9,7 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class AddRemoveTransitiveHull : AbstractAlgorithm
 {
-    public AddRemoveTransitiveHull(IGraphPresentation presentation)
+    public AddRemoveTransitiveHull(IGraphProjections presentation)
         : base(presentation)
     {
         Add = true;
@@ -47,13 +47,13 @@ public class AddRemoveTransitiveHull : AbstractAlgorithm
         }
         else if (nodes.Count == 1)
         {
-            var caption = Presentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-            mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption.DisplayText;
+            var caption = Projections.GetCaption(nodes.First().Id);
+            mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption;
         }
         else
         {
-            var caption = Presentation.GetPropertySetFor<Caption>().Get(nodes.First().Id);
-            mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption.DisplayText + " and ...";
+            var caption = Projections.GetCaption(nodes.First().Id);
+            mask.Label = (Reverse ? "Nodes reaching " : "Reachable nodes of ") + caption + " and ...";
         }
 
         return mask;
@@ -79,11 +79,11 @@ public class AddRemoveTransitiveHull : AbstractAlgorithm
     {
         if (Add)
         {
-            return Reverse ? n.In.Where(e => !Presentation.Picking.Pick(e.Source)) : n.Out.Where(e => !Presentation.Picking.Pick(e.Target));
+            return Reverse ? n.In.Where(e => !Projections.Picking.Pick(e.Source)) : n.Out.Where(e => !Projections.Picking.Pick(e.Target));
         }
         else
         {
-            return Reverse ? n.In.Where(e => Presentation.Picking.Pick(e.Source)) : n.Out.Where(e => Presentation.Picking.Pick(e.Target));
+            return Reverse ? n.In.Where(e => Projections.Picking.Pick(e.Source)) : n.Out.Where(e => Projections.Picking.Pick(e.Target));
         }
     }
 }

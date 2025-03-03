@@ -296,7 +296,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             var mask = algo.Compute(presentation.Graph.Nodes.AsParallel()
                 .Where(n => targetIds.Contains(n.Id))
                 .ToList());
-            mask.Invert(presentation);
+            mask.Invert(presentation.TransformedGraph, presentation.Picking);
 
             presentation.Masks().Push(mask);
 
@@ -328,7 +328,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             // 3. unfold clusters of targets again to only "see" dependencies to target nodes
             foreach (var c in targetClusters)
             {
-                presentation.ClusterFolding().Toggle(c.Id);
+                presentation.ClusterFolding.Toggle(c.Id);
             }
 
             // 4. find all nodes from which the targets can be reached
@@ -339,7 +339,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.CallTree.Analyzers
             var mask = algo.Compute(transformations.Graph.Nodes.AsParallel()
                 .Where(n => targetIds.Contains(n.Id))
                 .ToList());
-            mask.Invert(presentation);
+            mask.Invert(presentation.TransformedGraph, presentation.Picking);
 
             presentation.Masks().Push(mask);
 

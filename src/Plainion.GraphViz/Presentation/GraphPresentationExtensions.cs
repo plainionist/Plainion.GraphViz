@@ -16,29 +16,13 @@ namespace Plainion.GraphViz.Presentation
                 .Single();
         }
 
-        public static ClusterFoldingTransformation ClusterFolding(this IGraphPresentation presentation)
-        {
-            var transformations = presentation.GetModule<ITransformationModule>();
-            var transformation = transformations.Items
-                .OfType<ClusterFoldingTransformation>()
-                .SingleOrDefault();
-
-            if (transformation == null)
-            {
-                transformation = new ClusterFoldingTransformation(presentation);
-                transformations.Add(transformation);
-            }
-
-            return transformation;
-        }
-
         public static void ToogleFoldingOfVisibleClusters(this IGraphPresentation presentation)
         {
             Contract.RequiresNotNull(presentation, nameof(presentation));
 
-            var transformation = presentation.ClusterFolding();
+            var transformation = presentation.ClusterFolding;
 
-            var visibleClusters = presentation.TransformedGraph().Clusters
+            var visibleClusters = presentation.TransformedGraph.Clusters
                 .Where(presentation.Picking.Pick)
                 .Select(c => c.Id)
                 .ToList();
@@ -58,11 +42,6 @@ namespace Plainion.GraphViz.Presentation
         public static INodeMaskModule Masks(this IGraphPresentation presentation)
         {
             return presentation.GetModule<INodeMaskModule>();
-        }
-
-        public static IGraph TransformedGraph(this IGraphPresentation presentation)
-        {
-            return presentation.GetModule<ITransformationModule>().Graph;
         }
 
         public static void Select(this IGraphPresentation presentation, Node node, SiblingsType role)

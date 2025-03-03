@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Presentation
 {

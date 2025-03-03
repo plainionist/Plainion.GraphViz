@@ -1,13 +1,12 @@
 ﻿using System;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.GraphViz.Presentation;
 
-public interface IGraphPresentation : IModuleRepository, IDisposable
+public interface IGraphPresentation : IModuleRepository, IDisposable, IGraphProjections
 {
-    IGraph Graph { get; set; }
-
-    IGraphPicking Picking { get; }
+    new IGraph Graph { get;  set; }
 
     void InvalidateLayout();
 

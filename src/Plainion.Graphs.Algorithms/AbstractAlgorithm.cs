@@ -1,15 +1,16 @@
-﻿using Plainion.GraphViz.Presentation;
+﻿using System;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
 public class AbstractAlgorithm
 {
-    public AbstractAlgorithm(IGraphPresentation presentation)
+    public AbstractAlgorithm(IGraphProjections projections)
     {
-        Contract.RequiresNotNull(presentation, nameof(presentation));
+        Contract.RequiresNotNull(projections);
 
-        Presentation = presentation;
+        Projections = projections;
     }
 
-    protected IGraphPresentation Presentation { get; }
+    protected IGraphProjections Projections { get; }
 }

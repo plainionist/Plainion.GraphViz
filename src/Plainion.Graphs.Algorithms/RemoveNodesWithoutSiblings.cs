@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
@@ -9,7 +9,7 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class RemoveNodesWithoutSiblings : AbstractAlgorithm
 {
-    public RemoveNodesWithoutSiblings(IGraphPresentation presentation)
+    public RemoveNodesWithoutSiblings(IGraphProjections presentation)
         : base(presentation)
     {
         SiblingsType = SiblingsType.Any;
@@ -19,10 +19,9 @@ public class RemoveNodesWithoutSiblings : AbstractAlgorithm
 
     public INodeMask Compute()
     {
-        var transformationModule = Presentation.GetModule<ITransformationModule>();
-        var nodesToHide = transformationModule.Graph.Nodes
+        var nodesToHide = Projections.TransformedGraph.Nodes
             // do not process hidden nodes
-            .Where(Presentation.Picking.Pick)
+            .Where(Projections.Picking.Pick)
             .Where(n => HideNode(n));
 
         var mask = new NodeMask();
@@ -49,15 +48,15 @@ public class RemoveNodesWithoutSiblings : AbstractAlgorithm
     {
         if (SiblingsType == SiblingsType.Any)
         {
-            return node.In.All(e => !Presentation.Picking.Pick(e.Source)) && node.Out.All(e => !Presentation.Picking.Pick(e.Target));
+            return node.In.All(e => !Projections.Picking.Pick(e.Source)) && node.Out.All(e => !Projections.Picking.Pick(e.Target));
         }
         else if (SiblingsType == SiblingsType.Sources)
         {
-            return node.In.All(e => !Presentation.Picking.Pick(e.Source));
+            return node.In.All(e => !Projections.Picking.Pick(e.Source));
         }
         else if (SiblingsType == SiblingsType.Targets)
         {
-            return node.Out.All(e => !Presentation.Picking.Pick(e.Target));
+            return node.Out.All(e => !Projections.Picking.Pick(e.Target));
         }
         else
         {

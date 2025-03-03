@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 using Plainion.GraphViz.Dot;
 
 namespace Plainion.GraphViz.Presentation;
@@ -122,7 +123,28 @@ public class GraphPresentation : IGraphPresentation
         }
     }
 
-    public IGraphPicking Picking { get; private set; }
+    public IGraphPicking Picking { get; }
+
+    public IGraph TransformedGraph => GetModule<ITransformationModule>().Graph;
+
+    public IClusterFolding ClusterFolding 
+    {
+        get
+        {
+            var transformations = GetModule<ITransformationModule>();
+            var transformation = transformations.Items
+                .OfType<ClusterFoldingTransformation>()
+                .SingleOrDefault();
+
+            if (transformation == null)
+            {
+                transformation = new ClusterFoldingTransformation(this);
+                transformations.Add(transformation);
+            }
+
+            return transformation;
+        }
+    }
 
     public void InvalidateLayout()
     {
@@ -230,4 +252,7 @@ public class GraphPresentation : IGraphPresentation
             }
         }
     }
+
+    public string GetCaption(string id) =>
+        GetPropertySetFor<Caption>().Get(id).DisplayText;
 }

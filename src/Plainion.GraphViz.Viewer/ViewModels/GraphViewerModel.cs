@@ -214,7 +214,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private void OnRemoveAllBut(IEnumerable<Node> nodes)
         {
             var mask = new AddRemoveNodes(Presentation).Compute(nodes);
-            mask.Invert(Presentation);
+            mask.Invert(Presentation.TransformedGraph, Presentation.Picking);
 
             Presentation.Masks().Push(mask);
         }
@@ -223,7 +223,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         {
             var selection = Presentation.GetPropertySetFor<Selection>();
 
-            var graph = Presentation.TransformedGraph();
+            var graph = Presentation.TransformedGraph;
             var inversion = graph.Nodes
                 .Where(Presentation.Picking.Pick)
                 .Where(n => !(selection.TryGet(n.Id)?.IsSelected ?? false))
@@ -251,7 +251,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
         private void OnRemoveUnreachableNodes(IReadOnlyCollection<Node> nodes)
         {
             var mask = new AddRemoveTransitiveHull(Presentation) { Add = false }.Compute(nodes);
-            mask.Invert(Presentation);
+            mask.Invert(Presentation.TransformedGraph, Presentation.Picking);
 
             Presentation.Masks().Push(mask);
         }
@@ -343,7 +343,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         private void ToggleClusterFolding(Cluster commandParamter)
         {
-            var t = Presentation.ClusterFolding();
+            var t = Presentation.ClusterFolding;
             foreach (var c in GetSelectedClusters(commandParamter))
             {
                 t.Toggle(c.Id);

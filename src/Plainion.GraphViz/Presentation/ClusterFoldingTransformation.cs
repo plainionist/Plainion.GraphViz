@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Presentation
@@ -9,7 +10,7 @@ namespace Plainion.GraphViz.Presentation
     /// <summary>
     /// Manages folding of clusters
     /// </summary>
-    public class ClusterFoldingTransformation : BindableBase, IGraphTransformation, IDisposable
+    public class ClusterFoldingTransformation : BindableBase, IGraphTransformation, IDisposable, IClusterFolding
     {
         private readonly IGraphPresentation myPresentation;
         private readonly HashSet<string> myFoldedClusters;
@@ -131,7 +132,7 @@ namespace Plainion.GraphViz.Presentation
             myCaptionsJournal = null;
         }
 
-        public IEnumerable<string> Clusters
+        public IReadOnlyCollection<string> Clusters
         {
             get { return myFoldedClusters; }
         }
@@ -141,7 +142,7 @@ namespace Plainion.GraphViz.Presentation
             return "[" + clusterId + "]";
         }
 
-        public IEnumerable<Node> GetNodes(string clusterId)
+        public IReadOnlyCollection<Node> GetNodes(string clusterId)
         {
             var graph = myGraph ?? myPresentation.Graph;
 

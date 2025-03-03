@@ -1,4 +1,6 @@
-﻿namespace Plainion.GraphViz.Presentation
+﻿using Plainion.Graphs;
+
+namespace Plainion.GraphViz.Presentation
 {
     public abstract class AbstractPropertySet : NotifyPropertyChangedBase
     {

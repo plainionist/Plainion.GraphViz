@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
@@ -9,18 +9,18 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class GetNodesOutsideCluster : AbstractAlgorithm
 {
-    public GetNodesOutsideCluster(IGraphPresentation presentation)
+    public GetNodesOutsideCluster(IGraphProjections presentation)
         : base(presentation)
     {
     }
 
     public IReadOnlyCollection<string> Compute(string clusterId)
     {
-        var transformationModule = Presentation.GetModule<ITransformationModule>();
+        var graph = Projections.TransformedGraph;
 
-        return transformationModule.Graph.Nodes
-            .Where(node => Presentation.Picking.Pick(node))
-            .Where(node => !transformationModule.Graph.Clusters.Any(c => c.Nodes.Any(n => n.Id == node.Id)))
+        return graph.Nodes
+            .Where(node => Projections.Picking.Pick(node))
+            .Where(node => !graph.Clusters.Any(c => c.Nodes.Any(n => n.Id == node.Id)))
             .Select(node => node.Id)
             .ToList();
     }

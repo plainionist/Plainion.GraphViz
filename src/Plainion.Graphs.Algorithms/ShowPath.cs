@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Plainion.GraphViz.Presentation;
+using Plainion.Graphs.Projections;
 
 namespace Plainion.Graphs.Algorithms;
 
@@ -10,29 +10,27 @@ namespace Plainion.Graphs.Algorithms;
 /// </summary>
 public class ShowPath : AbstractAlgorithm
 {
-    public ShowPath(IGraphPresentation presentation)
+    public ShowPath(IGraphProjections presentation)
         : base(presentation)
     {
     }
 
     public INodeMask Compute(Node from, Node to)
     {
-        var captions = Presentation.GetModule<ICaptionModule>();
-
         var mask = new NodeMask();
         mask.IsShowMask = false;
-        mask.Label = $"Path from {captions.Get(from.Id).DisplayText} to {captions.Get(to.Id).DisplayText}";
+        mask.Label = $"Path from {Projections.GetCaption(from.Id)} to {Projections.GetCaption(to.Id)}";
 
         mask.Set(GetPaths(from, to));
-        mask.Invert(Presentation);
+        mask.Invert(Projections.TransformedGraph, Projections.Picking);
 
         return mask;
     }
 
     private IEnumerable<Node> GetPaths(Node source, Node target)
     {
-        var reachableFromSource = GetReachableNodes(source, n => n.Out.Where(e => Presentation.Picking.Pick(e.Target)));
-        var reachingTarget = GetReachableNodes(target, n => n.In.Where(e => Presentation.Picking.Pick(e.Source)));
+        var reachableFromSource = GetReachableNodes(source, n => n.Out.Where(e => Projections.Picking.Pick(e.Target)));
+        var reachingTarget = GetReachableNodes(target, n => n.In.Where(e => Projections.Picking.Pick(e.Source)));
 
         return reachableFromSource
             .Intersect(reachingTarget)

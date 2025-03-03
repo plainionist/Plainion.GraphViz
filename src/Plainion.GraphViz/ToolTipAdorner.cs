@@ -4,6 +4,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Visuals;
 

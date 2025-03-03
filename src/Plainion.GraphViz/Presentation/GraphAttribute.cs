@@ -1,4 +1,5 @@
-﻿using Plainion.GraphViz.Dot;
+﻿using Plainion.Graphs;
+using Plainion.GraphViz.Dot;
 
 namespace Plainion.GraphViz.Presentation;
 

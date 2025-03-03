@@ -1,4 +1,6 @@
 ﻿
+using Plainion.Graphs.Projections;
+
 namespace Plainion.GraphViz.Presentation;
 
 public interface INodeMaskModule : IModule<INodeMask>
