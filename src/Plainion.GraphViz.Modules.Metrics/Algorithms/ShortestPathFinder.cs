@@ -20,8 +20,8 @@ static class ShortestPathsFinder
             {
                 if (target.Id != source.Id && visited.Contains(target.Id))
                 {
-                    var path = ReconstructPath(source, target, edges);
-                    if (path.Count > 0)
+                    var path = TryReconstructPath(source, target, edges);
+                    if (path != null)
                     {
                         sourcePaths.Add(path);
                     }
@@ -63,9 +63,9 @@ static class ShortestPathsFinder
         return (visited, edges);
     }
 
-    private static Path ReconstructPath(Node source, Node target, Dictionary<string, Edge> edges)
+    private static Path TryReconstructPath(Node source, Node target, Dictionary<string, Edge> edges)
     {
-        var path = new Path();
+        var path = new List<Edge>();
         var currentId = target.Id;
 
         while (edges.ContainsKey(currentId))
@@ -82,6 +82,6 @@ static class ShortestPathsFinder
 
         path.Reverse();
 
-        return path.Count > 0 && path[0].Source.Id == source.Id ? path : [];
+        return path.Count > 0 && path[0].Source.Id == source.Id ? new Path(path) : null;
     }
 }

@@ -8,5 +8,5 @@ class ShortestPaths(IReadOnlyCollection<Path> paths)
     public IReadOnlyCollection<Path> Paths { get; } = paths;
 
     public IReadOnlyCollection<Path> Get(string sourceId, string targetId) =>
-        Paths.Where(p => p[0].Source.Id == sourceId && p.Last().Target.Id == targetId).ToList();
+        Paths.Where(p => p.Start.Id == sourceId && p.End.Id == targetId).ToList();
 }
