@@ -6,6 +6,9 @@ namespace Plainion.GraphViz.Modules.Metrics;
 
 static class GraphMetricsCalculator
 {
+    /// <summary>
+    /// Ratio of actual edges to the maximum possible edges in the graph
+    /// </summary>
     public static GraphDensity ComputeGraphDensity(IGraph graph) =>
         new()
         {
@@ -15,21 +18,27 @@ static class GraphMetricsCalculator
         };
 
     /// <summary>
-    /// Longest shortest path (hops) 
+    /// The longest shortest path between any two nodes in the graph
+    /// https://en.wikipedia.org/wiki/Diameter_(graph_theory)
     /// </summary>
     public static int ComputeDiameter(ShortestPaths shortestPaths) =>
-        shortestPaths.Paths.Count == 0
-            ? 0
-            : shortestPaths.Paths.Max(path => path.Count);
+        shortestPaths.Paths.Count == 0 ? 0 : shortestPaths.Paths.Max(path => path.Count);
 
-    public static double ComputeAveragePathLength(ShortestPaths shortestPaths)
+    /// <summary>
+    /// The average shortest path length between two nodes in the graph.
+    /// https://en.wikipedia.org/wiki/Average_path_length
+    /// </summary>
+    public static double ComputeAveragePathLength(IGraph graph, ShortestPaths shortestPaths)
     {
-        if (shortestPaths.Paths.Count == 0) return 0.0;
+        if (graph.Nodes.Count <= 1)
+        {
+            return 0.0;
+        }
 
         var totalLength = shortestPaths.Paths.Sum(path => path.Count);
-        var pairCount = shortestPaths.Paths.Count; // Number of reachable pairs
+        var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
 
-        return (double)totalLength / pairCount;
+        return (double)totalLength / maxPairs;
     }
 
     public static Dictionary<string, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
