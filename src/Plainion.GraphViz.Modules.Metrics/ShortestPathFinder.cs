@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plainion.Graphs;
 
@@ -6,14 +7,17 @@ namespace Plainion.GraphViz.Modules.Metrics;
 
 class Path : List<Edge> { }
 
-class ShortestPathsResult(List<Path> paths)
+class ShortestPaths(IReadOnlyCollection<Path> paths)
 {
-    public List<Path> Paths { get; } = paths;
+    public IReadOnlyCollection<Path> Paths { get; } = paths;
+
+    public IReadOnlyCollection<Path> Get(string sourceId, string targetId) =>
+        Paths.Where(p => p[0].Source.Id == sourceId && p.Last().Target.Id == targetId).ToList();
 }
 
 static class ShortestPathsFinder
 {
-    public static ShortestPathsResult FindAllShortestPaths(IGraph graph)
+    public static ShortestPaths FindAllShortestPaths(IGraph graph)
     {
         var allPaths = new List<Path>();
         var lockObj = new object();
@@ -41,7 +45,7 @@ static class ShortestPathsFinder
             }
         });
 
-        return new ShortestPathsResult(allPaths);
+        return new ShortestPaths(allPaths);
     }
 
     private static (HashSet<string> visited, Dictionary<string, Edge> edges) BFS(IGraph graph, Node source)
@@ -55,15 +59,14 @@ static class ShortestPathsFinder
 
         while (queue.Count > 0)
         {
-            var u = queue.Dequeue();
-            foreach (var edge in u.Out)
+            var node = queue.Dequeue();
+            foreach (var edge in node.Out)
             {
-                var v = edge.Target;
-                if (!visited.Contains(v.Id))
+                if (!visited.Contains(edge.Target.Id))
                 {
-                    visited.Add(v.Id);
-                    edges[v.Id] = edge;
-                    queue.Enqueue(v);
+                    visited.Add(edge.Target.Id);
+                    edges[edge.Target.Id] = edge;
+                    queue.Enqueue(edge.Target);
                 }
             }
         }
@@ -71,20 +74,25 @@ static class ShortestPathsFinder
         return (visited, edges);
     }
 
-    private static Path ReconstructPath(Node start, Node end, Dictionary<string, Edge> edges)
+    private static Path ReconstructPath(Node source, Node target, Dictionary<string, Edge> edges)
     {
         var path = new Path();
-        var currentId = end.Id;
+        var currentId = target.Id;
 
         while (edges.ContainsKey(currentId))
         {
             var edge = edges[currentId];
             path.Add(edge);
             currentId = edge.Source.Id;
-            if (currentId == start.Id) break;
+
+            if (currentId == source.Id)
+            {
+                break;
+            }
         }
 
         path.Reverse();
-        return path.Count > 0 && path[0].Source.Id == start.Id ? path : [];
+
+        return path.Count > 0 && path[0].Source.Id == source.Id ? path : [];
     }
 }

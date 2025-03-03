@@ -8,18 +8,16 @@ namespace Plainion.GraphViz.Modules.Metrics.Tests;
 public class ShortestPathsFinderTests
 {
     [Test]
-    public void NoEdges_ReturnsNoPaths()
+    public void SingleEdge_ReturnsThisEdge()
     {
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");
 
         var result = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        var ab = result.Paths.FirstOrDefault(p => p[0].Source.Id == "A" && p.Last().Target.Id == "B");
-        Assert.That(ab, Is.Not.Null);
-        Assert.That(ab.Count, Is.EqualTo(1));
-        var bPaths = result.Paths.Any(p => p[0].Source.Id == "B");
-        Assert.That(bPaths, Is.False);
+        var paths = result.Get("A", "B");
+        Assert.That(paths.Count, Is.EqualTo(1));
+        Assert.That(paths.Single().Count, Is.EqualTo(1));
     }
 
     [Test]
@@ -32,18 +30,12 @@ public class ShortestPathsFinderTests
 
         var result = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        var ab = result.Paths.First(p => p[0].Source.Id == "A" && p.Last().Target.Id == "B");
-        Assert.That(ab.Count, Is.EqualTo(1));
-        var ac = result.Paths.First(p => p[0].Source.Id == "A" && p.Last().Target.Id == "C");
-        Assert.That(ac.Count, Is.EqualTo(2));
-        var bc = result.Paths.First(p => p[0].Source.Id == "B" && p.Last().Target.Id == "C");
-        Assert.That(bc.Count, Is.EqualTo(1));
-        var ba = result.Paths.First(p => p[0].Source.Id == "B" && p.Last().Target.Id == "A");
-        Assert.That(ba.Count, Is.EqualTo(2));
-        var ca = result.Paths.First(p => p[0].Source.Id == "C" && p.Last().Target.Id == "A");
-        Assert.That(ca.Count, Is.EqualTo(1));
-        var cb = result.Paths.First(p => p[0].Source.Id == "C" && p.Last().Target.Id == "B");
-        Assert.That(cb.Count, Is.EqualTo(2));
+        Assert.That(result.Get("A", "B").Single().Count, Is.EqualTo(1));
+        Assert.That(result.Get("A", "C").Single().Count, Is.EqualTo(2));
+        Assert.That(result.Get("B", "C").Single().Count, Is.EqualTo(1));
+        Assert.That(result.Get("B", "A").Single().Count, Is.EqualTo(2));
+        Assert.That(result.Get("C", "A").Single().Count, Is.EqualTo(1));
+        Assert.That(result.Get("C", "B").Single().Count, Is.EqualTo(2));
     }
 
     [Test]
@@ -55,12 +47,9 @@ public class ShortestPathsFinderTests
 
         var result = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        var ab = result.Paths.FirstOrDefault(p => p[0].Source.Id == "A" && p.Last().Target.Id == "B");
-        Assert.That(ab.Count, Is.EqualTo(1));
-        var cd = result.Paths.FirstOrDefault(p => p[0].Source.Id == "C" && p.Last().Target.Id == "D");
-        Assert.That(cd.Count, Is.EqualTo(1));
-        var ac = result.Paths.Any(p => p[0].Source.Id == "A" && p.Last().Target.Id == "C");
-        Assert.That(ac, Is.False);
+        Assert.That(result.Get("A", "B").Single().Count, Is.EqualTo(1));
+        Assert.That(result.Get("C", "D").Single().Count, Is.EqualTo(1));
+        Assert.That(result.Get("A", "C"), Is.Empty);
     }
 
     [Test]
@@ -73,10 +62,7 @@ public class ShortestPathsFinderTests
 
         var result = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        var ab = result.Paths.First(p => p[0].Source.Id == "A" && p.Last().Target.Id == "B");
-        Assert.That(ab.Count, Is.EqualTo(1));
-        var ac = result.Paths.First(p => p[0].Source.Id == "A" && p.Last().Target.Id == "C");
-        Assert.That(ac.Count, Is.EqualTo(1)); // A -> C direct (1 hop), not A -> B -> C
-        Assert.That(ac.Count, Is.EqualTo(1));
+        Assert.That(result.Get("A", "B").Single().Count, Is.EqualTo(1));
+        Assert.That(result.Get("A", "C").Single().Count, Is.EqualTo(1));
     }
 }
