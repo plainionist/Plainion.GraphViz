@@ -234,11 +234,16 @@ namespace Plainion.GraphViz.Modules.CodeInspection.PathFinder.Analyzers
             var analyzer = new AssemblyDependencyAnalyzer(loader, relevantAssemblies);
             var deps = analyzer.GetRecursiveDependencies(sources);
 
-            var assemblyGraphPresentation = new SpecialGraphBuilder()
-                .CreateGraphOfReachables(
+            var response = new CreateGraphOfReachables()
+                .Compute(
                     sources.Select(R.AssemblyName),
                     targets.Select(R.AssemblyName),
                     deps.Select(r => (R.AssemblyName(r.Assembly), R.AssemblyName(r.Dependency))));
+            var assemblyGraphPresentation = new GraphPresentation(response.Graph);
+            foreach(var mask in response.Masks.Reverse())
+            {
+                assemblyGraphPresentation.Masks().Push(mask);
+            }
 
             if (AssemblyReferencesOnly)
             {

@@ -1,16 +1,17 @@
 ﻿using System;
-using Plainion.Graphs.Projections;
 
-namespace Plainion.Graphs.Algorithms.Tests;
+namespace Plainion.Graphs.Projections;
 
-internal class GraphProjections : IGraphProjections
+public class NullGraphProjections : IGraphProjections
 {
-    public GraphProjections(IGraph graph)
+    public NullGraphProjections(IGraph graph)
     {
         Contract.RequiresNotNull(graph);
 
         Graph = graph;
         TransformedGraph = graph;
+
+        Picking = new NullGraphPicking();
         ClusterFolding = new ClusterFolding(this);
     }
 
@@ -18,7 +19,7 @@ internal class GraphProjections : IGraphProjections
 
     public IGraph TransformedGraph { get; }
 
-    public IGraphPicking Picking { get; } = new NullGraphPicking();
+    public IGraphPicking Picking { get; }
 
     public IClusterFolding ClusterFolding { get; }
 }
