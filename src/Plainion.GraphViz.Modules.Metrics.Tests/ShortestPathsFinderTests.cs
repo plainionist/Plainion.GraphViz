@@ -79,25 +79,18 @@ public class ShortestPathsFinderTests
         var result = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
         // Expected paths
-        var pathsAD = result.Paths.Where(p => p[0].Source.Id == "A" && p.Last().Target.Id == "D").ToList();
+        var pathsAD = result.Get("A", "D");
         Assert.That(pathsAD.Count, Is.EqualTo(2), "Should find 2 shortest paths from A to D");
 
         // Check both paths exist
         var path1 = pathsAD.FirstOrDefault(p => p.Count == 2 && p[0].Target.Id == "B" && p[1].Target.Id == "D");
         var path2 = pathsAD.FirstOrDefault(p => p.Count == 2 && p[0].Target.Id == "C" && p[1].Target.Id == "D");
-
         Assert.That(path1, Is.Not.Null, "Path A -> B -> D should exist");
         Assert.That(path2, Is.Not.Null, "Path A -> C -> D should exist");
 
-        // Verify other paths
-        var pathsAB = result.Paths.Count(p => p[0].Source.Id == "A" && p.Last().Target.Id == "B");
-        var pathsAC = result.Paths.Count(p => p[0].Source.Id == "A" && p.Last().Target.Id == "C");
-        var pathsBD = result.Paths.Count(p => p[0].Source.Id == "B" && p.Last().Target.Id == "D");
-        var pathsCD = result.Paths.Count(p => p[0].Source.Id == "C" && p.Last().Target.Id == "D");
-
-        Assert.That(pathsAB, Is.EqualTo(1), "A -> B should have 1 path");
-        Assert.That(pathsAC, Is.EqualTo(1), "A -> C should have 1 path");
-        Assert.That(pathsBD, Is.EqualTo(1), "B -> D should have 1 path");
-        Assert.That(pathsCD, Is.EqualTo(1), "C -> D should have 1 path");
+        Assert.That(result.Get("A", "B").Count, Is.EqualTo(1), "A -> B should have 1 path");
+        Assert.That(result.Get("A", "C").Count, Is.EqualTo(1), "A -> C should have 1 path");
+        Assert.That(result.Get("B", "D").Count, Is.EqualTo(1), "B -> D should have 1 path");
+        Assert.That(result.Get("C", "D").Count, Is.EqualTo(1), "C -> D should have 1 path");
     }
 }
