@@ -95,7 +95,7 @@
                 <DataGrid Grid.Row="0" ItemsSource="{Binding Pathways.BetweennessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Node" Binding="{Binding Key, Mode=OneWay}" Width="Auto"/>
-                        <DataGridTextColumn Header="Path Count" Binding="{Binding Value, Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Path Count" Binding="{Binding Value, StringFormat='{}{0:F4}', Mode=OneWay}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>

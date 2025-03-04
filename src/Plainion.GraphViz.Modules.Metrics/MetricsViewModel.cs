@@ -165,6 +165,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             AveragePathLength = GraphMetricsCalculator.ComputeAveragePathLength(Model.Presentation.Graph, shortestPaths),
             BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(Model.Presentation.Graph, shortestPaths)
                 .Select(x => new KeyValuePair<string, double>(captions.Get(x.Key.Id).DisplayText, x.Value))
+                .OrderByDescending(x => x.Value)
                 .ToList()
         };
     }
