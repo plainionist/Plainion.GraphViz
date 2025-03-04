@@ -1,6 +1,6 @@
 ﻿namespace Plainion.GraphViz.Modules.Metrics;
 
-class BetweennessVM
+class GraphItemMeasurementVM
 {
     public required string Caption { get; init; }
     public required double Absolute { get; init; }

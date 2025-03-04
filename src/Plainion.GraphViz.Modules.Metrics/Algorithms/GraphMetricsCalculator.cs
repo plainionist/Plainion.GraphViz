@@ -4,7 +4,7 @@ using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
 
-static class GraphMetricsCalculator
+static partial class GraphMetricsCalculator
 {
     /// <summary>
     /// Ratio of actual edges to the maximum possible edges in the graph
@@ -51,7 +51,7 @@ static class GraphMetricsCalculator
     /// Measures how often a node is a member of the shortest path between other nodes
     /// https://en.wikipedia.org/wiki/Betweenness_centrality
     /// </summary>
-    public static IReadOnlyCollection<BetweennessCentrality<Node>> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
+    public static IReadOnlyCollection<GraphItemMeasurement<Node>> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
         // (source, target) -> number of paths
         var pathCounts = new Dictionary<(Node, Node), int>();
@@ -89,7 +89,7 @@ static class GraphMetricsCalculator
         }
 
         return betweenness
-            .Select(x => new BetweennessCentrality<Node>
+            .Select(x => new GraphItemMeasurement<Node>
             {
                 Owner = x.Key,
                 Absolute = x.Value,
@@ -102,7 +102,7 @@ static class GraphMetricsCalculator
     /// Measures how often an edge is part of the shortest path between nodes
     /// https://en.wikipedia.org/wiki/Betweenness_centrality#Edge_betweenness_centrality
     /// </summary>
-    public static IReadOnlyCollection<BetweennessCentrality<Edge>> ComputeEdgeBetweenness(IGraph graph, ShortestPaths shortestPaths)
+    public static IReadOnlyCollection<GraphItemMeasurement<Edge>> ComputeEdgeBetweenness(IGraph graph, ShortestPaths shortestPaths)
     {
         // (source, target) -> number of paths
         var pathCounts = new Dictionary<(Node, Node), int>();
@@ -138,12 +138,46 @@ static class GraphMetricsCalculator
         }
 
         return betweenness
-            .Select(x => new BetweennessCentrality<Edge>
+            .Select(x => new GraphItemMeasurement<Edge>
             {
                 Owner = x.Key,
                 Absolute = x.Value,
                 Normalized = maxPairs > 0 ? x.Value / maxPairs : 0.0
             })
             .ToList();
+    }
+
+    /// <summary>
+    /// Measures how close a node is to all other nodes via shortest paths
+    /// https://en.wikipedia.org/wiki/Closeness_centrality
+    /// </summary>
+    public static IReadOnlyCollection<GraphItemMeasurement<Node>> ComputeClosenessCentrality(IGraph graph, ShortestPaths shortestPaths)
+    {
+        var distances = new Dictionary<Node, Dictionary<Node, int>>(); // v -> (u -> distance)
+        foreach (var node in graph.Nodes)
+        {
+            distances[node] = [];
+        }
+
+        // Aggregate shortest path distances
+        foreach (var path in shortestPaths.Paths)
+        {
+            if (!distances[path.Start].ContainsKey(path.End))
+            {
+                distances[path.Start][path.End] = path.Count;
+            }
+        }
+
+        // Compute closeness for each node
+        return graph.Nodes.Select(node =>
+        {
+            var sumDistances = distances[node].Values.Sum();
+            return new GraphItemMeasurement<Node>
+            {
+                Owner = node,
+                Absolute = sumDistances > 0 ? 1.0 / sumDistances : 0.0,
+                Normalized = sumDistances > 0 ? (double)(graph.Nodes.Count - 1) / sumDistances : 0.0
+            };
+        }).ToList();
     }
 }

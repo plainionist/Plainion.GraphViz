@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Plainion.Graphs;
 using Plainion.GraphViz.Modules.Metrics.Algorithms;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
@@ -164,7 +163,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             Diameter = GraphMetricsCalculator.ComputeDiameter(shortestPaths),
             AveragePathLength = GraphMetricsCalculator.ComputeAveragePathLength(Model.Presentation.Graph, shortestPaths),
             BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(Model.Presentation.Graph, shortestPaths)
-                .Select(x => new BetweennessVM
+                .Select(x => new GraphItemMeasurementVM
                 {
                     Caption = captions.Get(x.Owner.Id).DisplayText,
                     Absolute = x.Absolute,
@@ -173,9 +172,18 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 .OrderByDescending(x => x.Absolute)
                 .ToList(),
             EdgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(Model.Presentation.Graph, shortestPaths)
-                .Select(x => new BetweennessVM
+                .Select(x => new GraphItemMeasurementVM
                 {
                     Caption = $"{captions.Get(x.Owner.Source.Id).DisplayText} -> {captions.Get(x.Owner.Target.Id).DisplayText}",
+                    Absolute = x.Absolute,
+                    Normalized = x.Normalized,
+                })
+                .OrderByDescending(x => x.Absolute)
+                .ToList(),
+            ClosenessCentrality = GraphMetricsCalculator.ComputeClosenessCentrality(Model.Presentation.Graph, shortestPaths)
+                .Select(x => new GraphItemMeasurementVM
+                {
+                    Caption = captions.Get(x.Owner.Id).DisplayText,
                     Absolute = x.Absolute,
                     Normalized = x.Normalized,
                 })

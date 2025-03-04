@@ -126,6 +126,20 @@
                 </DataGrid>
             </GroupBox>
 
+            <GroupBox Height="300">
+                <GroupBox.Header>
+                    <TextBlock Text="Closeness Centrality" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
+                               ToolTip="Measures how close a node is to all others" />
+                </GroupBox.Header>
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Pathways.ClosenessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Caption" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
+                        <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Normalized" Binding="{Binding Normalized, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>
