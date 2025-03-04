@@ -166,7 +166,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(Model.Presentation.Graph, shortestPaths)
                 .Select(x => new BetweennessVM
                 {
-                    Node = captions.Get(x.Node.Id).DisplayText,
+                    Node = captions.Get(x.OwnerId).DisplayText,
                     Absolute = x.Absolute,
                     Normalized = x.Normalized,
                 })

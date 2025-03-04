@@ -80,7 +80,7 @@ static class GraphMetricsCalculator
         return betweenness
             .Select(x => new BetweennessCentrality
             {
-                Node = x.Key,
+                OwnerId = x.Key.Id,
                 Absolute = x.Value,
                 Normalized = maxPairs == 0 ? 0.0 : x.Value / maxPairs,
             })
@@ -88,33 +88,51 @@ static class GraphMetricsCalculator
     }
 
     /// <summary>
-    /// Measures how often an edge is a member of the shortest path between other nodes
+    /// Measures how often an edge is part of the shortest path between nodes
+    /// https://en.wikipedia.org/wiki/Betweenness_centrality#Edge_betweenness_centrality
     /// </summary>
-    public static IReadOnlyDictionary<Edge, double> ComputeEdgeBetweenness(IGraph graph, ShortestPaths shortestPaths)
+    public static IReadOnlyCollection<BetweennessCentrality> ComputeEdgeBetweenness(IGraph graph, ShortestPaths shortestPaths)
     {
-        var betweenness = graph.Edges.ToDictionary(e => e, _ => 0.0);
-        var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
+        // (source, target) -> number of paths
+        var pathCounts = new Dictionary<(Node, Node), int>();
+        var edgePathCounts = new Dictionary<(Node, Node), Dictionary<Edge, int>>(); // (s, t) -> (e -> count)
+        var maxPairs = (graph.Nodes.Count - 1) * (graph.Nodes.Count - 2);
 
-        if (maxPairs == 0)
-        {
-            // empty graph;
-            return betweenness;
-        }
-
+        // Count all shortest paths between 2 nodes
+        // and how often each edge is part of each path
         foreach (var path in shortestPaths.Paths)
         {
-            // add 1 for each path the edge is part of
+            var pathId = (path[0].Source, path.Last().Target);
+            pathCounts[pathId] = pathCounts.GetValueOrDefault(pathId) + 1;
+
+            if (!edgePathCounts.ContainsKey(pathId))
+            {
+                edgePathCounts[pathId] = [];
+            }
+
             foreach (var edge in path)
             {
-                betweenness[edge] += 1.0;
+                edgePathCounts[pathId][edge] = edgePathCounts[pathId].GetValueOrDefault(edge) + 1;
             }
         }
 
-        foreach (var edgeId in betweenness.Keys)
+        // Compute edge betweenness
+        var betweenness = graph.Edges.ToDictionary(e => e, _ => 0.0);
+        foreach (var entry in edgePathCounts)
         {
-            betweenness[edgeId] /= maxPairs;
+            foreach (var edgeCount in entry.Value)
+            {
+                betweenness[edgeCount.Key] += (double)edgeCount.Value / pathCounts[entry.Key];
+            }
         }
 
-        return betweenness;
+        return betweenness
+            .Select(x => new BetweennessCentrality
+            {
+                OwnerId = x.Key.Id,
+                Absolute = x.Value,
+                Normalized = maxPairs > 0 ? x.Value / maxPairs : 0.0
+            })
+            .ToList();
     }
 }
