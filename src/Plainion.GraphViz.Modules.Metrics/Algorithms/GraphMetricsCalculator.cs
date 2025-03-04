@@ -13,14 +13,14 @@ static class GraphMetricsCalculator
         graph.Edges.Count == 0 ? 0 : (double)graph.Edges.Count / (graph.Nodes.Count * (graph.Nodes.Count - 1));
 
     /// <summary>
-    /// The longest shortest path between any two nodes in the graph
+    /// Length of the longest shortest path between any two nodes in the graph
     /// https://en.wikipedia.org/wiki/Diameter_(graph_theory)
     /// </summary>
     public static int ComputeDiameter(ShortestPaths shortestPaths) =>
         shortestPaths.Paths.Count == 0 ? 0 : shortestPaths.Paths.Max(path => path.Count);
 
     /// <summary>
-    /// The average shortest path length between two nodes in the graph.
+    /// The average shortest path length between two nodes in the graph
     /// https://en.wikipedia.org/wiki/Average_path_length
     /// </summary>
     public static double ComputeAveragePathLength(IGraph graph, ShortestPaths shortestPaths)
