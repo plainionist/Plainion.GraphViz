@@ -38,32 +38,85 @@ static class GraphMetricsCalculator
 
     /// <summary>
     /// Measures how often a node is a member of the shortest path between other nodes
+    /// https://en.wikipedia.org/wiki/Betweenness_centrality
     /// </summary>
     public static IReadOnlyDictionary<Node, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
+        var pathCounts = new Dictionary<(Node, Node), int>(); // (source, target) -> number of paths
+        var nodePathCounts = new Dictionary<(Node, Node), Dictionary<Node, int>>(); // (s, t) -> (v -> count)
+
+        // Count all paths and node occurrences
+        foreach (var path in shortestPaths.Paths)
+        {
+            var pathId = (path.Start, path.End);
+            pathCounts[pathId] = pathCounts.GetValueOrDefault(pathId) + 1;
+
+            if (!nodePathCounts.ContainsKey(pathId))
+            {
+                nodePathCounts[pathId] = new Dictionary<Node, int>();
+            }
+
+            foreach (var node in path.Skip(1).Select(e => e.Source))
+            {
+                nodePathCounts[pathId][node] = nodePathCounts[pathId].GetValueOrDefault(node) + 1;
+            }
+        }
+
+        // Compute betweenness
         var betweenness = graph.Nodes.ToDictionary(n => n, _ => 0.0);
+        foreach (var key in pathCounts.Keys)
+        {
+            var totalPaths = pathCounts[key];
+            if (nodePathCounts.ContainsKey(key))
+            {
+                foreach (var kv in nodePathCounts[key])
+                {
+                    var nodeId = kv.Key;
+                    var nodePaths = kv.Value;
+                    betweenness[nodeId] += (double)nodePaths / totalPaths;
+                }
+            }
+        }
+
+        // Normalize by max number of edges
+        var maxPairs = (graph.Nodes.Count - 1) * (graph.Nodes.Count - 2);
+        if (maxPairs > 0)
+        {
+            foreach (var nodeId in betweenness.Keys)
+            {
+                betweenness[nodeId] /= maxPairs;
+            }
+        }
+
+        return betweenness;
+    }
+
+    /// <summary>
+    /// Measures how often an edge is a member of the shortest path between other nodes
+    /// </summary>
+    public static IReadOnlyDictionary<Edge, double> ComputeEdgeBetweenness(IGraph graph, ShortestPaths shortestPaths)
+    {
+        var betweenness = graph.Edges.ToDictionary(e => e, _ => 0.0);
         var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
 
         if (maxPairs == 0)
         {
             // empty graph;
-            return betweenness; 
+            return betweenness;
         }
 
         foreach (var path in shortestPaths.Paths)
         {
-            // skip start and end, ignore target nodes as target of one edge is the source of the next
-            // then count add 1 for each path the node is part of
-            foreach (var nodeId in path.Skip(1).Select(e => e.Source))
+            // add 1 for each path the edge is part of
+            foreach (var edge in path)
             {
-                betweenness[nodeId] += 1.0;
+                betweenness[edge] += 1.0;
             }
         }
 
-        // Normalize by max possible directed pairs
-        foreach (var nodeId in betweenness.Keys)
+        foreach (var edgeId in betweenness.Keys)
         {
-            betweenness[nodeId] /= maxPairs;
+            betweenness[edgeId] /= maxPairs;
         }
 
         return betweenness;

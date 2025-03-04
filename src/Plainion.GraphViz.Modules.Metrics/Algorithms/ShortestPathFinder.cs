@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plainion.Graphs;
 
@@ -13,21 +14,7 @@ static class ShortestPathsFinder
 
         Parallel.ForEach(graph.Nodes, source =>
         {
-            var (visited, edges) = BFS(graph, source);
-            var sourcePaths = new List<Path>();
-
-            foreach (var target in graph.Nodes)
-            {
-                if (target.Id != source.Id && visited.Contains(target.Id))
-                {
-                    var path = TryReconstructPath(source, target, edges);
-                    if (path != null)
-                    {
-                        sourcePaths.Add(path);
-                    }
-                }
-            }
-
+            var sourcePaths = BFSAllPaths(graph, source);
             lock (lockObj)
             {
                 allPaths.AddRange(sourcePaths);
@@ -37,51 +24,48 @@ static class ShortestPathsFinder
         return new ShortestPaths(allPaths);
     }
 
-    private static (HashSet<string> visited, Dictionary<string, Edge> edges) BFS(IGraph graph, Node source)
+    private static List<Path> BFSAllPaths(IGraph graph, Node source)
     {
-        var visited = new HashSet<string>();
-        var edges = new Dictionary<string, Edge>(); // Edge leading to each node
-        var queue = new Queue<Node>();
+        var paths = new List<Path>();
+        var queue = new Queue<(Node node, List<Edge> path, int dist)>();
+        var distances = graph.Nodes.ToDictionary(n => n.Id, _ => int.MaxValue);
+        var allPathsToNode = new Dictionary<string, List<List<Edge>>>();
 
-        visited.Add(source.Id);
-        queue.Enqueue(source);
+        queue.Enqueue((source, new List<Edge>(), 0));
+        distances[source.Id] = 0;
+        allPathsToNode[source.Id] = new List<List<Edge>> { new List<Edge>() };
 
         while (queue.Count > 0)
         {
-            var node = queue.Dequeue();
-            foreach (var edge in node.Out)
+            var (current, currentPath, currentDist) = queue.Dequeue();
+
+            foreach (var edge in current.Out)
             {
-                if (!visited.Contains(edge.Target.Id))
+                var next = edge.Target;
+                var newPath = new List<Edge>(currentPath) { edge };
+                var newDist = currentDist + 1;
+
+                if (newDist < distances[next.Id])
                 {
-                    visited.Add(edge.Target.Id);
-                    edges[edge.Target.Id] = edge;
-                    queue.Enqueue(edge.Target);
+                    distances[next.Id] = newDist;
+                    allPathsToNode[next.Id] = new List<List<Edge>> { newPath };
+                    queue.Enqueue((next, newPath, newDist));
+                }
+                else if (newDist == distances[next.Id])
+                {
+                    allPathsToNode[next.Id].Add(newPath);
                 }
             }
         }
 
-        return (visited, edges);
-    }
-
-    private static Path TryReconstructPath(Node source, Node target, Dictionary<string, Edge> edges)
-    {
-        var path = new List<Edge>();
-        var currentId = target.Id;
-
-        while (edges.ContainsKey(currentId))
+        foreach (var target in graph.Nodes)
         {
-            var edge = edges[currentId];
-            path.Add(edge);
-            currentId = edge.Source.Id;
-
-            if (currentId == source.Id)
+            if (target.Id != source.Id && allPathsToNode.ContainsKey(target.Id))
             {
-                break;
+                paths.AddRange(allPathsToNode[target.Id].Select(x => new Path(x)));
             }
         }
 
-        path.Reverse();
-
-        return path.Count > 0 && path[0].Source.Id == source.Id ? new Path(path) : null;
+        return paths;
     }
 }
