@@ -1,8 +1,10 @@
-﻿namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
+﻿using Plainion.Graphs;
 
-class BetweennessCentrality
+namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
+
+class BetweennessCentrality<T> where T : IGraphItem
 {
-    public required string OwnerId { get; init; }
+    public required T Owner { get; init; }
     public required double Absolute { get; init; }
     public required double Normalized { get; init; }
 }

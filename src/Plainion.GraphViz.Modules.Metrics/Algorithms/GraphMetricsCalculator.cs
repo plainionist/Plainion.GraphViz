@@ -51,7 +51,7 @@ static class GraphMetricsCalculator
     /// Measures how often a node is a member of the shortest path between other nodes
     /// https://en.wikipedia.org/wiki/Betweenness_centrality
     /// </summary>
-    public static IReadOnlyCollection<BetweennessCentrality> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
+    public static IReadOnlyCollection<BetweennessCentrality<Node>> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
         // (source, target) -> number of paths
         var pathCounts = new Dictionary<(Node, Node), int>();
@@ -89,9 +89,9 @@ static class GraphMetricsCalculator
         }
 
         return betweenness
-            .Select(x => new BetweennessCentrality
+            .Select(x => new BetweennessCentrality<Node>
             {
-                OwnerId = x.Key.Id,
+                Owner = x.Key,
                 Absolute = x.Value,
                 Normalized = maxPairs == 0 ? 0.0 : x.Value / maxPairs,
             })
@@ -102,7 +102,7 @@ static class GraphMetricsCalculator
     /// Measures how often an edge is part of the shortest path between nodes
     /// https://en.wikipedia.org/wiki/Betweenness_centrality#Edge_betweenness_centrality
     /// </summary>
-    public static IReadOnlyCollection<BetweennessCentrality> ComputeEdgeBetweenness(IGraph graph, ShortestPaths shortestPaths)
+    public static IReadOnlyCollection<BetweennessCentrality<Edge>> ComputeEdgeBetweenness(IGraph graph, ShortestPaths shortestPaths)
     {
         // (source, target) -> number of paths
         var pathCounts = new Dictionary<(Node, Node), int>();
@@ -138,9 +138,9 @@ static class GraphMetricsCalculator
         }
 
         return betweenness
-            .Select(x => new BetweennessCentrality
+            .Select(x => new BetweennessCentrality<Edge>
             {
-                OwnerId = x.Key.Id,
+                Owner = x.Key,
                 Absolute = x.Value,
                 Normalized = maxPairs > 0 ? x.Value / maxPairs : 0.0
             })

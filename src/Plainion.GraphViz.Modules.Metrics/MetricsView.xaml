@@ -105,8 +105,23 @@
                 </GroupBox.Header>
                 <DataGrid Grid.Row="0" ItemsSource="{Binding Pathways.BetweennessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Node" Binding="{Binding Key, Mode=OneWay}" Width="Auto"/>
-                        <DataGridTextColumn Header="Path Count" Binding="{Binding Value, StringFormat='{}{0:F4}', Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Caption" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
+                        <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Normalized" Binding="{Binding Normalized, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Height="300">
+                <GroupBox.Header>
+                    <TextBlock Text="Edge Betweenness" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
+                               ToolTip="Number of times an edge is a member of the shortest path between two nodes" />
+                </GroupBox.Header>
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Pathways.EdgeBetweenness}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Caption" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
+                        <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
+                        <DataGridTextColumn Header="Normalized" Binding="{Binding Normalized, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
