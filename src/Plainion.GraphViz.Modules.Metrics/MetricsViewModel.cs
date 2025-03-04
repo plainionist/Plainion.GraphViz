@@ -55,6 +55,8 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         myCTS?.Cancel();
 
         myDegreeCentrality = [];
+
+        TriggerAnalysis();
     }
 
     public INotification Notification { get; set; }
