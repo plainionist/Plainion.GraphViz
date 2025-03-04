@@ -1,6 +1,6 @@
-﻿namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
+﻿namespace Plainion.GraphViz.Modules.Metrics;
 
-internal class GraphDensity
+internal class GraphDensityVM
 {
     public required int NodeCount { get; init; }
     public required int EdgeCount { get; init; }

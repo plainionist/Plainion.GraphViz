@@ -15,7 +15,7 @@ public class GraphMetricsCalculatorTests
 
         var paths = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph).Density, Is.EqualTo(0));
+        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph), Is.EqualTo(0));
         Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(0));
         Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(builder.Graph, paths), Is.EqualTo(0.0));
         var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths);
@@ -30,10 +30,10 @@ public class GraphMetricsCalculatorTests
 
         var paths = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph).Density, Is.EqualTo(0.5));
+        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph), Is.EqualTo(0.5));
         Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(1)); // A -> B
         Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(builder.Graph, paths), Is.EqualTo(1.0 / 2.0)); // Only 1 path
-        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths);
+        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths).ToDictionary(x => x.Key.Id, x => x.Value);
         Assert.That(betweenness["A"], Is.EqualTo(0.0)); // No intermediate nodes
         Assert.That(betweenness["B"], Is.EqualTo(0.0));
     }
@@ -48,10 +48,10 @@ public class GraphMetricsCalculatorTests
 
         var paths = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph).Density, Is.EqualTo(0.5));
+        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph), Is.EqualTo(0.5));
         Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(2)); // e.g., A -> B -> C
         Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(builder.Graph, paths), Is.EqualTo(1.5)); // 9 hops / 6 paths
-        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths);
+        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths).ToDictionary(x => x.Key.Id, x => x.Value);
         Assert.That(betweenness["A"], Is.EqualTo(1.0 / 6.0)); // C -> B
         Assert.That(betweenness["B"], Is.EqualTo(1.0 / 6.0)); // A -> C
         Assert.That(betweenness["C"], Is.EqualTo(1.0 / 6.0)); // B -> A
@@ -67,11 +67,11 @@ public class GraphMetricsCalculatorTests
 
         var paths = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
-        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph).Density, Is.EqualTo(0.25));
+        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph), Is.EqualTo(0.25));
         Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(3)); // A -> D
         var avg = (1 + 2 + 3 + 1 + 2 + 1) / 12.0; // A->B, A->C, A->D, B->C, B->D, C->D
         Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(builder.Graph, paths), Is.EqualTo(avg));
-        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths);
+        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths).ToDictionary(x => x.Key.Id, x => x.Value);
         Assert.That(betweenness["A"], Is.EqualTo(0.0));
         Assert.That(betweenness["B"], Is.EqualTo(2.0 / 12.0)); // A -> C, A -> D
         Assert.That(betweenness["C"], Is.EqualTo(2.0 / 12.0)); // A -> D, B -> D

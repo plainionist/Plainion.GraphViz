@@ -9,13 +9,8 @@ static class GraphMetricsCalculator
     /// <summary>
     /// Ratio of actual edges to the maximum possible edges in the graph
     /// </summary>
-    public static GraphDensity ComputeGraphDensity(IGraph graph) =>
-        new()
-        {
-            NodeCount = graph.Nodes.Count,
-            EdgeCount = graph.Edges.Count,
-            Density = graph.Edges.Count == 0 ? 0 : (double)graph.Edges.Count / (graph.Nodes.Count * (graph.Nodes.Count - 1))
-        };
+    public static double ComputeGraphDensity(IGraph graph) =>
+        graph.Edges.Count == 0 ? 0 : (double)graph.Edges.Count / (graph.Nodes.Count * (graph.Nodes.Count - 1));
 
     /// <summary>
     /// The longest shortest path between any two nodes in the graph
@@ -44,9 +39,9 @@ static class GraphMetricsCalculator
     /// <summary>
     /// Measures how often a node is a member of the shortest path between other nodes
     /// </summary>
-    public static Dictionary<string, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
+    public static IReadOnlyDictionary<Node, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
-        var betweenness = graph.Nodes.ToDictionary(n => n.Id, _ => 0.0);
+        var betweenness = graph.Nodes.ToDictionary(n => n, _ => 0.0);
         var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
 
         if (maxPairs == 0)
@@ -59,7 +54,7 @@ static class GraphMetricsCalculator
         {
             // skip start and end, ignore target nodes as target of one edge is the source of the next
             // then count add 1 for each path the node is part of
-            foreach (var nodeId in path.Skip(1).Select(e => e.Source.Id))
+            foreach (var nodeId in path.Skip(1).Select(e => e.Source))
             {
                 betweenness[nodeId] += 1.0;
             }

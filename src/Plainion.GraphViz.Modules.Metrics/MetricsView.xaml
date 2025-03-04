@@ -17,6 +17,7 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Background="#FDFDF5" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="5">
+            
             <GroupBox Header="Degree Centrality" Height="300">
                 <DataGrid Grid.Row="0" ItemsSource="{Binding DegreeCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
@@ -46,7 +47,7 @@
                     <TextBlock Text="Edge Count:" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
                     <TextBlock Text="{Binding GraphDensity.EdgeCount, TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
 
-                    <TextBlock Text="Density [0;1]:" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0"/>
+                    <TextBlock Text="Density [0; 1]:" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0"/>
                     <TextBlock Text="{Binding GraphDensity.Density, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
                 </Grid>
             </GroupBox>
@@ -68,6 +69,35 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+            </GroupBox>
+
+            <GroupBox Header="Path Lengths" Margin="0,5,0,0">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Diameter [0; N - 1]:" Grid.Row="0" Grid.Column="0" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Pathways.Diameter, TargetNullValue='-'}" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"/>
+
+                    <TextBlock Text="Average Path Length [0; N - 1]:" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
+                    <TextBlock Text="{Binding Pathways.AveragePathLength, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Betweenness Centrality" Height="300">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Pathways.BetweennessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Node" Binding="{Binding Key, Mode=OneWay}" Width="Auto"/>
+                        <DataGridTextColumn Header="Path Count" Binding="{Binding Value, Mode=OneWay}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </GroupBox>
 
         </StackPanel>

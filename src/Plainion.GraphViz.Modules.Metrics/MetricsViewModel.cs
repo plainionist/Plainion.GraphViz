@@ -17,8 +17,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     private Action myFinishAction;
     private CancellationTokenSource myCTS;
     private IReadOnlyCollection<NodeDegreesVM> myDegreeCentrality;
-    private GraphDensity myGraphDensity;
+    private GraphDensityVM myGraphDensity;
     private IReadOnlyCollection<CycleVM> myCycles;
+    private PathwaysVM myPathways;
 
     public MetricsViewModel(IDomainModel model)
          : base(model)
@@ -32,7 +33,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         set { SetProperty(ref myDegreeCentrality, value); }
     }
 
-    public GraphDensity GraphDensity
+    public GraphDensityVM GraphDensity
     {
         get { return myGraphDensity; }
         set { SetProperty(ref myGraphDensity, value); }
@@ -42,6 +43,12 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     {
         get { return myCycles; }
         set { SetProperty(ref myCycles, value); }
+    }
+
+    public PathwaysVM Pathways
+    {
+        get { return myPathways; }
+        set { SetProperty(ref myPathways, value); }
     }
 
     protected override void OnPresentationChanged()
@@ -101,8 +108,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         }
 
         Step(() => { DegreeCentrality = ComputeDegreeCentrality(); });
-        Step(() => { GraphDensity = GraphMetricsCalculator.ComputeGraphDensity(Model.Presentation.Graph); });
+        Step(() => { GraphDensity = ComputeGraphDensity(); });
         Step(() => { Cycles = ComputeCycles(); });
+        Step(() => { Pathways = ComputePathways(); });
     }
 
     private IReadOnlyCollection<NodeDegreesVM> ComputeDegreeCentrality()
@@ -121,6 +129,14 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             .ToList();
     }
 
+    private GraphDensityVM ComputeGraphDensity() =>
+        new()
+        {
+            NodeCount = Model.Presentation.Graph.Nodes.Count,
+            EdgeCount = Model.Presentation.Graph.Edges.Count,
+            Density = GraphMetricsCalculator.ComputeGraphDensity(Model.Presentation.Graph)
+        };
+
     private IReadOnlyCollection<CycleVM> ComputeCycles()
     {
         var captions = Model.Presentation.GetPropertySetFor<Caption>();
@@ -136,5 +152,22 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             .Select(CreateCycleVM)
             .ToList();
     }
+
+    private PathwaysVM ComputePathways()
+    {
+        var shortestPaths = ShortestPathsFinder.FindAllShortestPaths(Model.Presentation.Graph);
+
+        var captions = Model.Presentation.GetPropertySetFor<Caption>();
+
+        return new()
+        {
+            Diameter = GraphMetricsCalculator.ComputeDiameter(shortestPaths),
+            AveragePathLength = GraphMetricsCalculator.ComputeAveragePathLength(Model.Presentation.Graph, shortestPaths),
+            BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(Model.Presentation.Graph, shortestPaths)
+                .Select(x => new KeyValuePair<string, double>(captions.Get(x.Key.Id).DisplayText, x.Value))
+                .ToList()
+        };
+    }
+
 }
 
