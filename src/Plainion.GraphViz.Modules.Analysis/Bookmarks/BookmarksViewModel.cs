@@ -1,8 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows.Input;
-using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.GraphViz.Presentation;
+using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Prism.Commands;
 
 namespace Plainion.GraphViz.Modules.Analysis.Bookmarks

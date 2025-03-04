@@ -65,6 +65,9 @@ namespace Plainion.GraphViz.Modules.Analysis.Filters
             DeleteMaskCommand = new DelegateCommand(OnDeleteMask);
             MoveMaskUpCommand = new DelegateCommand(OnMoveMaskUp);
             MoveMaskDownCommand = new DelegateCommand(OnMoveMaskDown);
+
+            // this might be called after presentation is already loaded
+            OnPresentationChanged();
         }
 
         protected override void OnPresentationChanged()
