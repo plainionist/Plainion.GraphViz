@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
@@ -27,7 +28,9 @@ internal class ToolsMenuItemModel : BindableBase
             Title = "Graph Metrics"
         };
 
-        StartAnalysisRequest.Raise(notification, c => { });
+        StartAnalysisRequest.Raise(notification, c => {
+            Debug.WriteLine("CLOSED");
+        });
     }
 
     private void OnPresentationChanged(object sender, EventArgs e)

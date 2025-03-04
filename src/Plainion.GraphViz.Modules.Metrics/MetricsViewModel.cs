@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Plainion.Graphs;
 using Plainion.GraphViz.Modules.Metrics.Algorithms;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
@@ -19,6 +20,8 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     private GraphDensityVM myGraphDensity;
     private IReadOnlyCollection<CycleVM> myCycles;
     private PathwaysVM myPathways;
+    private IModuleChangedObserver myNodeMaskObserver;
+    private IModuleChangedObserver myTransformationsObserver;
 
     public MetricsViewModel(IDomainModel model)
          : base(model)
@@ -52,11 +55,49 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
     protected override void OnPresentationChanged()
     {
-        myCTS?.Cancel();
+        if (myNodeMaskObserver != null)
+        {
+            myNodeMaskObserver.ModuleChanged -= OnNodeMasksChanged;
+            myNodeMaskObserver.Dispose();
+            myNodeMaskObserver = null;
+        }
 
+        if (myTransformationsObserver != null)
+        {
+            myTransformationsObserver.ModuleChanged -= OnTransformationsChanged;
+            myTransformationsObserver.Dispose();
+            myTransformationsObserver = null;
+        }
+
+        if (Model.Presentation == null)
+        {
+            return;
+        }
+
+        myNodeMaskObserver = Model.Presentation.GetModule<INodeMaskModule>().CreateObserver();
+        myNodeMaskObserver.ModuleChanged += OnNodeMasksChanged;
+
+        myTransformationsObserver = Model.Presentation.GetModule<ITransformationModule>().CreateObserver();
+        myTransformationsObserver.ModuleChanged += OnTransformationsChanged;
+
+        RestartAnalysis();
+    }
+
+    private void RestartAnalysis()
+    {
         myDegreeCentrality = [];
-
+        myCTS?.Cancel();
         TriggerAnalysis();
+    }
+
+    private void OnTransformationsChanged(object sender, EventArgs e)
+    {
+        RestartAnalysis();
+    }
+
+    private void OnNodeMasksChanged(object sender, EventArgs e)
+    {
+        RestartAnalysis();
     }
 
     public INotification Notification { get; set; }
@@ -93,6 +134,12 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             return;
         }
 
+        if (myFinishAction == null)
+        {
+            // dialog not open
+            return;
+        }
+
         myCTS = new CancellationTokenSource();
 
         Task.Run(() => RunAnalysis(myCTS.Token), myCTS.Token)
@@ -108,17 +155,31 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             token.ThrowIfCancellationRequested();
         }
 
-        Step(() => { DegreeCentrality = ComputeDegreeCentrality(); });
-        Step(() => { GraphDensity = ComputeGraphDensity(); });
-        Step(() => { Cycles = ComputeCycles(); });
-        Step(() => { Pathways = ComputePathways(); });
+        var builder = new RelaxedGraphBuilder();
+        foreach (var node in Model.Presentation.TransformedGraph.Nodes.Where(Model.Presentation.Picking.Pick))
+        {
+            builder.TryAddNode(node.Id);
+        }
+        foreach (var edge in Model.Presentation.TransformedGraph.Edges.Where(Model.Presentation.Picking.Pick))
+        {
+            builder.TryAddEdge(edge.Source.Id, edge.Target.Id);
+        }
+        foreach (var cluster in Model.Presentation.TransformedGraph.Clusters.Where(Model.Presentation.Picking.Pick))
+        {
+            builder.TryAddCluster(cluster.Id, cluster.Nodes.Where(Model.Presentation.Picking.Pick).Select(x => x.Id));
+        }
+
+        Step(() => { DegreeCentrality = ComputeDegreeCentrality(Model.Presentation, builder.Graph); });
+        Step(() => { GraphDensity = ComputeGraphDensity(Model.Presentation, builder.Graph); });
+        Step(() => { Cycles = ComputeCycles(Model.Presentation, builder.Graph); });
+        Step(() => { Pathways = ComputePathways(Model.Presentation, builder.Graph); });
     }
 
-    private IReadOnlyCollection<NodeDegreesVM> ComputeDegreeCentrality()
+    private static IReadOnlyCollection<NodeDegreesVM> ComputeDegreeCentrality(IModuleRepository modules, IGraph graph)
     {
-        var captions = Model.Presentation.GetPropertySetFor<Caption>();
+        var captions = modules.GetPropertySetFor<Caption>();
 
-        return Model.Presentation.Graph.Nodes
+        return graph.Nodes
             .Select(x => new NodeDegreesVM
             {
                 Caption = captions.Get(x.Id).DisplayText,
@@ -130,17 +191,17 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             .ToList();
     }
 
-    private GraphDensityVM ComputeGraphDensity() =>
+    private static GraphDensityVM ComputeGraphDensity(IModuleRepository modules, IGraph graph) =>
         new()
         {
-            NodeCount = Model.Presentation.Graph.Nodes.Count,
-            EdgeCount = Model.Presentation.Graph.Edges.Count,
-            Density = GraphMetricsCalculator.ComputeGraphDensity(Model.Presentation.Graph)
+            NodeCount = graph.Nodes.Count,
+            EdgeCount = graph.Edges.Count,
+            Density = GraphMetricsCalculator.ComputeGraphDensity(graph)
         };
 
-    private IReadOnlyCollection<CycleVM> ComputeCycles()
+    private static IReadOnlyCollection<CycleVM> ComputeCycles(IModuleRepository modules, IGraph graph)
     {
-        var captions = Model.Presentation.GetPropertySetFor<Caption>();
+        var captions = modules.GetPropertySetFor<Caption>();
 
         CycleVM CreateCycleVM(Cycle cycle) =>
             new()
@@ -149,22 +210,22 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 Path = cycle.Path.Skip(1).Select(n => captions.Get(n.Id).DisplayText).ToList()
             };
 
-        return CycleFinder.FindAllCycles(Model.Presentation.Graph)
+        return CycleFinder.FindAllCycles(graph)
             .Select(CreateCycleVM)
             .ToList();
     }
 
-    private PathwaysVM ComputePathways()
+    private static PathwaysVM ComputePathways(IModuleRepository modules, IGraph graph)
     {
-        var shortestPaths = ShortestPathsFinder.FindAllShortestPaths(Model.Presentation.Graph);
+        var shortestPaths = ShortestPathsFinder.FindAllShortestPaths(graph);
 
-        var captions = Model.Presentation.GetPropertySetFor<Caption>();
+        var captions = modules.GetPropertySetFor<Caption>();
 
         return new()
         {
             Diameter = GraphMetricsCalculator.ComputeDiameter(shortestPaths),
-            AveragePathLength = GraphMetricsCalculator.ComputeAveragePathLength(Model.Presentation.Graph, shortestPaths),
-            BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(Model.Presentation.Graph, shortestPaths)
+            AveragePathLength = GraphMetricsCalculator.ComputeAveragePathLength(graph, shortestPaths),
+            BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
                     Caption = captions.Get(x.Owner.Id).DisplayText,
@@ -173,7 +234,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 })
                 .OrderByDescending(x => x.Absolute)
                 .ToList(),
-            EdgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(Model.Presentation.Graph, shortestPaths)
+            EdgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
                     Caption = $"{captions.Get(x.Owner.Source.Id).DisplayText} -> {captions.Get(x.Owner.Target.Id).DisplayText}",
@@ -182,7 +243,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 })
                 .OrderByDescending(x => x.Absolute)
                 .ToList(),
-            ClosenessCentrality = GraphMetricsCalculator.ComputeClosenessCentrality(Model.Presentation.Graph, shortestPaths)
+            ClosenessCentrality = GraphMetricsCalculator.ComputeClosenessCentrality(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
                     Caption = captions.Get(x.Owner.Id).DisplayText,
