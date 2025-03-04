@@ -40,11 +40,12 @@ static class GraphMetricsCalculator
     /// Measures how often a node is a member of the shortest path between other nodes
     /// https://en.wikipedia.org/wiki/Betweenness_centrality
     /// </summary>
-    public static IReadOnlyDictionary<Node, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
+    public static IReadOnlyCollection<BetweennessCentrality> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
         // (source, target) -> number of paths
         var pathCounts = new Dictionary<(Node, Node), int>();
         var nodePathCounts = new Dictionary<(Node, Node), Dictionary<Node, int>>(); // (s, t) -> (v -> count)
+        var maxPairs = (graph.Nodes.Count - 1) * (graph.Nodes.Count - 2);
 
         // Count all shortest paths between 2 nodes
         // and how often each node is part of each path (ignoring start and end)
@@ -76,17 +77,14 @@ static class GraphMetricsCalculator
             }
         }
 
-        // Normalize by max number of edges
-        var maxPairs = (graph.Nodes.Count - 1) * (graph.Nodes.Count - 2);
-        if (maxPairs > 0)
-        {
-            foreach (var nodeId in betweenness.Keys)
+        return betweenness
+            .Select(x => new BetweennessCentrality
             {
-                betweenness[nodeId] /= maxPairs;
-            }
-        }
-
-        return betweenness;
+                Node = x.Key,
+                Absolute = x.Value,
+                Normalized = maxPairs == 0 ? 0.0 : x.Value / maxPairs,
+            })
+            .ToList();
     }
 
     /// <summary>

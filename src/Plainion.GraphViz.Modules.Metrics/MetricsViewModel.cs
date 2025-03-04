@@ -164,8 +164,13 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             Diameter = GraphMetricsCalculator.ComputeDiameter(shortestPaths),
             AveragePathLength = GraphMetricsCalculator.ComputeAveragePathLength(Model.Presentation.Graph, shortestPaths),
             BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(Model.Presentation.Graph, shortestPaths)
-                .Select(x => new KeyValuePair<string, double>(captions.Get(x.Key.Id).DisplayText, x.Value))
-                .OrderByDescending(x => x.Value)
+                .Select(x => new BetweennessVM
+                {
+                    Node = captions.Get(x.Node.Id).DisplayText,
+                    Absolute = x.Absolute,
+                    Normalized = x.Normalized,
+                })
+                .OrderByDescending(x => x.Absolute)
                 .ToList()
         };
     }
