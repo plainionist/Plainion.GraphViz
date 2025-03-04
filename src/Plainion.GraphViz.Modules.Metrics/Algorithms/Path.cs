@@ -4,7 +4,7 @@ using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
 
-class Path : IReadOnlyList<Edge>
+class Path : IEnumerable<Edge>
 {
     private readonly IReadOnlyList<Edge> myPaths;
 
@@ -18,7 +18,7 @@ class Path : IReadOnlyList<Edge>
     public Node Start => myPaths[0].Source;
     public Node End => myPaths[myPaths.Count - 1].Target;
 
-    public int Count => myPaths.Count;
+    public int Distance => myPaths.Count;
     public IEnumerator<Edge> GetEnumerator() => myPaths.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => myPaths.GetEnumerator();
     public Edge this[int index] => myPaths[index];

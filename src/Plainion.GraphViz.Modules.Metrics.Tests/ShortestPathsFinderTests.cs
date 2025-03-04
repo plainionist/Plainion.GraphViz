@@ -83,8 +83,8 @@ public class ShortestPathsFinderTests
         Assert.That(pathsAD.Count, Is.EqualTo(2), "Should find 2 shortest paths from A to D");
 
         // Check both paths exist
-        var path1 = pathsAD.FirstOrDefault(p => p.Count == 2 && p[0].Target.Id == "B" && p[1].Target.Id == "D");
-        var path2 = pathsAD.FirstOrDefault(p => p.Count == 2 && p[0].Target.Id == "C" && p[1].Target.Id == "D");
+        var path1 = pathsAD.FirstOrDefault(p => p.Distance == 2 && p[0].Target.Id == "B" && p[1].Target.Id == "D");
+        var path2 = pathsAD.FirstOrDefault(p => p.Distance == 2 && p[0].Target.Id == "C" && p[1].Target.Id == "D");
         Assert.That(path1, Is.Not.Null, "Path A -> B -> D should exist");
         Assert.That(path2, Is.Not.Null, "Path A -> C -> D should exist");
 

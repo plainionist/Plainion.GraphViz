@@ -17,7 +17,7 @@ static partial class GraphMetricsCalculator
     /// https://en.wikipedia.org/wiki/Diameter_(graph_theory)
     /// </summary>
     public static int ComputeDiameter(ShortestPaths shortestPaths) =>
-        shortestPaths.Paths.Count == 0 ? 0 : shortestPaths.Paths.Max(path => path.Count);
+        shortestPaths.Paths.Count == 0 ? 0 : shortestPaths.Paths.Max(path => path.Distance);
 
     /// <summary>
     /// The average shortest path length between two nodes in the graph
@@ -38,7 +38,7 @@ static partial class GraphMetricsCalculator
             var pair = (path.Start, path.End);
             if (!distances.ContainsKey(pair))
             {
-                distances[pair] = path.Count; // Take first path’s length (all are shortest)
+                distances[pair] = path.Distance; // Take first path’s length (all are shortest)
             }
         }
 
@@ -113,7 +113,7 @@ static partial class GraphMetricsCalculator
         // and how often each edge is part of each path
         foreach (var path in shortestPaths.Paths)
         {
-            var pathId = (path[0].Source, path.Last().Target);
+            var pathId = (path.Start, path.End);
             pathCounts[pathId] = pathCounts.GetValueOrDefault(pathId) + 1;
 
             if (!edgePathCounts.ContainsKey(pathId))
@@ -164,7 +164,7 @@ static partial class GraphMetricsCalculator
         {
             if (!distances[path.Start].ContainsKey(path.End))
             {
-                distances[path.Start][path.End] = path.Count;
+                distances[path.Start][path.End] = path.Distance;
             }
         }
 
