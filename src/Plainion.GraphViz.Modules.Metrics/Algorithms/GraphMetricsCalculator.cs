@@ -49,22 +49,26 @@ static class GraphMetricsCalculator
         var betweenness = graph.Nodes.ToDictionary(n => n.Id, _ => 0.0);
         var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
 
+        if (maxPairs == 0)
+        {
+            // empty graph;
+            return betweenness; 
+        }
+
         foreach (var path in shortestPaths.Paths)
         {
             // skip start and end, ignore target nodes as target of one edge is the source of the next
-            foreach(var nodeId in path.Skip(1).Select(e => e.Source.Id))
+            // then count add 1 for each path the node is part of
+            foreach (var nodeId in path.Skip(1).Select(e => e.Source.Id))
             {
-                betweenness[nodeId] += 1.0; // Add 1 for each path it’s on
+                betweenness[nodeId] += 1.0;
             }
         }
 
         // Normalize by max possible directed pairs
-        if (maxPairs > 0)
+        foreach (var nodeId in betweenness.Keys)
         {
-            foreach (var nodeId in betweenness.Keys)
-            {
-                betweenness[nodeId] /= maxPairs;
-            }
+            betweenness[nodeId] /= maxPairs;
         }
 
         return betweenness;
