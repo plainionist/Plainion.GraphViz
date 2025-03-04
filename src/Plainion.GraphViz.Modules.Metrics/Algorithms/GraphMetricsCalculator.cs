@@ -42,10 +42,12 @@ static class GraphMetricsCalculator
     /// </summary>
     public static IReadOnlyDictionary<Node, double> ComputeBetweennessCentrality(IGraph graph, ShortestPaths shortestPaths)
     {
-        var pathCounts = new Dictionary<(Node, Node), int>(); // (source, target) -> number of paths
+        // (source, target) -> number of paths
+        var pathCounts = new Dictionary<(Node, Node), int>();
         var nodePathCounts = new Dictionary<(Node, Node), Dictionary<Node, int>>(); // (s, t) -> (v -> count)
 
-        // Count all paths and node occurrences
+        // Count all shortest paths between 2 nodes
+        // and how often each node is part of each path (ignoring start and end)
         foreach (var path in shortestPaths.Paths)
         {
             var pathId = (path.Start, path.End);
@@ -53,9 +55,11 @@ static class GraphMetricsCalculator
 
             if (!nodePathCounts.ContainsKey(pathId))
             {
-                nodePathCounts[pathId] = new Dictionary<Node, int>();
+                nodePathCounts[pathId] = [];
             }
 
+            // skip start and end, ignore target nodes as target of one edge is the source of the next
+            // then count add 1 for each path the node is part of
             foreach (var node in path.Skip(1).Select(e => e.Source))
             {
                 nodePathCounts[pathId][node] = nodePathCounts[pathId].GetValueOrDefault(node) + 1;
@@ -64,17 +68,11 @@ static class GraphMetricsCalculator
 
         // Compute betweenness
         var betweenness = graph.Nodes.ToDictionary(n => n, _ => 0.0);
-        foreach (var key in pathCounts.Keys)
+        foreach (var entry in nodePathCounts)
         {
-            var totalPaths = pathCounts[key];
-            if (nodePathCounts.ContainsKey(key))
+            foreach (var nodeCount in entry.Value)
             {
-                foreach (var kv in nodePathCounts[key])
-                {
-                    var nodeId = kv.Key;
-                    var nodePaths = kv.Value;
-                    betweenness[nodeId] += (double)nodePaths / totalPaths;
-                }
+                betweenness[nodeCount.Key] += (double)nodeCount.Value / pathCounts[entry.Key];
             }
         }
 
