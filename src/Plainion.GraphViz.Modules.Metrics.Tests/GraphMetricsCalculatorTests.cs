@@ -27,6 +27,26 @@ public class GraphMetricsCalculatorTests
     }
 
     [Test]
+    public void SingleNodeGraph_ReturnsZeros()
+    {
+        var builder = new RelaxedGraphBuilder();
+        builder.TryAddNode("A"); 
+
+        var paths = ShortestPathsFinder.FindAllShortestPaths(builder.Graph);
+
+        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(builder.Graph), Is.EqualTo(0)); // 0 / (1 * 0) = 0
+        Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(0)); // No paths
+        Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(builder.Graph, paths), Is.EqualTo(0.0)); // No pairs
+
+        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(builder.Graph, paths).ToDictionary(x => x.OwnerId);
+        Assert.That(betweenness["A"].Absolute, Is.EqualTo(0.0)); // No paths
+        Assert.That(betweenness["A"].Normalized, Is.EqualTo(0.0));
+
+        var edgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(builder.Graph, paths).ToDictionary(x => x.OwnerId, x => x.Absolute);
+        Assert.That(edgeBetweenness.Count, Is.EqualTo(0)); // No edges
+    }
+
+    [Test]
     public void SingleEdgeGraph_DiameterAndAvgPath()
     {
         var builder = new RelaxedGraphBuilder();
@@ -110,5 +130,71 @@ public class GraphMetricsCalculatorTests
         Assert.That(edgeBetweenness["edge-from-B-to-C"].Normalized, Is.EqualTo(4.0 / 6.0));
         Assert.That(edgeBetweenness["edge-from-C-to-D"].Absolute, Is.EqualTo(3.0)); // A->D, B->D, C->D
         Assert.That(edgeBetweenness["edge-from-C-to-D"].Normalized, Is.EqualTo(3.0 / 6.0));
+    }
+
+    [Test]
+    public void DisconnectedGraph_Metrics()
+    {
+        var builder = new RelaxedGraphBuilder();
+        builder.TryAddEdge("A", "B"); // Component 1
+        builder.TryAddEdge("C", "D"); // Component 2
+        var graph = builder.Graph;
+        var paths = ShortestPathsFinder.FindAllShortestPaths(graph);
+
+        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(graph), Is.EqualTo(0.1667).Within(0.0001)); // 2 / (4 * 3)
+        Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(1)); // Max within components
+        Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(graph, paths), Is.EqualTo(2.0 / 12.0)); // 2 paths / 12 pairs
+
+        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(graph, paths).ToDictionary(x => x.OwnerId);
+        Assert.That(betweenness["A"].Absolute, Is.EqualTo(0.0));
+        Assert.That(betweenness["A"].Normalized, Is.EqualTo(0.0));
+        Assert.That(betweenness["B"].Absolute, Is.EqualTo(0.0));
+        Assert.That(betweenness["B"].Normalized, Is.EqualTo(0.0));
+        Assert.That(betweenness["C"].Absolute, Is.EqualTo(0.0));
+        Assert.That(betweenness["C"].Normalized, Is.EqualTo(0.0));
+        Assert.That(betweenness["D"].Absolute, Is.EqualTo(0.0));
+        Assert.That(betweenness["D"].Normalized, Is.EqualTo(0.0));
+
+        var edgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(graph, paths).ToDictionary(x => x.OwnerId);
+        Assert.That(edgeBetweenness["edge-from-A-to-B"].Absolute, Is.EqualTo(1.0));
+        Assert.That(edgeBetweenness["edge-from-A-to-B"].Normalized, Is.EqualTo(1.0 / 6.0));
+        Assert.That(edgeBetweenness["edge-from-C-to-D"].Absolute, Is.EqualTo(1.0));
+        Assert.That(edgeBetweenness["edge-from-C-to-D"].Normalized, Is.EqualTo(1.0 / 6.0));
+    }
+
+    [Test]
+    public void DiamondGraph_Metrics()
+    {
+        var builder = new RelaxedGraphBuilder();
+        builder.TryAddEdge("A", "B");
+        builder.TryAddEdge("A", "C");
+        builder.TryAddEdge("B", "D");
+        builder.TryAddEdge("C", "D");
+        var graph = builder.Graph;
+        var paths = ShortestPathsFinder.FindAllShortestPaths(graph);
+
+        Assert.That(GraphMetricsCalculator.ComputeGraphDensity(graph), Is.EqualTo(0.3333).Within(0.0001)); // 4 / (4 * 3)
+        Assert.That(GraphMetricsCalculator.ComputeDiameter(paths), Is.EqualTo(2)); // A -> D
+        Assert.That(GraphMetricsCalculator.ComputeAveragePathLength(graph, paths), Is.EqualTo(6.0 / 12.0)); // 6 hops / 12 pairs
+
+        var betweenness = GraphMetricsCalculator.ComputeBetweennessCentrality(graph, paths).ToDictionary(x => x.OwnerId);
+        Assert.That(betweenness["A"].Absolute, Is.EqualTo(0.0));
+        Assert.That(betweenness["A"].Normalized, Is.EqualTo(0.0));
+        Assert.That(betweenness["B"].Absolute, Is.EqualTo(0.5)); // A->D (1/2)
+        Assert.That(betweenness["B"].Normalized, Is.EqualTo(0.5 / 6.0));
+        Assert.That(betweenness["C"].Absolute, Is.EqualTo(0.5)); // A->D (1/2)
+        Assert.That(betweenness["C"].Normalized, Is.EqualTo(0.5 / 6.0));
+        Assert.That(betweenness["D"].Absolute, Is.EqualTo(0.0));
+        Assert.That(betweenness["D"].Normalized, Is.EqualTo(0.0));
+
+        var edgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(graph, paths).ToDictionary(x => x.OwnerId);
+        Assert.That(edgeBetweenness["edge-from-A-to-B"].Absolute, Is.EqualTo(1.5)); // A->B, A->D (1/2)
+        Assert.That(edgeBetweenness["edge-from-A-to-B"].Normalized, Is.EqualTo(1.5 / 6.0));
+        Assert.That(edgeBetweenness["edge-from-A-to-C"].Absolute, Is.EqualTo(1.5)); // A->C, A->D (1/2)
+        Assert.That(edgeBetweenness["edge-from-A-to-C"].Normalized, Is.EqualTo(1.5 / 6.0));
+        Assert.That(edgeBetweenness["edge-from-B-to-D"].Absolute, Is.EqualTo(1.5)); // B->D, A->D (1/2)
+        Assert.That(edgeBetweenness["edge-from-B-to-D"].Normalized, Is.EqualTo(1.5 / 6.0));
+        Assert.That(edgeBetweenness["edge-from-C-to-D"].Absolute, Is.EqualTo(1.5)); // C->D, A->D (1/2)
+        Assert.That(edgeBetweenness["edge-from-C-to-D"].Normalized, Is.EqualTo(1.5 / 6.0));
     }
 }

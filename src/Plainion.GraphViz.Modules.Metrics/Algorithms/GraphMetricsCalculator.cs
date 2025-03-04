@@ -23,16 +23,27 @@ static class GraphMetricsCalculator
     /// The average shortest path length between two nodes in the graph
     /// https://en.wikipedia.org/wiki/Average_path_length
     /// </summary>
-    public static double ComputeAveragePathLength(IGraph graph, ShortestPaths shortestPaths)
+    public static double ComputeAveragePathLength(IGraph graph, ShortestPaths result)
     {
         if (graph.Nodes.Count <= 1)
         {
             return 0.0;
         }
 
-        var totalLength = shortestPaths.Paths.Sum(path => path.Count);
-        var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
+        // we get all shortest path between two nodes but for average path length
+        // we want to count every shortest path (wrt to start and end node) only once
+        var distances = new Dictionary<(Node, Node), int>();
+        foreach (var path in result.Paths)
+        {
+            var pair = (path.Start, path.End);
+            if (!distances.ContainsKey(pair))
+            {
+                distances[pair] = path.Count; // Take first path’s length (all are shortest)
+            }
+        }
 
+        var totalLength = distances.Values.Sum();
+        var maxPairs = graph.Nodes.Count * (graph.Nodes.Count - 1);
         return (double)totalLength / maxPairs;
     }
 
