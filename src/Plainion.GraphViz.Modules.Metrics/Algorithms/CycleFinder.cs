@@ -6,7 +6,7 @@ namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
 
 class CycleFinder
 {
-    public static List<Cycle> FindAllCycles(IGraph graph)
+    public static IReadOnlyCollection<Cycle> FindAllCycles(IGraph graph)
     {
         var unvisited = new HashSet<Node>(graph.Nodes);
 
@@ -20,39 +20,49 @@ class CycleFinder
             var start = unvisited.First();
             unvisited.Remove(start);
 
-            FindCycles(unvisited, start, [start], cycles);
+            FindCycles(unvisited, start, new List<Edge>(), cycles);
         }
 
         return cycles;
     }
 
-    private static void FindCycles(HashSet<Node> unvisited, Node current, List<Node> path, List<Cycle> cycles)
+    private static void FindCycles(HashSet<Node> unvisited, Node current, List<Edge> edgePath, List<Cycle> cycles)
     {
         foreach (var edge in current.Out)
         {
-            var targetNodeIdx = path.IndexOf(edge.Target);
-
-            // node exists in tracked path -> cycle detected
-            if (targetNodeIdx >= 0)
+            // Check for self-loop first
+            if (edge.Source == edge.Target)
             {
-                var cycleStartNode = path[targetNodeIdx];
-
-                // ignore everything up to the cycle start
-                var cyclePath = path.Skip(targetNodeIdx + 1).ToList();
-                // close the cycle with the start node
-                cyclePath.Add(cycleStartNode);
-
                 cycles.Add(new Cycle
                 {
-                    Start = cycleStartNode,
-                    Path = cyclePath
+                    Start = edge.Source,
+                    Edges = [edge]
                 });
             }
-            else if (unvisited.Contains(edge.Target))
+            // Check for larger cycles
+            else
             {
-                // Continue walking the path
-                unvisited.Remove(edge.Target);
-                FindCycles(unvisited, edge.Target, new List<Node>(path) { edge.Target }, cycles);
+                var cycleStartIdx = edgePath.FindIndex(e => e.Source == edge.Target);
+
+                // node exists in tracked path -> cycle detected
+                if (cycleStartIdx >= 0)
+                {
+                    // ignore everything up to the cycle start
+                    var cycleEdgePath = edgePath.Skip(cycleStartIdx).ToList();
+                    // close the cycle with the start node
+                    cycleEdgePath.Add(edge);
+
+                    cycles.Add(new Cycle
+                    {
+                        Start = edge.Target,
+                        Edges = cycleEdgePath
+                    });
+                }
+                else if (unvisited.Contains(edge.Target))
+                {
+                    unvisited.Remove(edge.Target);
+                    FindCycles(unvisited, edge.Target, new List<Edge>(edgePath) { edge }, cycles);
+                }
             }
         }
     }
