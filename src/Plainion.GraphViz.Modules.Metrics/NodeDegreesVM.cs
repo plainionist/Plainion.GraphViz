@@ -2,6 +2,7 @@
 
 internal class NodeDegreesVM
 {
+    public required string Id { get; init; }
     public required string Caption { get; init; }
 
     public required int In { get; init; }

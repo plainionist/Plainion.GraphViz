@@ -17,6 +17,9 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Background="#FDFDF5" Orientation="Vertical" HorizontalAlignment="Stretch" Margin="5">
+            <StackPanel.Resources>
+                <pn:BindingProxy x:Key="ThisProxy" Data="{Binding ElementName=_this}"/>
+            </StackPanel.Resources>
             
             <GroupBox Height="300">
                 <GroupBox.Header>
@@ -30,6 +33,19 @@
                         <DataGridTextColumn Header="Out" Binding="{Binding Out, Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="Total" Binding="{Binding Total, Mode=OneWay}" Width="*"/>
                     </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
+                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
             </GroupBox>
 

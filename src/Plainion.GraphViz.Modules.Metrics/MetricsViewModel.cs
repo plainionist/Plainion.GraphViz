@@ -9,6 +9,7 @@ using Plainion.GraphViz.Modules.Metrics.Algorithms;
 using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
+using Plainion.Windows.Mvvm;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
@@ -27,7 +28,21 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
          : base(model)
     {
         myDegreeCentrality = [];
+
+        HighlightCommand = new DelegateCommand<object>(OnHighlight);
     }
+
+    private void OnHighlight(object item)
+    {
+        if (item is NodeDegreesVM vm)
+        {
+            var selection = Model.Presentation.GetPropertySetFor<Selection>();
+            selection.Clear();
+            selection.Get(vm.Id).IsSelected = true;
+        }
+    }
+
+    public DelegateCommand<object> HighlightCommand { get; set; }
 
     public IReadOnlyCollection<NodeDegreesVM> DegreeCentrality
     {
@@ -182,6 +197,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         return graph.Nodes
             .Select(x => new NodeDegreesVM
             {
+                Id = x.Id,
                 Caption = captions.Get(x.Id).DisplayText,
                 In = x.In.Count,
                 Out = x.Out.Count,
