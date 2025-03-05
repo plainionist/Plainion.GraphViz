@@ -4,7 +4,7 @@ namespace Plainion.GraphViz.Modules.Metrics;
 
 internal class NodeDegreesVM
 {
-    public required Node Owner { get; init; }
+    public required Node Model { get; init; }
     public required string Caption { get; init; }
 
     public required int In { get; init; }

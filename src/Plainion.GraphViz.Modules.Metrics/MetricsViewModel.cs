@@ -39,13 +39,47 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
     private void OnHighlight(object item)
     {
-        if (item is NodeDegreesVM vm)
+        if (item is NodeDegreesVM nodeDegreesVM)
         {
             var selection = Model.Presentation.GetPropertySetFor<Selection>();
             selection.Clear();
-            selection.Get(vm.Owner.Id).IsSelected = true;
+            selection.Get(nodeDegreesVM.Model.Id).IsSelected = true;
 
-            myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(vm.Owner);
+            myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(nodeDegreesVM.Model);
+        }
+        else if (item is CycleVM cycleVM)
+        {
+            var selection = Model.Presentation.GetPropertySetFor<Selection>();
+            selection.Clear();
+            foreach (var pathItem in cycleVM.Model.Path)
+            {
+                selection.Get(pathItem.Id).IsSelected = true;
+            }
+
+            myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(cycleVM.Model.Start);
+        }
+        else if (item is GraphItemMeasurementVM itemMeasurementVM)
+        {
+            var selection = Model.Presentation.GetPropertySetFor<Selection>();
+            selection.Clear();
+
+            if (itemMeasurementVM.Model is Node node)
+            {
+                selection.Get(node.Id).IsSelected = true;
+                myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(node);
+            }
+            else if (itemMeasurementVM.Model is Edge edge)
+            {
+                selection.Get(edge.Id).IsSelected = true;
+                selection.Get(edge.Source.Id).IsSelected = true;
+                selection.Get(edge.Target.Id).IsSelected = true;
+
+                myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(edge.Source);
+            }
+            else
+            {
+                // intentionally ignore
+            }
         }
     }
 
@@ -204,7 +238,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         return graph.Nodes
             .Select(x => new NodeDegreesVM
             {
-                Owner = x,
+                Model = x,
                 Caption = captions.Get(x.Id).DisplayText,
                 In = x.In.Count,
                 Out = x.Out.Count,
@@ -229,6 +263,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         CycleVM CreateCycleVM(Cycle cycle) =>
             new()
             {
+                Model = cycle,
                 Start = captions.Get(cycle.Start.Id).DisplayText,
                 Path = cycle.Path.Skip(1).Select(n => captions.Get(n.Id).DisplayText).ToList()
             };
@@ -251,6 +286,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
+                    Model = x.Owner,
                     Caption = captions.Get(x.Owner.Id).DisplayText,
                     Absolute = x.Absolute,
                     Normalized = x.Normalized,
@@ -260,6 +296,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             EdgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
+                    Model = x.Owner,
                     Caption = $"{captions.Get(x.Owner.Source.Id).DisplayText} -> {captions.Get(x.Owner.Target.Id).DisplayText}",
                     Absolute = x.Absolute,
                     Normalized = x.Normalized,
@@ -269,6 +306,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             ClosenessCentrality = GraphMetricsCalculator.ComputeClosenessCentrality(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
+                    Model = x.Owner,
                     Caption = captions.Get(x.Owner.Id).DisplayText,
                     Absolute = x.Absolute,
                     Normalized = x.Normalized,

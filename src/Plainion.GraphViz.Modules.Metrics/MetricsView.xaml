@@ -79,6 +79,7 @@
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Text="{Binding Start}"/>
+                                
                                 <ItemsControl ItemsSource="{Binding Path}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
@@ -86,6 +87,13 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
+
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
+                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -125,6 +133,19 @@
                         <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="Normalized" Binding="{Binding Normalized, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
                     </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
+                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
             </GroupBox>
 
@@ -139,6 +160,19 @@
                         <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="Normalized" Binding="{Binding Normalized, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
                     </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
+                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
             </GroupBox>
 
@@ -153,6 +187,19 @@
                         <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
                         <DataGridTextColumn Header="Normalized" Binding="{Binding Normalized, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
                     </DataGrid.Columns>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
+                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
             </GroupBox>
 

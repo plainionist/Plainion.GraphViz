@@ -1,6 +1,8 @@
 
 ## 8.4 - 2025-03-
 
+- navigating to node after search improved
+- Metrics: Highlight context menu added
 
 ## 8.3 - 2025-03-05
 
