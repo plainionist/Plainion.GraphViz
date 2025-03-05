@@ -255,5 +255,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         };
     }
 
+    internal void Closed()
+    {
+        myFinishAction = null;
+    }
 }
 

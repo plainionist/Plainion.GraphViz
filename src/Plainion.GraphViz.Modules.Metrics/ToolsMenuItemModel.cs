@@ -10,10 +10,12 @@ namespace Plainion.GraphViz.Modules.Metrics;
 internal class ToolsMenuItemModel : BindableBase
 {
     private readonly IDomainModel myModel;
+    private readonly MetricsViewModel myController;
 
-    public ToolsMenuItemModel(IDomainModel model)
+    public ToolsMenuItemModel(IDomainModel model, MetricsViewModel controller)
     {
         myModel = model;
+        myController = controller;
 
         myModel.PresentationChanged += OnPresentationChanged;
 
@@ -29,7 +31,7 @@ internal class ToolsMenuItemModel : BindableBase
         };
 
         StartAnalysisRequest.Raise(notification, c => {
-            Debug.WriteLine("CLOSED");
+            myController.Closed();
         });
     }
 

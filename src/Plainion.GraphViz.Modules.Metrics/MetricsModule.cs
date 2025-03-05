@@ -10,6 +10,9 @@ public class MetricsModule(IRegionManager regionManager) : IModule
     {
         regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.AddIns, typeof(ToolsMenuItem));
         regionManager.RegisterViewWithRegion(RegionNames.Metrics, typeof(MetricsView));
+
+        // workaround to get notified when the window closes
+        containerRegistry.RegisterSingleton<MetricsViewModel>();
     }
 
     public void OnInitialized(IContainerProvider containerProvider) { }
