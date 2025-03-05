@@ -51,9 +51,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         {
             var selection = Model.Presentation.GetPropertySetFor<Selection>();
             selection.Clear();
-            foreach (var pathItem in cycleVM.Model.Path)
+            foreach (var edge in cycleVM.Model.Edges)
             {
-                selection.Get(pathItem.Id).IsSelected = true;
+                selection.Select(edge);
             }
 
             myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(cycleVM.Model.Start);
@@ -70,9 +70,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             }
             else if (itemMeasurementVM.Model is Edge edge)
             {
-                selection.Get(edge.Id).IsSelected = true;
-                selection.Get(edge.Source.Id).IsSelected = true;
-                selection.Get(edge.Target.Id).IsSelected = true;
+                selection.Select(edge);
 
                 myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(edge.Source);
             }

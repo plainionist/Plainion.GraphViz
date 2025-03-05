@@ -6,24 +6,24 @@ namespace Plainion.GraphViz.Presentation;
 
 public static class GraphPresentationExtensions
 {
-    public static DynamicClusterTransformation DynamicClusters(this IGraphPresentation presentation)
+    public static DynamicClusterTransformation DynamicClusters(this IGraphPresentation self)
     {
-        Contract.RequiresNotNull(presentation, nameof(presentation));
+        Contract.RequiresNotNull(self, nameof(self));
 
-        var transformations = presentation.GetModule<ITransformationModule>();
+        var transformations = self.GetModule<ITransformationModule>();
         return transformations.Items
             .OfType<DynamicClusterTransformation>()
             .Single();
     }
 
-    public static void ToogleFoldingOfVisibleClusters(this IGraphPresentation presentation)
+    public static void ToogleFoldingOfVisibleClusters(this IGraphPresentation self)
     {
-        Contract.RequiresNotNull(presentation, nameof(presentation));
+        Contract.RequiresNotNull(self, nameof(self));
 
-        var clusterFolding = presentation.ClusterFolding;
+        var clusterFolding = self.ClusterFolding;
 
-        var visibleClusters = presentation.TransformedGraph.Clusters
-            .Where(presentation.Picking.Pick)
+        var visibleClusters = self.TransformedGraph.Clusters
+            .Where(self.Picking.Pick)
             .Select(c => c.Id)
             .ToList();
 
@@ -39,19 +39,15 @@ public static class GraphPresentationExtensions
         }
     }
 
-    public static INodeMaskModule Masks(this IGraphPresentation presentation)
-    {
-        return presentation.GetModule<INodeMaskModule>();
-    }
+    public static INodeMaskModule Masks(this IGraphPresentation self) =>
+        self.GetModule<INodeMaskModule>();
 
-    public static void Select(this IGraphPresentation presentation, Node node, SiblingsType role)
+    public static void Select(this IGraphPresentation self, Node node, SiblingsType role)
     {
-        var selection = presentation.GetPropertySetFor<Selection>();
-        foreach (var e in GetEdges(node, role).Where(presentation.Picking.Pick))
+        var selection = self.GetPropertySetFor<Selection>();
+        foreach (var e in GetEdges(node, role).Where(self.Picking.Pick))
         {
-            selection.Get(e.Id).IsSelected = true;
-            selection.Get(e.Source.Id).IsSelected = true;
-            selection.Get(e.Target.Id).IsSelected = true;
+            selection.Select(e);
         }
     }
 
@@ -67,4 +63,12 @@ public static class GraphPresentationExtensions
             foreach (var e in node.Out) yield return e;
         }
     }
+
+    public static void Select(this IPropertySetModule<Selection> self, Edge edge)
+    {
+        self.Get(edge.Id).IsSelected = true;
+        self.Get(edge.Source.Id).IsSelected = true;
+        self.Get(edge.Target.Id).IsSelected = true;
+    }
 }
+
