@@ -7,14 +7,17 @@ using System.Windows;
 using Plainion.Graphs;
 using Plainion.GraphViz.Modules.Metrics.Algorithms;
 using Plainion.GraphViz.Presentation;
+using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Plainion.Windows.Mvvm;
+using Prism.Events;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
 class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 {
+    private readonly IEventAggregator myEventAggregator;
     private Action myFinishAction;
     private CancellationTokenSource myCTS;
     private IReadOnlyCollection<NodeDegreesVM> myDegreeCentrality;
@@ -24,9 +27,11 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     private IModuleChangedObserver myNodeMaskObserver;
     private IModuleChangedObserver myTransformationsObserver;
 
-    public MetricsViewModel(IDomainModel model)
+    public MetricsViewModel(IDomainModel model, IEventAggregator eventAggregator)
          : base(model)
     {
+        myEventAggregator = eventAggregator;
+
         myDegreeCentrality = [];
 
         HighlightCommand = new DelegateCommand<object>(OnHighlight);
@@ -38,7 +43,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         {
             var selection = Model.Presentation.GetPropertySetFor<Selection>();
             selection.Clear();
-            selection.Get(vm.Id).IsSelected = true;
+            selection.Get(vm.Owner.Id).IsSelected = true;
+
+            myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(vm.Owner);
         }
     }
 
@@ -197,7 +204,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         return graph.Nodes
             .Select(x => new NodeDegreesVM
             {
-                Id = x.Id,
+                Owner = x,
                 Caption = captions.Get(x.Id).DisplayText,
                 In = x.In.Count,
                 Out = x.Out.Count,
