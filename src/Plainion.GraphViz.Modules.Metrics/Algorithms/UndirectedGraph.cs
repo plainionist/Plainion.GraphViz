@@ -152,7 +152,7 @@ class RelaxedGraphBuilder
         return node;
     }
 
-    public static Graph Convert(Plainion.Graphs.Graph graph)
+    public static Graph Convert(IGraph graph)
     {
         var builder = new RelaxedGraphBuilder();
         foreach (var node in graph.Nodes)
