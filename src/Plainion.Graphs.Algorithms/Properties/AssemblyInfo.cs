@@ -3,18 +3,18 @@
 using System.Reflection;
 
 [assembly: AssemblyTitle("Plainion.Graphs.Algorithms")]
-[assembly: AssemblyProduct("Plainion.Graphs.Algorithms")]
-[assembly: AssemblyDescription("Plainion.Graphs.Algorithms")]
+[assembly: AssemblyProduct("Plainion.GraphViz")]
+[assembly: AssemblyDescription("Plainion.GraphViz")]
 [assembly: AssemblyCopyright("Copyright @ 2025")]
-[assembly: AssemblyVersion("8.2")]
-[assembly: AssemblyFileVersion("8.2")]
+[assembly: AssemblyVersion("8.3")]
+[assembly: AssemblyFileVersion("8.3")]
 namespace System {
     internal static class AssemblyVersionInformation {
         internal const System.String AssemblyTitle = "Plainion.Graphs.Algorithms";
-        internal const System.String AssemblyProduct = "Plainion.Graphs.Algorithms";
-        internal const System.String AssemblyDescription = "Plainion.Graphs.Algorithms";
+        internal const System.String AssemblyProduct = "Plainion.GraphViz";
+        internal const System.String AssemblyDescription = "Plainion.GraphViz";
         internal const System.String AssemblyCopyright = "Copyright @ 2025";
-        internal const System.String AssemblyVersion = "8.2";
-        internal const System.String AssemblyFileVersion = "8.2";
+        internal const System.String AssemblyVersion = "8.3";
+        internal const System.String AssemblyFileVersion = "8.3";
     }
 }
