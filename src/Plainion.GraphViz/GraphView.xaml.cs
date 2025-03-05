@@ -255,8 +255,8 @@ namespace Plainion.GraphViz
             ContextMenu.IsOpen = true;
         }
 
-        // relative to rendertarget
-        // TODO: unfort. still unclear why navigteto requires scroll to center
+        // relative to rendertarget. When using "NavigateTo" we need to scroll to center
+        // while when using rubber band we dont want to
         private bool ZoomTo(Point start, Point end, bool scrollToCenter)
         {
             var left = Math.Min(start.X, end.X);
@@ -266,7 +266,7 @@ namespace Plainion.GraphViz
 
             if (width < 10 || height < 10)
             {
-                // tollerance against strange mouse handling
+                // Tolerance against incorrect input
                 return false;
             }
 
@@ -279,14 +279,25 @@ namespace Plainion.GraphViz
             var scrollTarget = scrollToCenter
                 ? new Point(left + width / 2, top + height / 2)
                 : new Point(left, top);
-            var topLeft = myScaleTransform.Transform(scrollTarget);
-            if (double.IsNaN(topLeft.X) || double.IsNaN(topLeft.Y))
+
+            // Convert target point from world space to scroll space
+            var transformedPoint = myScaleTransform.Transform(scrollTarget);
+
+            if (double.IsNaN(transformedPoint.X) || double.IsNaN(transformedPoint.Y))
             {
                 return true;
             }
 
-            ScrollViewer.ScrollToHorizontalOffset(topLeft.X);
-            ScrollViewer.ScrollToVerticalOffset(topLeft.Y);
+            if (scrollToCenter)
+            {
+                ScrollViewer.ScrollToHorizontalOffset(transformedPoint.X - ScrollViewer.ViewportWidth / 2);
+                ScrollViewer.ScrollToVerticalOffset(transformedPoint.Y - ScrollViewer.ViewportHeight / 2);
+            }
+            else
+            {
+                ScrollViewer.ScrollToHorizontalOffset(transformedPoint.X);
+                ScrollViewer.ScrollToVerticalOffset(transformedPoint.Y);
+            }
 
             return true;
         }
