@@ -275,6 +275,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
     {
         var shortestPaths = ShortestPathsFinder.FindAllShortestPaths(graph);
 
+        var undirectedGraph = Graphs.Undirected.RelaxedGraphBuilder.Convert(graph);
+        var shortestUndirectedPaths = UndirectedShortestPathsFinder.FindAllShortestPaths(undirectedGraph);
+
         var captions = modules.GetPropertySetFor<Caption>();
 
         return new()
@@ -301,7 +304,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 })
                 .OrderByDescending(x => x.Absolute)
                 .ToList(),
-            ClosenessCentrality = UndirectedGraphMetrics.ComputeClosenessCentrality(graph, shortestPaths)
+            ClosenessCentrality = UndirectedGraphMetrics.ComputeClosenessCentrality(undirectedGraph, shortestUndirectedPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
                     Model = x.Owner,
