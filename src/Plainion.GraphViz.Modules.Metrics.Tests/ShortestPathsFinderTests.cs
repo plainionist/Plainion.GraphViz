@@ -9,7 +9,7 @@ namespace Plainion.GraphViz.Modules.Metrics.Tests;
 public class ShortestPathsFinderTests
 {
     [Test]
-    public void SingleEdge_ReturnsThisEdge()
+    public void SingleEdge()
     {
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");
@@ -22,7 +22,7 @@ public class ShortestPathsFinderTests
     }
 
     [Test]
-    public void TriangleGraph_ReturnsAllPaths()
+    public void TriangleGraph()
     {
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");
@@ -40,7 +40,7 @@ public class ShortestPathsFinderTests
     }
 
     [Test]
-    public void DisconnectedGraph_ReturnsPartialPaths()
+    public void DisconnectedGraph()
     {
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");
@@ -54,7 +54,7 @@ public class ShortestPathsFinderTests
     }
 
     [Test]
-    public void WeightedEdges_IgnoresWeights()
+    public void WeightedEdges()
     {
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");
@@ -68,7 +68,7 @@ public class ShortestPathsFinderTests
     }
 
     [Test]
-    public void DiamondGraph_FindsMultipleShortestPaths()
+    public void DiamondGraph()
     {
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");

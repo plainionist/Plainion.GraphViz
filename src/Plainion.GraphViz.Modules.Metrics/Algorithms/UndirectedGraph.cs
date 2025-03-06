@@ -30,7 +30,7 @@ class RelaxedGraphBuilder
 {
     private readonly Dictionary<string, Node> myNodes = [];
 
-    public Node Start { get; private set; }
+    public IReadOnlyCollection<Node> Nodes => myNodes.Values;
 
     public void TryAddEdge(string sourceNodeId, string targetNodeId)
     {
@@ -47,29 +47,28 @@ class RelaxedGraphBuilder
         {
             node = new Node(id);
             myNodes.Add(id, node);
-
-            Start ??= node;
         }
 
         return node;
     }
 
-    public static Node Convert(IGraph graph)
+    public static IReadOnlyCollection<Node> Convert(IGraph graph)
     {
         var builder = new RelaxedGraphBuilder();
         foreach (var edge in graph.Edges)
         {
             builder.TryAddEdge(edge.Source.Id, edge.Target.Id);
         }
-        return builder.Start;
+        return builder.Nodes;
     }
 }
 
 static class UndirectedGraph
 {
-    public static IEnumerable<(Node, Node)> Edges(this Node self) => self.WalkEdges().OrderBy(x => (x.Item1.Id, x.Item2.Id));
+    public static IEnumerable<(Node, Node)> Edges(this IEnumerable<Node> self)
+        => self.WalkEdges().OrderBy(x => (x.Item1.Id, x.Item2.Id));
 
-    private static IEnumerable<(Node, Node)> WalkEdges(this Node self)
+    private static IEnumerable<(Node, Node)> WalkEdges(this IEnumerable<Node> self)
     {
         if (self == null)
         {
@@ -77,32 +76,40 @@ static class UndirectedGraph
         }
 
         var visited = new HashSet<string>();
-        var coveredEdges = new HashSet<(Node, Node)>();
+        var coveredEdges = new HashSet<(string, string)>();
         var queue = new Queue<Node>();
 
-        queue.Enqueue(self);
-        visited.Add(self.Id);
-
-        while (queue.Count > 0)
+        foreach (var startNode in self)
         {
-            var node = queue.Dequeue();
-
-            foreach (var neighbor in node.Neighbors)
+            if (visited.Contains(startNode.Id))
             {
-                var edge = node.Id.CompareTo(neighbor.Id) < 0
-                    ? (node, neighbor)
-                    : (neighbor, node);
+                continue;
+            }
 
-                if (!coveredEdges.Contains(edge))
-                {
-                    yield return edge;
-                    coveredEdges.Add(edge);
-                }
+            queue.Enqueue(startNode);
+            visited.Add(startNode.Id);
 
-                if (!visited.Contains(neighbor.Id))
+            while (queue.Count > 0)
+            {
+                var node = queue.Dequeue();
+
+                foreach (var neighbor in node.Neighbors)
                 {
-                    visited.Add(neighbor.Id);
-                    queue.Enqueue(neighbor);
+                    var edgeKey = node.Id.CompareTo(neighbor.Id) < 0
+                        ? (node.Id, neighbor.Id)
+                        : (neighbor.Id, node.Id);
+
+                    if (!coveredEdges.Contains(edgeKey))
+                    {
+                        yield return (node, neighbor);
+                        coveredEdges.Add(edgeKey);
+                    }
+
+                    if (!visited.Contains(neighbor.Id))
+                    {
+                        visited.Add(neighbor.Id);
+                        queue.Enqueue(neighbor);
+                    }
                 }
             }
         }
