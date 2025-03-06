@@ -14,7 +14,7 @@ public class UndirectedShortestPathsFinderTests
         var builder = new RelaxedGraphBuilder();
         builder.TryAddEdge("A", "B");
 
-        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Nodes);
+        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
         var paths = result.Get("A", "B");
         Assert.That(paths.Count, Is.EqualTo(1));
@@ -29,7 +29,7 @@ public class UndirectedShortestPathsFinderTests
         builder.TryAddEdge("B", "C");
         builder.TryAddEdge("C", "A");
 
-        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Nodes);
+        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
         Assert.That(result.Get("A", "B").Single().Distance, Is.EqualTo(1));
         Assert.That(result.Get("A", "C").Single().Distance, Is.EqualTo(1));
@@ -43,7 +43,7 @@ public class UndirectedShortestPathsFinderTests
         builder.TryAddEdge("A", "B");
         builder.TryAddEdge("C", "D");
 
-        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Nodes);
+        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
         Assert.That(result.Get("A", "B").Single().Distance, Is.EqualTo(1));
         Assert.That(result.Get("C", "D").Single().Distance, Is.EqualTo(1));
@@ -59,7 +59,7 @@ public class UndirectedShortestPathsFinderTests
         builder.TryAddEdge("B", "D");
         builder.TryAddEdge("C", "D");
 
-        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Nodes);
+        var result = UndirectedShortestPathsFinder.FindAllShortestPaths(builder.Graph);
 
         var pathsAD = result.Get("A", "D");
         Assert.That(pathsAD.Count, Is.EqualTo(1), "Should find 1 shortest path from A to D"); // Single path per pair

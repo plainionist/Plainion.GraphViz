@@ -251,7 +251,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         {
             NodeCount = graph.Nodes.Count,
             EdgeCount = graph.Edges.Count,
-            Density = GraphMetricsCalculator.ComputeGraphDensity(graph)
+            Density = GraphMetrics.ComputeGraphDensity(graph)
         };
 
     private static IReadOnlyCollection<CycleVM> ComputeCycles(IModuleRepository modules, IGraph graph)
@@ -279,9 +279,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 
         return new()
         {
-            Diameter = GraphMetricsCalculator.ComputeDiameter(shortestPaths),
-            AveragePathLength = GraphMetricsCalculator.ComputeAveragePathLength(graph, shortestPaths),
-            BetweennessCentrality = GraphMetricsCalculator.ComputeBetweennessCentrality(graph, shortestPaths)
+            Diameter = GraphMetrics.ComputeDiameter(shortestPaths),
+            AveragePathLength = GraphMetrics.ComputeAveragePathLength(graph, shortestPaths),
+            BetweennessCentrality = GraphMetrics.ComputeBetweennessCentrality(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
                     Model = x.Owner,
@@ -291,7 +291,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 })
                 .OrderByDescending(x => x.Absolute)
                 .ToList(),
-            EdgeBetweenness = GraphMetricsCalculator.ComputeEdgeBetweenness(graph, shortestPaths)
+            EdgeBetweenness = GraphMetrics.ComputeEdgeBetweenness(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
                     Model = x.Owner,
@@ -301,7 +301,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 })
                 .OrderByDescending(x => x.Absolute)
                 .ToList(),
-            ClosenessCentrality = GraphMetricsCalculator.ComputeClosenessCentrality(graph, shortestPaths)
+            ClosenessCentrality = UndirectedGraphMetrics.ComputeClosenessCentrality(graph, shortestPaths)
                 .Select(x => new GraphItemMeasurementVM
                 {
                     Model = x.Owner,

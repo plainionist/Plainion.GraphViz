@@ -30,15 +30,20 @@ class RelaxedGraphBuilder
 {
     private readonly Dictionary<string, Node> myNodes = [];
 
-    public IReadOnlyCollection<Node> Nodes => myNodes.Values;
+    public IReadOnlyCollection<Node> Graph => myNodes.Values;
 
-    public void TryAddEdge(string sourceNodeId, string targetNodeId)
+    public void TryAddNode(string id)
     {
-        var sourceNode = GetOrCreateNode(sourceNodeId);
-        var targetNode = GetOrCreateNode(targetNodeId);
+        GetOrCreateNode(id);
+    }
 
-        sourceNode.Neighbors.Add(targetNode);
-        targetNode.Neighbors.Add(sourceNode);
+    public void TryAddEdge(string sourceId, string targetId)
+    {
+        var source = GetOrCreateNode(sourceId);
+        var target = GetOrCreateNode(targetId);
+
+        source.Neighbors.Add(target);
+        target.Neighbors.Add(source);
     }
 
     private Node GetOrCreateNode(string id)
@@ -59,7 +64,7 @@ class RelaxedGraphBuilder
         {
             builder.TryAddEdge(edge.Source.Id, edge.Target.Id);
         }
-        return builder.Nodes;
+        return builder.Graph;
     }
 }
 
