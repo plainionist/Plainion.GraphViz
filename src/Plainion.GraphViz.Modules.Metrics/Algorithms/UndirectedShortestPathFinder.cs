@@ -1,73 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Plainion.Graphs.Undirected;
 
 namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
-
-class UndirectedPath : IEquatable<UndirectedPath>
-{
-    private readonly IReadOnlyList<Node> myNodes;
-
-    public UndirectedPath(IReadOnlyList<Node> nodes)
-    {
-        System.Contract.RequiresNotNull(nodes);
-        myNodes = nodes;
-    }
-
-    public Node Start => myNodes[0];
-    public Node End => myNodes[myNodes.Count - 1];
-    public int Distance => myNodes.Count - 1; // Hops between nodes
-
-    public override string ToString()
-    {
-        return string.Join(" - ", myNodes.Select(n => n.Id));
-    }
-
-    public bool Equals(UndirectedPath other)
-    {
-        if (other == null) return false;
-        if (ReferenceEquals(this, other)) return true;
-        if (Distance != other.Distance) return false;
-
-        // Undirected: A - B == B - A
-        return (Start.Id == other.Start.Id && End.Id == other.End.Id) ||
-               (Start.Id == other.End.Id && End.Id == other.Start.Id);
-    }
-
-    public override bool Equals(object obj) => Equals(obj as UndirectedPath);
-
-    public override int GetHashCode()
-    {
-        var minId = Math.Min(Start.Id.GetHashCode(), End.Id.GetHashCode());
-        var maxId = Math.Max(Start.Id.GetHashCode(), End.Id.GetHashCode());
-        return HashCode.Combine(minId, maxId, Distance);
-    }
-}
-
-class ShortestUndirectedPaths
-{
-    public IReadOnlyCollection<UndirectedPath> Paths { get; }
-
-    public ShortestUndirectedPaths(IReadOnlyCollection<UndirectedPath> paths)
-    {
-        Paths = paths.Distinct().ToList(); // Remove duplicates
-    }
-
-    public IReadOnlyCollection<UndirectedPath> Get(string sourceId, string targetId) =>
-        Paths.Where(p => p.Start.Id == sourceId && p.End.Id == targetId).ToList();
-
-    public override string ToString() => string.Join("\n", Paths);
-}
 
 static class UndirectedShortestPathsFinder
 {
     public static ShortestUndirectedPaths FindAllShortestPaths(IReadOnlyCollection<Node> graph)
     {
         var allPaths = graph
-            //.AsParallel()
+            .AsParallel()
             .SelectMany(x => BFSAllPaths(x, graph))
             .ToList();
 

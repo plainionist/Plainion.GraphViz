@@ -6,7 +6,7 @@ using Plainion.GraphViz.Modules.Metrics.Algorithms;
 namespace Plainion.GraphViz.Modules.Metrics.Tests;
 
 [TestFixture]
-public class UndirectedShortestPathsFinderTests
+public class UndirectedShortestPathFinderTests
 {
     [Test]
     public void SingleEdge()

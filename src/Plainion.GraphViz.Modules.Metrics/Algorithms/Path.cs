@@ -18,8 +18,8 @@ class Path : IEnumerable<Edge>
 
     public Node Start => myPaths[0].Source;
     public Node End => myPaths[myPaths.Count - 1].Target;
-
     public int Distance => myPaths.Count;
+
     public IEnumerator<Edge> GetEnumerator() => myPaths.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => myPaths.GetEnumerator();
     public Edge this[int index] => myPaths[index];
