@@ -68,6 +68,11 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
                 selection.Get(node.Id).IsSelected = true;
                 myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(node);
             }
+            else if (itemMeasurementVM.Model is Graphs.Undirected.Node uNode)
+            {
+                selection.Get(uNode.Id).IsSelected = true;
+                myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(uNode);
+            }
             else if (itemMeasurementVM.Model is Edge edge)
             {
                 selection.Select(edge);

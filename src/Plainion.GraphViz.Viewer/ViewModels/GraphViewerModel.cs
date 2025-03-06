@@ -423,7 +423,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             return transformation != null && transformation.Clusters.Contains(GraphItemForContextMenu.Id);
         }
 
-        private void OnEventFocused(Node node)
+        private void OnEventFocused(IGraphItem node)
         {
             if (node != null)
             {
