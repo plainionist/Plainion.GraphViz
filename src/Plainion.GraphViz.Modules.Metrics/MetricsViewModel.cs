@@ -268,7 +268,7 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             {
                 Model = cycle,
                 Start = captions.Get(cycle.Start.Id).DisplayText,
-                Path = cycle.Path.Skip(1).Select(n => captions.Get(n.Id).DisplayText).ToList()
+                Path = cycle.Path.Select(n => captions.Get(n.Id).DisplayText).ToList()
             };
 
         return CycleFinder.FindAllCycles(graph)

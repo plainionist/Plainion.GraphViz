@@ -57,7 +57,7 @@ public class GraphCycleDetectorTests
     }
 
     [Test]
-    public void SelfLoop_ReturnsSelfCycle()
+    public void SelfLoop()
     {
         // A -> A
         var builder = new RelaxedGraphBuilder();
@@ -65,8 +65,7 @@ public class GraphCycleDetectorTests
 
         var cycles = DetectCycles(builder);
 
-        Assert.That(cycles.Count, Is.EqualTo(1));
-        Assert.That(cycles[0], Is.EqualTo(new List<string> { "A", "A" }));
+        Assert.That(cycles, Is.Empty);
     }
 
     private static List<List<string>> DetectCycles(RelaxedGraphBuilder builder) =>

@@ -30,39 +30,26 @@ class CycleFinder
     {
         foreach (var edge in current.Out)
         {
-            // Check for self-loop first
-            if (edge.Source == edge.Target)
+            var cycleStartIdx = edgePath.FindIndex(e => e.Source == edge.Target);
+
+            // node exists in tracked path -> cycle detected
+            if (cycleStartIdx >= 0)
             {
+                // ignore everything up to the cycle start
+                var cycleEdgePath = edgePath.Skip(cycleStartIdx).ToList();
+                // close the cycle with the start node
+                cycleEdgePath.Add(edge);
+
                 cycles.Add(new Cycle
                 {
-                    Start = edge.Source,
-                    Edges = [edge]
+                    Start = edge.Target,
+                    Edges = cycleEdgePath
                 });
             }
-            // Check for larger cycles
-            else
+            else if (unvisited.Contains(edge.Target))
             {
-                var cycleStartIdx = edgePath.FindIndex(e => e.Source == edge.Target);
-
-                // node exists in tracked path -> cycle detected
-                if (cycleStartIdx >= 0)
-                {
-                    // ignore everything up to the cycle start
-                    var cycleEdgePath = edgePath.Skip(cycleStartIdx).ToList();
-                    // close the cycle with the start node
-                    cycleEdgePath.Add(edge);
-
-                    cycles.Add(new Cycle
-                    {
-                        Start = edge.Target,
-                        Edges = cycleEdgePath
-                    });
-                }
-                else if (unvisited.Contains(edge.Target))
-                {
-                    unvisited.Remove(edge.Target);
-                    FindCycles(unvisited, edge.Target, new List<Edge>(edgePath) { edge }, cycles);
-                }
+                unvisited.Remove(edge.Target);
+                FindCycles(unvisited, edge.Target, new List<Edge>(edgePath) { edge }, cycles);
             }
         }
     }
