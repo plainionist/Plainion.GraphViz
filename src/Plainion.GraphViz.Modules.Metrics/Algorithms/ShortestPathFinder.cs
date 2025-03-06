@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Plainion.Graphs;
 
 namespace Plainion.GraphViz.Modules.Metrics.Algorithms;
@@ -9,17 +8,10 @@ static class ShortestPathsFinder
 {
     public static ShortestPaths FindAllShortestPaths(IGraph graph)
     {
-        var allPaths = new List<Path>();
-        var lockObj = new object();
-
-        Parallel.ForEach(graph.Nodes, source =>
-        {
-            var sourcePaths = BFSAllPaths(graph, source);
-            lock (lockObj)
-            {
-                allPaths.AddRange(sourcePaths);
-            }
-        });
+        var allPaths = graph.Nodes
+            .AsParallel()
+            .SelectMany(x => BFSAllPaths(graph, x))
+            .ToList();
 
         return new ShortestPaths(allPaths);
     }

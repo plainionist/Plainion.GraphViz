@@ -66,27 +66,19 @@ static class UndirectedShortestPathsFinder
 {
     public static ShortestUndirectedPaths FindAllShortestPaths(IReadOnlyCollection<Node> graph)
     {
-        var allPaths = new List<UndirectedPath>();
-        var lockObj = new object();
-        var allNodes = graph.ToHashSet();
-
-        Parallel.ForEach(allNodes, source =>
-        {
-            var sourcePaths = BFSAllPaths(source, allNodes);
-            lock (lockObj)
-            {
-                allPaths.AddRange(sourcePaths);
-            }
-        });
+        var allPaths = graph
+            //.AsParallel()
+            .SelectMany(x => BFSAllPaths(x, graph))
+            .ToList();
 
         return new ShortestUndirectedPaths(allPaths);
     }
 
-    private static List<UndirectedPath> BFSAllPaths(Node source, HashSet<Node> allNodes)
+    private static List<UndirectedPath> BFSAllPaths(Node source, IReadOnlyCollection<Node> graph)
     {
         var paths = new Dictionary<string, UndirectedPath>(); // Target ID -> Shortest Path
         var queue = new Queue<(Node node, List<Node> path, int dist)>();
-        var distances = allNodes.ToDictionary(n => n.Id, _ => int.MaxValue);
+        var distances = graph.ToDictionary(n => n.Id, _ => int.MaxValue);
 
         queue.Enqueue((source, new List<Node> { source }, 0));
         distances[source.Id] = 0;
