@@ -1,81 +1,24 @@
 ﻿using System;
-using System.Linq;
-using Plainion.Graphs;
 using Plainion.GraphViz.Presentation;
-using Plainion.GraphViz.Viewer.Abstractions;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
 using Plainion.Prism.Interactivity.InteractionRequest;
-using Plainion.Windows.Mvvm;
-using Prism.Events;
 
 namespace Plainion.GraphViz.Modules.Metrics;
 
 class MetricsViewModel : ViewModelBase, IInteractionRequestAware
 {
-    private readonly IEventAggregator myEventAggregator;
     private Action myFinishAction;
     private IModuleChangedObserver myNodeMaskObserver;
     private IModuleChangedObserver myTransformationsObserver;
 
-    public MetricsViewModel(IDomainModel model, IEventAggregator eventAggregator)
+    public MetricsViewModel(IDomainModel model, HighlightViewModel highlightViewModel)
          : base(model)
     {
-        myEventAggregator = eventAggregator;
-
+        Highlighting = highlightViewModel;
         Metrics = new MetricsComputationViewModel();
-        HighlightCommand = new DelegateCommand<object>(OnHighlight);
     }
 
-    private void OnHighlight(object item)
-    {
-        if (item is NodeDegreesVM nodeDegreesVM)
-        {
-            var selection = Model.Presentation.GetPropertySetFor<Selection>();
-            selection.Clear();
-            selection.Get(nodeDegreesVM.Model.Id).IsSelected = true;
-
-            myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(nodeDegreesVM.Model);
-        }
-        else if (item is CycleVM cycleVM)
-        {
-            var selection = Model.Presentation.GetPropertySetFor<Selection>();
-            selection.Clear();
-            foreach (var edge in cycleVM.Model.Edges)
-            {
-                selection.Select(edge);
-            }
-
-            myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(cycleVM.Model.Start);
-        }
-        else if (item is GraphItemMeasurementVM itemMeasurementVM)
-        {
-            var selection = Model.Presentation.GetPropertySetFor<Selection>();
-            selection.Clear();
-
-            if (itemMeasurementVM.Model is Node node)
-            {
-                selection.Get(node.Id).IsSelected = true;
-                myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(node);
-            }
-            else if (itemMeasurementVM.Model is Graphs.Undirected.Node uNode)
-            {
-                selection.Get(uNode.Id).IsSelected = true;
-                myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(uNode);
-            }
-            else if (itemMeasurementVM.Model is Edge edge)
-            {
-                selection.Select(edge);
-
-                myEventAggregator.GetEvent<NodeFocusedEvent>().Publish(edge.Source);
-            }
-            else
-            {
-                // intentionally ignore
-            }
-        }
-    }
-
-    public DelegateCommand<object> HighlightCommand { get; set; }
+    public HighlightViewModel Highlighting { get; set; }
 
     public MetricsComputationViewModel Metrics { get; }
 

@@ -39,7 +39,7 @@
                             <Setter Property="ContextMenu">
                                 <Setter.Value>
                                     <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
-                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                        <MenuItem Header="Highlight" Command="{Binding Highlighting.HighlightCommand}"
                                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     </ContextMenu>
                                 </Setter.Value>
@@ -90,7 +90,7 @@
 
                                 <StackPanel.ContextMenu>
                                     <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
-                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                        <MenuItem Header="Highlight" Command="{Binding Highlighting.HighlightCommand}"
                                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     </ContextMenu>
                                 </StackPanel.ContextMenu>
@@ -139,7 +139,7 @@
                             <Setter Property="ContextMenu">
                                 <Setter.Value>
                                     <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
-                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                        <MenuItem Header="Highlight" Command="{Binding Highlighting.HighlightCommand}"
                                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     </ContextMenu>
                                 </Setter.Value>
@@ -166,7 +166,7 @@
                             <Setter Property="ContextMenu">
                                 <Setter.Value>
                                     <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
-                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                        <MenuItem Header="Highlight" Command="{Binding Highlighting.HighlightCommand}"
                                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     </ContextMenu>
                                 </Setter.Value>
@@ -193,7 +193,7 @@
                             <Setter Property="ContextMenu">
                                 <Setter.Value>
                                     <ContextMenu DataContext="{Binding Data.DataContext, Source={StaticResource ThisProxy}}">
-                                        <MenuItem Header="Highlight" Command="{Binding HighlightCommand}"
+                                        <MenuItem Header="Highlight" Command="{Binding Highlighting.HighlightCommand}"
                                                   CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
                                     </ContextMenu>
                                 </Setter.Value>
