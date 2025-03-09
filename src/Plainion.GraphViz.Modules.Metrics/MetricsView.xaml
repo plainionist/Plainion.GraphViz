@@ -26,7 +26,7 @@
                     <TextBlock Text="Degree Centrality" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
                                ToolTip="Number of direct neighbors for each node" />
                 </GroupBox.Header>
-                <DataGrid Grid.Row="0" ItemsSource="{Binding DegreeCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Metrics.DegreeCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Node" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
                         <DataGridTextColumn Header="In" Binding="{Binding In, Mode=OneWay}" Width="*"/>
@@ -62,19 +62,19 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Node Count:" Grid.Row="0" Grid.Column="0" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding GraphDensity.NodeCount, TargetNullValue='-'}" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"/>
+                    <TextBlock Text="{Binding Metrics.GraphDensity.NodeCount, TargetNullValue='-'}" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"/>
 
                     <TextBlock Text="Edge Count:" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
-                    <TextBlock Text="{Binding GraphDensity.EdgeCount, TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
+                    <TextBlock Text="{Binding Metrics.GraphDensity.EdgeCount, TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
 
                     <TextBlock Text="Density [0; 1]:" Grid.Row="2" Grid.Column="0" Margin="0,5,5,0" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
                                ToolTip="How connected the graph is (number of edges vs. max possible)" />
-                    <TextBlock Text="{Binding GraphDensity.Density, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
+                    <TextBlock Text="{Binding Metrics.GraphDensity.Density, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="2" Grid.Column="1" Margin="5,5,0,0"/>
                 </Grid>
             </GroupBox>
 
             <GroupBox Header="Cycles" Margin="0,5,0,0" Height="300">
-                <ListView ItemsSource="{Binding Cycles}" BorderThickness="1" Margin="5">
+                <ListView ItemsSource="{Binding Metrics.Cycles}" BorderThickness="1" Margin="5">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -114,11 +114,11 @@
 
                     <TextBlock Text="Diameter [0; N - 1]:" Grid.Row="0" Grid.Column="0" Margin="0,5,5,0" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
                                ToolTip="Longest shortest path in the graph" />
-                    <TextBlock Text="{Binding Diameter, TargetNullValue='-'}" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"/>
+                    <TextBlock Text="{Binding Metrics.Diameter, TargetNullValue='-'}" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0"/>
 
                     <TextBlock Text="Average Path Length [0; N - 1]:" Grid.Row="1" Grid.Column="0" Margin="0,5,5,0" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
                                ToolTip="Average shortest path length in the graph" />
-                    <TextBlock Text="{Binding AveragePathLength, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
+                    <TextBlock Text="{Binding Metrics.AveragePathLength, StringFormat='{}{0:F4}', TargetNullValue='-'}" Grid.Row="1" Grid.Column="1" Margin="5,5,0,0"/>
                 </Grid>
             </GroupBox>
 
@@ -127,7 +127,7 @@
                     <TextBlock Text="Betweenness Centrality" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
                                ToolTip="How often a node lies on the shortest path between other nodes" />
                 </GroupBox.Header>
-                <DataGrid Grid.Row="0" ItemsSource="{Binding BetweennessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Metrics.BetweennessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Caption" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
                         <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
@@ -154,7 +154,7 @@
                     <TextBlock Text="Edge Betweenness" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
                                ToolTip="How often an edge is part a shortest path" />
                 </GroupBox.Header>
-                <DataGrid Grid.Row="0" ItemsSource="{Binding EdgeBetweenness}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Metrics.EdgeBetweenness}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Caption" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
                         <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
@@ -181,7 +181,7 @@
                     <TextBlock Text="Closeness Centrality" Foreground="Blue" TextDecorations="Underline" Cursor="Help"
                                ToolTip="How central a node is via shortest paths to others" />
                 </GroupBox.Header>
-                <DataGrid Grid.Row="0" ItemsSource="{Binding ClosenessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Metrics.ClosenessCentrality}" AutoGenerateColumns="False" HeadersVisibility="Column" Margin="5">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Caption" Binding="{Binding Caption, Mode=OneWay}" Width="Auto"/>
                         <DataGridTextColumn Header="Absolute" Binding="{Binding Absolute, StringFormat='{}{0:F2}', Mode=OneWay}" Width="*"/>
