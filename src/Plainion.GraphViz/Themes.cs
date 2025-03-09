@@ -38,7 +38,7 @@ namespace Plainion.GraphViz
             public override Brush ClusterBorderColor(Brush color) => Brushes.DodgerBlue;
         }
 
-        public static readonly NakedView Naked = new NakedView();
+        public static readonly NakedView Naked = new();
     }
 
     public class NakedView : INotifyPropertyChanged
