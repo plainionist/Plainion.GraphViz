@@ -243,22 +243,23 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         }
 
         var graph = BuildVisibleGraph();
+        var captions = Model.Presentation.GetPropertySetFor<Caption>();
 
-        Step(() => { DegreeCentrality = ComputeDegreeCentrality(Model.Presentation, graph); });
-        Step(() => { GraphDensity = ComputeGraphDensity(Model.Presentation, graph); });
-        Step(() => { Cycles = ComputeCycles(Model.Presentation, graph); });
+        Step(() => { DegreeCentrality = ComputeDegreeCentrality(captions, graph); });
+        Step(() => { GraphDensity = ComputeGraphDensity(graph); });
+        Step(() => { Cycles = ComputeCycles(captions, graph); });
 
         var shortestPaths = ShortestPathsFinder.FindAllShortestPaths(graph);
 
         Step(() => { Diameter = GraphMetrics.ComputeDiameter(shortestPaths); });
         Step(() => { AveragePathLength = GraphMetrics.ComputeAveragePathLength(graph, shortestPaths); });
-        Step(() => { BetweennessCentrality = ComputeBetweennessCentrality(Model.Presentation, graph, shortestPaths); });
-        Step(() => { EdgeBetweenness = ComputeEdgeBetweenness(Model.Presentation, graph, shortestPaths); });
+        Step(() => { BetweennessCentrality = ComputeBetweennessCentrality(captions, graph, shortestPaths); });
+        Step(() => { EdgeBetweenness = ComputeEdgeBetweenness(captions, graph, shortestPaths); });
 
         var undirectedGraph = Graphs.Undirected.RelaxedGraphBuilder.Convert(graph);
         var shortestUndirectedPaths = UndirectedShortestPathsFinder.FindAllShortestPaths(undirectedGraph);
 
-        Step(() => { ClosenessCentrality = ComputeClosenessCentrality(Model.Presentation, undirectedGraph, shortestUndirectedPaths); });
+        Step(() => { ClosenessCentrality = ComputeClosenessCentrality(captions, undirectedGraph, shortestUndirectedPaths); });
     }
 
     private IGraph BuildVisibleGraph()
@@ -283,11 +284,8 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
         return builder.Graph;
     }
 
-    private static IReadOnlyCollection<NodeDegreesVM> ComputeDegreeCentrality(IModuleRepository modules, IGraph graph)
-    {
-        var captions = modules.GetPropertySetFor<Caption>();
-
-        return graph.Nodes
+    private static IReadOnlyCollection<NodeDegreesVM> ComputeDegreeCentrality(IPropertySetModule<Caption> captions, IGraph graph) =>
+        graph.Nodes
             .Select(x => new NodeDegreesVM
             {
                 Model = x,
@@ -298,9 +296,8 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             })
             .OrderByDescending(x => x.Total)
             .ToList();
-    }
 
-    private static GraphDensityVM ComputeGraphDensity(IModuleRepository modules, IGraph graph) =>
+    private static GraphDensityVM ComputeGraphDensity(IGraph graph) =>
         new()
         {
             NodeCount = graph.Nodes.Count,
@@ -308,10 +305,8 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             Density = GraphMetrics.ComputeGraphDensity(graph)
         };
 
-    private static IReadOnlyCollection<CycleVM> ComputeCycles(IModuleRepository modules, IGraph graph)
+    private static IReadOnlyCollection<CycleVM> ComputeCycles(IPropertySetModule<Caption> captions, IGraph graph)
     {
-        var captions = modules.GetPropertySetFor<Caption>();
-
         CycleVM CreateCycleVM(Cycle cycle) =>
             new()
             {
@@ -325,11 +320,8 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             .ToList();
     }
 
-    private static IReadOnlyCollection<GraphItemMeasurementVM> ComputeBetweennessCentrality(IModuleRepository modules, IGraph graph, ShortestPaths shortestPaths)
-    {
-        var captions = modules.GetPropertySetFor<Caption>();
-
-        return GraphMetrics.ComputeBetweennessCentrality(graph, shortestPaths)
+    private static IReadOnlyCollection<GraphItemMeasurementVM> ComputeBetweennessCentrality(IPropertySetModule<Caption> captions, IGraph graph, ShortestPaths shortestPaths) =>
+        GraphMetrics.ComputeBetweennessCentrality(graph, shortestPaths)
             .Select(x => new GraphItemMeasurementVM
             {
                 Model = x.Owner,
@@ -339,13 +331,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             })
             .OrderByDescending(x => x.Absolute)
             .ToList();
-    }
 
-    private static IReadOnlyCollection<GraphItemMeasurementVM> ComputeEdgeBetweenness(IModuleRepository modules, IGraph graph, ShortestPaths shortestPaths)
-    {
-        var captions = modules.GetPropertySetFor<Caption>();
-
-        return GraphMetrics.ComputeEdgeBetweenness(graph, shortestPaths)
+    private static IReadOnlyCollection<GraphItemMeasurementVM> ComputeEdgeBetweenness(IPropertySetModule<Caption> captions, IGraph graph, ShortestPaths shortestPaths)=>
+        GraphMetrics.ComputeEdgeBetweenness(graph, shortestPaths)
             .Select(x => new GraphItemMeasurementVM
             {
                 Model = x.Owner,
@@ -355,13 +343,9 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             })
             .OrderByDescending(x => x.Absolute)
             .ToList();
-    }
 
-    private static IReadOnlyCollection<GraphItemMeasurementVM> ComputeClosenessCentrality(IModuleRepository modules, IReadOnlyCollection<Graphs.Undirected.Node> graph, ShortestUndirectedPaths shortestPaths)
-    {
-        var captions = modules.GetPropertySetFor<Caption>();
-
-        return UndirectedGraphMetrics.ComputeClosenessCentrality(graph, shortestPaths)
+    private static IReadOnlyCollection<GraphItemMeasurementVM> ComputeClosenessCentrality(IPropertySetModule<Caption> captions, IReadOnlyCollection<Graphs.Undirected.Node> graph, ShortestUndirectedPaths shortestPaths) =>
+        UndirectedGraphMetrics.ComputeClosenessCentrality(graph, shortestPaths)
             .Select(x => new GraphItemMeasurementVM
             {
                 Model = x.Owner,
@@ -371,7 +355,6 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             })
             .OrderByDescending(x => x.Absolute)
             .ToList();
-    }
 
     internal void Closed()
     {
