@@ -214,24 +214,35 @@ class MetricsViewModel : ViewModelBase, IInteractionRequestAware
             token.ThrowIfCancellationRequested();
         }
 
+        var graph = BuildVisibleGraph();
+
+        Step(() => { DegreeCentrality = ComputeDegreeCentrality(Model.Presentation, graph); });
+        Step(() => { GraphDensity = ComputeGraphDensity(Model.Presentation, graph); });
+        Step(() => { Cycles = ComputeCycles(Model.Presentation, graph); });
+        
+        Step(() => { Pathways = ComputePathways(Model.Presentation, graph); });
+    }
+
+    private IGraph BuildVisibleGraph()
+    {
         var builder = new RelaxedGraphBuilder();
+
         foreach (var node in Model.Presentation.TransformedGraph.Nodes.Where(Model.Presentation.Picking.Pick))
         {
             builder.TryAddNode(node.Id);
         }
+        
         foreach (var edge in Model.Presentation.TransformedGraph.Edges.Where(Model.Presentation.Picking.Pick))
         {
             builder.TryAddEdge(edge.Source.Id, edge.Target.Id);
         }
+        
         foreach (var cluster in Model.Presentation.TransformedGraph.Clusters.Where(Model.Presentation.Picking.Pick))
         {
             builder.TryAddCluster(cluster.Id, cluster.Nodes.Where(Model.Presentation.Picking.Pick).Select(x => x.Id));
         }
 
-        Step(() => { DegreeCentrality = ComputeDegreeCentrality(Model.Presentation, builder.Graph); });
-        Step(() => { GraphDensity = ComputeGraphDensity(Model.Presentation, builder.Graph); });
-        Step(() => { Cycles = ComputeCycles(Model.Presentation, builder.Graph); });
-        Step(() => { Pathways = ComputePathways(Model.Presentation, builder.Graph); });
+        return builder.Graph;
     }
 
     private static IReadOnlyCollection<NodeDegreesVM> ComputeDegreeCentrality(IModuleRepository modules, IGraph graph)
