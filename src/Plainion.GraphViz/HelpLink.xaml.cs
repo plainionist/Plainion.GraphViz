@@ -11,17 +11,21 @@ namespace Plainion.GraphViz
             InitializeComponent();
         }
 
-        public static readonly DependencyProperty PageProperty = DependencyProperty.Register( "Page", typeof( string ), typeof( HelpLink ) );
+        public static readonly DependencyProperty PageProperty = DependencyProperty.Register("Page", typeof(string), typeof(HelpLink));
 
         public string Page
         {
-            get { return ( string )GetValue( PageProperty ); }
-            set { SetValue( PageProperty, value ); }
+            get { return (string)GetValue(PageProperty); }
+            set { SetValue(PageProperty, value); }
         }
 
-        private void OnTipsClick( object sender, RoutedEventArgs e )
+        private void OnTipsClick(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://plainionist.github.io/Plainion.GraphViz/");
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://plainionist.github.io/Plainion.GraphViz/",
+                UseShellExecute = true
+            });
         }
     }
 }
