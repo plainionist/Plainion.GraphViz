@@ -23,9 +23,9 @@ let ns = XNamespace.Get "http://github.com/ronin4net/plainion/GraphViz/Packaging
 let createClusters() = seq {
         yield! rules.Rules
             |> Seq.filter(fun x -> equalsI x.Category "leaf" || equalsI x.Category "shared")
-            |> Seq.map(fun x -> XElement(ns + "Cluster",
-                XAttribute("Name", x.Namespace.Value),
-                XElement(ns + "Include", XAttribute("Pattern", createPattern x))))
+            |> Seq.map(fun x ->  XElement(ns + "Cluster",
+                    XAttribute("Name", x.Namespace |> Option.defaultWith(fun () -> x.Class.Value)),
+                    XElement(ns + "Include", XAttribute("Pattern", createPattern x))))
 
         yield XElement(ns + "Cluster",
                 XAttribute("Name", "Composition"),
