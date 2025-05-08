@@ -1,8 +1,9 @@
 
-## 8.4 - 2025-03-
+## 8.4 - 2025-05-
 
 - navigating to node after search improved
 - Metrics: Highlight context menu added
+- Fix: package analysis doesn't try to load already loaded assemblies
 
 ## 8.3 - 2025-03-05
 

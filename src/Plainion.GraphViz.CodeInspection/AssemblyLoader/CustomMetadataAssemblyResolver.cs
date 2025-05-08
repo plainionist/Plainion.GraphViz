@@ -42,15 +42,21 @@ class CustomMetadataAssemblyResolver : MetadataAssemblyResolver
 
     public override Assembly Resolve(MetadataLoadContext context, AssemblyName assemblyName)
     {
-        var assembly = ResolveCore(context, assemblyName);
+        var assembly = context.GetAssemblies().FirstOrDefault(x => x.GetName().Name == assemblyName.Name);
+        if (assembly != null)
+        {
+            return assembly;
+        }
+
+        assembly = ResolveCore(context, assemblyName);
+
         myLogger.LogDebug($"{assembly} => {assembly?.Location}");
+
         return assembly;
     }
 
     private Assembly ResolveCore(MetadataLoadContext context, AssemblyName assemblyName)
     {
-        //Debugger.Launch();
-
         var requestingAssembly = myTryGetRequestingAssembly() ?? Assembly.GetEntryAssembly();
 
         var assembly = new PathAssemblyResolver(myAssemblies.Values).Resolve(context, assemblyName);
