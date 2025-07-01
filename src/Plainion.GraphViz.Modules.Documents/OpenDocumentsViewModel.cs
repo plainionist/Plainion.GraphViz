@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using Plainion.GraphViz.Dot;
@@ -12,6 +13,7 @@ using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
 using Plainion.Graphs.Projections;
+using System.Security.Policy;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
@@ -21,6 +23,7 @@ namespace Plainion.GraphViz.Modules.Documents
         private readonly GraphToDotLangSynchronizer myGraphToDotSynchronizer;
         private IPresentationCreationService myPresentationCreationService;
         private IStatusMessageService myStatusMessageService;
+        private byte[] myLastFileHash;
 
         public OpenDocumentsViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, IDomainModel model)
             : base(model)
@@ -117,6 +120,10 @@ namespace Plainion.GraphViz.Modules.Documents
                     // enqueue to have less blocking of UI
                     Application.Current.Dispatcher.BeginInvoke(new Action(() => SyncToDocument(p, path))));
             }
+
+            myLastFileHash = ComputeFileHash(path);
+            var hashStringToLog = "File Hash : " + GetFileHashString(myLastFileHash);
+            myStatusMessageService.Publish(new StatusMessage(hashStringToLog));
         }
 
         private void SyncToDocument(IGraphPresentation p, string path)
@@ -171,7 +178,32 @@ namespace Plainion.GraphViz.Modules.Documents
 
         private void OnCurrentFileChanged(object sender, FileSystemEventArgs e)
         {
+            byte[] currentHash = ComputeFileHash(e.FullPath);
+            if (myLastFileHash != null && currentHash.SequenceEqual(myLastFileHash))
+            {
+                // No actual content change — skip reload
+                return;
+            }
+
+            myLastFileHash = currentHash;
+            var changedHashStringToLog = "Changed File Hash : " + GetFileHashString(myLastFileHash);
+            myStatusMessageService.Publish(new StatusMessage(changedHashStringToLog));
+            
             Application.Current.Dispatcher.BeginInvoke(new Action(() => HotReOpen(e.FullPath, 3)));
+        }
+
+        private byte[] ComputeFileHash(string filePath)
+        {
+            using (var stream = File.OpenRead(filePath))
+            using (var sha = SHA256.Create())
+            {
+                return sha.ComputeHash(stream);
+            }
+        }
+
+        private string GetFileHashString(byte[] fileHashBytes)
+        {
+            return BitConverter.ToString(fileHashBytes).Replace("-", "").ToLowerInvariant();
         }
 
         // hot reloading the document while it is edited with notpad works but 
