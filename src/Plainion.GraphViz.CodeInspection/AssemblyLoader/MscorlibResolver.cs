@@ -45,7 +45,7 @@ class MscorlibResolver : AbstractAssemblyResolver<MscorlibResolutionResult>
                 new FileInfo(Path.Combine(netFwRoot, version, assemblyName.Name + ".dll")),
                 @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8");
 
-            return new[] { result };
+            return [result];
         }
         else
         {
@@ -61,7 +61,7 @@ class MscorlibResolver : AbstractAssemblyResolver<MscorlibResolutionResult>
                 Path.Combine(@"C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App", version),
                 Path.Combine(@"C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App", version));
 
-            return new[] { result };
+            return [result];
         }
     }
 }
