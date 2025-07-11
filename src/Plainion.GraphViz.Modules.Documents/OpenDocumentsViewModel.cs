@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Shapes;
 using Plainion.Graphs;
 using Plainion.Graphs.Projections;
 using Plainion.GraphViz.Dot;
@@ -21,8 +20,9 @@ namespace Plainion.GraphViz.Modules.Documents
     {
         private FileSystemWatcher myFileWatcher;
         private readonly GraphToDotLangSynchronizer myGraphToDotSynchronizer;
-        private IPresentationCreationService myPresentationCreationService;
-        private IStatusMessageService myStatusMessageService;
+        private readonly IPresentationCreationService myPresentationCreationService;
+        private readonly IStatusMessageService myStatusMessageService;
+        private DateTime myLastWrittenByApp;
 
         public OpenDocumentsViewModel(IPresentationCreationService presentationCreationService, IStatusMessageService statusMessageService, IDomainModel model)
             : base(model)
@@ -188,6 +188,7 @@ namespace Plainion.GraphViz.Modules.Documents
                 writer.PrettyPrint = true;
 
                 writer.Write(graph, new NullGraphPicking(), p);
+                myLastWrittenByApp = File.GetLastWriteTimeUtc(path);
             }
 
             myFileWatcher.EnableRaisingEvents = true;
@@ -195,6 +196,15 @@ namespace Plainion.GraphViz.Modules.Documents
 
         private void OnCurrentFileChanged(object sender, FileSystemEventArgs e)
         {
+            var lastWriteTime = File.GetLastWriteTimeUtc(e.FullPath);
+
+            if ((lastWriteTime - myLastWrittenByApp).TotalMilliseconds < 100)
+            {
+                // there seems to be a race-condition within file watcher which causes the handler being called 
+                // when we write the file from this app even thought we have disabled event sending
+                return;
+            }
+
             Application.Current.Dispatcher.BeginInvoke(new Action(() => HotReOpen(e.FullPath, 3)));
         }
 
