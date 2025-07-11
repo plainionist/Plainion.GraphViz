@@ -41,7 +41,8 @@ namespace Plainion.GraphViz.Modules.Documents
             var node = myGraphBuilder.TryAddNode(nodeId);
             if (node == null)
             {
-                myFailedItems.Add(new FailedItem(nodeId, "Node already exists"));
+                // it is quite common that nodes are mentioned in clusters and again in the graph itself
+                //myFailedItems.Add(new FailedItem(nodeId, "Node already exists"));
                 return null;
             }
 

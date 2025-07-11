@@ -1,7 +1,6 @@
-﻿using Plainion.GraphViz.Dot;
-using Plainion.GraphViz.Presentation;
-using System;
+﻿using System;
 using System.Linq;
+using Plainion.GraphViz.Presentation;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
