@@ -1,9 +1,14 @@
 
-## 8.4 - 2025-05-
+## 8.5 - 2025-07-12
+
+- Fix: race-condition between "sync to file" and "hot reload"
+
+## 8.4 - 2025-07-11
 
 - navigating to node after search improved
 - Metrics: Highlight context menu added
 - Fix: package analysis doesn't try to load already loaded assemblies
+- Fix: help link
 
 ## 8.3 - 2025-03-05
 
