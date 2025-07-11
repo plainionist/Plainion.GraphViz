@@ -4,14 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Shapes;
+using Plainion.Graphs;
+using Plainion.Graphs.Projections;
 using Plainion.GraphViz.Dot;
+using Plainion.GraphViz.Presentation;
 using Plainion.GraphViz.Viewer.Abstractions.Services;
 using Plainion.GraphViz.Viewer.Abstractions.ViewModel;
-using Plainion.Graphs;
-using Plainion.GraphViz.Presentation;
 using Plainion.Prism.Interactivity.InteractionRequest;
 using Prism.Commands;
-using Plainion.Graphs.Projections;
+using Path = System.IO.Path;
 
 namespace Plainion.GraphViz.Modules.Documents
 {
@@ -58,6 +60,8 @@ namespace Plainion.GraphViz.Modules.Documents
 
         private void Open(string path)
         {
+            myStatusMessageService.Publish(new StatusMessage($"Opening '{path}'"));
+
             if (Path.GetExtension(path).Equals(".pgv", StringComparison.OrdinalIgnoreCase))
             {
                 OpenPresentation(path);
@@ -101,14 +105,8 @@ namespace Plainion.GraphViz.Modules.Documents
 
             Model.Presentation = presentation;
 
-            myFileWatcher = new FileSystemWatcher();
-            myFileWatcher.Path = Path.GetDirectoryName(path);
-            myFileWatcher.Filter = Path.GetFileName(path);
-            // http://stackoverflow.com/questions/19905151/system-io-filesystemwatcher-does-not-watch-file-changed-by-visual-studio-2013
-            myFileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime;
-            myFileWatcher.Changed += OnCurrentFileChanged;
-            myFileWatcher.Error += OnFileWatcherError;
-            myFileWatcher.EnableRaisingEvents = true;
+            DestroyFileWatcher();
+            CreateFileWatcher(path);
 
             // only synchronize presentations where we know the doc type and which were created from this module
             if (Path.GetExtension(path).Equals(".dot", StringComparison.OrdinalIgnoreCase))
@@ -117,6 +115,32 @@ namespace Plainion.GraphViz.Modules.Documents
                     // enqueue to have less blocking of UI
                     Application.Current.Dispatcher.BeginInvoke(new Action(() => SyncToDocument(p, path))));
             }
+        }
+
+        private void CreateFileWatcher(string path)
+        {
+            myFileWatcher = new FileSystemWatcher();
+            myFileWatcher.Path = Path.GetDirectoryName(path);
+            myFileWatcher.Filter = Path.GetFileName(path);
+            // http://stackoverflow.com/questions/19905151/system-io-filesystemwatcher-does-not-watch-file-changed-by-visual-studio-2013
+            myFileWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime;
+            myFileWatcher.Changed += OnCurrentFileChanged;
+            myFileWatcher.Error += OnFileWatcherError;
+            myFileWatcher.EnableRaisingEvents = true;
+        }
+
+        private void DestroyFileWatcher()
+        {
+            if (myFileWatcher == null)
+            {
+                return;
+            }
+
+            myFileWatcher.Changed -= OnCurrentFileChanged;
+            myFileWatcher.Error -= OnFileWatcherError;
+
+            myFileWatcher.Dispose();
+            myFileWatcher = null;
         }
 
         private void SyncToDocument(IGraphPresentation p, string path)
@@ -179,18 +203,15 @@ namespace Plainion.GraphViz.Modules.Documents
         // so lets apply some tolerance
         private void HotReOpen(string file, int remainingRetries)
         {
-            for (int i = 0; i < 3; ++i)
+            try
             {
-                try
+                Open(file);
+            }
+            catch
+            {
+                if (remainingRetries > 0)
                 {
-                    Open(file);
-                }
-                catch
-                {
-                    if (remainingRetries > 0)
-                    {
-                        Application.Current.Dispatcher.BeginInvoke(new Action(() => HotReOpen(file, --remainingRetries)));
-                    }
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() => HotReOpen(file, --remainingRetries)));
                 }
             }
         }
@@ -202,11 +223,7 @@ namespace Plainion.GraphViz.Modules.Documents
 
         protected override void OnPresentationChanged()
         {
-            if (myFileWatcher != null)
-            {
-                myFileWatcher.Dispose();
-                myFileWatcher = null;
-            }
+            DestroyFileWatcher();
 
             // reset only!
             myGraphToDotSynchronizer.Detach();
