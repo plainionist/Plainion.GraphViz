@@ -15,6 +15,7 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
     {
         private IGraphPresentation myPresentation;
         private IModuleChangedObserver myTransformationsObserver;
+        private bool myIsMerging;
 
         public ClusterEditorViewModel(IDomainModel model)
             : base(model)
@@ -88,6 +89,8 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnDrop(NodeDropRequest request)
         {
+            using var _ = myTransformationsObserver.Mute();
+
             var targetCluster = request.DropTarget.Type == NodeType.Node ? request.DropTarget.Parent : request.DropTarget;
             MergeInto(request.DroppedNode, targetCluster);
         }
@@ -97,14 +100,30 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
             var droppedNodes = node.Type == NodeType.Cluster ? node.Children : [node];
 
             // need a copy as we modify the collection in the loop
-            foreach (var droppedNode in droppedNodes.ToList())
+            var nodesList = droppedNodes.ToList();
+
+            // suppress per-node OnParentChanged → AddToCluster(single) to avoid
+            // N individual ApplyTransformations calls during the move
+            myIsMerging = true;
+
+            try
             {
-                droppedNode.Parent.Children.Remove(droppedNode);
+                foreach (var droppedNode in nodesList)
+                {
+                    droppedNode.Parent.Children.Remove(droppedNode);
 
-                cluster.Children.Add(droppedNode);
+                    cluster.Children.Add(droppedNode);
 
-                droppedNode.Parent = cluster;
+                    droppedNode.Parent = cluster;
+                }
             }
+            finally
+            {
+                myIsMerging = false;
+            }
+
+            // batch-update the model once for all moved nodes
+            myPresentation.DynamicClusters().AddToCluster(nodesList.Select(n => n.Id), cluster.Id);
 
             if (node.Type == NodeType.Cluster)
             {
@@ -238,6 +257,11 @@ namespace Plainion.GraphViz.Modules.Analysis.Clusters
 
         private void OnParentChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (myIsMerging)
+            {
+                return;
+            }
+
             var node = (NodeViewModel)sender;
             myPresentation.DynamicClusters().AddToCluster(node.Id, node.Parent.Id);
         }
