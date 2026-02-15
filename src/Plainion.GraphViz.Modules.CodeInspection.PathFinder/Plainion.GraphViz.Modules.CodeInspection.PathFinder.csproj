@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka" Version="1.5.37" />
-    <PackageReference Include="Akka.Remote" Version="1.5.37" />
+    <PackageReference Include="Akka" Version="1.5.60" />
+    <PackageReference Include="Akka.Remote" Version="1.5.60" />
     <PackageReference Include="Plainion.Prism" Version="9.0.0" />
     <PackageReference Include="Prism.Wpf" Version="9.0.537" />
     <PackageReference Include="System.Reflection.MetadataLoadContext" Version="8.0.0" />
