@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Plainion.Graphs;
 
@@ -116,5 +117,40 @@ public class Graph : IGraph
     public void Freeze()
     {
         IsFrozen = true;
+    }
+
+    /// <summary>
+    /// Creates a deep copy of this graph with new Node, Edge, and Cluster instances.
+    /// The cloned graph is frozen.
+    /// </summary>
+    public Graph DeepClone()
+    {
+        var clone = new Graph();
+
+        var nodeMap = new Dictionary<string, Node>(myNodes.Count);
+        foreach (var node in myNodes.Values)
+        {
+            var clonedNode = new Node(node.Id);
+            nodeMap[node.Id] = clonedNode;
+            clone.Add(clonedNode);
+        }
+
+        foreach (var edge in myEdges.Values)
+        {
+            var clonedEdge = new Edge(nodeMap[edge.Source.Id], nodeMap[edge.Target.Id], edge.Weight);
+            clone.Add(clonedEdge);
+
+            nodeMap[edge.Source.Id].Out.Add(clonedEdge);
+            nodeMap[edge.Target.Id].In.Add(clonedEdge);
+        }
+
+        foreach (var cluster in myClusters.Values)
+        {
+            var clonedCluster = new Cluster(cluster.Id, cluster.Nodes.Select(n => nodeMap[n.Id]));
+            clone.Add(clonedCluster);
+        }
+
+        clone.Freeze();
+        return clone;
     }
 }

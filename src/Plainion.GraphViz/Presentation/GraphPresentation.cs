@@ -72,14 +72,14 @@ public class GraphPresentation : IGraphPresentation
                 throw new InvalidOperationException("Graph already set to presentation. Changing Graph is not allowed!");
             }
 
-            if (value is Graph g && g.IsFrozen)
+            if (value is Graph g)
             {
-                myGraph = g;
+                // graph is mutable in order to support easy graph building -> protect against graph changes
+                myGraph = g.IsFrozen ? g : g.DeepClone();
             }
             else
             {
-                // graph is mutable in order to support easy graph building -> protect against graph changes
-                myGraph = Objects.Clone(value);
+                throw new ArgumentException($"Unsupported graph type: {value.GetType().Name}. Expected Graph.");
             }
 
             // fill up the Captions module here directly to avoid performance issues by
