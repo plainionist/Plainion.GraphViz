@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Akka" Version="1.5.60" />
     <PackageReference Include="Akka.Remote" Version="1.5.60" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
