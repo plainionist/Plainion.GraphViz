@@ -13,7 +13,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
     {
         private static readonly string myProjectHome = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(SmokeTest).Assembly.Location), "..", ".."));
 
-        private static readonly string[] TargetFrameworks = ["net8.0", "net48"];
+        private static readonly string[] TargetFrameworks = ["net10.0", "net48"];
 
         [OneTimeSetUp]
         public void FixtureSetup()
