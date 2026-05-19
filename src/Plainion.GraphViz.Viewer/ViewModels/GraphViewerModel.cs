@@ -155,6 +155,10 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 () => Presentation.Masks().Push(new RemoveNodesWithoutSiblings(Presentation) { SiblingsType = SiblingsType.Any }.Compute()),
                 () => Presentation != null);
 
+            RemoveNodesWithoutCrossClusterEdgesCommand = new DelegateCommand(
+                () => Presentation.Masks().Push(new RemoveNodesWithoutCrossClusterEdges(Presentation).Compute()),
+                () => Presentation != null);
+
             FoldUnfoldAllClustersCommand = new DelegateCommand(
                 () => Presentation.ToogleFoldingOfVisibleClusters(),
                 () => Presentation != null);
@@ -480,6 +484,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand RemoveNodesWithoutSiblingsCommand { get; private set; }
 
+        public DelegateCommand RemoveNodesWithoutCrossClusterEdgesCommand { get; private set; }
+
         public DelegateCommand ShowNodesOutsideClustersCommand { get; private set; }
 
         public DelegateCommand ClearSelectionCommand { get; private set; }
@@ -566,6 +572,7 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             RemoveNodesWithoutSourcesCommand.RaiseCanExecuteChanged();
             RemoveNodesWithoutTargetsCommand.RaiseCanExecuteChanged();
             RemoveNodesWithoutSiblingsCommand.RaiseCanExecuteChanged();
+            RemoveNodesWithoutCrossClusterEdgesCommand.RaiseCanExecuteChanged();
             ShowNodesOutsideClustersCommand.RaiseCanExecuteChanged();
             FoldUnfoldAllClustersCommand.RaiseCanExecuteChanged();
             AddVisibleNodesOutsideClustersToClusterCommand.RaiseCanExecuteChanged();

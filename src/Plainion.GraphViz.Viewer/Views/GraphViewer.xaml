@@ -166,6 +166,7 @@
                 <MenuItem Header="Specials">
                     <MenuItem Header="Show cycles" Command="{Binding ShowCyclesCommand}"/>
                     <MenuItem Header="Show nodes outside clusters" Command="{Binding ShowNodesOutsideClustersCommand}"/>
+                    <MenuItem Header="Remove nodes without cross-cluster edges" Command="{Binding RemoveNodesWithoutCrossClusterEdgesCommand}"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Home" Command="{Binding HomeCommand}"/>
