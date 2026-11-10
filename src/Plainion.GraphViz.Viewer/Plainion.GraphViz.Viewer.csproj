@@ -16,6 +16,11 @@
     <Content Include="Plainion.GraphViz.Viewer.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\..\Extern\GraphViz\**\*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -43,12 +48,5 @@
     <Resource Include="Resources\Settings.png" />
     <Resource Include="Resources\StatusMessages.png" />
   </ItemGroup>
-
-  <Target Name="DeployGraphVizTools" AfterTargets="Build">
-    <ItemGroup>
-      <GraphViz Include="..\..\Extern\GraphViz\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(GraphViz)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
-  </Target>
 
 </Project>

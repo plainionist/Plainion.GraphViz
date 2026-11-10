@@ -6,9 +6,21 @@ navigation_weight: 200
 
 # Development
 
-Plainion.GraphViz is developed based on the .NET 8.0 in C#, so you need to install .NET 8.0 SDK.
+Plainion.GraphViz is developed based on .NET 10.0 in C#, so you need to install the .NET 10.0 SDK.
 
 All other dependencies are handled via NuGet.
+
+## Publishing the viewer
+
+From the repository root, publish the viewer with:
+
+```powershell
+dotnet publish .\src\Plainion.GraphViz.Viewer\Plainion.GraphViz.Viewer.csproj -c Release -o .\publish
+```
+
+Run `.\publish\Plainion.GraphViz.Viewer.exe`. The publish output includes the bundled Graphviz tools,
+native libraries, and configuration files. Keep the complete publish output together: the viewer expects
+`dot.exe` and the other Graphviz files alongside its assemblies.
 
 # Extensibility
 
