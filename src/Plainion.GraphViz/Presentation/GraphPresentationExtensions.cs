@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Plainion.Graphs;
+using Plainion.Graphs.Algorithms;
 
 namespace Plainion.GraphViz.Presentation;
 
@@ -51,6 +52,16 @@ public static class GraphPresentationExtensions
         }
     }
 
+    public static void SelectNodesWithoutSiblings(this IGraphPresentation self, SiblingsType type)
+    {
+        var hideMask = new RemoveNodesWithoutSiblings(self) { SiblingsType = type }.Compute();
+        var selection = self.GetPropertySetFor<Selection>();
+        foreach (var node in self.TransformedGraph.Nodes.Where(n => hideMask.IsSet(n) == false))
+        {
+            selection.Get(node.Id).IsSelected = true;
+        }
+    }
+
     private static IEnumerable<Edge> GetEdges(Node node, SiblingsType type)
     {
         if (type == SiblingsType.Sources || type == SiblingsType.Any)
@@ -71,4 +82,3 @@ public static class GraphPresentationExtensions
         self.Get(edge.Target.Id).IsSelected = true;
     }
 }
-

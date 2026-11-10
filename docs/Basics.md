@@ -38,6 +38,9 @@ so you may have to slowly zoom out and check a bit left and right. This will be 
 You can you Ctrl-LMB-Click to select one or multple nodes and edges. This may help to keep the overview in a 
 huge graph while manually navigating with zoom and pan.
 
+Right-click the canvas and use "Select" > "All without sources" or "All without targets" to select
+visible nodes without visible incoming or outgoing neighbours, respectively. Existing selections are preserved.
+
 ![](Screenshots/Deselect-all.png)
 
 Use RMB-Click on the canvas and the "Deselect all" context menu to remove all selection from the graph.

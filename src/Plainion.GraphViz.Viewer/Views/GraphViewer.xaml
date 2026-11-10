@@ -150,6 +150,10 @@
                     <MenuItem Header="Nodes without targets" Command="{Binding RemoveNodesWithoutTargetsCommand}"/>
                     <MenuItem Header="Nodes without siblings" Command="{Binding RemoveNodesWithoutSiblingsCommand}"/>
                 </MenuItem>
+                <MenuItem Header="Select">
+                    <MenuItem Header="All without sources" Command="{Binding SelectNodesWithoutSourcesCommand}"/>
+                    <MenuItem Header="All without targets" Command="{Binding SelectNodesWithoutTargetsCommand}"/>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Clear selection" Command="{Binding ClearSelectionCommand}"/>
                 <MenuItem Header="Invert selection" Command="{Binding InvertSelectionCommand}"/>

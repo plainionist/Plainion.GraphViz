@@ -175,6 +175,14 @@ namespace Plainion.GraphViz.Viewer.ViewModels
                 () => OnInvertSelection(),
                 () => Presentation != null);
 
+            SelectNodesWithoutSourcesCommand = new DelegateCommand(
+                () => Presentation.SelectNodesWithoutSiblings(SiblingsType.Sources),
+                () => Presentation != null);
+
+            SelectNodesWithoutTargetsCommand = new DelegateCommand(
+                () => Presentation.SelectNodesWithoutSiblings(SiblingsType.Targets),
+                () => Presentation != null);
+
             HomeCommand = new DelegateCommand(
                 () => Navigation.HomeZoomPan(),
                 () => Presentation != null);
@@ -492,6 +500,10 @@ namespace Plainion.GraphViz.Viewer.ViewModels
 
         public DelegateCommand InvertSelectionCommand { get; private set; }
 
+        public DelegateCommand SelectNodesWithoutSourcesCommand { get; private set; }
+
+        public DelegateCommand SelectNodesWithoutTargetsCommand { get; private set; }
+
         public DelegateCommand HomeCommand { get; private set; }
 
         public DelegateCommand InvalidateLayoutCommand { get; private set; }
@@ -578,6 +590,8 @@ namespace Plainion.GraphViz.Viewer.ViewModels
             AddVisibleNodesOutsideClustersToClusterCommand.RaiseCanExecuteChanged();
             ClearSelectionCommand.RaiseCanExecuteChanged();
             InvertSelectionCommand.RaiseCanExecuteChanged();
+            SelectNodesWithoutSourcesCommand.RaiseCanExecuteChanged();
+            SelectNodesWithoutTargetsCommand.RaiseCanExecuteChanged();
             HomeCommand.RaiseCanExecuteChanged();
             InvalidateLayoutCommand.RaiseCanExecuteChanged();
             PrintGraphCommand.RaiseCanExecuteChanged();
