@@ -45,6 +45,20 @@ visible nodes without visible incoming or outgoing neighbours, respectively. Exi
 
 Use RMB-Click on the canvas and the "Deselect all" context menu to remove all selection from the graph.
 
+### Select nodes by pattern
+
+Open the filter/selection dialog using the existing filter toolbar button and choose the **Select** tab.
+Enter a case-insensitive regular expression to match node captions, or enable **Match on identifier** to match
+node identifiers instead. The preview shows the visible nodes that match the pattern.
+
+Click **Select matches** or press Enter to add matching nodes to the existing selection. Click **Deselect matches**
+to remove matching nodes. Other selected nodes and existing edge selections are preserved; connecting edges are
+not selected automatically. Typing only updates the preview.
+An empty or invalid pattern disables both actions; use `.*` to match all visible nodes.
+
+Selection respects the current filtering and folding. It does not reveal hidden nodes, unfold clusters,
+create filters, or change the graph layout.
+
 ## Graph Layouts
 
 Plainion.Graphviz supports various graph layout algorithms.

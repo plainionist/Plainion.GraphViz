@@ -22,7 +22,7 @@
             </pn:PopupViewAction>
         </pn:InteractionRequestTrigger>
     </i:Interaction.Triggers>
-    <Button Command="{Binding OpenNodeMasksEditorCommand}" Padding="1" Margin="2" ToolTip="Filter nodes by caption or identifier">
+    <Button Command="{Binding OpenNodeMasksEditorCommand}" Padding="1" Margin="2" ToolTip="Filter or select nodes by caption or identifier">
         <Button.Content>
             <Image Source="/Plainion.GraphViz.Modules.Analysis;Component/Resources/Filter.png" Width="16"/>
         </Button.Content>

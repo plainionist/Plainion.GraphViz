@@ -2,6 +2,7 @@
 using Plainion.GraphViz.Modules.Analysis.Clusters;
 using Plainion.GraphViz.Modules.Analysis.Filters;
 using Plainion.GraphViz.Modules.Analysis.NodeMasks;
+using Plainion.GraphViz.Modules.Analysis.NodeSelection;
 using Plainion.GraphViz.Modules.Analysis.Search;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -18,6 +19,7 @@ public class AnalysisModule(IRegionManager regionManager) : IModule
         regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SecondaryToolBox, typeof(OpenNodeMasksView));
         regionManager.RegisterViewWithRegion(RegionNames.NodeMasksEditor, typeof(NodeMasksEditor));
         regionManager.RegisterViewWithRegion(RegionNames.NodeMasksView, typeof(NodeMasksView));
+        regionManager.RegisterViewWithRegion(RegionNames.NodeSelectionEditor, typeof(NodeSelectionEditor));
 
         regionManager.RegisterViewWithRegion(Viewer.Abstractions.RegionNames.SecondaryToolBox, typeof(OpenClustersView));
         regionManager.RegisterViewWithRegion(RegionNames.ClusterEditor, typeof(ClusterEditor));

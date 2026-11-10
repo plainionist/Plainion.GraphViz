@@ -13,6 +13,10 @@ Plainion.GraphViz has two basic filter types:
 - "Show" filter: specifies which nodes should be seen
 - "Hide" filter: specifies which nodes should be hidden
 
+The filter toolbar button opens a dialog with **Filter** and **Select** tabs. The **Filter** tab provides the
+filter features described here; the **Select** tab supports [selecting nodes by pattern](Basics#select-nodes-by-pattern)
+without changing graph visibility.
+
 Most filters created with the UI are "delta" filters which specify the nodes to be added to/removed from the 
 visible graph.
 

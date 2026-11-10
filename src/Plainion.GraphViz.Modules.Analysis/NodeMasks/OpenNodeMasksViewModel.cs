@@ -25,7 +25,7 @@ class OpenNodeMasksViewModel : BindableBase
     private void OnOpenFilterEditor()
     {
         var notification = new Notification();
-        notification.Title = "Filters";
+        notification.Title = "Filter and select nodes";
 
         NodeMasksEditorRequest.Raise(notification, c => { });
     }
