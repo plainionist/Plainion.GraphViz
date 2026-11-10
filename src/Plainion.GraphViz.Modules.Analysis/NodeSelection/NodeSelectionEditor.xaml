@@ -65,7 +65,7 @@
         </TextBlock>
 
         <ListView Grid.Row="2" ItemsSource="{Binding PreviewNodes}"
-                  SelectedItem="{Binding SelectedPreviewItem}" Margin="5,0,5,0">
+                  SelectedItem="{Binding SelectedPreviewItem}" Margin="5,0,5,5">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding DisplayText}" Background="Transparent">
