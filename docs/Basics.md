@@ -51,9 +51,13 @@ Open the filter/selection dialog using the existing filter toolbar button and ch
 Enter a case-insensitive regular expression to match node captions, or enable **Match on identifier** to match
 node identifiers instead. The preview shows the visible nodes that match the pattern.
 
+Enable **Show selected nodes only** at the bottom to limit the preview to selected matches. This option is off
+by default and affects only the preview: both actions still apply to all matching visible nodes.
+
 Click **Select matches** or press Enter to add matching nodes to the existing selection. Click **Deselect matches**
 to remove matching nodes. Other selected nodes and existing edge selections are preserved; connecting edges are
 not selected automatically. Typing only updates the preview.
+After either action, the pattern is cleared and the preview is refreshed.
 An empty or invalid pattern disables both actions; use `.*` to match all visible nodes.
 
 Selection respects the current filtering and folding. It does not reveal hidden nodes, unfold clusters,

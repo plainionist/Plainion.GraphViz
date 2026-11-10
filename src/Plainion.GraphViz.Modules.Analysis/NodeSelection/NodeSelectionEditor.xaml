@@ -19,6 +19,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="5">
@@ -65,7 +66,7 @@
         </TextBlock>
 
         <ListView Grid.Row="2" ItemsSource="{Binding PreviewNodes}"
-                  SelectedItem="{Binding SelectedPreviewItem}" Margin="5,0,5,5">
+                  SelectedItem="{Binding SelectedPreviewItem}" Margin="5,0,5,0">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding DisplayText}" Background="Transparent">
@@ -78,5 +79,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <StackPanel Grid.Row="3" Orientation="Vertical">
+            <CheckBox Margin="5" Content="Show selected nodes only" IsChecked="{Binding ShowSelectedNodesOnly}"
+                      ToolTip="Only filters the preview; both actions still apply to all matching visible nodes."/>
+        </StackPanel>
     </Grid>
 </UserControl>

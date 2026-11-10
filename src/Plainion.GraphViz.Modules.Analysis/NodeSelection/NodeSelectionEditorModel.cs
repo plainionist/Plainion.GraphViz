@@ -16,8 +16,11 @@ class NodeSelectionEditorModel : ViewModelBase
     private readonly Dispatcher myDispatcher = Dispatcher.CurrentDispatcher;
     private IGraphPresentation myPresentation;
     private IModuleChangedObserver myCaptionsObserver;
+    private IModuleChangedObserver mySelectionObserver;
+    private IReadOnlyList<NodeWithCaption> myMatchedNodes = [];
     private string myPattern;
     private bool myMatchOnIdentifier;
+    private bool myShowSelectedNodesOnly;
     private bool myPreviewRefreshPending;
     private NodeWithCaption mySelectedPreviewItem;
 
@@ -55,6 +58,18 @@ class NodeSelectionEditorModel : ViewModelBase
         }
     }
 
+    public bool ShowSelectedNodesOnly
+    {
+        get { return myShowSelectedNodesOnly; }
+        set
+        {
+            if (SetProperty(ref myShowSelectedNodesOnly, value))
+            {
+                RefreshPreview();
+            }
+        }
+    }
+
     public IReadOnlyList<NodeWithCaption> PreviewNodes { get; private set; } = [];
 
     public string ValidationError { get; private set; }
@@ -84,6 +99,9 @@ class NodeSelectionEditorModel : ViewModelBase
             myCaptionsObserver.ModuleChanged -= OnGraphChanged;
             myCaptionsObserver.Dispose();
             myCaptionsObserver = null;
+            mySelectionObserver.ModuleChanged -= OnSelectionChanged;
+            mySelectionObserver.Dispose();
+            mySelectionObserver = null;
         }
 
         myPresentation = Model.Presentation;
@@ -93,6 +111,8 @@ class NodeSelectionEditorModel : ViewModelBase
             myPresentation.GraphVisibilityChanged += OnGraphChanged;
             myCaptionsObserver = myPresentation.GetPropertySetFor<Caption>().CreateObserver();
             myCaptionsObserver.ModuleChanged += OnGraphChanged;
+            mySelectionObserver = myPresentation.GetPropertySetFor<Selection>().CreateObserver();
+            mySelectionObserver.ModuleChanged += OnSelectionChanged;
         }
 
         myPattern = null;
@@ -115,10 +135,19 @@ class NodeSelectionEditorModel : ViewModelBase
         }));
     }
 
+    private void OnSelectionChanged(object sender, EventArgs e)
+    {
+        if (ShowSelectedNodesOnly)
+        {
+            OnGraphChanged(sender, e);
+        }
+    }
+
     private void RefreshPreview()
     {
         ClearErrors(nameof(Pattern));
         ValidationError = null;
+        myMatchedNodes = [];
         PreviewNodes = [];
 
         try
@@ -130,12 +159,17 @@ class NodeSelectionEditorModel : ViewModelBase
             if (myPresentation != null)
             {
                 var captions = myPresentation.GetPropertySetFor<Caption>();
-                PreviewNodes = myPresentation.TransformedGraph.Nodes
+                myMatchedNodes = myPresentation.TransformedGraph.Nodes
                     .Where(myPresentation.Picking.Pick)
                     .Select(n => new NodeWithCaption(n, MatchOnIdentifier ? n.Id : captions.Get(n.Id).DisplayText))
                     .Where(n => regex == null || regex.IsMatch(n.DisplayText))
                     .OrderBy(n => n.DisplayText)
                     .ToList();
+
+                var selections = myPresentation.GetPropertySetFor<Selection>();
+                PreviewNodes = ShowSelectedNodesOnly
+                    ? myMatchedNodes.Where(n => selections.TryGet(n.Node.Id)?.IsSelected == true).ToList()
+                    : myMatchedNodes;
             }
         }
         catch (RegexParseException ex)
@@ -165,7 +199,7 @@ class NodeSelectionEditorModel : ViewModelBase
         return myPresentation != null
             && !string.IsNullOrEmpty(Pattern)
             && ValidationError == null
-            && PreviewNodes.Count > 0;
+            && myMatchedNodes.Count > 0;
     }
 
     private void SetSelection(bool isSelected)
@@ -178,7 +212,7 @@ class NodeSelectionEditorModel : ViewModelBase
         }
 
         var selections = myPresentation.GetPropertySetFor<Selection>();
-        foreach (var node in PreviewNodes)
+        foreach (var node in myMatchedNodes)
         {
             var selection = isSelected ? selections.Get(node.Node.Id) : selections.TryGet(node.Node.Id);
             if (selection != null)
@@ -186,6 +220,8 @@ class NodeSelectionEditorModel : ViewModelBase
                 selection.IsSelected = isSelected;
             }
         }
+
+        Pattern = null;
     }
 
     private void OnMouseDown(MouseButtonEventArgs args)
