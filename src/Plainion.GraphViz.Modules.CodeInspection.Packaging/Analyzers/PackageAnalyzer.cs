@@ -18,6 +18,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         private readonly ILogger<PackageAnalyzer> myLogger;
 
         private SystemPackaging mySpec;
+        private string myBaseDirectory;
         private CancellationToken myCancellationToken;
         private Dictionary<string, List<Type>> myPackageToTypesMap;
         private List<Package> myRelevantPackages;
@@ -41,9 +42,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         /// </summary>
         public IList<string> PackagesToAnalyze { get; private set; }
 
-        public AnalysisDocument Execute(SystemPackaging config, CancellationToken cancellationToken)
+        public AnalysisDocument Execute(SystemPackaging config, string baseDirectory, CancellationToken cancellationToken)
         {
             mySpec = config;
+            myBaseDirectory = baseDirectory;
             myCancellationToken = cancellationToken;
 
             myRelevantPackages = PackagesToAnalyze.Any()
@@ -85,12 +87,15 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Analyzers
         {
             Contract.Requires(!string.IsNullOrEmpty(package.Name), "Package requires a name");
 
-            myLogger.LogInformation("Assembly root {0}", Path.GetFullPath(mySpec.AssemblyRoot));
+            var assemblyRoot = Path.GetFullPath(mySpec.AssemblyRoot, myBaseDirectory);
+            myLogger.LogInformation("Assembly root {0}", assemblyRoot);
             myLogger.LogInformation("Loading package {0}", package.Name);
 
             return package.Includes
-                .SelectMany(i => Directory.GetFiles(mySpec.AssemblyRoot, i.Pattern))
-                .Where(file => !package.Excludes.Any(e => e.Matches(file)))
+                .SelectMany(i => Directory.GetFiles(assemblyRoot, i.Pattern))
+                // Exclusions match the spec's original path, not its resolved absolute location.
+                .Where(file => !package.Excludes.Any(e => e.Matches(
+                    Path.Combine(mySpec.AssemblyRoot, Path.GetRelativePath(assemblyRoot, file)))))
                 .SelectMany(file => myTypesLoader.TryLoadAllTypes(file))
                 .ToList();
         }

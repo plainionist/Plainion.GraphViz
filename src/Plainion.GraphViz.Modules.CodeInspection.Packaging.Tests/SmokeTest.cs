@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Plainion.Diagnostics;
 using Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors;
+using Plainion.GraphViz.Modules.CodeInspection.Packaging.Spec;
 
 namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 {
@@ -33,6 +34,35 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             }
         }
 
+        [TestCase(false, "*Test*.dll", true, true)]
+        [TestCase(false, "*Lib.dll", true, false)]
+        [TestCase(true, "*Test*.dll", false, false)]
+        public async Task ExclusionsMatchOriginalRoot(bool absoluteRoot, string exclusion, bool hasComponent, bool hasBuilder)
+        {
+            var assemblyLocation = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", TargetFrameworks[0]);
+            var spec = new SystemPackaging { AssemblyRoot = absoluteRoot ? assemblyLocation : "." };
+            var package = new Package { Name = "DummyProject" };
+            package.Patterns.Add(new Include { Pattern = "DummyProject*.dll" });
+            package.Patterns.Add(new Exclude { Pattern = exclusion });
+            spec.Packages.Add(package);
+            using var client = new PackageAnalysisClient { HideHostWindow = true };
+
+            var originalDirectory = Environment.CurrentDirectory;
+            try
+            {
+                Environment.CurrentDirectory = assemblyLocation;
+                var response = await client.AnalyseAsync(new AnalysisRequest { Spec = SpecUtils.Serialize(spec) })
+                    .WaitAsync(TimeSpan.FromSeconds(30));
+
+                Assert.That(response.Nodes.Contains("DummyProject.Component"), Is.EqualTo(hasComponent));
+                Assert.That(response.Nodes.Contains("DummyProject.Lib.IBuilder"), Is.EqualTo(hasBuilder));
+            }
+            finally
+            {
+                Environment.CurrentDirectory = originalDirectory;
+            }
+        }
+
         [TestCaseSource(nameof(TargetFrameworks))]
         public async Task AnalyzePackageDependencies(string targetFramework)
         {
@@ -40,29 +70,44 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
             {
                 client.HideHostWindow = true;
 
-                var spec = @"
+                var spec = SpecUtils.Deserialize(@"
                     <SystemPackaging AssemblyRoot=""."" xmlns=""http://github.com/ronin4net/plainion/GraphViz/Packaging/Spec"">
                         <Package Name=""DummyProject"">
                             <Include Pattern=""DummyProject.dll"" />
                             <Include Pattern=""DummyProject.Lib.dll"" />
                         </Package>
-                    </SystemPackaging>";
+                    </SystemPackaging>");
+                spec.NetFramework = targetFramework == "net48";
+                var assemblyLocation = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", targetFramework);
+                spec.AssemblyRoot = assemblyLocation;
 
                 var request = new AnalysisRequest
                 {
-                    Spec = spec,
+                    Spec = SpecUtils.Serialize(spec),
                     PackagesToAnalyze = null
                 };
 
-                // "AssemblyRoot" uses relative path
-                Environment.CurrentDirectory = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", targetFramework);
+                await client.AnalyseAsync(request).WaitAsync(TimeSpan.FromSeconds(30));
 
-                var response = await client.AnalyseAsync(request);
+                spec.AssemblyRoot = ".";
+                request.Spec = SpecUtils.Serialize(spec);
 
-                var edges = response.Edges
-                    .Select(x => $"{x.Item1} -> {x.Item2}")
-                    .ToList();
-                Assert.That(edges, Contains.Item("DummyProject.Component -> DummyProject.Lib.IBuilder"));
+                var originalDirectory = Environment.CurrentDirectory;
+                try
+                {
+                    Environment.CurrentDirectory = assemblyLocation;
+
+                    var response = await client.AnalyseAsync(request).WaitAsync(TimeSpan.FromSeconds(30));
+
+                    var edges = response.Edges
+                        .Select(x => $"{x.Item1} -> {x.Item2}")
+                        .ToList();
+                    Assert.That(edges, Contains.Item("DummyProject.Component -> DummyProject.Lib.IBuilder"));
+                }
+                finally
+                {
+                    Environment.CurrentDirectory = originalDirectory;
+                }
             }
         }
 

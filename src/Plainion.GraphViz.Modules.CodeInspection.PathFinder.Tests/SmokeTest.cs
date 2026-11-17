@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -40,8 +41,11 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
 
                 var assemblyLocation = Path.Combine(myProjectHome, "testData", "DummyProject", "bin", "Debug", targetFramework);
 
-                var configFile = Path.Combine(Path.GetTempPath(), "GraphViz.AnalyzeCallTree.json");
-                File.WriteAllText(configFile, @"
+                var configFile = Path.GetTempFileName();
+                string responseFile = null;
+                try
+                {
+                    File.WriteAllText(configFile, @"
                     {
                         ""binFolder"": """ + assemblyLocation.Replace('\\', '/') + @""",
                         ""keepInnerAssemblyDependencies"": true,
@@ -52,16 +56,25 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Tests
                         ""relevantAssemblies"": [ ""DummyProject*"" ]
                     }");
 
-                var responseFile = await client.AnalyzeAsync(new PathFinderRequest
+                    responseFile = await client.AnalyzeAsync(new PathFinderRequest
+                    {
+                        ConfigFile = configFile,
+                        AssemblyReferencesOnly = false
+                    }).WaitAsync(TimeSpan.FromSeconds(30));
+
+                    var response = File.ReadAllText(responseFile);
+
+                    Assert.That(response, Is.Not.Empty);
+                    Assert.That(response, Contains.Substring(@"""DummyProject.Component"" -> ""DummyProject.Lib.IBuilder"""));
+                }
+                finally
                 {
-                    ConfigFile = configFile,
-                    AssemblyReferencesOnly = false
-                });
-
-                var response = File.ReadAllText(responseFile);
-
-                Assert.That(response, Is.Not.Empty);
-                Assert.That(response, Contains.Substring(@"""DummyProject.Component"" -> ""DummyProject.Lib.IBuilder"""));
+                    File.Delete(configFile);
+                    if (responseFile != null)
+                    {
+                        File.Delete(responseFile);
+                    }
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -46,16 +47,28 @@ class Program
 
             logger.LogInformation("Creating actor system");
 
-            using (var system = ActorSystem.Create("CodeInspection", ActorSystemConfig))
+            var config = args.Length == 0 ? ActorSystemConfig
+                : ConfigurationFactory.ParseString("akka.remote.dot-netty.tcp.port = 0").WithFallback(ActorSystemConfig);
+
+            using (var system = ActorSystem.Create("CodeInspection", config))
             {
+                if (args.Length > 0)
+                {
+                    using var pipe = new NamedPipeClientStream(".", args[0], PipeDirection.Out);
+                    pipe.Connect(30000);
+                    using var writer = new StreamWriter(pipe);
+                    writer.WriteLine(((ExtendedActorSystem)system).Provider.DefaultAddress);
+                }
+
                 Console.WriteLine("==> Running");
 
                 while (true) Thread.Sleep(1000);
             }
         }
-        catch
+        catch (Exception ex)
         {
-            logger.LogError(" === DEAD === ");
+            logger.LogError(ex, "Actor host failed");
+            Environment.ExitCode = 1;
         }
     }
 

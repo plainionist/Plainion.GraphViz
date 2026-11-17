@@ -11,6 +11,8 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
 
     class AnalysisMessage : AnalysisRequest
     {
+        public string BaseDirectory { get; set; }
+
         public string OutputFile { get; set; }
     }
 

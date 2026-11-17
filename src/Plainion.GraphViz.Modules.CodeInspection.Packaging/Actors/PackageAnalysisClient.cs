@@ -15,6 +15,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
             var msg = new AnalysisMessage
             {
                 Spec = SpecUtils.Zip(request.Spec),
+                BaseDirectory = Environment.CurrentDirectory,
                 PackagesToAnalyze = request.PackagesToAnalyze,
                 OutputFile = Path.GetTempFileName(),
             };
@@ -24,10 +25,10 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                 throw new NotSupportedException("Spec is too big");
             }
 
-            var response = await this.ProcessAsync(typeof(PackageAnalysisActor), msg, cancellationToken);
-
             try
             {
+                var response = await this.ProcessAsync(typeof(PackageAnalysisActor), msg, cancellationToken);
+
                 if (response is AnalysisResponse m)
                 {
                     var serializer = new DocumentSerializer();

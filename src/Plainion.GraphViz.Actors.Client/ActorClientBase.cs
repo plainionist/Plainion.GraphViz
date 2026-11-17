@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
@@ -11,29 +11,47 @@ namespace Plainion.GraphViz.Actors.Client;
 
 public class ActorClientBase : IDisposable
 {
-    // this class is used in UI thread only so we can safely use shared static variables here
-    private static ActorSystem mySystem;
-    private static int myHostPid;
+    private ActorSystem mySystem;
+    private Process myHost;
+    private Address myRemoteAddress;
+    private readonly SemaphoreSlim myStartupLock = new(1, 1);
 
     public bool HideHostWindow { get; set; }
 
     protected async Task<object> ProcessAsync<TRequest>(Type actorType, TRequest request, CancellationToken cancellationToken)
     {
-        StartActorSystemOnDemand();
+        try
+        {
+            await StartActorSystemOnDemandAsync(cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            return null;
+        }
 
-        var remoteAddress = Address.Parse("akka.tcp://CodeInspection@localhost:2525");
+        var system = mySystem;
+        var host = myHost;
+        var actor = system.ActorOf(Props.Create(actorType)
+            .WithDeploy(Deploy.None.WithScope(new RemoteScope(myRemoteAddress))));
 
-        var actor = mySystem.ActorOf(Props.Create(actorType)
-            .WithDeploy(Deploy.None.WithScope(new RemoteScope(remoteAddress))));
-
-        cancellationToken.Register(() => actor.Tell(new CancelMessage()));
-
-        // In case this call does not return and nothing is happening "remotely" run the app with debugger attached
-        // and watch the output window - exceptions will be printed there
-        var response = await actor.Ask(request);
+        using var lifetime = new CancellationTokenSource();
 
         try
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return null;
+            }
+
+            var responseTask = actor.Ask<object>(request, cancellationToken: lifetime.Token);
+            using var registration = cancellationToken.Register(() => actor.Tell(new CancelMessage()));
+            var hostExit = host.WaitForExitAsync(lifetime.Token);
+            if (await Task.WhenAny(responseTask, hostExit) == hostExit)
+            {
+                throw new InvalidOperationException($"Actor host exited with code {host.ExitCode} before responding.");
+            }
+
+            var response = await responseTask;
             if (response is FailedMessage m)
             {
                 throw new Exception(m.Error);
@@ -49,32 +67,56 @@ public class ActorClientBase : IDisposable
         }
         finally
         {
-            mySystem.Stop(actor);
-            //actor.Tell(Kill.Instance);
+            lifetime.Cancel();
+            system.Stop(actor);
         }
     }
 
-    private void StartActorSystemOnDemand()
+    private async Task StartActorSystemOnDemandAsync(CancellationToken cancellationToken)
     {
-        if (mySystem != null && IsHostRunning())
+        await myStartupLock.WaitAsync(cancellationToken);
+        try
         {
-            return;
-        }
+            cancellationToken.ThrowIfCancellationRequested();
 
-        ShutdownActorSystem();
+            if (mySystem != null && !myHost.HasExited)
+            {
+                return;
+            }
 
-        var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.GraphViz.Actors.Host.exe");
-        var info = new ProcessStartInfo(executable);
+            ShutdownActorSystem();
 
-        if (HideHostWindow)
-        {
-            info.CreateNoWindow = true;
-            info.UseShellExecute = false;
-        }
+            var pipeName = $"Plainion.GraphViz.{Guid.NewGuid():N}";
+            using var pipe = new NamedPipeServerStream(pipeName, PipeDirection.In, 1,
+                PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
+            using var startup = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            startup.CancelAfter(TimeSpan.FromSeconds(30));
 
-        myHostPid = Process.Start(info).Id;
+            var executable = Path.Combine(Path.GetDirectoryName(GetType().Assembly.Location), "Plainion.GraphViz.Actors.Host.exe");
+            var info = new ProcessStartInfo(executable)
+            {
+                UseShellExecute = false,
+                CreateNoWindow = HideHostWindow
+            };
+            info.ArgumentList.Add(pipeName);
 
-        var config = ConfigurationFactory.ParseString(@"
+            try
+            {
+                startup.Token.ThrowIfCancellationRequested();
+                myHost = Process.Start(info);
+
+                var connection = pipe.WaitForConnectionAsync(startup.Token);
+                var hostExit = myHost.WaitForExitAsync(startup.Token);
+                if (await Task.WhenAny(connection, hostExit) == hostExit && myHost.HasExited)
+                {
+                    throw new InvalidOperationException($"Actor host exited with code {myHost.ExitCode} during startup.");
+                }
+
+                await connection;
+                using var reader = new StreamReader(pipe);
+                myRemoteAddress = Address.Parse(await reader.ReadLineAsync(startup.Token));
+
+                var config = ConfigurationFactory.ParseString(@"
                 akka {
                     actor {
                         provider = remote
@@ -88,53 +130,55 @@ public class ActorClientBase : IDisposable
                     }
                 }");
 
-        mySystem = ActorSystem.Create("CodeInspectionClient", config);
-    }
-
-    private bool IsHostRunning()
-    {
-        return TryGetHostProcess() != null;
-    }
-
-    private Process TryGetHostProcess()
-    {
-        if (myHostPid == -1)
-        {
-            return null;
+                mySystem = ActorSystem.Create("CodeInspectionClient", config);
+            }
+            catch (OperationCanceledException ex) when (startup.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+            {
+                ShutdownActorSystem();
+                throw new TimeoutException("Actor host did not become ready within 30 seconds.", ex);
+            }
+            catch
+            {
+                ShutdownActorSystem();
+                throw;
+            }
+            finally
+            {
+                startup.Cancel();
+            }
         }
-
-        return Process.GetProcessesByName("Plainion.GraphViz.Actors.Host").SingleOrDefault(p => p.Id == myHostPid);
+        finally
+        {
+            myStartupLock.Release();
+        }
     }
 
     private void ShutdownActorSystem()
     {
-        if (mySystem != null)
+        try
         {
-            try
-            {
-                mySystem.Dispose();
-            }
-            catch
-            {
-            }
-            mySystem = null;
+            mySystem?.Dispose();
         }
-
-        if (myHostPid != -1)
+        finally
         {
-            try
+            mySystem = null;
+
+            if (myHost != null)
             {
-                var host = TryGetHostProcess();
-                if (host != null)
+                try
                 {
-                    host.Kill();
-                    host.Dispose();
+                    if (!myHost.HasExited)
+                    {
+                        myHost.Kill();
+                        myHost.WaitForExit();
+                    }
+                }
+                finally
+                {
+                    myHost.Dispose();
+                    myHost = null;
                 }
             }
-            catch
-            {
-            }
-            myHostPid = -1;
         }
     }
 

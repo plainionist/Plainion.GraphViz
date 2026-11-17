@@ -40,7 +40,7 @@ namespace Plainion.GraphViz.Modules.CodeInspection.Packaging.Actors
                             analyzer.PackagesToAnalyze.AddRange(r.PackagesToAnalyze);
                         }
 
-                        return analyzer.Execute(spec, CancellationToken);
+                        return analyzer.Execute(spec, r.BaseDirectory, CancellationToken);
                     }, CancellationToken)
                     .ContinueWith<object>(x =>
                     {
